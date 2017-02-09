@@ -1,0 +1,16 @@
+*
+!*.enc
+!.git*
+!*.yml
+!*Makefile
+!*.sublime-project
+!*.md
+!Cargo.toml
+!rustfmt.toml
+!LICENSE
+!src
+!src/**
+!tests
+!tests/**
+!examples
+!examples/**

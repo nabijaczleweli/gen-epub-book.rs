@@ -1,0 +1,21 @@
+[package]
+name = "gen-epub-book"
+description = "Generate an ePub book from a simple plaintext descriptor"
+repository = "https://github.com/nabijaczleweli/gen-epub-book.rs"
+readme = "README.md"
+keywords = ["generate", "ePub", "ebook", "e-book", "book"]
+categories = ["encoding", "text-processing"]
+license = "MIT"
+# Remember to also update in appveyor.yml
+version = "0.1.0"
+# Remember to also update in gen-epub-book.md
+authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
+
+[dependencies]
+clap = "2.20"
+
+
+[[bin]]
+name = "gen-epub-book"
+test = false
+doc = false

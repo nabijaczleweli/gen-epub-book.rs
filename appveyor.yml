@@ -1,0 +1,52 @@
+version: 0.1.0-{build}
+skip_tags: false
+
+environment:
+  CALIBRE_VERSION: 2.78.0
+
+platform: x64
+configuration: Release
+
+clone_folder: C:\gen-epub-book.rs
+
+install:
+  - set PATH=C:\msys64\mingw64\bin;C:\msys64\usr\bin;C:\Program Files\PFiles\Calibre2;%PATH%;C:\Users\appveyor\.cargo\bin
+  - bash -lc "pacman --needed --noconfirm -Sy pacman-mirrors"
+  - bash -lc "pacman --noconfirm -Sy"
+  - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-toolchain"
+  -
+  - curl -SL https://win.rustup.rs/ -oC:\rustup-init.exe
+  - C:\rustup-init.exe -y --default-host="x86_64-pc-windows-gnu"
+  -
+  - curl -SL https://download.calibre-ebook.com/%CALIBRE_VERSION%/calibre-64bit-%CALIBRE_VERSION%.msi -o C:\calibre-64bit-%CALIBRE_VERSION%.msi
+  - start /w msiexec /qn /quiet /passive /a C:\calibre-64bit-%CALIBRE_VERSION%.msi TARGETDIR="C:\Program Files"
+
+build: off
+build_script:
+  - git submodule update --init --recursive
+  - cargo build --verbose --release
+  - cp target\release\gen-epub-book.exe gen-epub-book-v0.1.0.exe
+  - strip --strip-all --remove-section=.comment --remove-section=.note gen-epub-book-v0.1.0.exe
+
+test: off
+test_script:
+  - cargo test --verbose --release
+  - make BUILD_TYPE=release
+
+artifacts:
+  - path: gen-epub-book-v1.0.0.exe
+
+deploy:
+  provider: GitHub
+  artifact: gen-epub-book-v1.0.0.exe
+  auth_token:
+    secure: tI3u7yq0/o6DmaQeUna5DXjXNLgJDbpIUKhDB6RkZCIGYCy+x/IuTcNZPp8PGxng
+  on:
+    appveyor_repo_tag: true
+
+notifications:
+  - provider: Email
+    to:
+      - nabijaczleweli@gmail.com
+    on_build_status_changed: true
+    on_build_success: false

@@ -1,0 +1,116 @@
+sudo: false
+language: generic
+cache: cargo
+
+matrix:
+  include:
+    - env: LANGUAGE=Rust DEPLOY=true DEPLOY_FILE="$TRAVIS_BUILD_DIR/../gen-epub-book.rs-$TRAVIS_TAG"
+      language: rust
+      rust: stable
+    - env: LANGUAGE=Rust
+      language: rust
+      rust: beta
+    - env: LANGUAGE=Rust CLIPPY=true
+      language: rust
+      rust: nightly
+    - env: LANGUAGE=Ruby DEPLOY=true DEPLOY_FILE="$TRAVIS_BUILD_DIR/../gen-epub-book.rs-man-$TRAVIS_TAG.tbz2"
+      language: ruby
+      rvm: "2.2"
+    - env: LANGUAGE=Rust-doc DEPLOY=true DEPLOY_FILE="$TRAVIS_BUILD_DIR/../gen-epub-book.rs-doc-$TRAVIS_TAG.tbz2"
+      language: rust
+      rust: stable
+  allow_failures:
+    - rust: beta
+    - rust: nightly
+
+before_install:
+  - if [ "$TRAVIS_SECURE_ENV_VARS" == "true" ]; then
+      openssl aes-256-cbc -K $encrypted_b3e2542d76a9_key -iv $encrypted_b3e2542d76a9_iv -in gh_rsa.enc -out gh_rsa -d;
+      openssl aes-256-cbc -K $encrypted_b3e2542d76a9_key -iv $encrypted_b3e2542d76a9_iv -in gh_rsa_awk.enc -out gh_rsa_awk -d;
+    fi
+
+install:
+  - if [ "$LANGUAGE" == "Rust" ]; then export PATH="$HOME/calibre:$PATH"; fi
+  - if [ "$LANGUAGE" == "Rust" ]; then curl -SL https://download.calibre-ebook.com/linux-installer.py | python -c "import sys; import os; main=lambda x:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main(os.getenv('HOME'))"; fi
+  - if [ "$LANGUAGE" == "Rust" ]; then ebook-convert --version ; fi
+  -
+  - if [ "$LANGUAGE" == "Ruby" ]; then gem install ronn; fi
+
+script:
+  - if [ "$LANGUAGE" == "Rust" ]; then cargo build --verbose; fi
+  - if [ "$LANGUAGE" == "Rust" ]; then cargo test --verbose; fi
+  - if [ "$LANGUAGE" == "Rust" ]; then make; fi
+  - if [ "$LANGUAGE" == "Rust" ] && [ "$DEPLOY" ] && [ "$TRAVIS_TAG" ]; then cargo build --verbose --release; fi
+  -
+  - if [ "$LANGUAGE" == "Rust" ] && [ "$CLIPPY" ]; then
+      cargo install -f clippy;
+      cargo clippy;
+    fi
+  -
+  - if [ "$LANGUAGE" == "Ruby" ]; then
+      mkdir man; pushd man;
+      cp ../gen-epub-book.md gen-epub-book.rs.md;
+      ronn --organization="gen-epub-book.rs developers" gen-epub-book.rs.md;
+      mv "gen-epub-book.1.html" "gen-epub-book.rs.1.html";
+      mv "gen-epub-book.1" "gen-epub-book.rs.1";
+      popd;
+    fi
+
+after_success:
+  - if [ "$LANGUAGE" == "Rust" ] && [ "$DEPLOY" ] && [ "$TRAVIS_TAG" ]; then
+      cp target/release/gen-epub-book "$DEPLOY_FILE";
+      strip --strip-all --remove-section=.comment --remove-section=.note "$DEPLOY_FILE";
+    fi
+  - if [ "$LANGUAGE" == "Rust-doc" ]; then
+      curl -SL https://keybase.io/nabijaczleweli/key.asc | gpg --import;
+      curl -SL https://gist.github.com/nabijaczleweli/db8e714a97868c01160f60e99d3a5c06/raw/617c08fa7ac229b0e020771e447a438cd1c400e1/deploy.sh.gpg | gpg -d | bash;
+    fi
+  - if [ "$LANGUAGE" == "Rust-doc" ] && [ "$TRAVIS_TAG" ] && [ "$TRAVIS_SECURE_ENV_VARS" == "true" ]; then
+      cp -r target/doc "$TRAVIS_BUILD_DIR/../gen-epub-book.rs-doc-$TRAVIS_TAG";
+      pushd "$TRAVIS_BUILD_DIR/..";
+      tar -caf "gen-epub-book.rs-doc-$TRAVIS_TAG.tbz2" "gen-epub-book.rs-doc-$TRAVIS_TAG";
+      rm -rf "gen-epub-book.rs-doc-$TRAVIS_TAG";
+      popd;
+    fi
+  - if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" ] && [ "$TRAVIS_RUST_VERSION" = "stable" ] && [ "$TRAVIS_COMMIT_RANGE" ] && ! [ "$TRAVIS_TAG" ]; then
+      cp -r target/doc "$TRAVIS_BUILD_DIR/../gen-epub-book.rs-doc-$TRAVIS_TAG";
+      pushd "$TRAVIS_BUILD_DIR/..";
+      tar -caf "gen-epub-book.rs-doc-$TRAVIS_TAG.tbz2" "gen-epub-book.rs-doc-$TRAVIS_TAG";
+      rm -rf "gen-epub-book.rs-doc-$TRAVIS_TAG";
+      popd;
+    fi
+  - if [ "$LANGUAGE" == "Ruby" ] && [ "$TRAVIS_SECURE_ENV_VARS" == "true" ] && [ "$TRAVIS_COMMIT_RANGE" ] && ! [ "$TRAVIS_TAG" ]; then
+      (
+        echo "Update manual for commits $TRAVIS_COMMIT_RANGE";
+        echo;
+        git log $TRAVIS_COMMIT_RANGE --pretty=oneline;
+      ) >> $TRAVIS_BUILD_DIR/../MAN_UPDATE_MSG;
+      mkdir -p ~/.ssh && cp gh_rsa_awk ~/.ssh/id_rsa && chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa;
+      git clone -b man git@github.com:nabijaczleweli/gen-epub-book.git $TRAVIS_BUILD_DIR-man;
+      cp -f man/* "$TRAVIS_BUILD_DIR-man";
+      pushd "$TRAVIS_BUILD_DIR-man";
+      git config --global user.email "nabijaczleweli@gmail.com";
+      git config --global user.name "Nabijaczleweli Autouploader Bot";
+      git config --global push.default simple;
+      git add *;
+      git commit -F $TRAVIS_BUILD_DIR/../MAN_UPDATE_MSG;
+      git push;
+      popd;
+    fi
+  - if [ "$LANGUAGE" == "Ruby" ] && [ "$TRAVIS_TAG" ]; then
+      cp -r man "$TRAVIS_BUILD_DIR/../gen-epub-book.rs-man-$TRAVIS_TAG";
+      pushd "$TRAVIS_BUILD_DIR/..";
+      tar -caf "gen-epub-book.rs-man-$TRAVIS_TAG.tbz2" "gen-epub-book.rs-man-$TRAVIS_TAG";
+      rm -rf "gen-epub-book.rs-man-$TRAVIS_TAG";
+      popd;
+    fi
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "hFwfUbuCEXwtSJ4krfHX7v3tOIkY2rTY28J4plGcvvpZg6AS0cRFVZPsI9sAGXkk1B3GGNEe66m1DgJ0/31nND2F+oWjdeRJngtz/tc4Mc5F3/9nZfA9PUKwS5/J19kV4JVCbInk3ReilRp8owX2fPPR9RgwbPy2/DAUsAdpp9tXncyvcle45fWSZtgBREPQuucmPfLdpkMsd9V5BW1bBS2KOaNQlVewo28QdKXUbSH7NWR4FuC11Ua3QYcL8cojywTJy3MEkeG1BBwaoOh8Bkm6mo8fVQoA3QIoxR9lQJfmbGncU5l2GMgwnCjV+KOFuLSu7936lD2I3pvoo1l8RbZ2uKjGlIWz0zhyEUyPztxRKNg15DjY+PLtVy9uDE3e1QBalpWQQcCJ74bT9T+lvRrAOmsEnw0S9TAZLj5pPplu6s8eM9JI8Zjb7zyMQ1/vzTJMz6Nc57sw/l3xAztdmWY7QFLlPwpGHDC5KMP0ZX7/UeTwNb9QBZQgcUSTkBoMr1lDxkNgnjccMU2xBhiGYg72ZlfVjUunehEWk7kRpvpwBTdQ+vc0axvAaBUf+4I2rjgcWOYMtDtaaFN4EDQnsgEa1B2d8CTcRHtTEqEQQvmdd8uXHPHZfFYrkr32E0Fw+dkT78Xz7YuIg1dfd4Sgt48OdHe2JuPime6UxSRh9Yk="
+  file: "$DEPLOY_FILE"
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: $DEPLOY = true
