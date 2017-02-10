@@ -12,7 +12,9 @@ version = "0.1.0"
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 
 [dependencies]
+chrono = "0.3"
 clap = "2.20"
+url = "1.4"
 
 
 [[bin]]

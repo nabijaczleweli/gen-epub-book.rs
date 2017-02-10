@@ -21,6 +21,8 @@ use std::fs;
 pub struct Options {
     /// The descriptor file.
     pub source_file: (String, PathBuf),
+    /// The root for relative source paths.
+    pub relative_root: (String, PathBuf),
     /// The file to insert the assembled ePub to.
     pub output_file: (String, PathBuf),
 }
@@ -38,6 +40,10 @@ impl Options {
         let target = matches.value_of("TARGET").unwrap();
         Options {
             source_file: (source.to_string(), PathBuf::from(source)),
+            relative_root: match source.rfind('/').or_else(|| source.rfind("\\")) {
+                Some(s) => (source[..s + 1].to_string(), PathBuf::from(&source[..s])),
+                None => ("".to_string(), PathBuf::from(".")),
+            },
             output_file: (target.to_string(), PathBuf::from(target)),
         }
     }

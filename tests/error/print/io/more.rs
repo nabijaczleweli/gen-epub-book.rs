@@ -10,7 +10,8 @@ fn normal_non_e() {
             more: Some("stream ended"),
         }
         .print_error(&mut out);
-    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(), "Reading input file failed: stream ended.\n".to_string());
+    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
+               "Reading input file failed: stream ended.\n".to_string());
 }
 
 #[test]
@@ -22,7 +23,8 @@ fn normal_e() {
             more: Some("stream ended"),
         }
         .print_error(&mut out);
-    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(), "Creating output file failed: stream ended.\n".to_string());
+    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
+               "Creating output file failed: stream ended.\n".to_string());
 }
 
 #[test]
@@ -34,7 +36,8 @@ fn single_non_e() {
             more: Some("stream ended"),
         }
         .print_error(&mut out);
-    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(), "Cing input file failed: stream ended.\n".to_string());
+    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
+               "Cing input file failed: stream ended.\n".to_string());
 }
 
 #[test]
@@ -46,7 +49,8 @@ fn single_e() {
             more: Some("stream ended"),
         }
         .print_error(&mut out);
-    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(), "ing input file failed: stream ended.\n".to_string());
+    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
+               "ing input file failed: stream ended.\n".to_string());
 }
 
 #[test]
@@ -58,5 +62,6 @@ fn empty() {
             more: Some("stream ended"),
         }
         .print_error(&mut out);
-    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(), "ing input file failed: stream ended.\n".to_string());
+    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
+               "ing input file failed: stream ended.\n".to_string());
 }

@@ -5,6 +5,11 @@
 			"working_dir": "$project_path",
 			"shell_cmd": "cargo build && cargo test && make",
 			"name": "Build gen-epub-book.rs and examples"
+		},
+		{
+			"working_dir": "$project_path",
+			"cmd": "cargo doc",
+			"name": "Document gen-epub-book.rs"
 		}
 	],
 	"folders":

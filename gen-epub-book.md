@@ -20,7 +20,6 @@ keys are ignored, lines that don't match the format are ignored.
     Type: plaintext
     Value: e-book's title
     Amount: 1
-    Order: irrelevant
 
   Content
 
@@ -28,7 +27,6 @@ keys are ignored, lines that don't match the format are ignored.
     Type: file path
     Value: relative path to (X)HTML chunk
     Amount: any
-    Order: after Self
     Remarks: see ADDITIONAL CONTENT PROCESSING
 
   String-Content
@@ -37,7 +35,6 @@ keys are ignored, lines that don't match the format are ignored.
     Type: (X)HTML
     Value: (X)HTML string
     Amount: any
-    Order: after Self and Out
 
   Image-Content
 
@@ -45,7 +42,6 @@ keys are ignored, lines that don't match the format are ignored.
     Type: file path
     Value: relative path to image to include in e-book
     Amount: any
-    Order: after Self and Out
 
   Network-Image-Content
 
@@ -53,7 +49,6 @@ keys are ignored, lines that don't match the format are ignored.
     Type: file URL
     Value: URL of image to include in e-book
     Amount: any
-    Order: after Self and Out
 
   Cover
 
@@ -61,7 +56,6 @@ keys are ignored, lines that don't match the format are ignored.
     Type: file path
     Value: relative path to image to use as e-book cover
     Amount: 0-1
-    Order: after Self and Out
     Remarks: exclusive with Network-Cover
 
   Network-Cover
@@ -70,7 +64,6 @@ keys are ignored, lines that don't match the format are ignored.
     Type: file URL
     Value: URL to image to use as e-book cover
     Amount: 0-1
-    Order: after Self and Out
     Remarks: exclusive with Cover
 
   Author
@@ -79,23 +72,20 @@ keys are ignored, lines that don't match the format are ignored.
     Type: plaintext string
     Value: e-book's author
     Amount: 1
-    Order: irrelevant
 
   Date
 
     Required: yes
-    Type: ISO-8601-compliant date
+    Type: RFC3339-compliant date
     Value: e-book's authoring/publishing date
     Amount: 1
-    Order: irrelevant
 
   Language
 
     Required: yes
-    Type: ISO-639-1-compliant language code
+    Type: BCP47-compliant language code
     Value: language used in e-book
     Amount: 1
-    Order: irrelevant
 
 ## ADDITIONAL CONTENT PROCESSING
 

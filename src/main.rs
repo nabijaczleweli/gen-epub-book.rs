@@ -1,7 +1,9 @@
 extern crate gen_epub_book;
 
+use std::fs::File;
 use std::io::stderr;
 use std::process::exit;
+use self::gen_epub_book::{ops, Options, Error};
 
 
 fn main() {
@@ -18,10 +20,20 @@ fn actual_main() -> i32 {
     }
 }
 
-fn result_main() -> Result<(), gen_epub_book::Error> {
-    let opts = gen_epub_book::Options::parse();
-
+fn result_main() -> Result<(), Error> {
+    let opts = Options::parse();
     println!("{:#?}", opts);
+
+    for elem in try!(ops::parse_descriptor("input file",
+                                           &mut try!(File::open(&opts.source_file.1).map_err(|_| {
+        Error::Io {
+            desc: "input file",
+            op: "open",
+            more: None,
+        }
+    })))) {
+        println!("{}", elem);
+    }
 
     Ok(())
 }

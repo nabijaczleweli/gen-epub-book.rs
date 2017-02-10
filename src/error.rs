@@ -18,6 +18,17 @@ pub enum Error {
         /// Additional data.
         more: Option<&'static str>,
     },
+    /// A parsing error occured.
+    Parse {
+        /// What failed to parse.
+        ///
+        /// Something like "URL", "datetime".
+        tp: &'static str,
+        /// Where the thing that failed to parse would go, were it to parese properly.
+        wher: &'static str,
+        /// Additional data.
+        more: Option<&'static str>,
+    },
 }
 
 impl Error {
@@ -52,6 +63,13 @@ impl Error {
                 }
                 writeln!(err_out, ".").unwrap();
             }
+            Error::Parse { tp, wher, more } => {
+                write!(err_out, "Failed to parse {} for {}", tp, wher).unwrap();
+                if let Some(more) = more {
+                    write!(err_out, ": {}", more).unwrap();
+                }
+                writeln!(err_out, ".").unwrap();
+            }
         }
     }
 
@@ -70,6 +88,7 @@ impl Error {
     pub fn exit_value(&self) -> i32 {
         match *self {
             Error::Io { .. } => 1,
+            Error::Parse { .. } => 2,
         }
     }
 }
