@@ -1,4 +1,5 @@
 use self::super::util::uppercase_first;
+use std::path::PathBuf;
 use std::io::Write;
 
 
@@ -28,6 +29,20 @@ pub enum Error {
         wher: &'static str,
         /// Additional data.
         more: Option<&'static str>,
+    },
+    /// A requested file doesn't exist.
+    FileNotFound {
+        /// What requested the file.
+        who: &'static str,
+        /// The file that should exist.
+        path: PathBuf,
+    },
+    /// A path is in a wrong state.
+    WrongFileState {
+        /// What the file is not.
+        what: &'static str,
+        /// The file that should exist.
+        path: PathBuf,
     },
 }
 
@@ -70,6 +85,8 @@ impl Error {
                 }
                 writeln!(err_out, ".").unwrap();
             }
+            Error::FileNotFound { who, ref path } => writeln!(err_out, "File {} for {} not found.", path.display(), who).unwrap(),
+            Error::WrongFileState { what, ref path } => writeln!(err_out, "File {} is not {}.", path.display(), what).unwrap(),
         }
     }
 
@@ -89,6 +106,8 @@ impl Error {
         match *self {
             Error::Io { .. } => 1,
             Error::Parse { .. } => 2,
+            Error::FileNotFound { .. } => 3,
+            Error::WrongFileState { .. } => 4,
         }
     }
 }

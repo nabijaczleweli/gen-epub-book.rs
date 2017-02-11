@@ -25,6 +25,8 @@ pub struct Options {
     pub relative_root: (String, PathBuf),
     /// The file to insert the assembled ePub to.
     pub output_file: (String, PathBuf),
+    /// Whether to print more information to stdout. Default: false
+    pub verbose: bool,
 }
 
 impl Options {
@@ -34,17 +36,19 @@ impl Options {
             .setting(AppSettings::ColoredHelp)
             .arg(Arg::from_usage("<SOURCE> 'File to assemble ePub from'").validator(Options::source_file_validator))
             .arg(Arg::from_usage("<TARGET> 'File to write'"))
+            .arg(Arg::from_usage("-v --verbose 'Print more information to stdout'"))
             .get_matches();
 
         let source = matches.value_of("SOURCE").unwrap();
         let target = matches.value_of("TARGET").unwrap();
         Options {
             source_file: (source.to_string(), PathBuf::from(source)),
-            relative_root: match source.rfind('/').or_else(|| source.rfind("\\")) {
+            relative_root: match source.rfind('/').or_else(|| source.rfind('\\')) {
                 Some(s) => (source[..s + 1].to_string(), PathBuf::from(&source[..s])),
                 None => ("".to_string(), PathBuf::from(".")),
             },
             output_file: (target.to_string(), PathBuf::from(target)),
+            verbose: matches.is_present("verbose"),
         }
     }
 

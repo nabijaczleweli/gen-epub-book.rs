@@ -1,4 +1,5 @@
 use gen_epub_book::Error;
+use std::path::PathBuf;
 
 
 #[test]
@@ -21,6 +22,38 @@ fn io() {
 
 #[test]
 fn parse() {
-    assert_eq!(Error::Parse { tp: "", wher: "", more: None }.exit_value(), 2);
-    assert_eq!(Error::Parse { tp: "", wher: "", more: Some("") }.exit_value(), 2);
+    assert_eq!(Error::Parse {
+                       tp: "",
+                       wher: "",
+                       more: None,
+                   }
+                   .exit_value(),
+               2);
+    assert_eq!(Error::Parse {
+                       tp: "",
+                       wher: "",
+                       more: Some(""),
+                   }
+                   .exit_value(),
+               2);
+}
+
+#[test]
+fn file_not_found() {
+    assert_eq!(Error::FileNotFound {
+                       who: "",
+                       path: PathBuf::new(),
+                   }
+                   .exit_value(),
+               3);
+}
+
+#[test]
+fn wrong_file_state() {
+    assert_eq!(Error::WrongFileState {
+                       what: "",
+                       path: PathBuf::new(),
+                   }
+                   .exit_value(),
+               4);
 }
