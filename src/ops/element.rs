@@ -64,7 +64,7 @@ pub enum BookElement {
     /// Amount: 0-1<br />
     /// Remarks: exclusive with Network-Cover
     Cover(PathBuf),
-    /// URL to image to use as e-book cover
+    /// URL of image to use as e-book cover
     ///
     /// Required: no<br />
     /// Type: file URL<br />

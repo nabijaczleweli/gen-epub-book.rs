@@ -44,6 +44,19 @@ pub enum Error {
         /// The file that should exist.
         path: PathBuf,
     },
+    /// An incorrect amount of book elements.
+    WrongElementAmount {
+        /// The element's name.
+        element: &'static str,
+        /// Current amount.
+        actual: usize,
+        /// How it should be.
+        relation: &'static str,
+        /// WHat is should be.
+        bound: usize,
+    },
+    /// A requiured book element is missing.
+    RequiredElementMissing(&'static str),
 }
 
 impl Error {
@@ -87,6 +100,10 @@ impl Error {
             }
             Error::FileNotFound { who, ref path } => writeln!(err_out, "File {} for {} not found.", path.display(), who).unwrap(),
             Error::WrongFileState { what, ref path } => writeln!(err_out, "File {} is not {}.", path.display(), what).unwrap(),
+            Error::WrongElementAmount { element, actual, relation, bound } => {
+                writeln!(err_out, "Wrong amount of {} elements: {}, must be {} {}.", element, actual, relation, bound).unwrap()
+            }
+            Error::RequiredElementMissing(element) => writeln!(err_out, "Required element {} not specified.", element).unwrap(),
         }
     }
 
@@ -108,6 +125,8 @@ impl Error {
             Error::Parse { .. } => 2,
             Error::FileNotFound { .. } => 3,
             Error::WrongFileState { .. } => 4,
+            Error::WrongElementAmount { .. } => 5,
+            Error::RequiredElementMissing ( .. ) => 6,
         }
     }
 }

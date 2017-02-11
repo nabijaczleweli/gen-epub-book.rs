@@ -57,3 +57,20 @@ fn wrong_file_state() {
                    .exit_value(),
                4);
 }
+
+#[test]
+fn wrong_element_amount() {
+    assert_eq!(Error::WrongElementAmount {
+                       element: "",
+                       actual: 0,
+                       relation: "",
+                       bound: 0,
+                   }
+                   .exit_value(),
+               5);
+}
+
+#[test]
+fn required_element_missing() {
+    assert_eq!(Error::RequiredElementMissing("").exit_value(), 6);
+}

@@ -28,3 +28,25 @@ fn wrong_file_state() {
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
                "File file/that/does/not.exist is not actually a file.\n".to_string());
 }
+
+#[test]
+fn wrong_element_amount() {
+    let mut out = Vec::new();
+    Error::WrongElementAmount {
+            element: "Name",
+            actual: 2,
+            relation: "exactly",
+            bound: 1,
+        }
+        .print_error(&mut out);
+    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
+               "Wrong amount of Name elements: 2, must be exactly 1.\n".to_string());
+}
+
+#[test]
+fn required_element_missing() {
+    let mut out = Vec::new();
+    Error::RequiredElementMissing("Name").print_error(&mut out);
+    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
+               "Required element Name not specified.\n".to_string());
+}

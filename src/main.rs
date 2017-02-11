@@ -31,14 +31,12 @@ fn result_main() -> Result<(), Error> {
             more: None,
         }
     }))));
-
     println!("Loaded descriptor file {} with {} entries.", opts.source_file.0, descriptors.len());
 
     try!(ops::normalise_paths(&mut descriptors[..], &opts.relative_root, opts.verbose, &mut stdout()));
 
-    for desc in &descriptors {
-        println!("{}", desc);
-    }
+    let book = try!(ops::EPubBook::from_elements(descriptors));
+    println!("{:#?}", book);
 
     Ok(())
 }

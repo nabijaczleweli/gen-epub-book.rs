@@ -1,4 +1,5 @@
 mod element;
+mod book;
 
 use std::path::PathBuf;
 use self::super::Error;
@@ -6,6 +7,7 @@ use std::iter::FromIterator;
 use std::io::{BufReader, BufRead, Write, Read};
 
 pub use self::element::BookElement;
+pub use self::book::{EPubBook, EPubContent, EPubCover};
 
 
 /// Parse the whole descriptor, stopping at the first encountered error
