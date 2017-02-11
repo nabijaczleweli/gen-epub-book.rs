@@ -62,8 +62,28 @@
 <span id="18">18</span>
 <span id="19">19</span>
 <span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Module containing various utility functions.</span>
+
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>Path</span>;
 
 
 <span class='doccomment'>/// Uppercase the first character of the supplied string.</span>
@@ -82,6 +102,20 @@
         <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>String</span>::<span class='ident'>new</span>(),
         <span class='prelude-val'>Some</span>(<span class='ident'>f</span>) <span class='op'>=&gt;</span> <span class='ident'>f</span>.<span class='ident'>to_uppercase</span>().<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>() <span class='op'>+</span> <span class='ident'>c</span>.<span class='ident'>as_str</span>(),
     }
+}
+
+<span class='doccomment'>/// Get the (X)HTML ID from a path.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Replaces slashes with `-`s and removes all `../`s, `./`s and the extension.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// # Examples</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// ```</span>
+<span class='doccomment'>/// # use gen_epub_book::util::xhtml_id;</span>
+<span class='doccomment'>/// assert_eq!(xhtml_id(&quot;./abolish/the/../burgeoisie.html&quot;), &quot;abolish-the-burgeoisie&quot;.to_string());</span>
+<span class='doccomment'>/// ```</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>xhtml_id</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>p</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
+    <span class='ident'>p</span>.<span class='ident'>as_ref</span>().<span class='ident'>with_extension</span>(<span class='string'>&quot;&quot;</span>).<span class='ident'>to_string_lossy</span>().<span class='ident'>replace</span>(<span class='string'>&#39;\u{FFFD}&#39;</span>, <span class='string'>&quot;&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&#39;\\&#39;</span>, <span class='string'>&quot;/&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;../&quot;</span>, <span class='string'>&quot;&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&quot;./&quot;</span>, <span class='string'>&quot;&quot;</span>).<span class='ident'>replace</span>(<span class='string'>&#39;/&#39;</span>, <span class='string'>&quot;-&quot;</span>)
 }
 </pre>
 </section>
