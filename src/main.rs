@@ -23,7 +23,7 @@ fn actual_main() -> i32 {
 fn result_main() -> Result<(), Error> {
     let opts = Options::parse();
 
-    let mut descriptors = try!(ops::parse_descriptor("input file",
+    let descriptors = try!(ops::parse_descriptor("input file",
                                                  &mut try!(File::open(&opts.source_file.1).map_err(|_| {
         Error::Io {
             desc: "input file",
@@ -33,9 +33,8 @@ fn result_main() -> Result<(), Error> {
     }))));
     println!("Loaded descriptor file {} with {} entries.", opts.source_file.0, descriptors.len());
 
-    try!(ops::normalise_paths(&mut descriptors[..], &opts.relative_root, opts.verbose, &mut stdout()));
-
-    let book = try!(ops::EPubBook::from_elements(descriptors));
+    let mut book = try!(ops::EPubBook::from_elements(descriptors));
+    try!(book.normalise_paths(&opts.relative_root, opts.verbose, &mut stdout()));
     println!("{:#?}", book);
 
     Ok(())

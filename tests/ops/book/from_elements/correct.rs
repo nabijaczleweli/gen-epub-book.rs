@@ -32,7 +32,7 @@ fn file_cover() {
                    author: "nabijaczleweli".to_string(),
                    date: DateTime::parse_from_rfc3339("2017-02-08T15:30:18+01:00").unwrap(),
                    language: "en-GB".to_string(),
-                   cover: Some(EPubCover::File(PathBuf::from("examples/cover.png"))),
+                   cover: Some(EPubCover::File(("cover".to_string(), PathBuf::from("examples/cover.png")))),
                    content: vec![],
                }));
 }
@@ -70,9 +70,9 @@ fn content_propagation() {
                    date: DateTime::parse_from_rfc3339("2017-02-08T15:30:18+01:00").unwrap(),
                    language: "en-GB".to_string(),
                    cover: None,
-                   content: vec![EPubContent::File(PathBuf::from("examples/simple/ctnt.html")),
+                   content: vec![EPubContent::File(("examples-simple-ctnt".to_string(), PathBuf::from("examples/simple/ctnt.html"))),
                                  EPubContent::String("<em>Seize the means of production!</em>".to_string()),
-                                 EPubContent::Image(PathBuf::from("examples/simple/chapter_image.png")),
+                                 EPubContent::Image(("examples-simple-chapter_image".to_string(), PathBuf::from("examples/simple/chapter_image.png"))),
                                  EPubContent::NetworkImage(Url::parse("http://i.imgur.com/ViQ2WED.jpg").unwrap())],
                }));
 }
