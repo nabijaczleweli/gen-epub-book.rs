@@ -1,9 +1,6 @@
 version: 0.1.0-{build}
 skip_tags: false
 
-environment:
-  CALIBRE_VERSION: 2.78.0
-
 platform: x64
 configuration: Release
 
@@ -18,8 +15,9 @@ install:
   - curl -SL https://win.rustup.rs/ -oC:\rustup-init.exe
   - C:\rustup-init.exe -y --default-host="x86_64-pc-windows-gnu"
   -
-  - curl -SL https://download.calibre-ebook.com/%CALIBRE_VERSION%/calibre-64bit-%CALIBRE_VERSION%.msi -o C:\calibre-64bit-%CALIBRE_VERSION%.msi
-  - start /w msiexec /qn /quiet /passive /a C:\calibre-64bit-%CALIBRE_VERSION%.msi TARGETDIR="C:\Program Files"
+  - curl -SL https://calibre-ebook.com/dist/win64 -o C:\calibre.msi
+  - start /w msiexec /qn /quiet /passive /a C:\calibre.msi TARGETDIR="C:\Program Files"
+  - ebook-convert --version
 
 build: off
 build_script:
