@@ -12,5 +12,7 @@
 !src/**
 !tests
 !tests/**
+!assets
+!assets/**
 !examples
 !examples/**

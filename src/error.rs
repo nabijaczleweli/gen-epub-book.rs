@@ -41,7 +41,7 @@ pub enum Error {
     WrongFileState {
         /// What the file is not.
         what: &'static str,
-        /// The file that should exist.
+        /// The file that should be.
         path: PathBuf,
     },
     /// An incorrect amount of book elements.
@@ -55,7 +55,7 @@ pub enum Error {
         /// WHat is should be.
         bound: usize,
     },
-    /// A requiured book element is missing.
+    /// A required book element is missing.
     RequiredElementMissing(&'static str),
 }
 
@@ -126,7 +126,7 @@ impl Error {
             Error::FileNotFound { .. } => 3,
             Error::WrongFileState { .. } => 4,
             Error::WrongElementAmount { .. } => 5,
-            Error::RequiredElementMissing ( .. ) => 6,
+            Error::RequiredElementMissing(..) => 6,
         }
     }
 }

@@ -1,5 +1,6 @@
 Name: Fucking with all sorts of relative paths
-Cover: ../cover.png
+# Cover: ../cover.png
+Network-Cover: https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Recycle_symbol_Taiwan.svg/2000px-Recycle_symbol_Taiwan.svg.png
 
 Image-Content: relative/trucks_a_cash.png
 Content: relative/path/../green_ass_dog.html

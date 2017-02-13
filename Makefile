@@ -31,8 +31,7 @@ CALIBRE_CONVERT := ebook-convert
 BUILD_TYPE := debug
 OUTDIR := out/
 
-# BOOK_SOURCES := $(sort $(wildcard examples/*.epupp examples/**/*.epupp examples/**/**/*.epupp examples/**/**/**/*.epupp))
-BOOK_SOURCES :=
+BOOK_SOURCES := $(sort $(wildcard examples/*.epupp examples/**/*.epupp examples/**/**/*.epupp examples/**/**/**/*.epupp))
 
 .PHONY : all examples
 

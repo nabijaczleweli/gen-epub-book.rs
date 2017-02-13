@@ -26,6 +26,11 @@
 		},
 		{
 			"follow_symlinks": true,
+			"name": "Assets",
+			"path": "assets"
+		},
+		{
+			"follow_symlinks": true,
 			"name": "Examples",
 			"path": "examples"
 		},

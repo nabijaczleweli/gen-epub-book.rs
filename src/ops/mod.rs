@@ -1,12 +1,13 @@
 mod element;
 mod book;
 
+use regex::Regex;
 use self::super::Error;
 use std::iter::FromIterator;
 use std::io::{BufReader, BufRead, Read};
 
 pub use self::element::BookElement;
-pub use self::book::{EPubBook, EPubContent, EPubCover};
+pub use self::book::{EPubContentType, EPubData, EPubBook};
 
 
 /// Parse the whole descriptor, stopping at the first encountered error
@@ -63,4 +64,30 @@ pub fn parse_descriptor<R: Read>(desc: &'static str, from: &mut R) -> Result<Vec
         .collect::<Vec<_>>()));
 
     Ok(elems.into_iter().flat_map(|o| o).collect())
+}
+
+/// Find an ePub title line in the specified input stream.
+///
+/// The title line contains `<!-- ePub title: "TOC_NAME" -->`, where `TOC_NAME` is any string not containing the `"` character.
+///
+/// # Examples
+///
+/// ```
+/// # use gen_epub_book::ops::find_title;
+/// assert_eq!(find_title(&mut &br#"L1\nL <!-- ePub title: "TTL" -->2\nL3"#[..]),
+///            Some("TTL".to_string()));
+/// ```
+pub fn find_title<R: Read>(i: &mut R) -> Option<String> {
+    lazy_static! {
+        static ref TITLE_RGX: Regex = Regex::new(r#"<!-- ePub title: "([^"]+)" -->"#).unwrap();
+    }
+
+    BufReader::new(i)
+        .lines()
+        .find(|l| if l.is_ok() {
+            TITLE_RGX.is_match(&l.as_ref().unwrap())
+        } else {
+            false
+        })
+        .map(|l| TITLE_RGX.captures(&l.unwrap()).unwrap().get(1).unwrap().as_str().to_string())
 }
