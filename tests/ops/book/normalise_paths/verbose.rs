@@ -1,15 +1,15 @@
 use gen_epub_book::ops::{EPubContentType, BookElement, EPubBook};
+use self::super::make_test_folder;
 use std::fs::{self, File};
 use gen_epub_book::Error;
 use std::path::PathBuf;
-use std::env::temp_dir;
 use chrono::DateTime;
 
 
 #[test]
 fn correct() {
-    let tf = temp_dir().join("gen-epub-book.rs-test").join("ops-book-normalise-paths-verbose-correct");
-    let _ = fs::create_dir_all(tf.join("content"));
+    let tf = make_test_folder("verbose-correct");
+    let _ = fs::create_dir(tf.join("content"));
     File::create(tf.join("cover.png")).unwrap();
     File::create(tf.join("content").join("ch01.html")).unwrap();
 
@@ -33,8 +33,7 @@ fn correct() {
 
 #[test]
 fn nonexistant() {
-    let tf = temp_dir().join("gen-epub-book.rs-test").join("ops-book-normalise-paths-verbose-nonexistant");
-    let _ = fs::create_dir_all(&tf);
+    let tf = make_test_folder("verbose-nonexistant");
     File::create(tf.join("cover.png")).unwrap();
 
     let mut buf = vec![];
@@ -59,8 +58,8 @@ fn nonexistant() {
 
 #[test]
 fn bad_type() {
-    let tf = temp_dir().join("gen-epub-book.rs-test").join("ops-book-normalise-paths-verbose-bad-type");
-    let _ = fs::create_dir_all(tf.join("ch01.html"));
+    let tf = make_test_folder("verbose-bad-type");
+    let _ = fs::create_dir(tf.join("ch01.html"));
     File::create(tf.join("cover.png")).unwrap();
 
     let mut buf = vec![];
