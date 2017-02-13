@@ -1,4 +1,7 @@
 (function() {var implementors = {};
+implementors["hyper"] = [];
+implementors["reqwest"] = [];
+implementors["serde_urlencoded"] = [];
 implementors["url"] = [];
 
             if (window.register_implementors) {

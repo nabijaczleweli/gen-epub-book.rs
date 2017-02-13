@@ -218,7 +218,7 @@
     <span class='ident'>WrongFileState</span> {
         <span class='doccomment'>/// What the file is not.</span>
         <span class='ident'>what</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// The file that should exist.</span>
+        <span class='doccomment'>/// The file that should be.</span>
         <span class='ident'>path</span>: <span class='ident'>PathBuf</span>,
     },
     <span class='doccomment'>/// An incorrect amount of book elements.</span>
@@ -232,7 +232,7 @@
         <span class='doccomment'>/// WHat is should be.</span>
         <span class='ident'>bound</span>: <span class='ident'>usize</span>,
     },
-    <span class='doccomment'>/// A requiured book element is missing.</span>
+    <span class='doccomment'>/// A required book element is missing.</span>
     <span class='ident'>RequiredElementMissing</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>),
 }
 
@@ -303,7 +303,7 @@
             <span class='ident'>Error</span>::<span class='ident'>FileNotFound</span> { .. } <span class='op'>=&gt;</span> <span class='number'>3</span>,
             <span class='ident'>Error</span>::<span class='ident'>WrongFileState</span> { .. } <span class='op'>=&gt;</span> <span class='number'>4</span>,
             <span class='ident'>Error</span>::<span class='ident'>WrongElementAmount</span> { .. } <span class='op'>=&gt;</span> <span class='number'>5</span>,
-            <span class='ident'>Error</span>::<span class='ident'>RequiredElementMissing</span> ( .. ) <span class='op'>=&gt;</span> <span class='number'>6</span>,
+            <span class='ident'>Error</span>::<span class='ident'>RequiredElementMissing</span>(..) <span class='op'>=&gt;</span> <span class='number'>6</span>,
         }
     }
 }
