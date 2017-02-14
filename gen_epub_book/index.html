@@ -47,14 +47,162 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/gen_epub_book/lib.rs.html#1-20' title='goto source code'>[src]</a></span></h1>
-<h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+               </span><a class='srclink' href='../src/gen_epub_book/lib.rs.html#1-194' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Generate an ePub book from a simple plaintext descriptor</p>
+
+<h1 id='library-doc' class='section-header'><a href='#library-doc'>Library doc</a></h1>
+<p>This library is used by <code>gen-epub-book</code> itself for all its function and is therefore contains all necessary functions.</p>
+
+<h2 id='data-flow' class='section-header'><a href='#data-flow'>Data flow</a></h2>
+<pre><code class="language-text">Options
+|&gt; parse_descriptor()
+|&gt; EPubBook::from_elements()
+|&gt; EPubBook::normalise_paths()
+|&gt; EPubBook::write_zip()
+</code></pre>
+
+<h1 id='executable-manpage' class='section-header'><a href='#executable-manpage'>Executable manpage</a></h1>
+<p>Exit values and possible errors:</p>
+
+<pre><code class="language-text">1 - I/O error
+2 - parsing error
+3 - file not found
+4 - file in wrong state
+5 - incorrect amount of elements
+6 - required element missing
+</code></pre>
+
+<h2 id='synopsis' class='section-header'><a href='#synopsis'>SYNOPSIS</a></h2>
+<p><a href="https://github.com/nabijaczleweli/gen-epub-book.rs"><code>gen-epub-book</code></a> [OPTIONS] IN_FILE OUT_FILE</p>
+
+<h2 id='description' class='section-header'><a href='#description'>DESCRIPTION</a></h2>
+<p>Generate an ePub book from a simple plaintext descriptor.</p>
+
+<h2 id='options' class='section-header'><a href='#options'>OPTIONS</a></h2>
+<p>-v --verbose</p>
+
+<pre><code class="language-text">Print out more data.
+
+Default: false.
+</code></pre>
+
+<p>IN_FILE</p>
+
+<pre><code class="language-text">File to parse, must exist, must comply with the DESCRIPTOR FORMAT.
+</code></pre>
+
+<p>OUT_FILE</p>
+
+<pre><code class="language-text">File to write the book to, parent directory needn&#39;t exist.
+</code></pre>
+
+<h2 id='descriptor-format' class='section-header'><a href='#descriptor-format'>DESCRIPTOR FORMAT</a></h2>
+<p>The descriptor consists of multiple lines in the format <em>&quot;Key: Value&quot;</em>, unknown
+keys are ignored, lines that don&#39;t match the format are ignored.</p>
+
+<p>Name</p>
+
+<pre><code class="language-text">Required: yes
+Type: plaintext
+Value: e-book&#39;s title
+Amount: 1
+</code></pre>
+
+<p>Content</p>
+
+<pre><code class="language-text">Required: no
+Type: file path
+Value: relative path to (X)HTML chunk
+Amount: any
+Remarks: see ADDITIONAL CONTENT PROCESSING
+</code></pre>
+
+<p>String-Content</p>
+
+<pre><code class="language-text">Required: no
+Type: (X)HTML
+Value: (X)HTML string
+Amount: any
+</code></pre>
+
+<p>Image-Content</p>
+
+<pre><code class="language-text">Required: no
+Type: file path
+Value: relative path to image to include in e-book
+Amount: any
+</code></pre>
+
+<p>Network-Image-Content</p>
+
+<pre><code class="language-text">Required: no
+Type: file URL
+Value: URL of image to include in e-book
+Amount: any
+</code></pre>
+
+<p>Cover</p>
+
+<pre><code class="language-text">Required: no
+Type: file path
+Value: relative path to image to use as e-book cover
+Amount: 0-1
+Remarks: exclusive with Network-Cover
+</code></pre>
+
+<p>Network-Cover</p>
+
+<pre><code class="language-text">Required: no
+Type: file URL
+Value: URL to image to use as e-book cover
+Amount: 0-1
+Remarks: exclusive with Cover
+</code></pre>
+
+<p>Author</p>
+
+<pre><code class="language-text">Required: yes
+Type: plaintext string
+Value: e-book&#39;s author
+Amount: 1
+</code></pre>
+
+<p>Date</p>
+
+<pre><code class="language-text">Required: yes
+Type: RFC3339-compliant date
+Value: e-book&#39;s authoring/publishing date
+Amount: 1
+</code></pre>
+
+<p>Language</p>
+
+<pre><code class="language-text">Required: yes
+Type: BCP47-compliant language code
+Value: language used in e-book
+Amount: 1
+</code></pre>
+
+<h2 id='additional-content-processing' class='section-header'><a href='#additional-content-processing'>ADDITIONAL CONTENT PROCESSING</a></h2>
+<p>When adding content using the <code>Content</code> entry, the file will additinally be
+searched for a comment specifying the its name in the TOC in this format:</p>
+
+<pre><code class="language-text">&lt;!-- ePub title: &quot;TOC_NAME&quot; --&gt;
+</code></pre>
+
+<p>Where <code>TOC_NAME</code> is a string not containing the <em>&quot;</em> character.</p>
+
+<p>This will, on e-book readers, allow users to jump directly to the content
+represented by the document containing this entry.</p>
+
+<p>Optional.</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='mod' href='ops/index.html'
                                   title='gen_epub_book::ops'>ops</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Main functions doing actual work.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
