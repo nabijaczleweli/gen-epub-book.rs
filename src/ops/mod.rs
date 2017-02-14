@@ -1,5 +1,12 @@
-mod element;
+//! Main functions doing actual work.
+//!
+//! First, use `parse_descriptor()` to get an element list from a descriptor file,
+//! then construct an `EPubBook::from_elements()`, validate and absolutise paths via
+//! `EPubBook::normalise_paths()` and write the book with `EPubBook::write_zip()`.
+
+
 mod book;
+mod element;
 
 use regex::Regex;
 use self::super::Error;

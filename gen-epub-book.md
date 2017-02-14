@@ -3,11 +3,36 @@ gen-epub-book.rs(1) -- Generate an ePub book from a simple plaintext descriptor
 
 ## SYNOPSIS
 
-`gen-epub-book IN_FILE OUT_FILE`
+`gen-epub-book` IN_FILE OUT_FILE [OPTIONS]
 
 ## DESCRIPTION
 
 Generate an ePub book from a simple plaintext descriptor.
+
+Exit values and possible errors:
+
+    1 - I/O error
+    2 - parsing error
+    3 - file not found
+    4 - file in wrong state
+    5 - incorrect amount of elements
+    6 - required element missing
+
+## OPTIONS
+
+  -v --verbose
+
+    Print out more data.
+
+    Default: false.
+
+  IN_FILE
+
+    File to parse, must exist, must comply with the DESCRIPTOR FORMAT.
+
+  OUT_FILE
+
+    File to write the book to, parent directory needn't exist.
 
 ## DESCRIPTOR FORMAT
 
