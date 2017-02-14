@@ -7,7 +7,7 @@
 //! ```no_run
 //! # use gen_epub_book::Options;
 //! let options = Options::parse();
-//! println!("Assembling {} to {}", options.source_file.0, options.output_file.0);
+//! println!("{}sing verbose output", if options.verbose {"U"} else {"Not u"});
 //! ```
 
 
@@ -19,12 +19,12 @@ use std::fs;
 /// Representation of the application's all configurable values.
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct Options {
-    /// The descriptor file.
-    pub source_file: (String, PathBuf),
+    /// The descriptor file, or `None` for stdin.
+    pub source_file: Option<(String, PathBuf)>,
     /// The root for relative source paths.
     pub relative_root: (String, PathBuf),
-    /// The file to insert the assembled ePub to.
-    pub output_file: (String, PathBuf),
+    /// The file to insert the assembled ePub to, or `None` for stdout.
+    pub output_file: Option<(String, PathBuf)>,
     /// Whether to print more information. Default: false
     pub verbose: bool,
 }
@@ -39,24 +39,32 @@ impl Options {
             .arg(Arg::from_usage("-v --verbose 'Print more information'"))
             .get_matches();
 
-        let source = matches.value_of("SOURCE").unwrap();
-        let target = matches.value_of("TARGET").unwrap();
+        let source = Options::optional_fname_arg(matches.value_of("SOURCE").unwrap());
+        let target = Options::optional_fname_arg(matches.value_of("TARGET").unwrap());
         Options {
-            source_file: (source.to_string(), PathBuf::from(source)),
-            relative_root: match source.rfind('/').or_else(|| source.rfind('\\')) {
-                Some(s) => (source[..s + 1].to_string(), PathBuf::from(&source[..s])),
+            source_file: source.map(|s| (s.to_string(), PathBuf::from(s))),
+            relative_root: match source.and_then(|src| src.rfind('/').or_else(|| src.rfind('\\'))) {
+                Some(s) => (source.unwrap()[..s + 1].to_string(), PathBuf::from(&source.unwrap()[..s])),
                 None => ("".to_string(), PathBuf::from(".")),
             },
-            output_file: (target.to_string(), PathBuf::from(target)),
+            output_file: target.map(|tgt| (tgt.to_string(), PathBuf::from(tgt))),
             verbose: matches.is_present("verbose"),
         }
     }
 
     fn source_file_validator(s: String) -> Result<(), String> {
-        fs::canonicalize(&s).map_err(|_| format!("Source file \"{}\" not found", s)).and_then(|f| if f.is_file() {
+        if s == "-" {
             Ok(())
         } else {
-            Err(format!("Source file \"{}\" not actualy a file", s))
-        })
+            fs::canonicalize(&s).map_err(|_| format!("Source file \"{}\" not found", s)).and_then(|f| if f.is_file() {
+                Ok(())
+            } else {
+                Err(format!("Source file \"{}\" not actualy a file", s))
+            })
+        }
+    }
+
+    fn optional_fname_arg(s: &str) -> Option<&str> {
+        if s == "-" { None } else { Some(s) }
     }
 }
