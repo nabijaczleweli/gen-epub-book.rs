@@ -481,6 +481,10 @@
 <span id="437">437</span>
 <span id="438">438</span>
 <span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::<span class='kw'>super</span>::<span class='ident'>util</span>::{<span class='ident'>CONTENT_TABLE_HEADER</span>, <span class='ident'>CONTAINER</span>, <span class='ident'>MIME_TYPE</span>, <span class='ident'>write_string_content</span>, <span class='ident'>xhtml_path_id</span>, <span class='ident'>book_filename</span>, <span class='ident'>xhtml_url_id</span>, <span class='ident'>download_to</span>};
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::{<span class='ident'>BookElement</span>, <span class='ident'>find_title</span>};
@@ -901,20 +905,24 @@
     }
 
     <span class='kw'>fn</span> <span class='ident'>write_content</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Seek</span>, <span class='ident'>V</span>: <span class='ident'>Write</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>w</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ZipWriter</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>, <span class='ident'>verbose</span>: <span class='ident'>bool</span>, <span class='ident'>verb_out</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Error</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>added_filenames</span> <span class='op'>=</span> <span class='ident'>BTreeSet</span>::<span class='ident'>new</span>();
         <span class='kw'>for</span> <span class='kw-2'>&amp;</span>(_, <span class='kw-2'>ref</span> <span class='ident'>fname</span>, <span class='kw-2'>ref</span> <span class='ident'>tp</span>) <span class='kw'>in</span> <span class='self'>self</span>.<span class='ident'>cover</span>.<span class='ident'>iter</span>().<span class='ident'>chain</span>(<span class='self'>self</span>.<span class='ident'>content</span>.<span class='ident'>iter</span>()).<span class='ident'>chain</span>(<span class='self'>self</span>.<span class='ident'>non_content</span>.<span class='ident'>iter</span>()) {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>w</span>.<span class='ident'>start_file</span>(<span class='ident'>fname</span>.<span class='ident'>to_str</span>().<span class='ident'>unwrap</span>(), <span class='ident'>FileOptions</span>::<span class='ident'>default</span>()).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>EPubBook</span>::<span class='ident'>zip_error</span>(<span class='string'>&quot;create&quot;</span>, <span class='string'>&quot;table of contents&quot;</span>)));
-            <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>tp</span> {
-                <span class='ident'>EPubContentType</span>::<span class='ident'>File</span>(<span class='kw-2'>ref</span> <span class='ident'>pb</span>) <span class='op'>=&gt;</span> {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>io</span>::<span class='ident'>copy</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>open</span>(<span class='ident'>pb</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>EPubBook</span>::<span class='ident'>zip_error</span>(<span class='string'>&quot;open&quot;</span>, <span class='string'>&quot;Content file&quot;</span>))), <span class='ident'>w</span>)
-                        .<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>EPubBook</span>::<span class='ident'>zip_error</span>(<span class='string'>&quot;write&quot;</span>, <span class='string'>&quot;Content data&quot;</span>)));
-                }
-                <span class='ident'>EPubContentType</span>::<span class='ident'>Network</span>(<span class='kw-2'>ref</span> <span class='ident'>u</span>) <span class='op'>=&gt;</span> {
-                    <span class='kw'>if</span> <span class='ident'>verbose</span> {
-                        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>verb_out</span>, <span class='string'>&quot;Downloading {} to {}.&quot;</span>, <span class='ident'>u</span>, <span class='ident'>fname</span>.<span class='ident'>display</span>());
+            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>added_filenames</span>.<span class='ident'>contains</span>(<span class='ident'>fname</span>.<span class='ident'>to_str</span>().<span class='ident'>unwrap</span>()) {
+                <span class='ident'>added_filenames</span>.<span class='ident'>insert</span>(<span class='ident'>fname</span>.<span class='ident'>to_str</span>().<span class='ident'>unwrap</span>());
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>w</span>.<span class='ident'>start_file</span>(<span class='ident'>fname</span>.<span class='ident'>to_str</span>().<span class='ident'>unwrap</span>(), <span class='ident'>FileOptions</span>::<span class='ident'>default</span>()).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>EPubBook</span>::<span class='ident'>zip_error</span>(<span class='string'>&quot;create&quot;</span>, <span class='string'>&quot;table of contents&quot;</span>)));
+                <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>tp</span> {
+                    <span class='ident'>EPubContentType</span>::<span class='ident'>File</span>(<span class='kw-2'>ref</span> <span class='ident'>pb</span>) <span class='op'>=&gt;</span> {
+                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>io</span>::<span class='ident'>copy</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>File</span>::<span class='ident'>open</span>(<span class='ident'>pb</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>EPubBook</span>::<span class='ident'>zip_error</span>(<span class='string'>&quot;open&quot;</span>, <span class='string'>&quot;Content file&quot;</span>))), <span class='ident'>w</span>)
+                            .<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>EPubBook</span>::<span class='ident'>zip_error</span>(<span class='string'>&quot;write&quot;</span>, <span class='string'>&quot;Content data&quot;</span>)));
                     }
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>download_to</span>(<span class='ident'>w</span>, <span class='kw-2'>&amp;</span><span class='ident'>u</span>));
+                    <span class='ident'>EPubContentType</span>::<span class='ident'>Network</span>(<span class='kw-2'>ref</span> <span class='ident'>u</span>) <span class='op'>=&gt;</span> {
+                        <span class='kw'>if</span> <span class='ident'>verbose</span> {
+                            <span class='kw'>let</span> _ <span class='op'>=</span> <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>verb_out</span>, <span class='string'>&quot;Downloading {} to {}.&quot;</span>, <span class='ident'>u</span>, <span class='ident'>fname</span>.<span class='ident'>display</span>());
+                        }
+                        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>download_to</span>(<span class='ident'>w</span>, <span class='kw-2'>&amp;</span><span class='ident'>u</span>));
+                    }
+                    <span class='ident'>EPubContentType</span>::<span class='ident'>Raw</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>write_string_content</span>(<span class='ident'>w</span>, <span class='ident'>s</span>)),
                 }
-                <span class='ident'>EPubContentType</span>::<span class='ident'>Raw</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>write_string_content</span>(<span class='ident'>w</span>, <span class='ident'>s</span>)),
             }
         }
 

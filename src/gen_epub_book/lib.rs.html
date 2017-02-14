@@ -236,6 +236,10 @@
 <span id="192">192</span>
 <span id="193">193</span>
 <span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Generate an ePub book from a simple plaintext descriptor</span>
 <span class='doccomment'>//!</span>
@@ -288,12 +292,16 @@
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```text</span>
 <span class='doccomment'>//! File to parse, must exist, must comply with the DESCRIPTOR FORMAT.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Special case: &#39;-&#39; to read from stdin.</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! OUT_FILE</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ```text</span>
 <span class='doccomment'>//! File to write the book to, parent directory needn&#39;t exist.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! Special case: &#39;-&#39; to write to stdout.</span>
 <span class='doccomment'>//! ```</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! ## DESCRIPTOR FORMAT</span>
