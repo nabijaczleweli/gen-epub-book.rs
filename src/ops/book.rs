@@ -4,6 +4,7 @@ use zip::write::{ZipWriter, FileOptions};
 use chrono::{DateTime, FixedOffset};
 use mime_guess::guess_mime_type_opt;
 use std::io::{self, Write, Seek};
+use std::collections::BTreeSet;
 use self::super::super::Error;
 use std::iter::IntoIterator;
 use std::path::PathBuf;
@@ -329,16 +330,20 @@ impl EPubBook {
         try!(writeln!(w, r#"    <item href="toc.ncx" id="toc" media-type="application/x-dtbncx+xml"/>"#)
             .map_err(|_| EPubBook::zip_error("write", "content table manifest toc line")));
 
+        let mut specified_ids = BTreeSet::new();
         for &(ref id, ref fname, _) in self.cover.iter().chain(self.content.iter()).chain(self.non_content.iter()) {
-            try!(writeln!(w,
-                          r#"    <item href="{}" id="{}" media-type="{}" />"#,
-                          fname.display(),
-                          id,
-                          try!(guess_mime_type_opt(&fname).ok_or(Error::WrongFileState {
-                              what: "of recognised extension",
-                              path: fname.clone(),
-                          })))
-                .map_err(|_| EPubBook::zip_error("write", "content table manifest content")));
+            if !specified_ids.contains(&id[..]) {
+                specified_ids.insert(&id[..]);
+                try!(writeln!(w,
+                              r#"    <item href="{}" id="{}" media-type="{}" />"#,
+                              fname.display(),
+                              id,
+                              try!(guess_mime_type_opt(&fname).ok_or(Error::WrongFileState {
+                                  what: "of recognised extension",
+                                  path: fname.clone(),
+                              })))
+                    .map_err(|_| EPubBook::zip_error("write", "content table manifest content")));
+            }
         }
 
         try!(writeln!(w, r#"  </manifest>"#).map_err(|_| EPubBook::zip_error("write", "content table manifest end")));
