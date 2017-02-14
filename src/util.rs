@@ -149,8 +149,7 @@ pub fn write_string_content<W: Write>(to: &mut W, ctnt: &str) -> Result<(), Erro
 /// # }
 /// ```
 pub fn download_to<W: Write>(w: &mut W, what: &Url) -> Result<(), Error> {
-    let mut resp = try!(reqwest::get(what.as_str()).map_err(|e| {
-        println!("{:#?}", e);
+    let mut resp = try!(reqwest::get(what.as_str()).map_err(|_| {
         Error::Io {
             desc: "network content",
             op: "request",
@@ -165,8 +164,7 @@ pub fn download_to<W: Write>(w: &mut W, what: &Url) -> Result<(), Error> {
             more: resp.status().canonical_reason(),
         })
     } else {
-        try!(io::copy(&mut resp, w).map_err(|e| {
-            println!("{:#?}", e);
+        try!(io::copy(&mut resp, w).map_err(|_| {
             Error::Io {
                 desc: "network content",
                 op: "read",

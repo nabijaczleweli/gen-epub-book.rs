@@ -2,7 +2,7 @@ extern crate gen_epub_book;
 
 use std::process::exit;
 use std::fs::{self, File};
-use std::io::{stderr, stdout};
+use std::io::{Write, stderr};
 use self::gen_epub_book::{ops, Options, Error};
 
 
@@ -33,16 +33,17 @@ fn result_main() -> Result<(), Error> {
     }))));
 
     if opts.verbose {
-        println!("Loaded descriptor file {} with {} entries.", opts.source_file.0, descriptors.len());
+        let _ = writeln!(stderr(), "Loaded descriptor file {} with {} entries.", opts.source_file.0, descriptors.len());
     }
 
     let mut book = try!(ops::EPubBook::from_elements(descriptors));
-    try!(book.normalise_paths(&opts.relative_root, opts.verbose, &mut stdout()));
+    try!(book.normalise_paths(&opts.relative_root, opts.verbose, &mut stderr()));
 
     if let Some(p) = opts.output_file.1.parent() {
         if !p.exists() && fs::create_dir_all(p).is_ok() && opts.verbose {
-            println!("Created directory {}.",
-                     opts.output_file.0[..opts.output_file.0.rfind('/').or_else(|| opts.output_file.0.rfind('\\')).unwrap() + 1].to_string());
+            let _ = writeln!(stderr(),
+                             "Created directory {}.",
+                             opts.output_file.0[..opts.output_file.0.rfind('/').or_else(|| opts.output_file.0.rfind('\\')).unwrap() + 1].to_string());
         }
     }
     let mut outf = try!(File::create(&opts.output_file.1).map_err(|_| {
@@ -52,7 +53,7 @@ fn result_main() -> Result<(), Error> {
             more: None,
         }
     }));
-    try!(book.write_zip(&mut outf, opts.verbose, &mut stdout()));
+    try!(book.write_zip(&mut outf, opts.verbose, &mut stderr()));
 
     Ok(())
 }

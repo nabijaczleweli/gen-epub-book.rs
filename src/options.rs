@@ -25,7 +25,7 @@ pub struct Options {
     pub relative_root: (String, PathBuf),
     /// The file to insert the assembled ePub to.
     pub output_file: (String, PathBuf),
-    /// Whether to print more information to stdout. Default: false
+    /// Whether to print more information. Default: false
     pub verbose: bool,
 }
 
@@ -36,7 +36,7 @@ impl Options {
             .setting(AppSettings::ColoredHelp)
             .arg(Arg::from_usage("<SOURCE> 'File to assemble ePub from'").validator(Options::source_file_validator))
             .arg(Arg::from_usage("<TARGET> 'File to write'"))
-            .arg(Arg::from_usage("-v --verbose 'Print more information to stdout'"))
+            .arg(Arg::from_usage("-v --verbose 'Print more information'"))
             .get_matches();
 
         let source = matches.value_of("SOURCE").unwrap();
