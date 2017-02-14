@@ -2,6 +2,7 @@
 name = "gen-epub-book"
 description = "Generate an ePub book from a simple plaintext descriptor"
 repository = "https://github.com/nabijaczleweli/gen-epub-book.rs"
+documentation = "https://cdn.rawgit.com/nabijaczleweli/gen-epub-book.rs/doc/gen_epub_book/index.html"
 readme = "README.md"
 keywords = ["generate", "ePub", "ebook", "e-book", "book"]
 categories = ["encoding", "text-processing"]
