@@ -417,20 +417,24 @@ impl EPubBook {
     }
 
     fn write_content<W: Write + Seek, V: Write>(&self, w: &mut ZipWriter<W>, verbose: bool, verb_out: &mut V) -> Result<(), Error> {
+        let mut added_filenames = BTreeSet::new();
         for &(_, ref fname, ref tp) in self.cover.iter().chain(self.content.iter()).chain(self.non_content.iter()) {
-            try!(w.start_file(fname.to_str().unwrap(), FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "table of contents")));
-            match *tp {
-                EPubContentType::File(ref pb) => {
-                    try!(io::copy(&mut try!(File::open(pb).map_err(|_| EPubBook::zip_error("open", "Content file"))), w)
-                        .map_err(|_| EPubBook::zip_error("write", "Content data")));
-                }
-                EPubContentType::Network(ref u) => {
-                    if verbose {
-                        let _ = writeln!(verb_out, "Downloading {} to {}.", u, fname.display());
+            if !added_filenames.contains(fname.to_str().unwrap()) {
+                added_filenames.insert(fname.to_str().unwrap());
+                try!(w.start_file(fname.to_str().unwrap(), FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "table of contents")));
+                match *tp {
+                    EPubContentType::File(ref pb) => {
+                        try!(io::copy(&mut try!(File::open(pb).map_err(|_| EPubBook::zip_error("open", "Content file"))), w)
+                            .map_err(|_| EPubBook::zip_error("write", "Content data")));
                     }
-                    try!(download_to(w, &u));
+                    EPubContentType::Network(ref u) => {
+                        if verbose {
+                            let _ = writeln!(verb_out, "Downloading {} to {}.", u, fname.display());
+                        }
+                        try!(download_to(w, &u));
+                    }
+                    EPubContentType::Raw(ref s) => try!(write_string_content(w, s)),
                 }
-                EPubContentType::Raw(ref s) => try!(write_string_content(w, s)),
             }
         }
 
