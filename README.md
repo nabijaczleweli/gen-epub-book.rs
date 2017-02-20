@@ -37,3 +37,7 @@ For more detailed usage information and tag list, see the [manpage](https://cdn.
 ## Versions in other languages
 
 The original in [AWK](https://github.com/nabijaczleweli/gen-epub-book).
+
+A rewrite in [C++](https://github.com/nabijaczleweli/gen-epub-book.cpp).
+
+A rewrite in [Scala](https://github.com/nabijaczleweli/gen-epub-book.scala).
