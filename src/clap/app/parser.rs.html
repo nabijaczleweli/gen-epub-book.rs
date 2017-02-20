@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.20.3/src/app/parser.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.20.5/src/app/parser.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>parser.rs.html -- source</title>
@@ -2278,6 +2278,11 @@
 <span id="2234">2234</span>
 <span id="2235">2235</span>
 <span id="2236">2236</span>
+<span id="2237">2237</span>
+<span id="2238">2238</span>
+<span id="2239">2239</span>
+<span id="2240">2240</span>
+<span id="2241">2241</span>
 </pre><pre class='rust '>
 <span class='comment'>// Std</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::{<span class='ident'>BTreeMap</span>, <span class='ident'>HashMap</span>, <span class='ident'>VecDeque</span>};
@@ -2318,6 +2323,7 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Parser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>
     <span class='kw'>where</span> <span class='lifetime'>&#39;a</span>: <span class='lifetime'>&#39;b</span>
 {
+    <span class='ident'>propogated</span>: <span class='ident'>bool</span>,
     <span class='ident'>required</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span>,
     <span class='ident'>r_ifs</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='ident'>str</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>)<span class='op'>&gt;</span>,
     <span class='kw'>pub</span> <span class='ident'>short_list</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>char</span><span class='op'>&gt;</span>,
@@ -2350,6 +2356,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> <span class='ident'>Default</span> <span class='kw'>for</span> <span class='ident'>Parser</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='lifetime'>&#39;b</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Parser</span> {
+            <span class='ident'>propogated</span>: <span class='bool-val'>false</span>,
             <span class='ident'>flags</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
             <span class='ident'>opts</span>: <span class='macro'>vec</span><span class='macro'>!</span>[],
             <span class='ident'>positionals</span>: <span class='ident'>VecMap</span>::<span class='ident'>new</span>(),
@@ -2395,11 +2402,13 @@
     }
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>gen_completions_to</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>for_shell</span>: <span class='ident'>Shell</span>, <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) {
-
-        <span class='self'>self</span>.<span class='ident'>propogate_help_version</span>();
-        <span class='self'>self</span>.<span class='ident'>build_bin_names</span>();
-        <span class='self'>self</span>.<span class='ident'>propogate_globals</span>();
-        <span class='self'>self</span>.<span class='ident'>propogate_settings</span>();
+        <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>propogated</span> {
+            <span class='self'>self</span>.<span class='ident'>propogate_help_version</span>();
+            <span class='self'>self</span>.<span class='ident'>build_bin_names</span>();
+            <span class='self'>self</span>.<span class='ident'>propogate_globals</span>();
+            <span class='self'>self</span>.<span class='ident'>propogate_settings</span>();
+            <span class='self'>self</span>.<span class='ident'>propogated</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+        }
 
         <span class='ident'>ComplGen</span>::<span class='ident'>new</span>(<span class='self'>self</span>).<span class='ident'>generate</span>(<span class='ident'>for_shell</span>, <span class='ident'>buf</span>)
     }
@@ -4491,6 +4500,7 @@
 {
     <span class='kw'>fn</span> <span class='ident'>clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='ident'>Parser</span> {
+            <span class='ident'>propogated</span>: <span class='self'>self</span>.<span class='ident'>propogated</span>,
             <span class='ident'>required</span>: <span class='self'>self</span>.<span class='ident'>required</span>.<span class='ident'>clone</span>(),
             <span class='ident'>short_list</span>: <span class='self'>self</span>.<span class='ident'>short_list</span>.<span class='ident'>clone</span>(),
             <span class='ident'>long_list</span>: <span class='self'>self</span>.<span class='ident'>long_list</span>.<span class='ident'>clone</span>(),

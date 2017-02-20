@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-0.3.2/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/thread_local-0.3.3/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -790,6 +790,11 @@
 <span id="746">746</span>
 <span id="747">747</span>
 <span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2016 Amanieu d&#39;Antras</span>
 <span class='comment'>//</span>
@@ -874,6 +879,7 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>Chain</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>option</span>::<span class='ident'>IntoIter</span> <span class='kw'>as</span> <span class='ident'>OptionIter</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>panic</span>::<span class='ident'>UnwindSafe</span>;
 <span class='kw'>use</span> <span class='ident'>unreachable</span>::{<span class='ident'>UncheckedOptionExt</span>, <span class='ident'>UncheckedResultExt</span>};
 
 <span class='doccomment'>/// Thread-local variable wrapper</span>
@@ -1175,6 +1181,8 @@
     }
 }
 
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>UnwindSafe</span><span class='op'>&gt;</span> <span class='ident'>UnwindSafe</span> <span class='kw'>for</span> <span class='ident'>ThreadLocal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {}
+
 <span class='kw'>struct</span> <span class='ident'>RawIter</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Send</span><span class='op'>&gt;</span> {
     <span class='ident'>remaining</span>: <span class='ident'>usize</span>,
     <span class='ident'>index</span>: <span class='ident'>usize</span>,
@@ -1383,6 +1391,8 @@
 
 <span class='doccomment'>/// An iterator that moves out of a `CachedThreadLocal`.</span>
 <span class='kw'>pub</span> <span class='kw'>type</span> <span class='ident'>CachedIntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>Chain</span><span class='op'>&lt;</span><span class='ident'>OptionIter</span><span class='op'>&lt;</span><span class='ident'>Box</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>, <span class='ident'>IntoIter</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;&gt;</span>;
+
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Send</span> <span class='op'>+</span> <span class='ident'>UnwindSafe</span><span class='op'>&gt;</span> <span class='ident'>UnwindSafe</span> <span class='kw'>for</span> <span class='ident'>CachedThreadLocal</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {}
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
