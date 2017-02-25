@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/serde_json/value.rs.html#1-1726' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/serde_json/value.rs.html#1-2233' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>The Value enum, a loosely typed way of representing any valid JSON value.</p>
 
 <h1 id='constructing-json' class='section-header'><a href='#constructing-json'>Constructing JSON</a></h1>
@@ -110,15 +110,9 @@ a TCP stream.</p>
 <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='string'>r#&quot; { &quot;name&quot;: &quot;John Doe&quot;, &quot;age&quot;: 43, ... } &quot;#</span>;
 <span class='kw'>let</span> <span class='ident'>v</span>: <span class='ident'>Value</span> <span class='op'>=</span> <span class='ident'>serde_json</span>::<span class='ident'>from_str</span>(<span class='ident'>data</span>)<span class='question-mark'>?</span>;
 <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Please call {} at the number {}&quot;</span>, <span class='ident'>v</span>[<span class='string'>&quot;name&quot;</span>], <span class='ident'>v</span>[<span class='string'>&quot;phones&quot;</span>][<span class='number'>0</span>]);</pre>
-</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use map::<a class='struct' href='../../serde_json/map/struct.Map.html' title='serde_json::map::Map'>Map</a>;</code></td></tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
-                       <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Map.html'
-                                  title='serde_json::value::Map'>Map</a></td>
-                           <td class='docblock-short'>
-                                <p>Represents a key/value type.</p>
-                           </td>
-                       </tr>
                        <tr class=' module-item'>
                            <td><a class='struct' href='struct.Number.html'
                                   title='serde_json::value::Number'>Number</a></td>

@@ -47,9 +47,40 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/serde_json/de.rs.html#876-882' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct StreamDeserializer&lt;R, T&gt; <span class='where'>where R: Read, T: <a class='trait' href='../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span> { /* fields omitted */ }</pre><div class='docblock'><p>Iterator that deserializes a stream into multiple JSON values.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R, T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a> for <a class='struct' href='../serde_json/de/struct.StreamDeserializer.html' title='serde_json::de::StreamDeserializer'>StreamDeserializer</a>&lt;R, T&gt; <span class='where'>where R: Read, T: <a class='trait' href='../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/serde_json/de.rs.html#884-905' title='goto source code'>[src]</a></span></h3>
+               </span><a class='srclink' href='../src/serde_json/de.rs.html#968-971' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct StreamDeserializer&lt;R, T&gt; { /* fields omitted */ }</pre><div class='docblock'><p>Iterator that deserializes a stream into multiple JSON values.</p>
+
+<p>A stream deserializer can be created from any JSON deserializer using the
+<code>Deserializer::into_iter</code> method.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
+
+<span class='kw'>use</span> <span class='ident'>serde_json</span>::{<span class='ident'>Deserializer</span>, <span class='ident'>Value</span>};
+
+<span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='string'>&quot;1 2 {\&quot;k\&quot;: 3}&quot;</span>;
+
+    <span class='kw'>let</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='ident'>Deserializer</span>::<span class='ident'>from_str</span>(<span class='ident'>data</span>).<span class='ident'>into_iter</span>::<span class='op'>&lt;</span><span class='ident'>Value</span><span class='op'>&gt;</span>();
+
+    <span class='kw'>for</span> <span class='ident'>value</span> <span class='kw'>in</span> <span class='ident'>stream</span> {
+        <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{}&quot;</span>, <span class='ident'>value</span>.<span class='ident'>unwrap</span>());
+    }
+}</pre>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R, T&gt; <a class='struct' href='../serde_json/de/struct.StreamDeserializer.html' title='serde_json::de::StreamDeserializer'>StreamDeserializer</a>&lt;R, T&gt; <span class='where'>where R: <a class='trait' href='../serde_json/de/trait.Read.html' title='serde_json::de::Read'>Read</a>, T: <a class='trait' href='../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/serde_json/de.rs.html#973-992' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(read: R) -&gt; Self</code></span></h4>
+<div class='docblock'><p>Create a JSON stream deserializer from one of the possible serde_json
+input sources.</p>
+
+<p>Typically it is more convenient to use one of these methods instead:</p>
+
+<ul>
+<li>Deserializer::from_str(...).into_iter()</li>
+<li>Deserializer::from_bytes(...).into_iter()</li>
+<li>Deserializer::from_iter(...).into_iter()</li>
+<li>Deserializer::from_reader(...).into_iter()</li>
+</ul>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R, T&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a> for <a class='struct' href='../serde_json/de/struct.StreamDeserializer.html' title='serde_json::de::StreamDeserializer'>StreamDeserializer</a>&lt;R, T&gt; <span class='where'>where R: <a class='trait' href='../serde_json/de/trait.Read.html' title='serde_json::de::Read'>Read</a>, T: <a class='trait' href='../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/serde_json/de.rs.html#994-1015' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='associatedtype.Item' class='type'><span id='Item.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html#associatedtype.Item' class='type'>Item</a> = <a class='type' href='../serde_json/type.Result.html' title='serde_json::Result'>Result</a>&lt;T&gt;</code></span></h4>
 <div class='docblock'><p>The type of the elements being iterated over.</p>
 </div><h4 id='method.next' class='method'><span id='next.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html#tymethod.next' class='fnname'>next</a>(&amp;mut self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='type' href='../serde_json/type.Result.html' title='serde_json::Result'>Result</a>&lt;T&gt;&gt;</code></span></h4>

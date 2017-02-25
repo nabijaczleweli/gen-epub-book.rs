@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.7/src/error.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.9/src/error.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>error.rs.html -- source</title>
@@ -57,6 +57,8 @@
 <span id="13">13</span>
 <span id="14">14</span>
 <span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! A stand-in for `std::error`</span>
 <span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>fmt</span>::{<span class='ident'>Debug</span>, <span class='ident'>Display</span>};
@@ -71,7 +73,9 @@
     <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span>;
 
     <span class='doccomment'>/// The lower-level cause of this error, if any.</span>
-    <span class='kw'>fn</span> <span class='ident'>cause</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Error</span><span class='op'>&gt;</span> { <span class='prelude-val'>None</span> }
+    <span class='kw'>fn</span> <span class='ident'>cause</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Error</span><span class='op'>&gt;</span> {
+        <span class='prelude-val'>None</span>
+    }
 }
 </pre>
 </section>

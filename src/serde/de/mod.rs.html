@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.7/src/de/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.9/src/de/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -1644,6 +1644,15 @@
 <span id="1600">1600</span>
 <span id="1601">1601</span>
 <span id="1602">1602</span>
+<span id="1603">1603</span>
+<span id="1604">1604</span>
+<span id="1605">1605</span>
+<span id="1606">1606</span>
+<span id="1607">1607</span>
+<span id="1608">1608</span>
+<span id="1609">1609</span>
+<span id="1610">1610</span>
+<span id="1611">1611</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Generic data structure deserialization framework.</span>
 <span class='doccomment'>//!</span>
@@ -1828,7 +1837,10 @@
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;invalid type: {}, expected {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>unexp</span>, <span class='self'>self</span>.<span class='ident'>exp</span>)
             }
         }
-        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>InvalidType</span> { <span class='ident'>unexp</span>: <span class='ident'>unexp</span>, <span class='ident'>exp</span>: <span class='ident'>exp</span> })
+        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>InvalidType</span> {
+            <span class='ident'>unexp</span>: <span class='ident'>unexp</span>,
+            <span class='ident'>exp</span>: <span class='ident'>exp</span>,
+        })
     }
 
     <span class='doccomment'>/// Raised when a `Deserialize` receives a value of the right type but that</span>
@@ -1854,7 +1866,10 @@
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;invalid value: {}, expected {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>unexp</span>, <span class='self'>self</span>.<span class='ident'>exp</span>)
             }
         }
-        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>InvalidValue</span> { <span class='ident'>unexp</span>: <span class='ident'>unexp</span>, <span class='ident'>exp</span>: <span class='ident'>exp</span> })
+        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>InvalidValue</span> {
+            <span class='ident'>unexp</span>: <span class='ident'>unexp</span>,
+            <span class='ident'>exp</span>: <span class='ident'>exp</span>,
+        })
     }
 
     <span class='doccomment'>/// Raised when deserializing a sequence or map and the input data contains</span>
@@ -1876,7 +1891,10 @@
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>formatter</span>, <span class='string'>&quot;invalid length {}, expected {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>len</span>, <span class='self'>self</span>.<span class='ident'>exp</span>)
             }
         }
-        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>InvalidLength</span> { <span class='ident'>len</span>: <span class='ident'>len</span>, <span class='ident'>exp</span>: <span class='ident'>exp</span> })
+        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>InvalidLength</span> {
+            <span class='ident'>len</span>: <span class='ident'>len</span>,
+            <span class='ident'>exp</span>: <span class='ident'>exp</span>,
+        })
     }
 
     <span class='doccomment'>/// Raised when a `Deserialize` enum type received a variant with an</span>
@@ -1900,7 +1918,10 @@
                 }
             }
         }
-        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>UnknownVariant</span> { <span class='ident'>variant</span>: <span class='ident'>variant</span>, <span class='ident'>expected</span>: <span class='ident'>expected</span> })
+        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>UnknownVariant</span> {
+            <span class='ident'>variant</span>: <span class='ident'>variant</span>,
+            <span class='ident'>expected</span>: <span class='ident'>expected</span>,
+        })
     }
 
     <span class='doccomment'>/// Raised when a `Deserialize` struct type received a field with an</span>
@@ -1924,7 +1945,10 @@
                 }
             }
         }
-        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>UnknownField</span> { <span class='ident'>field</span>: <span class='ident'>field</span>, <span class='ident'>expected</span>: <span class='ident'>expected</span> })
+        <span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='ident'>UnknownField</span> {
+            <span class='ident'>field</span>: <span class='ident'>field</span>,
+            <span class='ident'>expected</span>: <span class='ident'>expected</span>,
+        })
     }
 
     <span class='doccomment'>/// Raised when a `Deserialize` struct type expected to receive a required</span>
@@ -2117,7 +2141,9 @@
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>formatter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span>;
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Expected</span> <span class='kw'>for</span> <span class='ident'>T</span> <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Visitor</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>Expected</span> <span class='kw'>for</span> <span class='ident'>T</span>
+    <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Visitor</span>
+{
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>formatter</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
         <span class='self'>self</span>.<span class='ident'>expecting</span>(<span class='ident'>formatter</span>)
     }
@@ -2168,8 +2194,7 @@
     <span class='doccomment'>/// manual for more information about how to implement this method.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// [impl-deserialize]: https://serde.rs/impl-deserialize.html</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>;
 }
 
 <span class='doccomment'>/// `DeserializeSeed` is the stateful form of the `Deserialize` trait. If you</span>
@@ -2317,8 +2342,7 @@
 
     <span class='doccomment'>/// Equivalent to the more common `Deserialize::deserialize` method, except</span>
     <span class='doccomment'>/// with some initial piece of data (the seed) passed in.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>;
 }
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='ident'>DeserializeSeed</span> <span class='kw'>for</span> <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
@@ -2431,56 +2455,43 @@
     <span class='doccomment'>/// `Deserializer::deserialize` means your data type will be able to</span>
     <span class='doccomment'>/// deserialize from self-describing formats only, ruling out Bincode and</span>
     <span class='doccomment'>/// many others.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a `bool` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_bool</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_bool</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a `u8` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_u8</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_u8</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a `u16` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_u16</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_u16</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a `u32` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_u32</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_u32</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a `u64` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_u64</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_u64</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting an `i8` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_i8</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_i8</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting an `i16` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_i16</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_i16</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting an `i32` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_i32</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_i32</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting an `i64` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_i64</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_i64</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a `f32` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_f32</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_f32</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a `f64` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_f64</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_f64</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a `char` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_char</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_char</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a string value and does</span>
     <span class='doccomment'>/// not benefit from taking ownership of buffered data owned by the</span>
@@ -2489,8 +2500,7 @@
     <span class='doccomment'>/// If the `Visitor` would benefit from taking ownership of `String` data,</span>
     <span class='doccomment'>/// indiciate this to the `Deserializer` by using `deserialize_string`</span>
     <span class='doccomment'>/// instead.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_str</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_str</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a string value and would</span>
     <span class='doccomment'>/// benefit from taking ownership of buffered data owned by the</span>
@@ -2499,8 +2509,7 @@
     <span class='doccomment'>/// If the `Visitor` would not benefit from taking ownership of `String`</span>
     <span class='doccomment'>/// data, indicate that to the `Deserializer` by using `deserialize_str`</span>
     <span class='doccomment'>/// instead.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_string</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_string</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a byte array and does not</span>
     <span class='doccomment'>/// benefit from taking ownership of buffered data owned by the</span>
@@ -2509,8 +2518,7 @@
     <span class='doccomment'>/// If the `Visitor` would benefit from taking ownership of `Vec&lt;u8&gt;` data,</span>
     <span class='doccomment'>/// indicate this to the `Deserializer` by using `deserialize_byte_buf`</span>
     <span class='doccomment'>/// instead.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_bytes</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_bytes</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a byte array and would</span>
     <span class='doccomment'>/// benefit from taking ownership of buffered data owned by the</span>
@@ -2519,44 +2527,43 @@
     <span class='doccomment'>/// If the `Visitor` would not benefit from taking ownership of `Vec&lt;u8&gt;`</span>
     <span class='doccomment'>/// data, indicate that to the `Deserializer` by using `deserialize_bytes`</span>
     <span class='doccomment'>/// instead.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_byte_buf</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_byte_buf</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting an optional value.</span>
     <span class='doccomment'>///</span>
     <span class='doccomment'>/// This allows deserializers that encode an optional value as a nullable</span>
     <span class='doccomment'>/// value to convert the null value into `None` and a regular value into</span>
     <span class='doccomment'>/// `Some(value)`.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_option</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a unit value.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_unit</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_unit</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a unit struct with a</span>
     <span class='doccomment'>/// particular name.</span>
     <span class='kw'>fn</span> <span class='ident'>deserialize_unit_struct</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
                                   <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                  <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                  <span class='ident'>visitor</span>: <span class='ident'>V</span>)
+                                  <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a newtype struct with a</span>
     <span class='doccomment'>/// particular name.</span>
     <span class='kw'>fn</span> <span class='ident'>deserialize_newtype_struct</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
                                      <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                     <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                     <span class='ident'>visitor</span>: <span class='ident'>V</span>)
+                                     <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a sequence of values.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_seq</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_seq</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a sequence of values and</span>
     <span class='doccomment'>/// knows how many values there are without looking at the serialized data.</span>
     <span class='kw'>fn</span> <span class='ident'>deserialize_seq_fixed_size</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
                                      <span class='ident'>len</span>: <span class='ident'>usize</span>,
-                                     <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                     <span class='ident'>visitor</span>: <span class='ident'>V</span>)
+                                     <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a tuple value with a</span>
@@ -2569,19 +2576,20 @@
     <span class='kw'>fn</span> <span class='ident'>deserialize_tuple_struct</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
                                    <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
                                    <span class='ident'>len</span>: <span class='ident'>usize</span>,
-                                   <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                                   <span class='ident'>visitor</span>: <span class='ident'>V</span>)
+                                   <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a map of key-value pairs.</span>
-    <span class='kw'>fn</span> <span class='ident'>deserialize_map</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
+    <span class='kw'>fn</span> <span class='ident'>deserialize_map</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting a struct with a particular</span>
     <span class='doccomment'>/// name and fields.</span>
     <span class='kw'>fn</span> <span class='ident'>deserialize_struct</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
                              <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
                              <span class='ident'>fields</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>],
-                             <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                             <span class='ident'>visitor</span>: <span class='ident'>V</span>)
+                             <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type is expecting the name of a struct</span>
@@ -2594,7 +2602,8 @@
     <span class='kw'>fn</span> <span class='ident'>deserialize_enum</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
                            <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
                            <span class='ident'>variants</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>],
-                           <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                           <span class='ident'>visitor</span>: <span class='ident'>V</span>)
+                           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Hint that the `Deserialize` type needs to deserialize a value whose type</span>
@@ -2663,77 +2672,77 @@
 
     <span class='doccomment'>/// Deserialize a `bool` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_bool</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Bool</span>(<span class='ident'>v</span>), <span class='kw-2'>&amp;</span><span class='self'>self</span>))
     }
 
     <span class='doccomment'>/// Deserialize an `i8` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_i8</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_i64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Deserialize an `i16` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_i16</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_i64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Deserialize an `i32` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_i32</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_i64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>i64</span>)
     }
 
     <span class='doccomment'>/// Deserialize an `i64` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_i64</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Signed</span>(<span class='ident'>v</span>), <span class='kw-2'>&amp;</span><span class='self'>self</span>))
     }
 
     <span class='doccomment'>/// Deserialize a `u8` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_u8</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_u64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Deserialize a `u16` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_u16</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_u64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Deserialize a `u32` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_u32</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_u64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u64</span>)
     }
 
     <span class='doccomment'>/// Deserialize a `u64` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_u64</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Unsigned</span>(<span class='ident'>v</span>), <span class='kw-2'>&amp;</span><span class='self'>self</span>))
     }
 
     <span class='doccomment'>/// Deserialize a `f32` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_f32</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_f64</span>(<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>f64</span>)
     }
 
     <span class='doccomment'>/// Deserialize a `f64` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_f64</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Float</span>(<span class='ident'>v</span>), <span class='kw-2'>&amp;</span><span class='self'>self</span>))
     }
@@ -2741,7 +2750,7 @@
     <span class='doccomment'>/// Deserialize a `char` into a `Value`.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>visit_char</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_str</span>(::<span class='ident'>utils</span>::<span class='ident'>encode_utf8</span>(<span class='ident'>v</span>).<span class='ident'>as_str</span>())
     }
@@ -2757,7 +2766,7 @@
     <span class='doccomment'>/// It is never correct to implement `visit_string` without implementing</span>
     <span class='doccomment'>/// `visit_str`. Implement neither, both, or just `visit_str`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_str</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Str</span>(<span class='ident'>v</span>), <span class='kw-2'>&amp;</span><span class='self'>self</span>))
     }
@@ -2779,28 +2788,28 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
     <span class='kw'>fn</span> <span class='ident'>visit_string</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>v</span>)
     }
 
     <span class='doccomment'>/// Deserialize a `()` into a `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_unit</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Unit</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>))
     }
 
     <span class='doccomment'>/// Deserialize an absent optional `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_none</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='prelude-ty'>Option</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>))
     }
 
     <span class='doccomment'>/// Deserialize a present optional `Value`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_some</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>,
+        <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>
     {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>deserializer</span>;
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='prelude-ty'>Option</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>))
@@ -2808,7 +2817,7 @@
 
     <span class='doccomment'>/// Deserialize `Value` as a newtype struct.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_newtype_struct</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>deserializer</span>: <span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>D</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>,
+        <span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>Deserializer</span>
     {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>deserializer</span>;
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>NewtypeStruct</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>))
@@ -2816,7 +2825,7 @@
 
     <span class='doccomment'>/// Deserialize `Value` as a sequence of elements.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_seq</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>V</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span>,
+        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span>
     {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>visitor</span>;
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Seq</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>))
@@ -2824,7 +2833,7 @@
 
     <span class='doccomment'>/// Deserialize `Value` as a key-value map.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_map</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>V</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>MapVisitor</span>,
+        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>MapVisitor</span>
     {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>visitor</span>;
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Map</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>))
@@ -2832,7 +2841,7 @@
 
     <span class='doccomment'>/// Deserialize `Value` as an enum.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_enum</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>V</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>EnumVisitor</span>,
+        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>EnumVisitor</span>
     {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>visitor</span>;
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Enum</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>))
@@ -2849,7 +2858,7 @@
     <span class='doccomment'>/// It is never correct to implement `visit_byte_buf` without implementing</span>
     <span class='doccomment'>/// `visit_bytes`. Implement neither, both, or just `visit_bytes`.</span>
     <span class='kw'>fn</span> <span class='ident'>visit_bytes</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>v</span>;
         <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>invalid_type</span>(<span class='ident'>Unexpected</span>::<span class='ident'>Bytes</span>(<span class='ident'>v</span>), <span class='kw-2'>&amp;</span><span class='self'>self</span>))
@@ -2872,7 +2881,7 @@
     <span class='doccomment'>/// `Vec&lt;u8&gt;`.</span>
     <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
     <span class='kw'>fn</span> <span class='ident'>visit_byte_buf</span><span class='op'>&lt;</span><span class='ident'>E</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>Value</span>, <span class='ident'>E</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>,
+        <span class='kw'>where</span> <span class='ident'>E</span>: <span class='ident'>Error</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_bytes</span>(<span class='kw-2'>&amp;</span><span class='ident'>v</span>)
     }
@@ -2916,7 +2925,9 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>SeqVisitor</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>V</span> <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>V</span><span class='op'>&gt;</span> <span class='ident'>SeqVisitor</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>V</span>
+    <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>SeqVisitor</span>
+{
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>V</span>::<span class='ident'>Error</span>;
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -2973,7 +2984,10 @@
     <span class='doccomment'>/// `Deserialize` implementations should typically use `MapVisitor::visit`</span>
     <span class='doccomment'>/// instead.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>visit_seed</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>kseed</span>: <span class='ident'>K</span>, <span class='ident'>vseed</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>K</span>::<span class='ident'>Value</span>, <span class='ident'>V</span>::<span class='ident'>Value</span>)<span class='op'>&gt;</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>visit_seed</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
+                        <span class='ident'>kseed</span>: <span class='ident'>K</span>,
+                        <span class='ident'>vseed</span>: <span class='ident'>V</span>)
+                        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>K</span>::<span class='ident'>Value</span>, <span class='ident'>V</span>::<span class='ident'>Value</span>)<span class='op'>&gt;</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>DeserializeSeed</span>,
               <span class='ident'>V</span>: <span class='ident'>DeserializeSeed</span>
     {
@@ -2982,7 +2996,7 @@
                 <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>visit_value_seed</span>(<span class='ident'>vseed</span>));
                 <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>((<span class='ident'>key</span>, <span class='ident'>value</span>)))
             }
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>)
+            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>),
         }
     }
 
@@ -3017,7 +3031,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>visit</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>K</span>, <span class='ident'>V</span>)<span class='op'>&gt;</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>Deserialize</span>,
-              <span class='ident'>V</span>: <span class='ident'>Deserialize</span>,
+              <span class='ident'>V</span>: <span class='ident'>Deserialize</span>
     {
         <span class='self'>self</span>.<span class='ident'>visit_seed</span>(<span class='ident'>PhantomData</span>, <span class='ident'>PhantomData</span>)
     }
@@ -3029,7 +3043,9 @@
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>V_</span><span class='op'>&gt;</span> <span class='ident'>MapVisitor</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>V_</span> <span class='kw'>where</span> <span class='ident'>V_</span>: <span class='ident'>MapVisitor</span> {
+<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>V_</span><span class='op'>&gt;</span> <span class='ident'>MapVisitor</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='ident'>V_</span>
+    <span class='kw'>where</span> <span class='ident'>V_</span>: <span class='ident'>MapVisitor</span>
+{
     <span class='kw'>type</span> <span class='ident'>Error</span> <span class='op'>=</span> <span class='ident'>V_</span>::<span class='ident'>Error</span>;
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -3047,7 +3063,10 @@
     }
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>visit_seed</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>kseed</span>: <span class='ident'>K</span>, <span class='ident'>vseed</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>K</span>::<span class='ident'>Value</span>, <span class='ident'>V</span>::<span class='ident'>Value</span>)<span class='op'>&gt;</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>visit_seed</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
+                        <span class='ident'>kseed</span>: <span class='ident'>K</span>,
+                        <span class='ident'>vseed</span>: <span class='ident'>V</span>)
+                        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>K</span>::<span class='ident'>Value</span>, <span class='ident'>V</span>::<span class='ident'>Value</span>)<span class='op'>&gt;</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>DeserializeSeed</span>,
               <span class='ident'>V</span>: <span class='ident'>DeserializeSeed</span>
     {
@@ -3057,7 +3076,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>visit</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span>(<span class='ident'>K</span>, <span class='ident'>V</span>)<span class='op'>&gt;</span>, <span class='ident'>V_</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>Deserialize</span>,
-              <span class='ident'>V</span>: <span class='ident'>Deserialize</span>,
+              <span class='ident'>V</span>: <span class='ident'>Deserialize</span>
     {
         (<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>visit</span>()
     }
@@ -3093,7 +3112,7 @@
     <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
     <span class='doccomment'>/// The `Visitor` that will be used to deserialize the content of the enum</span>
     <span class='doccomment'>/// variant.</span>
-    <span class='kw'>type</span> <span class='ident'>Variant</span>: <span class='ident'>VariantVisitor</span><span class='op'>&lt;</span><span class='ident'>Error</span><span class='op'>=</span><span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class='kw'>type</span> <span class='ident'>Variant</span>: <span class='ident'>VariantVisitor</span><span class='op'>&lt;</span><span class='ident'>Error</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// `visit_variant` is called to identify which variant to deserialize.</span>
     <span class='doccomment'>///</span>
@@ -3186,9 +3205,7 @@
     <span class='doccomment'>///     Err(Error::invalid_type(unexp, &amp;&quot;tuple variant&quot;))</span>
     <span class='doccomment'>/// }</span>
     <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>visit_tuple</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
-                      <span class='ident'>len</span>: <span class='ident'>usize</span>,
-                      <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+    <span class='kw'>fn</span> <span class='ident'>visit_tuple</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 
     <span class='doccomment'>/// Called when deserializing a struct-like variant.</span>
@@ -3211,7 +3228,8 @@
     <span class='doccomment'>/// ```</span>
     <span class='kw'>fn</span> <span class='ident'>visit_struct</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
                        <span class='ident'>fields</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>],
-                       <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
+                       <span class='ident'>visitor</span>: <span class='ident'>V</span>)
+                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
         <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>;
 }
 
