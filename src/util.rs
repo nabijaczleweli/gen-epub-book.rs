@@ -55,7 +55,15 @@ pub fn uppercase_first(s: &str) -> String {
 /// assert_eq!(&xhtml_path_id("./abolish/the/../burgeoisie.html"), "abolish-the-burgeoisie");
 /// ```
 pub fn xhtml_path_id<P: AsRef<Path>>(p: P) -> String {
-    p.as_ref().with_extension("").to_string_lossy().replace('\u{FFFD}', "").replace('\\', "/").replace("../", "").replace("./", "").replace('/', "-")
+    p.as_ref()
+        .with_extension("")
+        .to_string_lossy()
+        .replace('\u{FFFD}', "")
+        .replace('\\', "/")
+        .replace("../", "")
+        .replace("./", "")
+        .replace('/', "-")
+        .replace('.', "_")
 }
 
 /// Get filename to use for file specified by path.
