@@ -46,6 +46,17 @@ fn network_cover() {
 }
 
 #[test]
+fn include() {
+    assert_eq!(&BookElement::Include(PathBuf::from("style.css")).to_string(), "Include: style.css");
+}
+
+#[test]
+fn network_include() {
+    assert_eq!(BookElement::NetworkInclude(Url::parse(TAIWAN_RECYCLING_SYMBOL_URL).unwrap()).to_string(),
+               format!("Network-Include: {}", TAIWAN_RECYCLING_SYMBOL_URL));
+}
+
+#[test]
 fn author() {
     assert_eq!(&BookElement::Author("nabijaczleweli".to_string()).to_string(), "Author: nabijaczleweli");
 }

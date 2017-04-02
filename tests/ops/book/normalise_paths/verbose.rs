@@ -28,7 +28,7 @@ fn correct() {
                Some(("cover".to_string(), PathBuf::from("cover.png"), EPubContentType::File(tf.join("cover.png").canonicalize().unwrap()))));
     assert_eq!(&buf.iter().map(|&i| i as char).collect::<String>(),
                "Normalised cover.png to $TEMP/ops-book-normalise-paths-verbose-correct/cover.png for Cover.\n\
-                Normalised content/ch01.html to $TEMP/ops-book-normalise-paths-verbose-correct/content/ch01.html for Content or Image.\n");
+                Normalised content/ch01.html to $TEMP/ops-book-normalise-paths-verbose-correct/content/ch01.html for Content, Image or Include.\n");
 }
 
 #[test]
@@ -47,7 +47,7 @@ fn nonexistant() {
 
     assert_eq!(book.normalise_paths(&("$TEMP/ops-book-normalise-paths-verbose-nonexistant/".to_string(), tf.clone()), true, &mut buf),
                Err(Error::FileNotFound {
-                   who: "Content or Image",
+                   who: "Content, Image or Include",
                    path: tf.join("ch01.html"),
                }));
     assert_eq!(book.cover,

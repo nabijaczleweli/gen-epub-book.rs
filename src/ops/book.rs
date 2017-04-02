@@ -126,6 +126,10 @@ impl EPubBook {
                                                                      EPubContentType::Network(c)),
                                                                     "Cover and Network-Cover"))
                 }
+                BookElement::Include(c) => non_content.push((xhtml_path_id(&c), book_filename(&c), EPubContentType::File(c))),
+                BookElement::NetworkInclude(c) => {
+                    non_content.push((xhtml_url_id(&c).to_string(), PathBuf::from(c.path_segments().unwrap().last().unwrap()), EPubContentType::Network(c)));
+                }
                 BookElement::Author(a) => author = try!(EPubBook::handle_essential_element(author, a, "Author")),
                 BookElement::Date(d) => date = try!(EPubBook::handle_essential_element(date, d, "Date")),
                 BookElement::Language(l) => language = try!(EPubBook::handle_essential_element(language, l, "Language")),
@@ -193,7 +197,7 @@ impl EPubBook {
 
         for ctnt in self.content.iter_mut().chain(self.non_content.iter_mut()) {
             if let EPubContentType::File(ref mut pb) = ctnt.2 {
-                try!(EPubBook::normalise_path(relroot, pb, "Content or Image", verbose, verb_out));
+                try!(EPubBook::normalise_path(relroot, pb, "Content, Image or Include", verbose, verb_out));
             }
         }
 

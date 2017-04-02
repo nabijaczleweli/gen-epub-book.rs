@@ -71,6 +71,22 @@ pub enum BookElement {
     /// Amount: 0-1<br />
     /// Remarks: exclusive with Cover
     NetworkCover(Url),
+    /// Auxilliary file to include in e-book
+    ///
+    /// This is useful for, e.g., CSS.
+    ///
+    /// Required: no<br />
+    /// Value: relative path to (X)HTML chunk<br />
+    /// Amount: any
+    Include(PathBuf),
+    /// URL of auxilliary file to include in e-book
+    ///
+    /// This is useful for, e.g., fonts.
+    ///
+    /// Required: no<br />
+    /// Type: file URL<br />
+    /// Amount: any
+    NetworkInclude(Url),
     /// E-book's author
     ///
     /// Required: yes<br />
@@ -149,6 +165,8 @@ impl BookElement {
                         "Network-Image-Content" => Ok(Some(BookElement::NetworkImageContent(try!(BookElement::parse_url(ctnt))))),
                         "Cover" => Ok(Some(BookElement::Cover(PathBuf::from(ctnt)))),
                         "Network-Cover" => Ok(Some(BookElement::NetworkCover(try!(BookElement::parse_url(ctnt))))),
+                        "Include" => Ok(Some(BookElement::Include(PathBuf::from(ctnt)))),
+                        "Network-Include" => Ok(Some(BookElement::NetworkInclude(try!(BookElement::parse_url(ctnt))))),
                         "Author" => Ok(Some(BookElement::Author(ctnt.to_string()))),
                         "Date" => Ok(Some(BookElement::Date(try!(BookElement::parse_datetime(ctnt))))),
                         "Language" => Ok(Some(BookElement::Language(ctnt.to_string()))),
@@ -187,6 +205,8 @@ impl BookElement {
             BookElement::NetworkImageContent(_) => "Network-Image-Content",
             BookElement::Cover(_) => "Cover",
             BookElement::NetworkCover(_) => "Network-Cover",
+            BookElement::Include(_) => "Include",
+            BookElement::NetworkInclude(_) => "Network-Include",
             BookElement::Author(_) => "Author",
             BookElement::Date(_) => "Date",
             BookElement::Language(_) => "Language",
@@ -204,9 +224,11 @@ impl fmt::Display for BookElement {
             BookElement::Language(ref s) => write!(f, "{}", s),
             BookElement::Content(ref pb) |
             BookElement::ImageContent(ref pb) |
-            BookElement::Cover(ref pb) => write!(f, "{}", pb.display()),
+            BookElement::Cover(ref pb) |
+            BookElement::Include(ref pb) => write!(f, "{}", pb.display()),
             BookElement::NetworkImageContent(ref u) |
-            BookElement::NetworkCover(ref u) => write!(f, "{}", u.as_str()),
+            BookElement::NetworkCover(ref u) |
+            BookElement::NetworkInclude(ref u) => write!(f, "{}", u.as_str()),
             BookElement::Date(ref d) => write!(f, "{}", d.to_rfc3339()),
         }
     }

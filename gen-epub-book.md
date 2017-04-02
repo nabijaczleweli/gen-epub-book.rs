@@ -95,6 +95,20 @@ keys are ignored, lines that don't match the format are ignored.
     Amount: 0-1
     Remarks: exclusive with Cover
 
+  Include
+
+    Required: no
+    Type: file path
+    Value: auxilliary file to include in e-book
+    Amount: any
+
+  Network-Include
+
+    Required: no
+    Type: file URL
+    Value: URL of auxilliary file to include in e-book
+    Amount: any
+
   Author
 
     Required: yes
