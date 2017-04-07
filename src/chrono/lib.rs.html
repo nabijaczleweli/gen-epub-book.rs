@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -1249,7 +1250,7 @@
     <span class='doccomment'>/// `w.succ()`: | `Tue` | `Wed` | `Thu` | `Fri` | `Sat` | `Sun` | `Mon`</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>succ</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Weekday</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Tue</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Wed</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Thu</span>,
@@ -1267,7 +1268,7 @@
     <span class='doccomment'>/// `w.pred()`: | `Sun` | `Mon` | `Tue` | `Wed` | `Thu` | `Fri` | `Sat`</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>pred</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Weekday</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Sun</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Mon</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='ident'>Weekday</span>::<span class='ident'>Tue</span>,
@@ -1285,7 +1286,7 @@
     <span class='doccomment'>/// `w.number_from_monday()`: | 1     | 2     | 3     | 4     | 5     | 6     | 7</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>number_from_monday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='number'>1</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='number'>2</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='number'>3</span>,
@@ -1303,7 +1304,7 @@
     <span class='doccomment'>/// `w.number_from_sunday()`: | 2     | 3     | 4     | 5     | 6     | 7     | 1</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>number_from_sunday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='number'>2</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='number'>3</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='number'>4</span>,
@@ -1321,7 +1322,7 @@
     <span class='doccomment'>/// `w.num_days_from_monday()`: | 0     | 1     | 2     | 3     | 4     | 5     | 6</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>num_days_from_monday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='number'>0</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='number'>1</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='number'>2</span>,
@@ -1339,7 +1340,7 @@
     <span class='doccomment'>/// `w.num_days_from_sunday()`: | 1     | 2     | 3     | 4     | 5     | 6     | 0</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>num_days_from_sunday</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Weekday</span>::<span class='ident'>Mon</span> <span class='op'>=&gt;</span> <span class='number'>1</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Tue</span> <span class='op'>=&gt;</span> <span class='number'>2</span>,
             <span class='ident'>Weekday</span>::<span class='ident'>Wed</span> <span class='op'>=&gt;</span> <span class='number'>3</span>,

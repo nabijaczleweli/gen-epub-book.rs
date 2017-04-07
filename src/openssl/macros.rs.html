@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/macros.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/macros.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>macros.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -281,7 +282,7 @@
                 <span class='ident'>cvt_p</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>(<span class='ident'>bio</span>.<span class='ident'>as_ptr</span>(),
                          <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(),
                          <span class='prelude-val'>None</span>,
-                         <span class='ident'>passphrase</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+                         <span class='ident'>passphrase</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
                     .<span class='ident'>map</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)
             }
         }
@@ -303,7 +304,7 @@
                 <span class='ident'>cvt_p</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>(<span class='ident'>bio</span>.<span class='ident'>as_ptr</span>(),
                          <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(),
                          <span class='prelude-val'>Some</span>(::<span class='ident'>util</span>::<span class='ident'>invoke_passwd_cb</span>::<span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>),
-                         <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>cb</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+                         <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>cb</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
                     .<span class='ident'>map</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>)
             }
         }
@@ -339,7 +340,7 @@
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>f</span>(<span class='ident'>bio</span>.<span class='ident'>as_ptr</span>(),
                             <span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
                             <span class='ident'>cipher</span>.<span class='ident'>as_ptr</span>(),
-                            <span class='ident'>passphrase</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
+                            <span class='ident'>passphrase</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _,
                             <span class='ident'>passphrase</span>.<span class='ident'>len</span>() <span class='kw'>as</span> ::<span class='ident'>libc</span>::<span class='ident'>c_int</span>,
                             <span class='prelude-val'>None</span>,
                             <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>())));

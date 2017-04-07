@@ -9,6 +9,7 @@
 
     <title>decompose.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -246,7 +247,7 @@
 
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>char</span><span class='op'>&gt;</span> {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>DecompositionType</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>DecompositionType</span>::<span class='kw-2'>*</span>;
 
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>buffer</span>.<span class='ident'>first</span>() {
             <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span>(<span class='ident'>c</span>, <span class='number'>0</span>)) <span class='op'>=&gt;</span> {
@@ -269,9 +270,9 @@
                     <span class='kw'>let</span> <span class='ident'>callback</span> <span class='op'>=</span> <span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> {
                         <span class='kw'>let</span> <span class='ident'>class</span> <span class='op'>=</span>
                             <span class='kw'>super</span>::<span class='ident'>char</span>::<span class='ident'>canonical_combining_class</span>(<span class='ident'>d</span>);
-                        <span class='kw'>if</span> <span class='ident'>class</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='op'>*</span><span class='ident'>sorted</span> {
+                        <span class='kw'>if</span> <span class='ident'>class</span> <span class='op'>==</span> <span class='number'>0</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='kw-2'>*</span><span class='ident'>sorted</span> {
                             <span class='ident'>canonical_sort</span>(<span class='ident'>buffer</span>);
-                            <span class='op'>*</span><span class='ident'>sorted</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
+                            <span class='kw-2'>*</span><span class='ident'>sorted</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
                         }
                         <span class='ident'>buffer</span>.<span class='ident'>push</span>((<span class='ident'>d</span>, <span class='ident'>class</span>));
                     };
@@ -284,7 +285,7 @@
                         }
                     }
                 }
-                <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>sorted</span> {
+                <span class='kw'>if</span> <span class='kw-2'>*</span><span class='ident'>sorted</span> {
                     <span class='kw'>break</span>
                 }
             }

@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/pkcs12.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/pkcs12.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>pkcs12.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -274,6 +275,22 @@
 <span id="230">230</span>
 <span id="231">231</span>
 <span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! PKCS #12 archives.</span>
 
@@ -319,7 +336,12 @@
 
             <span class='kw'>let</span> <span class='ident'>pkey</span> <span class='op'>=</span> <span class='ident'>PKey</span>::<span class='ident'>from_ptr</span>(<span class='ident'>pkey</span>);
             <span class='kw'>let</span> <span class='ident'>cert</span> <span class='op'>=</span> <span class='ident'>X509</span>::<span class='ident'>from_ptr</span>(<span class='ident'>cert</span>);
-            <span class='kw'>let</span> <span class='ident'>chain</span> <span class='op'>=</span> <span class='ident'>Stack</span>::<span class='ident'>from_ptr</span>(<span class='ident'>chain</span>);
+
+            <span class='kw'>let</span> <span class='ident'>chain</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>chain</span>.<span class='ident'>is_null</span>() {
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Stack</span>::<span class='ident'>new</span>())
+            } <span class='kw'>else</span> {
+                <span class='ident'>Stack</span>::<span class='ident'>from_ptr</span>(<span class='ident'>chain</span>)
+            };
 
             <span class='prelude-val'>Ok</span>(<span class='ident'>ParsedPkcs12</span> {
                 <span class='ident'>pkey</span>: <span class='ident'>pkey</span>,
@@ -357,6 +379,7 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ParsedPkcs12</span> {
     <span class='kw'>pub</span> <span class='ident'>pkey</span>: <span class='ident'>PKey</span>,
     <span class='kw'>pub</span> <span class='ident'>cert</span>: <span class='ident'>X509</span>,
+    <span class='comment'>// FIXME Make this Option&lt;Stack&gt; in the next breaking release</span>
     <span class='kw'>pub</span> <span class='ident'>chain</span>: <span class='ident'>Stack</span><span class='op'>&lt;</span><span class='ident'>X509</span><span class='op'>&gt;</span>,
 }
 
@@ -430,8 +453,8 @@
             <span class='comment'>// https://www.openssl.org/docs/man1.0.2/crypto/PKCS12_create.html</span>
             <span class='kw'>let</span> <span class='ident'>keytype</span> <span class='op'>=</span> <span class='number'>0</span>;
 
-            <span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>PKCS12_create</span>(<span class='ident'>pass</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
-                                                <span class='ident'>friendly_name</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
+            <span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>PKCS12_create</span>(<span class='ident'>pass</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _,
+                                                <span class='ident'>friendly_name</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _,
                                                 <span class='ident'>pkey</span>,
                                                 <span class='ident'>cert</span>,
                                                 <span class='ident'>ca</span>,
@@ -457,7 +480,7 @@
     <span class='kw'>use</span> <span class='ident'>x509</span>::{<span class='ident'>X509</span>, <span class='ident'>X509Name</span>};
     <span class='kw'>use</span> <span class='ident'>x509</span>::<span class='ident'>extension</span>::<span class='ident'>KeyUsage</span>;
 
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>parse</span>() {
@@ -471,6 +494,16 @@
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parsed</span>.<span class='ident'>chain</span>.<span class='ident'>len</span>(), <span class='number'>1</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parsed</span>.<span class='ident'>chain</span>[<span class='number'>0</span>].<span class='ident'>fingerprint</span>(<span class='ident'>MessageDigest</span>::<span class='ident'>sha1</span>()).<span class='ident'>unwrap</span>().<span class='ident'>to_hex</span>(),
                    <span class='string'>&quot;c0cbdf7cdd03c9773e5468e1f6d2da7d5cbb1875&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>fn</span> <span class='ident'>parse_empty_chain</span>() {
+        <span class='kw'>let</span> <span class='ident'>der</span> <span class='op'>=</span> <span class='macro'>include_bytes</span><span class='macro'>!</span>(<span class='string'>&quot;../test/keystore-empty-chain.p12&quot;</span>);
+        <span class='kw'>let</span> <span class='ident'>pkcs12</span> <span class='op'>=</span> <span class='ident'>Pkcs12</span>::<span class='ident'>from_der</span>(<span class='ident'>der</span>).<span class='ident'>unwrap</span>();
+        <span class='kw'>let</span> <span class='ident'>parsed</span> <span class='op'>=</span> <span class='ident'>pkcs12</span>.<span class='ident'>parse</span>(<span class='string'>&quot;cassandra&quot;</span>).<span class='ident'>unwrap</span>();
+
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parsed</span>.<span class='ident'>chain</span>.<span class='ident'>len</span>(), <span class='number'>0</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parsed</span>.<span class='ident'>chain</span>.<span class='ident'>into_iter</span>().<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>().<span class='ident'>len</span>(), <span class='number'>0</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

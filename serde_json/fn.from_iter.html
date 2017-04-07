@@ -9,6 +9,7 @@
 
     <title>serde_json::from_iter - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -48,7 +49,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a class='srclink' href='../src/serde_json/de.rs.html#1040-1045' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn from_iter&lt;I, T&gt;(iter: I) -&gt; <a class='type' href='../serde_json/type.Result.html' title='serde_json::Result'>Result</a>&lt;T&gt; <span class='where'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=<a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;&gt;, T: <a class='trait' href='../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></pre><div class='docblock'><p>Deserialize an instance of type <code>T</code> from an iterator over bytes of JSON.</p>
+<pre class='rust fn'>pub fn from_iter&lt;I, T&gt;(iter: I) -&gt; <a class='type' href='../serde_json/type.Result.html' title='serde_json::Result'>Result</a>&lt;T&gt; <span class='where fmt-newline'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/iterator/trait.Iterator.html' title='core::iter::iterator::Iterator'>Iterator</a>&lt;Item=<a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;&gt;, T: <a class='trait' href='../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></pre><div class='docblock'><p>Deserialize an instance of type <code>T</code> from an iterator over bytes of JSON.</p>
 
 <p>This conversion can fail if the structure of the Value does not match the
 structure expected by <code>T</code>, for example if <code>T</code> is a struct type but the Value

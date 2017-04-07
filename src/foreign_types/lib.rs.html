@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -526,10 +527,10 @@
     <span class='kw'>type</span> <span class='ident'>Ref</span>: <span class='ident'>ForeignTypeRef</span><span class='op'>&lt;</span><span class='ident'>CType</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>CType</span><span class='op'>&gt;</span>;
 
     <span class='doccomment'>/// Constructs an instance of this type from its raw type.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
 
     <span class='doccomment'>/// Returns a raw pointer to the wrapped value.</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>;
+    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>;
 }
 
 <span class='doccomment'>/// A trait implemented by types which reference borrowed foreign types.</span>
@@ -539,20 +540,20 @@
 
     <span class='doccomment'>/// Constructs a shared instance of this type from its raw type.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>Self</span> {
-        <span class='kw-2'>&amp;</span><span class='op'>*</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>Self</span> {
+        <span class='kw-2'>&amp;</span><span class='kw-2'>*</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)
     }
 
     <span class='doccomment'>/// Constructs a mutable reference of this type from its raw type.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>Self</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>Self</span> {
+        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)
     }
 
     <span class='doccomment'>/// Returns a raw pointer to the wrapped value.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span> {
-        <span class='self'>self</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _
+    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span> {
+        <span class='self'>self</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _
     }
 }
 
@@ -587,19 +588,19 @@
         <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span>:<span class='ident'>ident</span>;
     ) <span class='op'>=&gt;</span> {
         $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned_attr</span>]</span>)<span class='op'>*</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>);
+        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span>(<span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>);
 
         <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>ForeignType</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span> {
             <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>;
             <span class='kw'>type</span> <span class='ident'>Ref</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span>;
 
             <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span> {
+            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span> {
                 <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span>(<span class='ident'>ptr</span>)
             }
 
             <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span> {
+            <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span> {
                 <span class='self'>self</span>.<span class='number'>0</span>
             }
         }

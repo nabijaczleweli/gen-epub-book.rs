@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/pkcs5.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/pkcs5.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>pkcs5.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -245,6 +246,56 @@
 <span id="201">201</span>
 <span id="202">202</span>
 <span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
@@ -332,7 +383,7 @@
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>key</span>.<span class='ident'>len</span>() <span class='op'>&lt;=</span> <span class='ident'>c_int</span>::<span class='ident'>max_value</span>() <span class='kw'>as</span> <span class='ident'>usize</span>);
 
         <span class='ident'>ffi</span>::<span class='ident'>init</span>();
-        <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>PKCS5_PBKDF2_HMAC</span>(<span class='ident'>pass</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _,
+        <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>PKCS5_PBKDF2_HMAC</span>(<span class='ident'>pass</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _,
                                    <span class='ident'>pass</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_int</span>,
                                    <span class='ident'>salt</span>.<span class='ident'>as_ptr</span>(),
                                    <span class='ident'>salt</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_int</span>,
@@ -344,8 +395,38 @@
     }
 }
 
+<span class='doccomment'>/// Derives a key from a password and salt using the scrypt algorithm.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Requires the `v110` feature and OpenSSL 1.1.0.</span>
+<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;v110&quot;</span>, <span class='ident'>ossl110</span>))]</span>
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>scrypt</span>(<span class='ident'>pass</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>],
+              <span class='ident'>salt</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>],
+              <span class='ident'>n</span>: <span class='ident'>u64</span>,
+              <span class='ident'>r</span>: <span class='ident'>u64</span>,
+              <span class='ident'>p</span>: <span class='ident'>u64</span>,
+              <span class='ident'>maxmem</span>: <span class='ident'>u64</span>,
+              <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>])
+              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
+    <span class='kw'>unsafe</span> {
+        <span class='ident'>ffi</span>::<span class='ident'>init</span>();
+        <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EVP_PBE_scrypt</span>(<span class='ident'>pass</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _,
+                                <span class='ident'>pass</span>.<span class='ident'>len</span>(),
+                                <span class='ident'>salt</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _,
+                                <span class='ident'>salt</span>.<span class='ident'>len</span>(),
+                                <span class='ident'>n</span>,
+                                <span class='ident'>r</span>,
+                                <span class='ident'>p</span>,
+                                <span class='ident'>maxmem</span>,
+                                <span class='ident'>key</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _,
+                                <span class='ident'>key</span>.<span class='ident'>len</span>()))
+            .<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+    }
+}
+
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
+    <span class='kw'>use</span> <span class='ident'>hex</span>::<span class='ident'>ToHex</span>;
+
     <span class='kw'>use</span> <span class='ident'>hash</span>::<span class='ident'>MessageDigest</span>;
     <span class='kw'>use</span> <span class='ident'>symm</span>::<span class='ident'>Cipher</span>;
 
@@ -358,7 +439,8 @@
         <span class='kw'>super</span>::<span class='ident'>pbkdf2_hmac</span>(<span class='string'>b&quot;passwd&quot;</span>, <span class='string'>b&quot;salt&quot;</span>, <span class='number'>1</span>, <span class='ident'>MessageDigest</span>::<span class='ident'>sha256</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>buf</span>).<span class='ident'>unwrap</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>buf</span>,
                    <span class='kw-2'>&amp;</span>[<span class='number'>0x55_u8</span>, <span class='number'>0xac_u8</span>, <span class='number'>0x04_u8</span>, <span class='number'>0x6e_u8</span>, <span class='number'>0x56_u8</span>, <span class='number'>0xe3_u8</span>, <span class='number'>0x08_u8</span>, <span class='number'>0x9f_u8</span>,
-                     <span class='number'>0xec_u8</span>, <span class='number'>0x16_u8</span>, <span class='number'>0x91_u8</span>, <span class='number'>0xc2_u8</span>, <span class='number'>0x25_u8</span>, <span class='number'>0x44_u8</span>, <span class='number'>0xb6_u8</span>, <span class='number'>0x05_u8</span>][..]);
+                     <span class='number'>0xec_u8</span>, <span class='number'>0x16_u8</span>, <span class='number'>0x91_u8</span>, <span class='number'>0xc2_u8</span>, <span class='number'>0x25_u8</span>, <span class='number'>0x44_u8</span>, <span class='number'>0xb6_u8</span>, <span class='number'>0x05_u8</span>]
+                        [..]);
 
         <span class='kw'>super</span>::<span class='ident'>pbkdf2_hmac</span>(<span class='string'>b&quot;Password&quot;</span>,
                            <span class='string'>b&quot;NaCl&quot;</span>,
@@ -368,7 +450,8 @@
             .<span class='ident'>unwrap</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>buf</span>,
                    <span class='kw-2'>&amp;</span>[<span class='number'>0x4d_u8</span>, <span class='number'>0xdc_u8</span>, <span class='number'>0xd8_u8</span>, <span class='number'>0xf6_u8</span>, <span class='number'>0x0b_u8</span>, <span class='number'>0x98_u8</span>, <span class='number'>0xbe_u8</span>, <span class='number'>0x21_u8</span>,
-                     <span class='number'>0x83_u8</span>, <span class='number'>0x0c_u8</span>, <span class='number'>0xee_u8</span>, <span class='number'>0x5e_u8</span>, <span class='number'>0xf2_u8</span>, <span class='number'>0x27_u8</span>, <span class='number'>0x01_u8</span>, <span class='number'>0xf9_u8</span>][..]);
+                     <span class='number'>0x83_u8</span>, <span class='number'>0x0c_u8</span>, <span class='number'>0xee_u8</span>, <span class='number'>0x5e_u8</span>, <span class='number'>0xf2_u8</span>, <span class='number'>0x27_u8</span>, <span class='number'>0x01_u8</span>, <span class='number'>0xf9_u8</span>]
+                        [..]);
     }
 
     <span class='comment'>// Test vectors from</span>
@@ -386,7 +469,8 @@
                      <span class='number'>0xf8_u8</span>, <span class='number'>0x14_u8</span>, <span class='number'>0x8e_u8</span>, <span class='number'>0x52_u8</span>, <span class='number'>0x45_u8</span>, <span class='number'>0x2b_u8</span>, <span class='number'>0x22_u8</span>, <span class='number'>0x16_u8</span>,
                      <span class='number'>0xb2_u8</span>, <span class='number'>0xb8_u8</span>, <span class='number'>0x09_u8</span>, <span class='number'>0x8b_u8</span>, <span class='number'>0x76_u8</span>, <span class='number'>0x1f_u8</span>, <span class='number'>0xc6_u8</span>, <span class='number'>0x33_u8</span>,
                      <span class='number'>0x60_u8</span>, <span class='number'>0x60_u8</span>, <span class='number'>0xa0_u8</span>, <span class='number'>0x9f_u8</span>, <span class='number'>0x76_u8</span>, <span class='number'>0x41_u8</span>, <span class='number'>0x5e_u8</span>, <span class='number'>0x9f_u8</span>,
-                     <span class='number'>0x71_u8</span>, <span class='number'>0xea_u8</span>, <span class='number'>0x47_u8</span>, <span class='number'>0xf9_u8</span>, <span class='number'>0xe9_u8</span>, <span class='number'>0x06_u8</span>, <span class='number'>0x43_u8</span>, <span class='number'>0x06_u8</span>][..]);
+                     <span class='number'>0x71_u8</span>, <span class='number'>0xea_u8</span>, <span class='number'>0x47_u8</span>, <span class='number'>0xf9_u8</span>, <span class='number'>0xe9_u8</span>, <span class='number'>0x06_u8</span>, <span class='number'>0x43_u8</span>, <span class='number'>0x06_u8</span>]
+                        [..]);
 
         <span class='kw'>super</span>::<span class='ident'>pbkdf2_hmac</span>(<span class='string'>b&quot;pass\0word&quot;</span>,
                            <span class='string'>b&quot;sa\0lt&quot;</span>,
@@ -402,7 +486,8 @@
                      <span class='number'>0xe7_u8</span>, <span class='number'>0x66_u8</span>, <span class='number'>0x04_u8</span>, <span class='number'>0xa4_u8</span>, <span class='number'>0x9a_u8</span>, <span class='number'>0xf0_u8</span>, <span class='number'>0x8f_u8</span>, <span class='number'>0xe7_u8</span>,
                      <span class='number'>0xc9_u8</span>, <span class='number'>0xf5_u8</span>, <span class='number'>0x71_u8</span>, <span class='number'>0x56_u8</span>, <span class='number'>0xc8_u8</span>, <span class='number'>0x79_u8</span>, <span class='number'>0x09_u8</span>, <span class='number'>0x96_u8</span>,
                      <span class='number'>0xb2_u8</span>, <span class='number'>0x0f_u8</span>, <span class='number'>0x06_u8</span>, <span class='number'>0xbc_u8</span>, <span class='number'>0x53_u8</span>, <span class='number'>0x5e_u8</span>, <span class='number'>0x5a_u8</span>, <span class='number'>0xb5_u8</span>,
-                     <span class='number'>0x44_u8</span>, <span class='number'>0x0d_u8</span>, <span class='number'>0xf7_u8</span>, <span class='number'>0xe8_u8</span>, <span class='number'>0x78_u8</span>, <span class='number'>0x29_u8</span>, <span class='number'>0x6f_u8</span>, <span class='number'>0xa7_u8</span>][..]);
+                     <span class='number'>0x44_u8</span>, <span class='number'>0x0d_u8</span>, <span class='number'>0xf7_u8</span>, <span class='number'>0xe8_u8</span>, <span class='number'>0x78_u8</span>, <span class='number'>0x29_u8</span>, <span class='number'>0x6f_u8</span>, <span class='number'>0xa7_u8</span>]
+                        [..]);
 
         <span class='kw'>super</span>::<span class='ident'>pbkdf2_hmac</span>(<span class='string'>b&quot;passwordPASSWORDpassword&quot;</span>,
                            <span class='string'>b&quot;salt\0\0\0&quot;</span>,
@@ -418,8 +503,10 @@
                      <span class='number'>0x1b_u8</span>, <span class='number'>0x6f_u8</span>, <span class='number'>0x0b_u8</span>, <span class='number'>0x2f_u8</span>, <span class='number'>0xc3_u8</span>, <span class='number'>0xad_u8</span>, <span class='number'>0xda_u8</span>, <span class='number'>0x50_u8</span>,
                      <span class='number'>0x54_u8</span>, <span class='number'>0x12_u8</span>, <span class='number'>0xe7_u8</span>, <span class='number'>0x9d_u8</span>, <span class='number'>0x89_u8</span>, <span class='number'>0x00_u8</span>, <span class='number'>0x56_u8</span>, <span class='number'>0xc6_u8</span>,
                      <span class='number'>0x2e_u8</span>, <span class='number'>0x52_u8</span>, <span class='number'>0x4c_u8</span>, <span class='number'>0x7d_u8</span>, <span class='number'>0x51_u8</span>, <span class='number'>0x15_u8</span>, <span class='number'>0x4b_u8</span>, <span class='number'>0x1a_u8</span>,
-                     <span class='number'>0x85_u8</span>, <span class='number'>0x34_u8</span>, <span class='number'>0x57_u8</span>, <span class='number'>0x5b_u8</span>, <span class='number'>0xd0_u8</span>, <span class='number'>0x2d_u8</span>, <span class='number'>0xee_u8</span>, <span class='number'>0x39_u8</span>][..]);
+                     <span class='number'>0x85_u8</span>, <span class='number'>0x34_u8</span>, <span class='number'>0x57_u8</span>, <span class='number'>0x5b_u8</span>, <span class='number'>0xd0_u8</span>, <span class='number'>0x2d_u8</span>, <span class='number'>0xee_u8</span>, <span class='number'>0x39_u8</span>]
+                        [..]);
     }
+
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>bytes_to_key</span>() {
         <span class='kw'>let</span> <span class='ident'>salt</span> <span class='op'>=</span> [<span class='number'>16_u8</span>, <span class='number'>34_u8</span>, <span class='number'>19_u8</span>, <span class='number'>23_u8</span>, <span class='number'>141_u8</span>, <span class='number'>4_u8</span>, <span class='number'>207_u8</span>, <span class='number'>221_u8</span>];
@@ -442,11 +529,25 @@
                                        <span class='ident'>MessageDigest</span>::<span class='ident'>sha1</span>(),
                                        <span class='kw-2'>&amp;</span><span class='ident'>data</span>,
                                        <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>salt</span>),
-                                       <span class='number'>1</span>).<span class='ident'>unwrap</span>(),
+                                       <span class='number'>1</span>)
+                       .<span class='ident'>unwrap</span>(),
                    <span class='kw'>super</span>::<span class='ident'>KeyIvPair</span> {
                        <span class='ident'>key</span>: <span class='ident'>expected_key</span>,
                        <span class='ident'>iv</span>: <span class='prelude-val'>Some</span>(<span class='ident'>expected_iv</span>),
                    });
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;v110&quot;</span>, <span class='ident'>ossl110</span>))]</span>
+    <span class='kw'>fn</span> <span class='ident'>scrypt</span>() {
+        <span class='kw'>let</span> <span class='ident'>pass</span> <span class='op'>=</span> <span class='string'>&quot;pleaseletmein&quot;</span>;
+        <span class='kw'>let</span> <span class='ident'>salt</span> <span class='op'>=</span> <span class='string'>&quot;SodiumChloride&quot;</span>;
+        <span class='kw'>let</span> <span class='ident'>expected</span> <span class='op'>=</span> <span class='string'>&quot;7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613\
+                        f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887&quot;</span>;
+
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>actual</span> <span class='op'>=</span> [<span class='number'>0</span>; <span class='number'>64</span>];
+        <span class='kw'>super</span>::<span class='ident'>scrypt</span>(<span class='ident'>pass</span>.<span class='ident'>as_bytes</span>(), <span class='ident'>salt</span>.<span class='ident'>as_bytes</span>(), <span class='number'>16384</span>, <span class='number'>8</span>, <span class='number'>1</span>, <span class='number'>0</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>actual</span>).<span class='ident'>unwrap</span>();
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>((<span class='kw-2'>&amp;</span><span class='ident'>actual</span>[..]).<span class='ident'>to_hex</span>(), <span class='ident'>expected</span>);
     }
 }
 </pre>

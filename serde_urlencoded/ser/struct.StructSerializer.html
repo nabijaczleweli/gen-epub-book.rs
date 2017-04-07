@@ -9,6 +9,7 @@
 
     <title>serde_urlencoded::ser::StructSerializer - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -49,7 +50,7 @@
                    </a>
                </span><a class='srclink' href='../../src/serde_urlencoded/ser/mod.rs.html#128-130' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct StructSerializer&lt;'output, Target:&nbsp;'output + <a class='trait' href='../../url/form_urlencoded/trait.Target.html' title='url::form_urlencoded::Target'>UrlEncodedTarget</a>&gt; { /* fields omitted */ }</pre><div class='docblock'><p>Struct serializer.</p>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'output, Target&gt; <a class='trait' href='../../serde/ser/trait.SerializeStruct.html' title='serde::ser::SerializeStruct'>SerializeStruct</a> for <a class='struct' href='../../serde_urlencoded/ser/struct.StructSerializer.html' title='serde_urlencoded::ser::StructSerializer'>StructSerializer</a>&lt;'output, Target&gt; <span class='where'>where Target: 'output + <a class='trait' href='../../url/form_urlencoded/trait.Target.html' title='url::form_urlencoded::Target'>UrlEncodedTarget</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_urlencoded/ser/mod.rs.html#463-480' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'output, Target&gt; <a class='trait' href='../../serde/ser/trait.SerializeStruct.html' title='serde::ser::SerializeStruct'>SerializeStruct</a> for <a class='struct' href='../../serde_urlencoded/ser/struct.StructSerializer.html' title='serde_urlencoded::ser::StructSerializer'>StructSerializer</a>&lt;'output, Target&gt; <span class='where fmt-newline'>where Target: 'output + <a class='trait' href='../../url/form_urlencoded/trait.Target.html' title='url::form_urlencoded::Target'>UrlEncodedTarget</a></span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/serde_urlencoded/ser/mod.rs.html#463-480' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='associatedtype.Ok' class='type'><span id='Ok.t' class='invisible'><code>type <a href='../../serde/ser/trait.SerializeStruct.html#associatedtype.Ok' class='type'>Ok</a> = &amp;'output mut <a class='struct' href='../../url/form_urlencoded/struct.Serializer.html' title='url::form_urlencoded::Serializer'>UrlEncodedSerializer</a>&lt;Target&gt;</code></span></h4>
 <div class='docblock'><p>Must match the <code>Ok</code> type of our <code>Serializer</code>.</p>
 </div><h4 id='associatedtype.Error' class='type'><span id='Error.t' class='invisible'><code>type <a href='../../serde/ser/trait.SerializeStruct.html#associatedtype.Error' class='type'>Error</a> = <a class='enum' href='../../serde_urlencoded/ser/enum.Error.html' title='serde_urlencoded::ser::Error'>Error</a></code></span></h4>

@@ -9,6 +9,7 @@
 
     <title>foreign_types - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -69,7 +70,7 @@ values.</p>
     <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FOO</span> {}
 
     <span class='kw'>extern</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FOO_free</span>(<span class='ident'>foo</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>);
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FOO_free</span>(<span class='ident'>foo</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>);
     }
 }
 
@@ -86,7 +87,7 @@ values.</p>
 <span class='comment'>//</span>
 <span class='comment'>// It dereferences to `FooRef`, so methods that do not require ownership should be defined</span>
 <span class='comment'>// there.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Foo</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>foo_sys</span>::<span class='ident'>FOO</span>);
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Foo</span>(<span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>foo_sys</span>::<span class='ident'>FOO</span>);
 
 <span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='ident'>Foo</span> {
     <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
@@ -98,11 +99,11 @@ values.</p>
     <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='ident'>foo_sys</span>::<span class='ident'>FOO</span>;
     <span class='kw'>type</span> <span class='ident'>Ref</span> <span class='op'>=</span> <span class='ident'>FooRef</span>;
 
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>foo_sys</span>::<span class='ident'>FOO</span>) <span class='op'>-&gt;</span> <span class='ident'>Foo</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>foo_sys</span>::<span class='ident'>FOO</span>) <span class='op'>-&gt;</span> <span class='ident'>Foo</span> {
         <span class='ident'>Foo</span>(<span class='ident'>ptr</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>foo_sys</span>::<span class='ident'>FOO</span> {
+    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>foo_sys</span>::<span class='ident'>FOO</span> {
         <span class='self'>self</span>.<span class='number'>0</span>
     }
 }
@@ -131,7 +132,7 @@ values.</p>
     <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FOO</span> {}
 
     <span class='kw'>extern</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FOO_free</span>(<span class='ident'>foo</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>);
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FOO_free</span>(<span class='ident'>foo</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>);
     }
 }
 
@@ -153,9 +154,9 @@ values.</p>
     <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>BAR</span> {}
 
     <span class='kw'>extern</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FOO_free</span>(<span class='ident'>foo</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>);
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BAR_free</span>(<span class='ident'>bar</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>BAR</span>);
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BAR_get_foo</span>(<span class='ident'>bar</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>BAR</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FOO_free</span>(<span class='ident'>foo</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>);
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BAR_free</span>(<span class='ident'>bar</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>BAR</span>);
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BAR_get_foo</span>(<span class='ident'>bar</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>BAR</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>;
     }
 }</pre>
 
@@ -174,9 +175,9 @@ modify the <code>FOO</code>, so we&#39;ll define a pair of accessor methods, one
     <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>BAR</span> {}
 
     <span class='kw'>extern</span> {
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FOO_free</span>(<span class='ident'>foo</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>);
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BAR_free</span>(<span class='ident'>bar</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>BAR</span>);
-        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BAR_get_foo</span>(<span class='ident'>bar</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>BAR</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>;
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>FOO_free</span>(<span class='ident'>foo</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>);
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BAR_free</span>(<span class='ident'>bar</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>BAR</span>);
+        <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BAR_get_foo</span>(<span class='ident'>bar</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>BAR</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>FOO</span>;
     }
 }
 

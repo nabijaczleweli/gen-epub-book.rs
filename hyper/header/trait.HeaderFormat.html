@@ -9,6 +9,7 @@
 
     <title>hyper::header::HeaderFormat - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -56,7 +57,7 @@
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.fmt_header' class='method stab '><span id='fmt_header.v' class='invisible'><code>fn <a href='#tymethod.fmt_header' class='fnname'>fmt_header</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h3><div class='docblock'><p>Format a header to be output into a TcpStream.</p>
+        <h3 id='tymethod.fmt_header' class='method'><span id='fmt_header.v' class='invisible'><code>fn <a href='#tymethod.fmt_header' class='fnname'>fmt_header</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h3><div class='docblock'><p>Format a header to be output into a TcpStream.</p>
 
 <p>This method is not allowed to introduce an Err not produced
 by the passed-in Formatter.</p>
@@ -80,7 +81,7 @@ by the passed-in Formatter.</p>
 <li><code>impl HeaderFormat for <a class='struct' href='../../hyper/header/struct.AcceptLanguage.html' title='hyper::header::AcceptLanguage'>AcceptLanguage</a></code></li>
 <li><code>impl HeaderFormat for <a class='struct' href='../../hyper/header/struct.AcceptRanges.html' title='hyper::header::AcceptRanges'>AcceptRanges</a></code></li>
 <li><code>impl HeaderFormat for <a class='struct' href='../../hyper/header/struct.Allow.html' title='hyper::header::Allow'>Allow</a></code></li>
-<li><code>impl&lt;S:&nbsp;<a class='trait' href='../../hyper/header/trait.Scheme.html' title='hyper::header::Scheme'>Scheme</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a>&gt; HeaderFormat for <a class='struct' href='../../hyper/header/struct.Authorization.html' title='hyper::header::Authorization'>Authorization</a>&lt;S&gt; <span class='where'>where S::<a class='trait' href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html' title='core::str::FromStr'>Err</a>: 'static</span></code></li>
+<li><code>impl&lt;S:&nbsp;<a class='trait' href='../../hyper/header/trait.Scheme.html' title='hyper::header::Scheme'>Scheme</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a>&gt; HeaderFormat for <a class='struct' href='../../hyper/header/struct.Authorization.html' title='hyper::header::Authorization'>Authorization</a>&lt;S&gt; <span class='where fmt-newline'>where S::<a class='trait' href='https://doc.rust-lang.org/nightly/core/str/trait.FromStr.html' title='core::str::FromStr'>Err</a>: 'static</span></code></li>
 <li><code>impl HeaderFormat for <a class='struct' href='../../hyper/header/struct.CacheControl.html' title='hyper::header::CacheControl'>CacheControl</a></code></li>
 <li><code>impl HeaderFormat for <a class='struct' href='../../hyper/header/struct.Cookie.html' title='hyper::header::Cookie'>Cookie</a></code></li>
 <li><code>impl HeaderFormat for <a class='struct' href='../../hyper/header/struct.Connection.html' title='hyper::header::Connection'>Connection</a></code></li>

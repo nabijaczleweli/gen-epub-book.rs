@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/siphasher-0.2.1/src/sip.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/siphasher-0.2.2/src/sip.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>sip.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -434,6 +435,21 @@
 <span id="390">390</span>
 <span id="391">391</span>
 <span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright 2012-2015 The Rust Project Developers. See the COPYRIGHT</span>
 <span class='comment'>// file at the top-level directory of this distribution and at</span>
@@ -527,14 +543,14 @@
 <span class='doccomment'>/// `copy_nonoverlapping` to let the compiler generate the most efficient way</span>
 <span class='doccomment'>/// to load it from a possibly unaligned address.</span>
 <span class='doccomment'>///</span>
-<span class='doccomment'>/// Unsafe because: unchecked indexing at i..i+size_of(int_ty)</span>
+<span class='doccomment'>/// Unsafe because: unchecked indexing at `i..i+size_of(int_ty)`</span>
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>load_int_le</span> {
     (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>buf</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>int_ty</span>:<span class='ident'>ident</span>) <span class='op'>=&gt;</span>
     ({
        <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span> <span class='op'>+</span> <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>int_ty</span><span class='op'>&gt;</span>() <span class='op'>&lt;=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>buf</span>.<span class='ident'>len</span>());
        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='number'>0</span> <span class='kw'>as</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>int_ty</span>;
        <span class='ident'>ptr</span>::<span class='ident'>copy_nonoverlapping</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>buf</span>.<span class='ident'>get_unchecked</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>i</span>),
-                                <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
+                                <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>data</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>,
                                 <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>int_ty</span><span class='op'>&gt;</span>());
        <span class='ident'>data</span>.<span class='ident'>to_le</span>()
     });
@@ -557,7 +573,7 @@
         <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>2</span>
     }
     <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>len</span> {
-        <span class='ident'>out</span> <span class='op'>|=</span> (<span class='op'>*</span><span class='ident'>buf</span>.<span class='ident'>get_unchecked</span>(<span class='ident'>start</span> <span class='op'>+</span> <span class='ident'>i</span>) <span class='kw'>as</span> <span class='ident'>u64</span>) <span class='op'>&lt;&lt;</span> (<span class='ident'>i</span> <span class='op'>*</span> <span class='number'>8</span>);
+        <span class='ident'>out</span> <span class='op'>|=</span> (<span class='kw-2'>*</span><span class='ident'>buf</span>.<span class='ident'>get_unchecked</span>(<span class='ident'>start</span> <span class='op'>+</span> <span class='ident'>i</span>) <span class='kw'>as</span> <span class='ident'>u64</span>) <span class='op'>&lt;&lt;</span> (<span class='ident'>i</span> <span class='op'>*</span> <span class='number'>8</span>);
         <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
     }
     <span class='macro'>debug_assert_eq</span><span class='macro'>!</span>(<span class='ident'>i</span>, <span class='ident'>len</span>);
@@ -576,6 +592,11 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_with_keys</span>(<span class='ident'>key0</span>: <span class='ident'>u64</span>, <span class='ident'>key1</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>SipHasher</span> {
         <span class='ident'>SipHasher</span>(<span class='ident'>SipHasher24</span>::<span class='ident'>new_with_keys</span>(<span class='ident'>key0</span>, <span class='ident'>key1</span>))
     }
+
+    <span class='doccomment'>/// Get the keys used by this hasher</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>u64</span>, <span class='ident'>u64</span>) {
+        (<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>hasher</span>.<span class='ident'>k0</span>, <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>hasher</span>.<span class='ident'>k1</span>)
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>SipHasher13</span> {
@@ -590,6 +611,11 @@
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_with_keys</span>(<span class='ident'>key0</span>: <span class='ident'>u64</span>, <span class='ident'>key1</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>SipHasher13</span> {
         <span class='ident'>SipHasher13</span> { <span class='ident'>hasher</span>: <span class='ident'>Hasher</span>::<span class='ident'>new_with_keys</span>(<span class='ident'>key0</span>, <span class='ident'>key1</span>) }
     }
+
+    <span class='doccomment'>/// Get the keys used by this hasher</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>u64</span>, <span class='ident'>u64</span>) {
+        (<span class='self'>self</span>.<span class='ident'>hasher</span>.<span class='ident'>k0</span>, <span class='self'>self</span>.<span class='ident'>hasher</span>.<span class='ident'>k1</span>)
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>SipHasher24</span> {
@@ -603,6 +629,11 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_with_keys</span>(<span class='ident'>key0</span>: <span class='ident'>u64</span>, <span class='ident'>key1</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='ident'>SipHasher24</span> {
         <span class='ident'>SipHasher24</span> { <span class='ident'>hasher</span>: <span class='ident'>Hasher</span>::<span class='ident'>new_with_keys</span>(<span class='ident'>key0</span>, <span class='ident'>key1</span>) }
+    }
+
+    <span class='doccomment'>/// Get the keys used by this hasher</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>u64</span>, <span class='ident'>u64</span>) {
+        (<span class='self'>self</span>.<span class='ident'>hasher</span>.<span class='ident'>k0</span>, <span class='self'>self</span>.<span class='ident'>hasher</span>.<span class='ident'>k1</span>)
     }
 }
 
@@ -710,7 +741,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>write_usize</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>i</span>: <span class='ident'>usize</span>) {
         <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='kw'>unsafe</span> {
-            <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='kw-2'>&amp;</span><span class='ident'>i</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>usize</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>())
+            <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='kw-2'>&amp;</span><span class='ident'>i</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>usize</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>())
         };
         <span class='self'>self</span>.<span class='ident'>short_write</span>(<span class='ident'>bytes</span>);
     }
@@ -730,7 +761,7 @@
 
         <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>ntail</span> <span class='op'>!=</span> <span class='number'>0</span> {
             <span class='ident'>needed</span> <span class='op'>=</span> <span class='number'>8</span> <span class='op'>-</span> <span class='self'>self</span>.<span class='ident'>ntail</span>;
-            <span class='self'>self</span>.<span class='ident'>tail</span> <span class='op'>|=</span> <span class='kw'>unsafe</span> { <span class='ident'>u8to64_le</span>(<span class='ident'>msg</span>, <span class='number'>0</span>, <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>length</span>, <span class='ident'>needed</span>)) } <span class='op'>&lt;&lt;</span> <span class='number'>8</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>ntail</span>;
+            <span class='self'>self</span>.<span class='ident'>tail</span> <span class='op'>|=</span> <span class='kw'>unsafe</span> { <span class='ident'>u8to64_le</span>(<span class='ident'>msg</span>, <span class='number'>0</span>, <span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='ident'>length</span>, <span class='ident'>needed</span>)) } <span class='op'>&lt;&lt;</span> (<span class='number'>8</span> <span class='op'>*</span> <span class='self'>self</span>.<span class='ident'>ntail</span>);
             <span class='kw'>if</span> <span class='ident'>length</span> <span class='op'>&lt;</span> <span class='ident'>needed</span> {
                 <span class='self'>self</span>.<span class='ident'>ntail</span> <span class='op'>+=</span> <span class='ident'>length</span>;
                 <span class='kw'>return</span>;
@@ -744,7 +775,7 @@
 
         <span class='comment'>// Buffered tail is now flushed, process new input.</span>
         <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>length</span> <span class='op'>-</span> <span class='ident'>needed</span>;
-        <span class='kw'>let</span> <span class='ident'>left</span> <span class='op'>=</span> <span class='ident'>len</span> <span class='kw-2'>&amp;</span> <span class='number'>0x7</span>;
+        <span class='kw'>let</span> <span class='ident'>left</span> <span class='op'>=</span> <span class='ident'>len</span> <span class='op'>&amp;</span> <span class='number'>0x7</span>;
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='ident'>needed</span>;
         <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='ident'>len</span> <span class='op'>-</span> <span class='ident'>left</span> {
@@ -765,7 +796,7 @@
     <span class='kw'>fn</span> <span class='ident'>finish</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u64</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>state</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>state</span>;
 
-        <span class='kw'>let</span> <span class='ident'>b</span>: <span class='ident'>u64</span> <span class='op'>=</span> ((<span class='self'>self</span>.<span class='ident'>length</span> <span class='kw'>as</span> <span class='ident'>u64</span> <span class='kw-2'>&amp;</span> <span class='number'>0xff</span>) <span class='op'>&lt;&lt;</span> <span class='number'>56</span>) <span class='op'>|</span> <span class='self'>self</span>.<span class='ident'>tail</span>;
+        <span class='kw'>let</span> <span class='ident'>b</span>: <span class='ident'>u64</span> <span class='op'>=</span> ((<span class='self'>self</span>.<span class='ident'>length</span> <span class='kw'>as</span> <span class='ident'>u64</span> <span class='op'>&amp;</span> <span class='number'>0xff</span>) <span class='op'>&lt;&lt;</span> <span class='number'>56</span>) <span class='op'>|</span> <span class='self'>self</span>.<span class='ident'>tail</span>;
 
         <span class='ident'>state</span>.<span class='ident'>v3</span> <span class='op'>^=</span> <span class='ident'>b</span>;
         <span class='ident'>S</span>::<span class='ident'>c_rounds</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>state</span>);

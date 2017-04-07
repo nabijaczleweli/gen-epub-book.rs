@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/hash.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/hash.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>hash.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -367,7 +368,7 @@
 <span id="323">323</span>
 <span id="324">324</span>
 </pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 <span class='kw'>use</span> <span class='ident'>ffi</span>;
 
@@ -380,7 +381,7 @@
 <span class='kw'>use</span> <span class='ident'>error</span>::<span class='ident'>ErrorStack</span>;
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MessageDigest</span>(<span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MD</span>);
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MessageDigest</span>(<span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MD</span>);
 
 <span class='kw'>impl</span> <span class='ident'>MessageDigest</span> {
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>md5</span>() <span class='op'>-&gt;</span> <span class='ident'>MessageDigest</span> {
@@ -411,7 +412,7 @@
         <span class='kw'>unsafe</span> { <span class='ident'>MessageDigest</span>(<span class='ident'>ffi</span>::<span class='ident'>EVP_ripemd160</span>()) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MD</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MD</span> {
         <span class='self'>self</span>.<span class='number'>0</span>
     }
 }
@@ -423,7 +424,7 @@
     <span class='ident'>Finalized</span>,
 }
 
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>State</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>State</span>::<span class='kw-2'>*</span>;
 
 <span class='doccomment'>/// Provides message digest (hash) computation.</span>
 <span class='doccomment'>///</span>
@@ -460,8 +461,8 @@
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// Don&#39;t ever hash passwords, use the functions in the `pkcs5` module or bcrypt/scrypt instead.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Hasher</span> {
-    <span class='ident'>ctx</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MD_CTX</span>,
-    <span class='ident'>md</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MD</span>,
+    <span class='ident'>ctx</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MD_CTX</span>,
+    <span class='ident'>md</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MD</span>,
     <span class='ident'>type_</span>: <span class='ident'>MessageDigest</span>,
     <span class='ident'>state</span>: <span class='ident'>State</span>,
 }
@@ -492,7 +493,7 @@
             <span class='ident'>Finalized</span> <span class='op'>=&gt;</span> (),
         }
         <span class='kw'>unsafe</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EVP_DigestInit_ex</span>(<span class='self'>self</span>.<span class='ident'>ctx</span>, <span class='self'>self</span>.<span class='ident'>md</span>, <span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EVP_DigestInit_ex</span>(<span class='self'>self</span>.<span class='ident'>ctx</span>, <span class='self'>self</span>.<span class='ident'>md</span>, <span class='number'>0</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)));
         }
         <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>Reset</span>;
         <span class='prelude-val'>Ok</span>(())
@@ -504,7 +505,7 @@
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>init</span>());
         }
         <span class='kw'>unsafe</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EVP_DigestUpdate</span>(<span class='self'>self</span>.<span class='ident'>ctx</span>, <span class='ident'>data</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>data</span>.<span class='ident'>len</span>())));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EVP_DigestUpdate</span>(<span class='self'>self</span>.<span class='ident'>ctx</span>, <span class='ident'>data</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _, <span class='ident'>data</span>.<span class='ident'>len</span>())));
         }
         <span class='self'>self</span>.<span class='ident'>state</span> <span class='op'>=</span> <span class='ident'>Updated</span>;
         <span class='prelude-val'>Ok</span>(())
@@ -579,7 +580,7 @@
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
     <span class='kw'>use</span> <span class='ident'>hex</span>::{<span class='ident'>FromHex</span>, <span class='ident'>ToHex</span>};
     <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>hash</span>, <span class='ident'>Hasher</span>, <span class='ident'>MessageDigest</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
 
     <span class='kw'>fn</span> <span class='ident'>hash_test</span>(<span class='ident'>hashtype</span>: <span class='ident'>MessageDigest</span>, <span class='ident'>hashtest</span>: <span class='kw-2'>&amp;</span>(<span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='kw-2'>&amp;</span><span class='ident'>str</span>)) {
         <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>hash</span>(<span class='ident'>hashtype</span>, <span class='kw-2'>&amp;</span><span class='ident'>Vec</span>::<span class='ident'>from_hex</span>(<span class='ident'>hashtest</span>.<span class='number'>0</span>).<span class='ident'>unwrap</span>()).<span class='ident'>unwrap</span>();

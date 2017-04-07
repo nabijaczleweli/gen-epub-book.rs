@@ -9,6 +9,7 @@
 
     <title>hyper::client::RedirectPolicy - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -51,12 +52,12 @@
 <pre class='rust enum'>pub enum RedirectPolicy {
     FollowNone,
     FollowAll,
-    FollowIf(fn(&amp;<a class='struct' href='../../hyper/struct.Url.html' title='hyper::Url'>Url</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>),
+    FollowIf(fn(_: &amp;<a class='struct' href='../../hyper/struct.Url.html' title='hyper::Url'>Url</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>),
 }</pre><div class='docblock'><p>Behavior regarding how to handle redirects within a Client.</p>
 </div><h2 class='variants'>Variants</h2>
 <span id='variant.FollowNone' class='variant'><span id='FollowNone.v' class='invisible'><code>FollowNone</code></span></span><div class='docblock'><p>Don&#39;t follow any redirects.</p>
 </div><span id='variant.FollowAll' class='variant'><span id='FollowAll.v' class='invisible'><code>FollowAll</code></span></span><div class='docblock'><p>Follow all redirects.</p>
-</div><span id='variant.FollowIf' class='variant'><span id='FollowIf.v' class='invisible'><code>FollowIf(fn(&amp;<a class='struct' href='../../hyper/struct.Url.html' title='hyper::Url'>Url</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></span><div class='docblock'><p>Follow a redirect if the contained function returns true.</p>
+</div><span id='variant.FollowIf' class='variant'><span id='FollowIf.v' class='invisible'><code>FollowIf(fn(_: &amp;<a class='struct' href='../../hyper/struct.Url.html' title='hyper::Url'>Url</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></span><div class='docblock'><p>Follow a redirect if the contained function returns true.</p>
 </div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a> for <a class='enum' href='../../hyper/client/enum.RedirectPolicy.html' title='hyper::client::RedirectPolicy'>RedirectPolicy</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper/client/mod.rs.html#501' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='enum' href='../../hyper/client/enum.RedirectPolicy.html' title='hyper::client::RedirectPolicy'>RedirectPolicy</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper/client/mod.rs.html#511-519' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, fmt: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>

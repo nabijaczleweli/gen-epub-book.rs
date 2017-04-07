@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/native-tls-0.1.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/native-tls-0.1.2/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -579,6 +580,38 @@
 <span id="535">535</span>
 <span id="536">536</span>
 <span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! An abstraction over platform-specific TLS implementations.</span>
 <span class='doccomment'>//!</span>
@@ -684,11 +717,8 @@
 <span class='doccomment'>//!     }</span>
 <span class='doccomment'>//! }</span>
 <span class='doccomment'>//! ```</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>doc</span>(<span class='ident'>html_root_url</span><span class='op'>=</span><span class='string'>&quot;https://docs.rs/native-tls/0.1.1&quot;</span>)]</span>
+<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>doc</span>(<span class='ident'>html_root_url</span><span class='op'>=</span><span class='string'>&quot;https://docs.rs/native-tls/0.1.2&quot;</span>)]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>openssl</span>;
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>any</span>::<span class='ident'>Any</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
@@ -768,6 +798,17 @@
     }
 }
 
+<span class='doccomment'>/// An X509 certificate.</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Certificate</span>(<span class='ident'>imp</span>::<span class='ident'>Certificate</span>);
+
+<span class='kw'>impl</span> <span class='ident'>Certificate</span> {
+    <span class='doccomment'>/// Parses a DER-formatted X509 certificate.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_der</span>(<span class='ident'>der</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Certificate</span><span class='op'>&gt;</span> {
+        <span class='kw'>let</span> <span class='ident'>cert</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>imp</span>::<span class='ident'>Certificate</span>::<span class='ident'>from_der</span>(<span class='ident'>der</span>));
+        <span class='prelude-val'>Ok</span>(<span class='ident'>Certificate</span>(<span class='ident'>cert</span>))
+    }
+}
+
 <span class='doccomment'>/// A TLS stream which has been interrupted midway through the handshake process.</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MidHandshakeTlsStream</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>(<span class='ident'>imp</span>::<span class='ident'>MidHandshakeTlsStream</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>);
 
@@ -826,14 +867,14 @@
     <span class='kw'>where</span> <span class='ident'>S</span>: <span class='ident'>Any</span> <span class='op'>+</span> <span class='ident'>fmt</span>::<span class='ident'>Debug</span>
 {
     <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>HandshakeError</span>::<span class='ident'>Failure</span>(<span class='kw-2'>ref</span> <span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='ident'>e</span>.<span class='ident'>description</span>(),
             <span class='ident'>HandshakeError</span>::<span class='ident'>Interrupted</span>(_) <span class='op'>=&gt;</span> <span class='string'>&quot;the handshake process was interrupted&quot;</span>,
         }
     }
 
     <span class='kw'>fn</span> <span class='ident'>cause</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>error</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>HandshakeError</span>::<span class='ident'>Failure</span>(<span class='kw-2'>ref</span> <span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>e</span>),
             <span class='ident'>HandshakeError</span>::<span class='ident'>Interrupted</span>(_) <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
         }
@@ -904,6 +945,15 @@
         <span class='prelude-val'>Ok</span>(<span class='self'>self</span>)
     }
 
+    <span class='doccomment'>/// Adds a certificate to the set of roots that the connector will trust.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// The connector will use the system&#39;s trust root by default. This method can be used to add</span>
+    <span class='doccomment'>/// to that set when communicating with servers not trusted by the system.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add_root_certificate</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>cert</span>: <span class='ident'>Certificate</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>TlsConnectorBuilder</span><span class='op'>&gt;</span> {
+        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>add_root_certificate</span>(<span class='ident'>cert</span>.<span class='number'>0</span>));
+        <span class='prelude-val'>Ok</span>(<span class='self'>self</span>)
+    }
+
     <span class='doccomment'>/// Consumes the builder, returning a `TlsConnector`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TlsConnector</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> <span class='ident'>connector</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>build</span>());
@@ -955,6 +1005,21 @@
         <span class='kw'>where</span> <span class='ident'>S</span>: <span class='ident'>io</span>::<span class='ident'>Read</span> <span class='op'>+</span> <span class='ident'>io</span>::<span class='ident'>Write</span>
     {
         <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>connect</span>(<span class='ident'>domain</span>, <span class='ident'>stream</span>));
+        <span class='prelude-val'>Ok</span>(<span class='ident'>TlsStream</span>(<span class='ident'>s</span>))
+    }
+
+    <span class='doccomment'>/// Like `connect`, but does not validate the server&#39;s domain name against its certificate.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// # Warning</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// You should think very carefully before you use this method. If hostname verification is not</span>
+    <span class='doccomment'>/// used, *any* valid certificate for *any* site will be trusted for use from any other. This</span>
+    <span class='doccomment'>/// introduces a significant vulnerability to man-in-the-middle attacks.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>danger_connect_without_providing_domain_for_certificate_verification_and_server_name_indication</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>(
+            <span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>stream</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='ident'>result</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>TlsStream</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>, <span class='ident'>HandshakeError</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;&gt;</span>
+        <span class='kw'>where</span> <span class='ident'>S</span>: <span class='ident'>io</span>::<span class='ident'>Read</span> <span class='op'>+</span> <span class='ident'>io</span>::<span class='ident'>Write</span>
+    {
+        <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>connect_no_domain</span>(<span class='ident'>stream</span>));
         <span class='prelude-val'>Ok</span>(<span class='ident'>TlsStream</span>(<span class='ident'>s</span>))
     }
 }

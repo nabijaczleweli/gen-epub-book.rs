@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -144,7 +145,7 @@
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
 <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>unreachable</span>() <span class='op'>-&gt;</span> <span class='op'>!</span> {
     <span class='kw'>let</span> <span class='ident'>x</span>: <span class='kw-2'>&amp;</span><span class='ident'>void</span>::<span class='ident'>Void</span> <span class='op'>=</span> <span class='ident'>mem</span>::<span class='ident'>transmute</span>(<span class='number'>1usize</span>);
-    <span class='ident'>void</span>::<span class='ident'>unreachable</span>(<span class='op'>*</span><span class='ident'>x</span>)
+    <span class='ident'>void</span>::<span class='ident'>unreachable</span>(<span class='kw-2'>*</span><span class='ident'>x</span>)
 }
 
 <span class='doccomment'>/// An extension trait for `Option&lt;T&gt;` providing unchecked unwrapping methods.</span>

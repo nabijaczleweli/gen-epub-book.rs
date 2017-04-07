@@ -9,6 +9,7 @@
 
     <title>parse.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -1007,7 +1008,7 @@
             }
 
             <span class='ident'>Item</span>::<span class='ident'>Numeric</span>(<span class='ident'>spec</span>, <span class='ident'>_pad</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Numeric</span>::<span class='op'>*</span>;
+                <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Numeric</span>::<span class='kw-2'>*</span>;
 
                 <span class='kw'>let</span> (<span class='ident'>width</span>, <span class='ident'>signed</span>, <span class='ident'>set</span>): (<span class='ident'>usize</span>, <span class='ident'>bool</span>,
                                            <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Parsed</span>, <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='ident'>ParseResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>spec</span> {
@@ -1054,7 +1055,7 @@
             }
 
             <span class='ident'>Item</span>::<span class='ident'>Fixed</span>(<span class='ident'>spec</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Fixed</span>::<span class='op'>*</span>;
+                <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Fixed</span>::<span class='kw-2'>*</span>;
 
                 <span class='kw'>match</span> <span class='ident'>spec</span> {
                     <span class='ident'>ShortMonthName</span> <span class='op'>=&gt;</span> {
@@ -1134,7 +1135,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='attribute'>#[<span class='ident'>test</span>]</span>
 <span class='kw'>fn</span> <span class='ident'>test_parse</span>() {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>IMPOSSIBLE</span>;
 
     <span class='comment'>// workaround for Rust issue #22255</span>
@@ -1148,7 +1149,7 @@
         (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>items</span>:<span class='ident'>expr</span>; <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>err</span>:<span class='ident'>tt</span>) <span class='op'>=&gt;</span> (
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse_all</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>, <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>items</span>), <span class='prelude-val'>Err</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>err</span>))
         );
-        (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>items</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_mut</span>)]</span> {
+        (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>:<span class='ident'>expr</span>, <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>items</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> (<span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unused_mut</span>)]</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>expected</span> <span class='op'>=</span> <span class='ident'>Parsed</span>::<span class='ident'>new</span>();
             $(<span class='ident'>expected</span>.<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>);)<span class='op'>*</span>
             <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>parse_all</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>fmt</span>, <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>items</span>), <span class='prelude-val'>Ok</span>(<span class='ident'>expected</span>))
@@ -1383,7 +1384,7 @@
 <span class='kw'>fn</span> <span class='ident'>test_rfc2822</span>() {
     <span class='kw'>use</span> <span class='ident'>datetime</span>::<span class='ident'>DateTime</span>;
     <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>fixed</span>::<span class='ident'>FixedOffset</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>NOT_ENOUGH</span>;
 
     <span class='comment'>// Test data - (input, Ok(expected result after parse and format) or Err(error code))</span>
@@ -1467,7 +1468,7 @@
 <span class='kw'>fn</span> <span class='ident'>test_rfc3339</span>() {
     <span class='kw'>use</span> <span class='ident'>datetime</span>::<span class='ident'>DateTime</span>;
     <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>fixed</span>::<span class='ident'>FixedOffset</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
 
     <span class='comment'>// Test data - (input, Ok(expected result after parse and format) or Err(error code))</span>
     <span class='kw'>let</span> <span class='ident'>testdates</span> <span class='op'>=</span> [

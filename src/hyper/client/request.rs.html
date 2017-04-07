@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.4/src/client/request.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.6/src/client/request.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>request.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -547,7 +548,7 @@
         <span class='kw'>let</span> <span class='ident'>message</span> <span class='op'>=</span> <span class='ident'>req</span>.<span class='ident'>message</span>;
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>message</span> <span class='op'>=</span> <span class='ident'>message</span>.<span class='ident'>downcast</span>::<span class='op'>&lt;</span><span class='ident'>Http11Message</span><span class='op'>&gt;</span>().<span class='ident'>ok</span>().<span class='ident'>unwrap</span>();
         <span class='ident'>message</span>.<span class='ident'>flush_outgoing</span>().<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>message</span>
+        <span class='kw'>let</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='kw-2'>*</span><span class='ident'>message</span>
             .<span class='ident'>into_inner</span>().<span class='ident'>downcast</span>::<span class='op'>&lt;</span><span class='ident'>MockStream</span><span class='op'>&gt;</span>().<span class='ident'>ok</span>().<span class='ident'>unwrap</span>();
         <span class='ident'>stream</span>.<span class='ident'>write</span>
     }

@@ -9,6 +9,7 @@
 
     <title>serde_json::ser::to_string - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -47,8 +48,8 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/serde_json/ser.rs.html#1319-1328' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn to_string&lt;T:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(value: &amp;T) -&gt; <a class='type' href='../../serde_json/type.Result.html' title='serde_json::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt; <span class='where'>where T: <a class='trait' href='../../serde/ser/trait.Serialize.html' title='serde::ser::Serialize'>Serialize</a></span></pre><div class='docblock'><p>Serialize the given data structure as a String of JSON.</p>
+               </span><a class='srclink' href='../../src/serde_json/ser.rs.html#1376-1385' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn to_string&lt;T:&nbsp;?<a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html' title='core::marker::Sized'>Sized</a>&gt;(value: &amp;T) -&gt; <a class='type' href='../../serde_json/type.Result.html' title='serde_json::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../serde/ser/trait.Serialize.html' title='serde::ser::Serialize'>Serialize</a></span></pre><div class='docblock'><p>Serialize the given data structure as a String of JSON.</p>
 
 <p>Serialization can fail if <code>T</code>&#39;s implementation of <code>Serialize</code> decides to
 fail, or if <code>T</code> contains a map with non-string keys.</p>

@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/ec.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/ec.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ec.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -812,7 +813,7 @@
             <span class='kw'>if</span> <span class='ident'>ptr</span>.<span class='ident'>is_null</span>() {
                 <span class='prelude-val'>None</span>
             } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>EcGroupRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+                <span class='prelude-val'>Some</span>(<span class='ident'>EcGroupRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
             }
         }
     }
@@ -823,7 +824,7 @@
             <span class='kw'>if</span> <span class='ident'>ptr</span>.<span class='ident'>is_null</span>() {
                 <span class='prelude-val'>None</span>
             } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>EcPointRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+                <span class='prelude-val'>Some</span>(<span class='ident'>EcPointRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
             }
         }
     }
@@ -834,7 +835,7 @@
             <span class='kw'>if</span> <span class='ident'>ptr</span>.<span class='ident'>is_null</span>() {
                 <span class='prelude-val'>None</span>
             } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
             }
         }
     }
@@ -954,7 +955,7 @@
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='kw'>use</span> <span class='ident'>bn</span>::<span class='ident'>BigNumContext</span>;
     <span class='kw'>use</span> <span class='ident'>nid</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>key_new_by_curve_name</span>() {

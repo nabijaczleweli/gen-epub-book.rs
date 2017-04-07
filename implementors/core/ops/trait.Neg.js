@@ -2,7 +2,6 @@
 implementors["antidote"] = [];
 implementors["chrono"] = ["impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Neg.html' title='core::ops::Neg'>Neg</a> for <a class='struct' href='chrono/struct.Duration.html' title='chrono::Duration'>Duration</a>",];
 implementors["hyper"] = ["impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Neg.html' title='core::ops::Neg'>Neg</a> for <a class='struct' href='time/duration/struct.Duration.html' title='time::duration::Duration'>Duration</a>",];
-implementors["lazy_static"] = [];
 implementors["libc"] = [];
 implementors["mime_guess"] = [];
 implementors["num"] = [];

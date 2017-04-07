@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -1037,7 +1038,7 @@
 <span class='kw'>fn</span> <span class='ident'>shrink</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>slice</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>T</span>], <span class='ident'>len</span>: <span class='ident'>usize</span>) {
     <span class='macro'>debug_assert</span><span class='macro'>!</span>(<span class='ident'>slice</span>.<span class='ident'>len</span>() <span class='op'>&gt;=</span> <span class='ident'>len</span>);
     <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>slice</span>.<span class='ident'>as_mut_ptr</span>();
-    <span class='op'>*</span><span class='ident'>slice</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>ptr</span>, <span class='ident'>len</span>) };
+    <span class='kw-2'>*</span><span class='ident'>slice</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>ptr</span>, <span class='ident'>len</span>) };
 }
 
 <span class='doccomment'>/// Determines if byte is a token char.</span>
@@ -1099,7 +1100,7 @@
 <span class='kw'>impl</span> <span class='ident'>Error</span> {
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>description_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Error</span>::<span class='ident'>HeaderName</span> <span class='op'>=&gt;</span> <span class='string'>&quot;invalid header name&quot;</span>,
             <span class='ident'>Error</span>::<span class='ident'>HeaderValue</span> <span class='op'>=&gt;</span> <span class='string'>&quot;invalid header value&quot;</span>,
             <span class='ident'>Error</span>::<span class='ident'>NewLine</span> <span class='op'>=&gt;</span> <span class='string'>&quot;invalid new line&quot;</span>,
@@ -1159,7 +1160,7 @@
     <span class='doccomment'>/// Convenience method to check if status is complete.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_complete</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Status</span>::<span class='ident'>Complete</span>(..) <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
             <span class='ident'>Status</span>::<span class='ident'>Partial</span> <span class='op'>=&gt;</span> <span class='bool-val'>false</span>
         }
@@ -1168,7 +1169,7 @@
     <span class='doccomment'>/// Convenience method to check if status is partial.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>is_partial</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Status</span>::<span class='ident'>Complete</span>(..) <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
             <span class='ident'>Status</span>::<span class='ident'>Partial</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>
         }
@@ -1648,7 +1649,7 @@
             }
             <span class='comment'>// &quot;Linear white space&quot; is ignored between the chunk size and the</span>
             <span class='comment'>// extension separator token (&quot;;&quot;) due to the &quot;implied *LWS rule&quot;.</span>
-            <span class='string'>b&#39;\t&#39;</span> <span class='op'>|</span> <span class='string'>b&#39; &#39;</span> <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>in_ext</span> <span class='kw-2'>&amp;</span> <span class='op'>!</span><span class='ident'>in_chunk_size</span> <span class='op'>=&gt;</span> {}
+            <span class='string'>b&#39;\t&#39;</span> <span class='op'>|</span> <span class='string'>b&#39; &#39;</span> <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>in_ext</span> <span class='op'>&amp;</span> <span class='op'>!</span><span class='ident'>in_chunk_size</span> <span class='op'>=&gt;</span> {}
             <span class='comment'>// LWS can follow the chunk size, but no more digits can come</span>
             <span class='string'>b&#39;\t&#39;</span> <span class='op'>|</span> <span class='string'>b&#39; &#39;</span> <span class='kw'>if</span> <span class='ident'>in_chunk_size</span> <span class='op'>=&gt;</span> <span class='ident'>in_chunk_size</span> <span class='op'>=</span> <span class='bool-val'>false</span>,
             <span class='comment'>// We allow any arbitrary octet once we are in the extension, since</span>

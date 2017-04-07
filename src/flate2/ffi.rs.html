@@ -9,6 +9,7 @@
 
     <title>ffi.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -109,7 +110,7 @@
 <span id="65">65</span>
 <span id="66">66</span>
 </pre><pre class='rust '>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>imp</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>imp</span>::<span class='kw-2'>*</span>;
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;zlib&quot;</span>)]</span>
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>bad_style</span>)]</span>
@@ -142,14 +143,14 @@
     <span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>MZ_DEFAULT_WINDOW_BITS</span>: <span class='ident'>c_int</span> <span class='op'>=</span> <span class='number'>15</span>;
 
     <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>mz_crc32</span>(<span class='ident'>crc</span>: <span class='ident'>c_ulong</span>,
-                                  <span class='ident'>ptr</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
+                                  <span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>,
                                   <span class='ident'>len</span>: <span class='ident'>size_t</span>) <span class='op'>-&gt;</span> <span class='ident'>c_ulong</span> {
         <span class='ident'>z</span>::<span class='ident'>crc32</span>(<span class='ident'>crc</span>, <span class='ident'>ptr</span>, <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>c_uint</span>)
     }
 
     <span class='kw'>const</span> <span class='ident'>ZLIB_VERSION</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;1.2.8\0&quot;</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>mz_deflateInit2</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>mz_stream</span>,
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>mz_deflateInit2</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>mz_stream</span>,
                                          <span class='ident'>level</span>: <span class='ident'>c_int</span>,
                                          <span class='ident'>method</span>: <span class='ident'>c_int</span>,
                                          <span class='ident'>window_bits</span>: <span class='ident'>c_int</span>,
@@ -157,14 +158,14 @@
                                          <span class='ident'>strategy</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
         <span class='ident'>z</span>::<span class='ident'>deflateInit2_</span>(<span class='ident'>stream</span>, <span class='ident'>level</span>, <span class='ident'>method</span>, <span class='ident'>window_bits</span>, <span class='ident'>mem_level</span>,
                          <span class='ident'>strategy</span>,
-                         <span class='ident'>ZLIB_VERSION</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                         <span class='ident'>ZLIB_VERSION</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
                          <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>mz_stream</span><span class='op'>&gt;</span>() <span class='kw'>as</span> <span class='ident'>c_int</span>)
     }
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>mz_inflateInit2</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>mz_stream</span>,
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>mz_inflateInit2</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>mz_stream</span>,
                                          <span class='ident'>window_bits</span>: <span class='ident'>c_int</span>)
                                          <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
         <span class='ident'>z</span>::<span class='ident'>inflateInit2_</span>(<span class='ident'>stream</span>, <span class='ident'>window_bits</span>,
-                         <span class='ident'>ZLIB_VERSION</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
+                         <span class='ident'>ZLIB_VERSION</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>c_char</span>,
                          <span class='ident'>mem</span>::<span class='ident'>size_of</span>::<span class='op'>&lt;</span><span class='ident'>mz_stream</span><span class='op'>&gt;</span>() <span class='kw'>as</span> <span class='ident'>c_int</span>)
     }
 }
@@ -173,7 +174,7 @@
 <span class='kw'>mod</span> <span class='ident'>imp</span> {
     <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>miniz_sys</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>miniz_sys</span>::<span class='op'>*</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>miniz_sys</span>::<span class='kw-2'>*</span>;
 }
 </pre>
 </section>

@@ -9,6 +9,7 @@
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -767,14 +768,14 @@
     <span class='kw'>fn</span> <span class='ident'>from_local_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>offset_from_local_date</span>(<span class='ident'>local</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>offset</span><span class='op'>|</span> {
             <span class='comment'>// since FixedOffset is within +/- 1 day, the date is never affected</span>
-            <span class='ident'>Date</span>::<span class='ident'>from_utc</span>(<span class='op'>*</span><span class='ident'>local</span>, <span class='ident'>offset</span>)
+            <span class='ident'>Date</span>::<span class='ident'>from_utc</span>(<span class='kw-2'>*</span><span class='ident'>local</span>, <span class='ident'>offset</span>)
         })
     }
 
     <span class='doccomment'>/// Converts the local `NaiveDateTime` to the timezone-aware `DateTime` if possible.</span>
     <span class='kw'>fn</span> <span class='ident'>from_local_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>local</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>LocalResult</span><span class='op'>&lt;</span><span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;&gt;</span> {
         <span class='self'>self</span>.<span class='ident'>offset_from_local_datetime</span>(<span class='ident'>local</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>offset</span><span class='op'>|</span> {
-            <span class='ident'>DateTime</span>::<span class='ident'>from_utc</span>(<span class='op'>*</span><span class='ident'>local</span> <span class='op'>-</span> <span class='ident'>offset</span>.<span class='ident'>fix</span>(), <span class='ident'>offset</span>)
+            <span class='ident'>DateTime</span>::<span class='ident'>from_utc</span>(<span class='kw-2'>*</span><span class='ident'>local</span> <span class='op'>-</span> <span class='ident'>offset</span>.<span class='ident'>fix</span>(), <span class='ident'>offset</span>)
         })
     }
 
@@ -787,13 +788,13 @@
     <span class='doccomment'>/// Converts the UTC `NaiveDate` to the local time.</span>
     <span class='doccomment'>/// The UTC is continuous and thus this cannot fail (but can give the duplicate local time).</span>
     <span class='kw'>fn</span> <span class='ident'>from_utc_date</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDate</span>) <span class='op'>-&gt;</span> <span class='ident'>Date</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        <span class='ident'>Date</span>::<span class='ident'>from_utc</span>(<span class='op'>*</span><span class='ident'>utc</span>, <span class='self'>self</span>.<span class='ident'>offset_from_utc_date</span>(<span class='ident'>utc</span>))
+        <span class='ident'>Date</span>::<span class='ident'>from_utc</span>(<span class='kw-2'>*</span><span class='ident'>utc</span>, <span class='self'>self</span>.<span class='ident'>offset_from_utc_date</span>(<span class='ident'>utc</span>))
     }
 
     <span class='doccomment'>/// Converts the UTC `NaiveDateTime` to the local time.</span>
     <span class='doccomment'>/// The UTC is continuous and thus this cannot fail (but can give the duplicate local time).</span>
     <span class='kw'>fn</span> <span class='ident'>from_utc_datetime</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>utc</span>: <span class='kw-2'>&amp;</span><span class='ident'>NaiveDateTime</span>) <span class='op'>-&gt;</span> <span class='ident'>DateTime</span><span class='op'>&lt;</span><span class='self'>Self</span><span class='op'>&gt;</span> {
-        <span class='ident'>DateTime</span>::<span class='ident'>from_utc</span>(<span class='op'>*</span><span class='ident'>utc</span>, <span class='self'>self</span>.<span class='ident'>offset_from_utc_datetime</span>(<span class='ident'>utc</span>))
+        <span class='ident'>DateTime</span>::<span class='ident'>from_utc</span>(<span class='kw-2'>*</span><span class='ident'>utc</span>, <span class='self'>self</span>.<span class='ident'>offset_from_utc_datetime</span>(<span class='ident'>utc</span>))
     }
 }
 

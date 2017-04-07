@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/dsa.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/dsa.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>dsa.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -280,7 +281,7 @@
             <span class='kw'>if</span> <span class='ident'>p</span>.<span class='ident'>is_null</span>() {
                 <span class='prelude-val'>None</span>
             } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>p</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>p</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
             }
         }
     }
@@ -291,7 +292,7 @@
             <span class='kw'>if</span> <span class='ident'>q</span>.<span class='ident'>is_null</span>() {
                 <span class='prelude-val'>None</span>
             } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>q</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>q</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
             }
         }
     }
@@ -302,7 +303,7 @@
             <span class='kw'>if</span> <span class='ident'>g</span>.<span class='ident'>is_null</span>() {
                 <span class='prelude-val'>None</span>
             } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>g</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>g</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
             }
         }
     }
@@ -347,7 +348,7 @@
         <span class='kw'>let</span> <span class='ident'>mem_bio</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>MemBioSlice</span>::<span class='ident'>new</span>(<span class='ident'>buf</span>));
 
         <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>cb_ptr</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>cb</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>;
+            <span class='kw'>let</span> <span class='ident'>cb_ptr</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>cb</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>;
             <span class='kw'>let</span> <span class='ident'>dsa</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>PEM_read_bio_DSAPrivateKey</span>(<span class='ident'>mem_bio</span>.<span class='ident'>as_ptr</span>(),
                                                                  <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(),
                                                                  <span class='prelude-val'>Some</span>(<span class='ident'>invoke_passwd_cb_old</span>::<span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>),
@@ -368,13 +369,13 @@
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
     <span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='self'>self</span>, <span class='ident'>BIGNUM</span>, <span class='ident'>DSA</span>};
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>pqg</span>(<span class='ident'>d</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DSA</span>) <span class='op'>-&gt;</span> [<span class='op'>*</span><span class='kw'>const</span> <span class='ident'>BIGNUM</span>; <span class='number'>3</span>] {
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>pqg</span>(<span class='ident'>d</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>DSA</span>) <span class='op'>-&gt;</span> [<span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>BIGNUM</span>; <span class='number'>3</span>] {
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>p</span>, <span class='kw-2'>mut</span> <span class='ident'>q</span>, <span class='kw-2'>mut</span> <span class='ident'>g</span>) <span class='op'>=</span> (<span class='ident'>ptr</span>::<span class='ident'>null</span>(), <span class='ident'>ptr</span>::<span class='ident'>null</span>(), <span class='ident'>ptr</span>::<span class='ident'>null</span>());
         <span class='ident'>ffi</span>::<span class='ident'>DSA_get0_pqg</span>(<span class='ident'>d</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>p</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>g</span>);
         [<span class='ident'>p</span>, <span class='ident'>q</span>, <span class='ident'>g</span>]
     }
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='ident'>d</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DSA</span>) <span class='op'>-&gt;</span> [<span class='op'>*</span><span class='kw'>const</span> <span class='ident'>BIGNUM</span>; <span class='number'>2</span>] {
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='ident'>d</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>DSA</span>) <span class='op'>-&gt;</span> [<span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>BIGNUM</span>; <span class='number'>2</span>] {
         <span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>pub_key</span>, <span class='kw-2'>mut</span> <span class='ident'>priv_key</span>) <span class='op'>=</span> (<span class='ident'>ptr</span>::<span class='ident'>null</span>(), <span class='ident'>ptr</span>::<span class='ident'>null</span>());
         <span class='ident'>ffi</span>::<span class='ident'>DSA_get0_key</span>(<span class='ident'>d</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>pub_key</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>priv_key</span>);
         [<span class='ident'>pub_key</span>, <span class='ident'>priv_key</span>]
@@ -385,12 +386,12 @@
 <span class='kw'>mod</span> <span class='ident'>compat</span> {
     <span class='kw'>use</span> <span class='ident'>ffi</span>::{<span class='ident'>BIGNUM</span>, <span class='ident'>DSA</span>};
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>pqg</span>(<span class='ident'>d</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DSA</span>) <span class='op'>-&gt;</span> [<span class='op'>*</span><span class='kw'>const</span> <span class='ident'>BIGNUM</span>; <span class='number'>3</span>] {
-        [(<span class='op'>*</span><span class='ident'>d</span>).<span class='ident'>p</span>, (<span class='op'>*</span><span class='ident'>d</span>).<span class='ident'>q</span>, (<span class='op'>*</span><span class='ident'>d</span>).<span class='ident'>g</span>]
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>pqg</span>(<span class='ident'>d</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>DSA</span>) <span class='op'>-&gt;</span> [<span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>BIGNUM</span>; <span class='number'>3</span>] {
+        [(<span class='kw-2'>*</span><span class='ident'>d</span>).<span class='ident'>p</span>, (<span class='kw-2'>*</span><span class='ident'>d</span>).<span class='ident'>q</span>, (<span class='kw-2'>*</span><span class='ident'>d</span>).<span class='ident'>g</span>]
     }
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='ident'>d</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>DSA</span>) <span class='op'>-&gt;</span> [<span class='op'>*</span><span class='kw'>const</span> <span class='ident'>BIGNUM</span>; <span class='number'>2</span>] {
-        [(<span class='op'>*</span><span class='ident'>d</span>).<span class='ident'>pub_key</span>, (<span class='op'>*</span><span class='ident'>d</span>).<span class='ident'>priv_key</span>]
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>keys</span>(<span class='ident'>d</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>DSA</span>) <span class='op'>-&gt;</span> [<span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>BIGNUM</span>; <span class='number'>2</span>] {
+        [(<span class='kw-2'>*</span><span class='ident'>d</span>).<span class='ident'>pub_key</span>, (<span class='kw-2'>*</span><span class='ident'>d</span>).<span class='ident'>priv_key</span>]
     }
 }
 
@@ -398,7 +399,7 @@
 <span class='kw'>mod</span> <span class='ident'>test</span> {
     <span class='kw'>use</span> <span class='ident'>symm</span>::<span class='ident'>Cipher</span>;
 
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_generate</span>() {

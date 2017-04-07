@@ -9,6 +9,7 @@
 
     <title>expand.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -428,7 +429,7 @@
 
 <span class='doccomment'>/// Returns true if and only if the given byte is allowed in a capture name.</span>
 <span class='kw'>fn</span> <span class='ident'>is_valid_cap_letter</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-    <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>b</span> {
+    <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>b</span> {
         <span class='string'>b&#39;0&#39;</span> ... <span class='string'>b&#39;9&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;a&#39;</span> ... <span class='string'>b&#39;z&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;A&#39;</span> ... <span class='string'>b&#39;Z&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;_&#39;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
         _ <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
     }

@@ -9,6 +9,7 @@
 
     <title>write.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -291,7 +292,7 @@
 </pre><pre class='rust '>
 <span class='doccomment'>//! Writer-based compression/decompression streams</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 
 <span class='kw'>use</span> {<span class='ident'>Action</span>, <span class='ident'>Status</span>, <span class='ident'>Compression</span>, <span class='ident'>Compress</span>, <span class='ident'>Decompress</span>};
@@ -497,7 +498,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>repeat</span>;
     <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>BzEncoder</span>, <span class='ident'>BzDecoder</span>};
 
@@ -511,7 +512,7 @@
         <span class='kw'>let</span> <span class='ident'>data</span> <span class='op'>=</span> <span class='ident'>c</span>.<span class='ident'>finish</span>().<span class='ident'>unwrap</span>().<span class='ident'>finish</span>().<span class='ident'>unwrap</span>();
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='ident'>data</span>[<span class='number'>0</span>..<span class='number'>5</span>], <span class='string'>b&quot;12834&quot;</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>data</span>.<span class='ident'>len</span>(), <span class='number'>500005</span>);
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;12834{}&quot;</span>, <span class='ident'>s</span>).<span class='ident'>as_bytes</span>() <span class='op'>==</span> <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='ident'>data</span>);
+        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;12834{}&quot;</span>, <span class='ident'>s</span>).<span class='ident'>as_bytes</span>() <span class='op'>==</span> <span class='kw-2'>&amp;</span><span class='kw-2'>*</span><span class='ident'>data</span>);
     }
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>

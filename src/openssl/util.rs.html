@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/util.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/util.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>util.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -174,14 +175,14 @@
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>invoke_passwd_cb_old</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>invoke_passwd_cb_old</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
                                              <span class='ident'>size</span>: <span class='ident'>c_int</span>,
                                              <span class='ident'>_rwflag</span>: <span class='ident'>c_int</span>,
-                                             <span class='ident'>cb_state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>)
+                                             <span class='ident'>cb_state</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>)
                                              <span class='op'>-&gt;</span> <span class='ident'>c_int</span>
     <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>c_char</span>]) <span class='op'>-&gt;</span> <span class='ident'>usize</span>
 {
-    <span class='kw'>let</span> <span class='ident'>callback</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span>(<span class='ident'>cb_state</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>CallbackState</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>);
+    <span class='kw'>let</span> <span class='ident'>callback</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span>(<span class='ident'>cb_state</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>CallbackState</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>);
 
     <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>panic</span>::<span class='ident'>catch_unwind</span>(<span class='ident'>AssertUnwindSafe</span>(<span class='op'>||</span> {
         <span class='kw'>let</span> <span class='ident'>pass_slice</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>buf</span>, <span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
@@ -200,17 +201,17 @@
 <span class='doccomment'>/// Password callback function, passed to private key loading functions.</span>
 <span class='doccomment'>///</span>
 <span class='doccomment'>/// `cb_state` is expected to be a pointer to a `CallbackState`.</span>
-<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>invoke_passwd_cb</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
+<span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>extern</span> <span class='kw'>fn</span> <span class='ident'>invoke_passwd_cb</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>(<span class='ident'>buf</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
                                          <span class='ident'>size</span>: <span class='ident'>c_int</span>,
                                          <span class='ident'>_rwflag</span>: <span class='ident'>c_int</span>,
-                                         <span class='ident'>cb_state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>)
+                                         <span class='ident'>cb_state</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>)
                                          <span class='op'>-&gt;</span> <span class='ident'>c_int</span>
     <span class='kw'>where</span> <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>usize</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span>
 {
-    <span class='kw'>let</span> <span class='ident'>callback</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span>(<span class='ident'>cb_state</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>CallbackState</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>);
+    <span class='kw'>let</span> <span class='ident'>callback</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span>(<span class='ident'>cb_state</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>CallbackState</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span>);
 
     <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>panic</span>::<span class='ident'>catch_unwind</span>(<span class='ident'>AssertUnwindSafe</span>(<span class='op'>||</span> {
-        <span class='kw'>let</span> <span class='ident'>pass_slice</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>buf</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
+        <span class='kw'>let</span> <span class='ident'>pass_slice</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts_mut</span>(<span class='ident'>buf</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>, <span class='ident'>size</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
         <span class='ident'>callback</span>.<span class='ident'>cb</span>.<span class='ident'>take</span>().<span class='ident'>unwrap</span>()(<span class='ident'>pass_slice</span>)
     }));
 

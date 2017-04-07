@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/x509/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/x509/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -1192,6 +1193,23 @@
 <span id="1148">1148</span>
 <span id="1149">1149</span>
 <span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
+<span id="1155">1155</span>
+<span id="1156">1156</span>
+<span id="1157">1157</span>
+<span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
+<span id="1167">1167</span>
 </pre><pre class='rust '>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>allow</span>(<span class='ident'>deprecated</span>)]</span>
 <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_long</span>};
@@ -1465,7 +1483,7 @@
 
             <span class='kw'>let</span> <span class='ident'>exts</span> <span class='op'>=</span> <span class='ident'>compat</span>::<span class='ident'>X509_get0_extensions</span>(<span class='ident'>cert</span>.<span class='ident'>as_ptr</span>());
             <span class='kw'>if</span> <span class='ident'>exts</span> <span class='op'>!=</span> <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>() {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>X509_REQ_add_extensions</span>(<span class='ident'>req</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>exts</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)));
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>X509_REQ_add_extensions</span>(<span class='ident'>req</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>exts</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)));
             }
 
             <span class='kw'>let</span> <span class='ident'>hash_fn</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>hash_type</span>.<span class='ident'>as_ptr</span>();
@@ -1521,6 +1539,23 @@
     }
 
     <span class='doccomment'>/// Sets the subject name of the certificate.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// When building certificates, the `C`, `ST`, and `O` options are common when using the openssl command line tools.</span>
+    <span class='doccomment'>/// The `CN` field is used for the common name, such as a DNS name.</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>/// use openssl::x509::{X509, X509NameBuilder};</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// let mut x509_name = openssl::x509::X509NameBuilder::new().unwrap();</span>
+    <span class='doccomment'>/// x509_name.append_entry_by_text(&quot;C&quot;, &quot;US&quot;).unwrap();</span>
+    <span class='doccomment'>/// x509_name.append_entry_by_text(&quot;ST&quot;, &quot;CA&quot;).unwrap();</span>
+    <span class='doccomment'>/// x509_name.append_entry_by_text(&quot;O&quot;, &quot;Some organization&quot;).unwrap();</span>
+    <span class='doccomment'>/// x509_name.append_entry_by_text(&quot;CN&quot;, &quot;www.example.com&quot;).unwrap();</span>
+    <span class='doccomment'>/// let x509_name = x509_name.build();</span>
+    <span class='doccomment'>///</span>
+    <span class='doccomment'>/// let mut x509 = openssl::x509::X509::builder().unwrap();</span>
+    <span class='doccomment'>/// x509.set_subject_name(&amp;x509_name).unwrap();</span>
+    <span class='doccomment'>/// ```</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_subject_name</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>subject_name</span>: <span class='kw-2'>&amp;</span><span class='ident'>X509NameRef</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
             <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>X509_set_subject_name</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>subject_name</span>.<span class='ident'>as_ptr</span>())).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
@@ -1605,7 +1640,7 @@
                 <span class='kw'>return</span> <span class='prelude-val'>None</span>;
             }
 
-            <span class='prelude-val'>Some</span>(<span class='ident'>Stack</span>::<span class='ident'>from_ptr</span>(<span class='ident'>stack</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _))
+            <span class='prelude-val'>Some</span>(<span class='ident'>Stack</span>::<span class='ident'>from_ptr</span>(<span class='ident'>stack</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
         }
     }
 
@@ -1622,7 +1657,7 @@
             <span class='kw'>let</span> <span class='ident'>evp</span> <span class='op'>=</span> <span class='ident'>hash_type</span>.<span class='ident'>as_ptr</span>();
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EVP_MAX_MD_SIZE</span>;
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0u8</span>; <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>usize</span>];
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>X509_digest</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>evp</span>, <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>len</span>)));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>X509_digest</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>evp</span>, <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>len</span>)));
             <span class='ident'>buf</span>.<span class='ident'>truncate</span>(<span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
             <span class='prelude-val'>Ok</span>(<span class='ident'>buf</span>)
         }
@@ -1652,7 +1687,7 @@
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>signature</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null</span>();
             <span class='ident'>compat</span>::<span class='ident'>X509_get0_signature</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>signature</span>, <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='self'>self</span>.<span class='ident'>as_ptr</span>());
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>signature</span>.<span class='ident'>is_null</span>());
-            <span class='ident'>Asn1BitStringRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>signature</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)
+            <span class='ident'>Asn1BitStringRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>signature</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)
         }
     }
 
@@ -1662,7 +1697,7 @@
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>algor</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null</span>();
             <span class='ident'>compat</span>::<span class='ident'>X509_get0_signature</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>algor</span>, <span class='self'>self</span>.<span class='ident'>as_ptr</span>());
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>algor</span>.<span class='ident'>is_null</span>());
-            <span class='ident'>X509AlgorithmRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>algor</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)
+            <span class='ident'>X509AlgorithmRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>algor</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)
         }
     }
 
@@ -1748,7 +1783,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>X509Ref</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>X509</span> {
     <span class='kw'>fn</span> <span class='ident'>as_ref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>X509Ref</span> {
-        <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>
+        <span class='kw-2'>&amp;</span><span class='kw-2'>*</span><span class='self'>self</span>
     }
 }
 
@@ -1760,7 +1795,7 @@
 
 <span class='kw'>impl</span> <span class='ident'>Borrow</span><span class='op'>&lt;</span><span class='ident'>X509Ref</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>X509</span> {
     <span class='kw'>fn</span> <span class='ident'>borrow</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>X509Ref</span> {
-        <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>
+        <span class='kw-2'>&amp;</span><span class='kw-2'>*</span><span class='self'>self</span>
     }
 }
 
@@ -1772,8 +1807,8 @@
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>X509v3Context</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>ffi</span>::<span class='ident'>X509V3_CTX</span>, <span class='ident'>PhantomData</span><span class='op'>&lt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>X509Ref</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>ConfRef</span>)<span class='op'>&gt;</span>);
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>X509v3Context</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509V3_CTX</span> {
-        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509V3_CTX</span> {
+        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='number'>0</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _
     }
 }
 
@@ -1808,8 +1843,8 @@
             <span class='ident'>ffi</span>::<span class='ident'>init</span>();
             <span class='kw'>let</span> <span class='ident'>conf</span> <span class='op'>=</span> <span class='ident'>conf</span>.<span class='ident'>map_or</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>ConfRef</span>::<span class='ident'>as_ptr</span>);
             <span class='kw'>let</span> <span class='ident'>context</span> <span class='op'>=</span> <span class='ident'>context</span>.<span class='ident'>map_or</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>X509v3Context</span>::<span class='ident'>as_ptr</span>);
-            <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _;
-            <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='ident'>value</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _;
+            <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _;
+            <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='ident'>value</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _;
 
             <span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>X509V3_EXT_nconf</span>(<span class='ident'>conf</span>, <span class='ident'>context</span>, <span class='ident'>name</span>, <span class='ident'>value</span>)).<span class='ident'>map</span>(<span class='ident'>X509Extension</span>)
         }
@@ -1833,7 +1868,7 @@
             <span class='kw'>let</span> <span class='ident'>conf</span> <span class='op'>=</span> <span class='ident'>conf</span>.<span class='ident'>map_or</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>ConfRef</span>::<span class='ident'>as_ptr</span>);
             <span class='kw'>let</span> <span class='ident'>context</span> <span class='op'>=</span> <span class='ident'>context</span>.<span class='ident'>map_or</span>(<span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>X509v3Context</span>::<span class='ident'>as_ptr</span>);
             <span class='kw'>let</span> <span class='ident'>name</span> <span class='op'>=</span> <span class='ident'>name</span>.<span class='ident'>as_raw</span>();
-            <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='ident'>value</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _;
+            <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='ident'>value</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _;
 
             <span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>X509V3_EXT_nconf_nid</span>(<span class='ident'>conf</span>, <span class='ident'>context</span>, <span class='ident'>name</span>, <span class='ident'>value</span>)).<span class='ident'>map</span>(<span class='ident'>X509Extension</span>)
         }
@@ -1855,7 +1890,7 @@
             <span class='kw'>let</span> <span class='ident'>field</span> <span class='op'>=</span> <span class='ident'>CString</span>::<span class='ident'>new</span>(<span class='ident'>field</span>).<span class='ident'>unwrap</span>();
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>value</span>.<span class='ident'>len</span>() <span class='op'>&lt;=</span> <span class='ident'>c_int</span>::<span class='ident'>max_value</span>() <span class='kw'>as</span> <span class='ident'>usize</span>);
             <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>X509_NAME_add_entry_by_txt</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>as_ptr</span>(),
-                                                <span class='ident'>field</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
+                                                <span class='ident'>field</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _,
                                                 <span class='ident'>ffi</span>::<span class='ident'>MBSTRING_UTF8</span>,
                                                 <span class='ident'>value</span>.<span class='ident'>as_ptr</span>(),
                                                 <span class='ident'>value</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_int</span>,
@@ -1871,7 +1906,7 @@
             <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>X509_NAME_add_entry_by_NID</span>(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>as_ptr</span>(),
                                                 <span class='ident'>field</span>.<span class='ident'>as_raw</span>(),
                                                 <span class='ident'>ffi</span>::<span class='ident'>MBSTRING_UTF8</span>,
-                                                <span class='ident'>value</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _,
+                                                <span class='ident'>value</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _,
                                                 <span class='ident'>value</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_int</span>,
                                                 <span class='op'>-</span><span class='number'>1</span>,
                                                 <span class='number'>0</span>))
@@ -2107,7 +2142,7 @@
         <span class='kw'>let</span> <span class='ident'>ext_type</span> <span class='op'>=</span> <span class='ident'>ext</span>.<span class='ident'>get_type</span>();
 
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>index</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>indexes</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>ext_type</span>) {
-            <span class='self'>self</span>.<span class='ident'>extensions</span>[<span class='op'>*</span><span class='ident'>index</span>] <span class='op'>=</span> <span class='ident'>ext</span>;
+            <span class='self'>self</span>.<span class='ident'>extensions</span>[<span class='kw-2'>*</span><span class='ident'>index</span>] <span class='op'>=</span> <span class='ident'>ext</span>;
             <span class='kw'>return</span>;
         }
 
@@ -2213,14 +2248,14 @@
     <span class='doccomment'>/// Returns the contents of this `GeneralName` if it is a `dNSName`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>dnsname</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='kw'>if</span> (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>type_</span> <span class='op'>!=</span> <span class='ident'>ffi</span>::<span class='ident'>GEN_DNS</span> {
+            <span class='kw'>if</span> (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>type_</span> <span class='op'>!=</span> <span class='ident'>ffi</span>::<span class='ident'>GEN_DNS</span> {
                 <span class='kw'>return</span> <span class='prelude-val'>None</span>;
             }
 
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ASN1_STRING_data</span>((<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>d</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _);
-            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_STRING_length</span>((<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>d</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _);
+            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ASN1_STRING_data</span>((<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>d</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _);
+            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_STRING_length</span>((<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>d</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _);
 
-            <span class='kw'>let</span> <span class='ident'>slice</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
+            <span class='kw'>let</span> <span class='ident'>slice</span> <span class='op'>=</span> <span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>usize</span>);
             <span class='comment'>// dNSNames are stated to be ASCII (specifically IA5). Hopefully</span>
             <span class='comment'>// OpenSSL checks that when loading a certificate but if not we&#39;ll</span>
             <span class='comment'>// use this instead of from_utf8_unchecked just in case.</span>
@@ -2231,14 +2266,14 @@
     <span class='doccomment'>/// Returns the contents of this `GeneralName` if it is an `iPAddress`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>ipaddress</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]<span class='op'>&gt;</span> {
         <span class='kw'>unsafe</span> {
-            <span class='kw'>if</span> (<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>type_</span> <span class='op'>!=</span> <span class='ident'>ffi</span>::<span class='ident'>GEN_IPADD</span> {
+            <span class='kw'>if</span> (<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>type_</span> <span class='op'>!=</span> <span class='ident'>ffi</span>::<span class='ident'>GEN_IPADD</span> {
                 <span class='kw'>return</span> <span class='prelude-val'>None</span>;
             }
 
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ASN1_STRING_data</span>((<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>d</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _);
-            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_STRING_length</span>((<span class='op'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>d</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _);
+            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ASN1_STRING_data</span>((<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>d</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _);
+            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_STRING_length</span>((<span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>as_ptr</span>()).<span class='ident'>d</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _);
 
-            <span class='prelude-val'>Some</span>(<span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>usize</span>))
+            <span class='prelude-val'>Some</span>(<span class='ident'>slice</span>::<span class='ident'>from_raw_parts</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>u8</span>, <span class='ident'>len</span> <span class='kw'>as</span> <span class='ident'>usize</span>))
         }
     }
 }
@@ -2262,7 +2297,7 @@
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>oid</span> <span class='op'>=</span> <span class='ident'>ptr</span>::<span class='ident'>null</span>();
             <span class='ident'>compat</span>::<span class='ident'>X509_ALGOR_get0</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>oid</span>, <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(), <span class='self'>self</span>.<span class='ident'>as_ptr</span>());
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>oid</span>.<span class='ident'>is_null</span>());
-            <span class='ident'>Asn1ObjectRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>oid</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _)
+            <span class='ident'>Asn1ObjectRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>oid</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)
         }
     }
 }
@@ -2285,59 +2320,59 @@
     <span class='kw'>use</span> <span class='ident'>libc</span>::{<span class='ident'>c_int</span>, <span class='ident'>c_void</span>};
     <span class='kw'>use</span> <span class='ident'>ffi</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_get_notAfter</span>(<span class='ident'>x</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_TIME</span> {
-        (<span class='op'>*</span>(<span class='op'>*</span>(<span class='op'>*</span><span class='ident'>x</span>).<span class='ident'>cert_info</span>).<span class='ident'>validity</span>).<span class='ident'>notAfter</span>
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_get_notAfter</span>(<span class='ident'>x</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_TIME</span> {
+        (<span class='kw-2'>*</span>(<span class='kw-2'>*</span>(<span class='kw-2'>*</span><span class='ident'>x</span>).<span class='ident'>cert_info</span>).<span class='ident'>validity</span>).<span class='ident'>notAfter</span>
     }
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_get_notBefore</span>(<span class='ident'>x</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_TIME</span> {
-        (<span class='op'>*</span>(<span class='op'>*</span>(<span class='op'>*</span><span class='ident'>x</span>).<span class='ident'>cert_info</span>).<span class='ident'>validity</span>).<span class='ident'>notBefore</span>
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_get_notBefore</span>(<span class='ident'>x</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_TIME</span> {
+        (<span class='kw-2'>*</span>(<span class='kw-2'>*</span>(<span class='kw-2'>*</span><span class='ident'>x</span>).<span class='ident'>cert_info</span>).<span class='ident'>validity</span>).<span class='ident'>notBefore</span>
     }
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_up_ref</span>(<span class='ident'>x</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>) {
-        <span class='ident'>ffi</span>::<span class='ident'>CRYPTO_add_lock</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> (<span class='op'>*</span><span class='ident'>x</span>).<span class='ident'>references</span>,
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_up_ref</span>(<span class='ident'>x</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>) {
+        <span class='ident'>ffi</span>::<span class='ident'>CRYPTO_add_lock</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> (<span class='kw-2'>*</span><span class='ident'>x</span>).<span class='ident'>references</span>,
                              <span class='number'>1</span>,
                              <span class='ident'>ffi</span>::<span class='ident'>CRYPTO_LOCK_X509</span>,
-                             <span class='string'>&quot;mod.rs\0&quot;</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw'>const</span> _,
+                             <span class='string'>&quot;mod.rs\0&quot;</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _,
                              <span class='macro'>line</span><span class='macro'>!</span>() <span class='kw'>as</span> <span class='ident'>c_int</span>);
     }
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_get0_extensions</span>(<span class='ident'>cert</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>)
-                                       <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>stack_st_X509_EXTENSION</span> {
-        <span class='kw'>let</span> <span class='ident'>info</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>cert</span>).<span class='ident'>cert_info</span>;
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_get0_extensions</span>(<span class='ident'>cert</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>)
+                                       <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>stack_st_X509_EXTENSION</span> {
+        <span class='kw'>let</span> <span class='ident'>info</span> <span class='op'>=</span> (<span class='kw-2'>*</span><span class='ident'>cert</span>).<span class='ident'>cert_info</span>;
         <span class='kw'>if</span> <span class='ident'>info</span>.<span class='ident'>is_null</span>() {
-            <span class='number'>0</span> <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _
+            <span class='number'>0</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _
         } <span class='kw'>else</span> {
-            (<span class='op'>*</span><span class='ident'>info</span>).<span class='ident'>extensions</span>
+            (<span class='kw-2'>*</span><span class='ident'>info</span>).<span class='ident'>extensions</span>
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_REQ_get_version</span>(<span class='ident'>x</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509_REQ</span>) <span class='op'>-&gt;</span> ::<span class='ident'>libc</span>::<span class='ident'>c_long</span>
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_REQ_get_version</span>(<span class='ident'>x</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509_REQ</span>) <span class='op'>-&gt;</span> ::<span class='ident'>libc</span>::<span class='ident'>c_long</span>
     {
-        ::<span class='ident'>ffi</span>::<span class='ident'>ASN1_INTEGER_get</span>((<span class='op'>*</span>(<span class='op'>*</span><span class='ident'>x</span>).<span class='ident'>req_info</span>).<span class='ident'>version</span>)
+        ::<span class='ident'>ffi</span>::<span class='ident'>ASN1_INTEGER_get</span>((<span class='kw-2'>*</span>(<span class='kw-2'>*</span><span class='ident'>x</span>).<span class='ident'>req_info</span>).<span class='ident'>version</span>)
     }
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_REQ_get_subject_name</span>(<span class='ident'>x</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509_REQ</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> ::<span class='ident'>ffi</span>::<span class='ident'>X509_NAME</span>
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_REQ_get_subject_name</span>(<span class='ident'>x</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>X509_REQ</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> ::<span class='ident'>ffi</span>::<span class='ident'>X509_NAME</span>
     {
-        (<span class='op'>*</span>(<span class='op'>*</span><span class='ident'>x</span>).<span class='ident'>req_info</span>).<span class='ident'>subject</span>
+        (<span class='kw-2'>*</span>(<span class='kw-2'>*</span><span class='ident'>x</span>).<span class='ident'>req_info</span>).<span class='ident'>subject</span>
     }
   
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_get0_signature</span>(<span class='ident'>psig</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_BIT_STRING</span>,
-                                      <span class='ident'>palg</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>X509_ALGOR</span>, 
-                                      <span class='ident'>x</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>) {
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_get0_signature</span>(<span class='ident'>psig</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_BIT_STRING</span>,
+                                      <span class='ident'>palg</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>X509_ALGOR</span>, 
+                                      <span class='ident'>x</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>X509</span>) {
         <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>psig</span>.<span class='ident'>is_null</span>() {
-            <span class='op'>*</span><span class='ident'>psig</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>x</span>).<span class='ident'>signature</span>;
+            <span class='kw-2'>*</span><span class='ident'>psig</span> <span class='op'>=</span> (<span class='kw-2'>*</span><span class='ident'>x</span>).<span class='ident'>signature</span>;
         }
         <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>palg</span>.<span class='ident'>is_null</span>() {
-            <span class='op'>*</span><span class='ident'>palg</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>x</span>).<span class='ident'>sig_alg</span>;
+            <span class='kw-2'>*</span><span class='ident'>palg</span> <span class='op'>=</span> (<span class='kw-2'>*</span><span class='ident'>x</span>).<span class='ident'>sig_alg</span>;
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_ALGOR_get0</span>(<span class='ident'>paobj</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_OBJECT</span>,
-                                  <span class='ident'>pptype</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>,
-                                  <span class='ident'>pval</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
-                                  <span class='ident'>alg</span>: <span class='op'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>X509_ALGOR</span>) {
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>X509_ALGOR_get0</span>(<span class='ident'>paobj</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>ASN1_OBJECT</span>,
+                                  <span class='ident'>pptype</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_int</span>,
+                                  <span class='ident'>pval</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
+                                  <span class='ident'>alg</span>: <span class='kw-2'>*</span><span class='kw'>const</span> <span class='ident'>ffi</span>::<span class='ident'>X509_ALGOR</span>) {
         <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>paobj</span>.<span class='ident'>is_null</span>() {
-            <span class='op'>*</span><span class='ident'>paobj</span> <span class='op'>=</span> (<span class='op'>*</span><span class='ident'>alg</span>).<span class='ident'>algorithm</span>;
+            <span class='kw-2'>*</span><span class='ident'>paobj</span> <span class='op'>=</span> (<span class='kw-2'>*</span><span class='ident'>alg</span>).<span class='ident'>algorithm</span>;
         }
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>pptype</span>.<span class='ident'>is_null</span>());
         <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>pval</span>.<span class='ident'>is_null</span>());

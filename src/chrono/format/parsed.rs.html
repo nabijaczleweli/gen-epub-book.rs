@@ -9,6 +9,7 @@
 
     <title>parsed.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -1253,10 +1254,10 @@
 <span class='doccomment'>/// Checks if `old` is either empty or has the same value to `new` (i.e. &quot;consistent&quot;),</span>
 <span class='doccomment'>/// and if it is empty, set `old` to `new` as well.</span>
 <span class='kw'>fn</span> <span class='ident'>set_if_consistent</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>PartialEq</span><span class='op'>&gt;</span>(<span class='ident'>old</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>, <span class='ident'>new</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>ParseResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>old</span>) <span class='op'>=</span> <span class='op'>*</span><span class='ident'>old</span> {
-        <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>old</span> <span class='op'>==</span> <span class='ident'>new</span> {<span class='prelude-val'>Ok</span>(())} <span class='kw'>else</span> {<span class='prelude-val'>Err</span>(<span class='ident'>IMPOSSIBLE</span>)}
+    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>old</span>) <span class='op'>=</span> <span class='kw-2'>*</span><span class='ident'>old</span> {
+        <span class='kw'>if</span> <span class='kw-2'>*</span><span class='ident'>old</span> <span class='op'>==</span> <span class='ident'>new</span> {<span class='prelude-val'>Ok</span>(())} <span class='kw'>else</span> {<span class='prelude-val'>Err</span>(<span class='ident'>IMPOSSIBLE</span>)}
     } <span class='kw'>else</span> {
-        <span class='op'>*</span><span class='ident'>old</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>new</span>);
+        <span class='kw-2'>*</span><span class='ident'>old</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>new</span>);
         <span class='prelude-val'>Ok</span>(())
     }
 }
@@ -1777,7 +1778,7 @@
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>Parsed</span>;
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw'>super</span>::{<span class='ident'>OUT_OF_RANGE</span>, <span class='ident'>IMPOSSIBLE</span>, <span class='ident'>NOT_ENOUGH</span>};
     <span class='kw'>use</span> <span class='ident'>Datelike</span>;
-    <span class='kw'>use</span> <span class='ident'>Weekday</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>Weekday</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='ident'>naive</span>::<span class='ident'>date</span>::{<span class='self'>self</span>, <span class='ident'>NaiveDate</span>};
     <span class='kw'>use</span> <span class='ident'>naive</span>::<span class='ident'>time</span>::<span class='ident'>NaiveTime</span>;
     <span class='kw'>use</span> <span class='ident'>offset</span>::<span class='ident'>TimeZone</span>;
@@ -1858,7 +1859,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_parsed_to_naive_date</span>() {
         <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>parse</span> {
-            ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
+            ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> (
                 <span class='ident'>Parsed</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>: <span class='prelude-val'>Some</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),)<span class='op'>*</span> ..<span class='ident'>Parsed</span>::<span class='ident'>new</span>() }.<span class='ident'>to_naive_date</span>()
             )
         }
@@ -2007,7 +2008,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_parsed_to_naive_time</span>() {
         <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>parse</span> {
-            ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
+            ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> (
                 <span class='ident'>Parsed</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>: <span class='prelude-val'>Some</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),)<span class='op'>*</span> ..<span class='ident'>Parsed</span>::<span class='ident'>new</span>() }.<span class='ident'>to_naive_time</span>()
             )
         }
@@ -2050,10 +2051,10 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_parsed_to_naive_datetime_with_offset</span>() {
         <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>parse</span> {
-            (<span class='ident'>offset</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>offset</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
+            (<span class='ident'>offset</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>offset</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> (
                 <span class='ident'>Parsed</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>: <span class='prelude-val'>Some</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),)<span class='op'>*</span> ..<span class='ident'>Parsed</span>::<span class='ident'>new</span>() }.<span class='ident'>to_naive_datetime_with_offset</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>offset</span>)
             );
-            ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (<span class='macro'>parse</span><span class='macro'>!</span>(<span class='ident'>offset</span> <span class='op'>=</span> <span class='number'>0</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),<span class='op'>*</span>))
+            ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> (<span class='macro'>parse</span><span class='macro'>!</span>(<span class='ident'>offset</span> <span class='op'>=</span> <span class='number'>0</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),<span class='kw-2'>*</span>))
         }
 
         <span class='kw'>let</span> <span class='ident'>ymdhms</span> <span class='op'>=</span> <span class='op'>|</span><span class='ident'>y</span>,<span class='ident'>m</span>,<span class='ident'>d</span>,<span class='ident'>h</span>,<span class='ident'>n</span>,<span class='ident'>s</span><span class='op'>|</span> <span class='prelude-val'>Ok</span>(<span class='ident'>NaiveDate</span>::<span class='ident'>from_ymd</span>(<span class='ident'>y</span>, <span class='ident'>m</span>, <span class='ident'>d</span>).<span class='ident'>and_hms</span>(<span class='ident'>h</span>, <span class='ident'>n</span>, <span class='ident'>s</span>));
@@ -2160,7 +2161,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_parsed_to_datetime</span>() {
         <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>parse</span> {
-            ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
+            ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> (
                 <span class='ident'>Parsed</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>: <span class='prelude-val'>Some</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),)<span class='op'>*</span> ..<span class='ident'>Parsed</span>::<span class='ident'>new</span>() }.<span class='ident'>to_datetime</span>()
             )
         }
@@ -2189,7 +2190,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_parsed_to_datetime_with_timezone</span>() {
         <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>parse</span> {
-            (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tz</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='op'>*</span>) <span class='op'>=&gt;</span> (
+            (<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tz</span>:<span class='ident'>expr</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>:<span class='ident'>expr</span>),<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> (
                 <span class='ident'>Parsed</span> { $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>k</span>: <span class='prelude-val'>Some</span>(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>v</span>),)<span class='op'>*</span> ..<span class='ident'>Parsed</span>::<span class='ident'>new</span>() }.<span class='ident'>to_datetime_with_timezone</span>(<span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>tz</span>)
             )
         }

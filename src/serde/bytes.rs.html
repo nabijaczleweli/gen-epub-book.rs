@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.9/src/bytes.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.13/src/bytes.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>bytes.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -669,7 +670,7 @@
     (<span class='ident'>bytes</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>])
      <span class='op'>-&gt;</span> <span class='ident'>iter</span>::<span class='ident'>FlatMap</span><span class='op'>&lt;</span><span class='ident'>slice</span>::<span class='ident'>Iter</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>char</span>::<span class='ident'>EscapeDefault</span>, <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>char</span>::<span class='ident'>EscapeDefault</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>f</span>(<span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>char</span>::<span class='ident'>EscapeDefault</span> {
-        <span class='ident'>char</span>::<span class='ident'>from_u32</span>(<span class='op'>*</span><span class='ident'>b</span> <span class='kw'>as</span> <span class='ident'>u32</span>).<span class='ident'>unwrap</span>().<span class='ident'>escape_default</span>()
+        <span class='ident'>char</span>::<span class='ident'>from_u32</span>(<span class='kw-2'>*</span><span class='ident'>b</span> <span class='kw'>as</span> <span class='ident'>u32</span>).<span class='ident'>unwrap</span>().<span class='ident'>escape_default</span>()
     }
     <span class='ident'>bytes</span>.<span class='ident'>iter</span>().<span class='ident'>flat_map</span>(<span class='ident'>f</span> <span class='kw'>as</span> <span class='kw'>fn</span>(<span class='kw-2'>&amp;</span><span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>char</span>::<span class='ident'>EscapeDefault</span>)
 }

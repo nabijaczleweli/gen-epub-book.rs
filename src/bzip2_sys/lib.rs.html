@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -145,48 +146,48 @@
 
 <span class='attribute'>#[<span class='ident'>repr</span>(<span class='ident'>C</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>bz_stream</span> {
-    <span class='kw'>pub</span> <span class='ident'>next_in</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
+    <span class='kw'>pub</span> <span class='ident'>next_in</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
     <span class='kw'>pub</span> <span class='ident'>avail_in</span>: <span class='ident'>c_uint</span>,
     <span class='kw'>pub</span> <span class='ident'>total_in_lo32</span>: <span class='ident'>c_uint</span>,
     <span class='kw'>pub</span> <span class='ident'>total_in_hi32</span>: <span class='ident'>c_uint</span>,
 
-    <span class='kw'>pub</span> <span class='ident'>next_out</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
+    <span class='kw'>pub</span> <span class='ident'>next_out</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_char</span>,
     <span class='kw'>pub</span> <span class='ident'>avail_out</span>: <span class='ident'>c_uint</span>,
     <span class='kw'>pub</span> <span class='ident'>total_out_lo32</span>: <span class='ident'>c_uint</span>,
     <span class='kw'>pub</span> <span class='ident'>total_out_hi32</span>: <span class='ident'>c_uint</span>,
 
-    <span class='kw'>pub</span> <span class='ident'>state</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
+    <span class='kw'>pub</span> <span class='ident'>state</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
 
-    <span class='kw'>pub</span> <span class='ident'>bzalloc</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>c_int</span>, <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span><span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>bzfree</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>)<span class='op'>&gt;</span>,
-    <span class='kw'>pub</span> <span class='ident'>opaque</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
+    <span class='kw'>pub</span> <span class='ident'>bzalloc</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='ident'>c_int</span>, <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span><span class='op'>&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>bzfree</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw'>extern</span> <span class='kw'>fn</span>(<span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>, <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>)<span class='op'>&gt;</span>,
+    <span class='kw'>pub</span> <span class='ident'>opaque</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>c_void</span>,
 }
 
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>abi_compat</span> {
-    ($(<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ty</span>),<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ret</span>:<span class='ident'>ty</span>,)<span class='op'>*</span>) <span class='op'>=&gt;</span> {
+    ($(<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>:<span class='ident'>ident</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>:<span class='ident'>ty</span>),<span class='kw-2'>*</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ret</span>:<span class='ident'>ty</span>,)<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> {
         <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
         <span class='kw'>extern</span> <span class='string'>&quot;system&quot;</span> {
-            $(<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ret</span>;)<span class='op'>*</span>
+            $(<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='kw-2'>*</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ret</span>;)<span class='op'>*</span>
         }
         <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>unix</span>)]</span>
         <span class='kw'>extern</span> {
-            $(<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='op'>*</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ret</span>;)<span class='op'>*</span>
+            $(<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>t</span>),<span class='kw-2'>*</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ret</span>;)<span class='op'>*</span>
         }
     }
 }
 
 <span class='macro'>abi_compat</span><span class='macro'>!</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzCompressInit</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>,
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzCompressInit</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>,
                               <span class='ident'>blockSize100k</span>: <span class='ident'>c_int</span>,
                               <span class='ident'>verbosity</span>: <span class='ident'>c_int</span>,
                               <span class='ident'>workFactor</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzCompress</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>, <span class='ident'>action</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzCompressEnd</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzDecompressInit</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>,
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzCompress</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>, <span class='ident'>action</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzCompressEnd</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzDecompressInit</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>,
                                 <span class='ident'>verbosity</span>: <span class='ident'>c_int</span>,
                                 <span class='ident'>small</span>: <span class='ident'>c_int</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzDecompress</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzDecompressEnd</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzDecompress</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>BZ2_bzDecompressEnd</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>bz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>,
 }
 
 <span class='attribute'>#[<span class='ident'>no_mangle</span>]</span>

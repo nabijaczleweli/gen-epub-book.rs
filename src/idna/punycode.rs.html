@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/idna-0.1.0/src/punycode.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/idna-0.1.1/src/punycode.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>punycode.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -254,9 +255,8 @@
 <span id="210">210</span>
 <span id="211">211</span>
 <span id="212">212</span>
-<span id="213">213</span>
 </pre><pre class='rust '>
-<span class='comment'>// Copyright 2013 Simon Sapin.</span>
+<span class='comment'>// Copyright 2013 The rust-url developers.</span>
 <span class='comment'>//</span>
 <span class='comment'>// Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or</span>
 <span class='comment'>// http://www.apache.org/licenses/LICENSE-2.0&gt; or the MIT license</span>
@@ -443,11 +443,11 @@
                         <span class='kw'>break</span>
                     }
                     <span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='ident'>t</span> <span class='op'>+</span> ((<span class='ident'>q</span> <span class='op'>-</span> <span class='ident'>t</span>) <span class='op'>%</span> (<span class='ident'>BASE</span> <span class='op'>-</span> <span class='ident'>t</span>));
-                    <span class='ident'>value_to_digit</span>(<span class='ident'>value</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>output</span>);
+                    <span class='ident'>output</span>.<span class='ident'>push</span>(<span class='ident'>value_to_digit</span>(<span class='ident'>value</span>));
                     <span class='ident'>q</span> <span class='op'>=</span> (<span class='ident'>q</span> <span class='op'>-</span> <span class='ident'>t</span>) <span class='op'>/</span> (<span class='ident'>BASE</span> <span class='op'>-</span> <span class='ident'>t</span>);
                     <span class='ident'>k</span> <span class='op'>+=</span> <span class='ident'>BASE</span>;
                 }
-                <span class='ident'>value_to_digit</span>(<span class='ident'>q</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>output</span>);
+                <span class='ident'>output</span>.<span class='ident'>push</span>(<span class='ident'>value_to_digit</span>(<span class='ident'>q</span>));
                 <span class='ident'>bias</span> <span class='op'>=</span> <span class='ident'>adapt</span>(<span class='ident'>delta</span>, <span class='ident'>processed</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>processed</span> <span class='op'>==</span> <span class='ident'>basic_length</span>);
                 <span class='ident'>delta</span> <span class='op'>=</span> <span class='number'>0</span>;
                 <span class='ident'>processed</span> <span class='op'>+=</span> <span class='number'>1</span>;
@@ -461,13 +461,12 @@
 
 
 <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>value_to_digit</span>(<span class='ident'>value</span>: <span class='ident'>u32</span>, <span class='ident'>output</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>String</span>) {
-    <span class='kw'>let</span> <span class='ident'>code_point</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>value</span> {
-        <span class='number'>0</span> ... <span class='number'>25</span> <span class='op'>=&gt;</span> <span class='ident'>value</span> <span class='op'>+</span> <span class='number'>0x61</span>,  <span class='comment'>// a..z</span>
-        <span class='number'>26</span> ... <span class='number'>35</span> <span class='op'>=&gt;</span> <span class='ident'>value</span> <span class='op'>-</span> <span class='number'>26</span> <span class='op'>+</span> <span class='number'>0x30</span>,  <span class='comment'>// 0..9</span>
+<span class='kw'>fn</span> <span class='ident'>value_to_digit</span>(<span class='ident'>value</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='ident'>char</span> {
+    <span class='kw'>match</span> <span class='ident'>value</span> {
+        <span class='number'>0</span> ... <span class='number'>25</span> <span class='op'>=&gt;</span> (<span class='ident'>value</span> <span class='kw'>as</span> <span class='ident'>u8</span> <span class='op'>+</span> <span class='string'>&#39;a&#39;</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='kw'>as</span> <span class='ident'>char</span>,  <span class='comment'>// a..z</span>
+        <span class='number'>26</span> ... <span class='number'>35</span> <span class='op'>=&gt;</span> (<span class='ident'>value</span> <span class='kw'>as</span> <span class='ident'>u8</span> <span class='op'>-</span> <span class='number'>26</span> <span class='op'>+</span> <span class='string'>&#39;0&#39;</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='kw'>as</span> <span class='ident'>char</span>,  <span class='comment'>// 0..9</span>
         _ <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>()
-    };
-    <span class='kw'>unsafe</span> { <span class='ident'>output</span>.<span class='ident'>as_mut_vec</span>().<span class='ident'>push</span>(<span class='ident'>code_point</span> <span class='kw'>as</span> <span class='ident'>u8</span>) }
+    }
 }
 </pre>
 </section>

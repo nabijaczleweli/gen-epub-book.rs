@@ -9,6 +9,7 @@
 
     <title>time.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -2408,7 +2409,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>format_with_items</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>items</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='ident'>DelayedFormat</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>
             <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span><span class='op'>=</span><span class='ident'>Item</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span> <span class='op'>+</span> <span class='ident'>Clone</span> {
-        <span class='ident'>DelayedFormat</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>, <span class='prelude-val'>Some</span>(<span class='op'>*</span><span class='self'>self</span>), <span class='ident'>items</span>)
+        <span class='ident'>DelayedFormat</span>::<span class='ident'>new</span>(<span class='prelude-val'>None</span>, <span class='prelude-val'>Some</span>(<span class='kw-2'>*</span><span class='self'>self</span>), <span class='ident'>items</span>)
     }
 
     <span class='doccomment'>/// Formats the time with the specified format string.</span>
@@ -2560,7 +2561,7 @@
     <span class='kw'>fn</span> <span class='ident'>with_hour</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>hour</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveTime</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='ident'>hour</span> <span class='op'>&gt;=</span> <span class='number'>24</span> { <span class='kw'>return</span> <span class='prelude-val'>None</span>; }
         <span class='kw'>let</span> <span class='ident'>secs</span> <span class='op'>=</span> <span class='ident'>hour</span> <span class='op'>*</span> <span class='number'>3600</span> <span class='op'>+</span> <span class='self'>self</span>.<span class='ident'>secs</span> <span class='op'>%</span> <span class='number'>3600</span>;
-        <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span> { <span class='ident'>secs</span>: <span class='ident'>secs</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span> { <span class='ident'>secs</span>: <span class='ident'>secs</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveTime` with the minute number changed.</span>
@@ -2580,7 +2581,7 @@
     <span class='kw'>fn</span> <span class='ident'>with_minute</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>min</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveTime</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='ident'>min</span> <span class='op'>&gt;=</span> <span class='number'>60</span> { <span class='kw'>return</span> <span class='prelude-val'>None</span>; }
         <span class='kw'>let</span> <span class='ident'>secs</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>secs</span> <span class='op'>/</span> <span class='number'>3600</span> <span class='op'>*</span> <span class='number'>3600</span> <span class='op'>+</span> <span class='ident'>min</span> <span class='op'>*</span> <span class='number'>60</span> <span class='op'>+</span> <span class='self'>self</span>.<span class='ident'>secs</span> <span class='op'>%</span> <span class='number'>60</span>;
-        <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span> { <span class='ident'>secs</span>: <span class='ident'>secs</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span> { <span class='ident'>secs</span>: <span class='ident'>secs</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveTime` with the second number changed.</span>
@@ -2602,7 +2603,7 @@
     <span class='kw'>fn</span> <span class='ident'>with_second</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sec</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveTime</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='ident'>sec</span> <span class='op'>&gt;=</span> <span class='number'>60</span> { <span class='kw'>return</span> <span class='prelude-val'>None</span>; }
         <span class='kw'>let</span> <span class='ident'>secs</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>secs</span> <span class='op'>/</span> <span class='number'>60</span> <span class='op'>*</span> <span class='number'>60</span> <span class='op'>+</span> <span class='ident'>sec</span>;
-        <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span> { <span class='ident'>secs</span>: <span class='ident'>secs</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span> { <span class='ident'>secs</span>: <span class='ident'>secs</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveTime` with nanoseconds since the whole non-leap second changed.</span>
@@ -2636,7 +2637,7 @@
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_nanosecond</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nano</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveTime</span><span class='op'>&gt;</span> {
         <span class='kw'>if</span> <span class='ident'>nano</span> <span class='op'>&gt;=</span> <span class='number'>2_000_000_000</span> { <span class='kw'>return</span> <span class='prelude-val'>None</span>; }
-        <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span> { <span class='ident'>frac</span>: <span class='ident'>nano</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='prelude-val'>Some</span>(<span class='ident'>NaiveTime</span> { <span class='ident'>frac</span>: <span class='ident'>nano</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Returns the number of non-leap seconds past the last midnight.</span>

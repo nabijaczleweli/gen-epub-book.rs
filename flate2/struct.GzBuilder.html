@@ -9,6 +9,7 @@
 
     <title>flate2::GzBuilder - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -72,7 +73,7 @@ written out to the supplied parameter <code>w</code>.</p>
 
 <p>Data read from the returned encoder will be the compressed version of
 the data read from the given reader.</p>
-</div><h4 id='method.buf_read' class='method'><span id='buf_read.v' class='invisible'><code>fn <a href='#method.buf_read' class='fnname'>buf_read</a>&lt;R&gt;(self, r: R, lvl: <a class='enum' href='../flate2/enum.Compression.html' title='flate2::Compression'>Compression</a>) -&gt; <a class='struct' href='../flate2/bufread/struct.GzEncoder.html' title='flate2::bufread::GzEncoder'>EncoderReaderBuf</a>&lt;R&gt; <span class='where'>where R: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html' title='std::io::BufRead'>BufRead</a></span></code></span></h4>
+</div><h4 id='method.buf_read' class='method'><span id='buf_read.v' class='invisible'><code>fn <a href='#method.buf_read' class='fnname'>buf_read</a>&lt;R&gt;(self, r: R, lvl: <a class='enum' href='../flate2/enum.Compression.html' title='flate2::Compression'>Compression</a>) -&gt; <a class='struct' href='../flate2/bufread/struct.GzEncoder.html' title='flate2::bufread::GzEncoder'>EncoderReaderBuf</a>&lt;R&gt; <span class='where fmt-newline'>where R: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html' title='std::io::BufRead'>BufRead</a></span></code></span></h4>
 <div class='docblock'><p>Consume this builder, creating a reader encoder in the process.</p>
 
 <p>Data read from the returned encoder will be the compressed version of

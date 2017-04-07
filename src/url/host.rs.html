@@ -9,6 +9,7 @@
 
     <title>host.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -575,7 +576,7 @@
         <span class='comment'>// Implementing `Serializer` correctly for an enum is tricky,</span>
         <span class='comment'>// so let’s use existing enums that already do.</span>
         <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>IpAddr</span>;
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>HostInternal</span>::<span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
             <span class='ident'>HostInternal</span>::<span class='ident'>Domain</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>None</span>),
             <span class='ident'>HostInternal</span>::<span class='ident'>Ipv4</span>(<span class='ident'>addr</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='prelude-val'>Some</span>(<span class='ident'>IpAddr</span>::<span class='ident'>V4</span>(<span class='ident'>addr</span>))),
@@ -631,7 +632,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: ::<span class='ident'>serde</span>::<span class='ident'>Serialize</span><span class='op'>&gt;</span>  ::<span class='ident'>serde</span>::<span class='ident'>Serialize</span> <span class='kw'>for</span> <span class='ident'>Host</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>serialize</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>serializer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>R</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>R</span>: ::<span class='ident'>serde</span>::<span class='ident'>Serializer</span> {
         <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>IpAddr</span>;
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Host</span>::<span class='ident'>Domain</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='ident'>s</span>),
             <span class='ident'>Host</span>::<span class='ident'>Ipv4</span>(<span class='ident'>addr</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>IpAddr</span>::<span class='ident'>V4</span>(<span class='ident'>addr</span>)),
             <span class='ident'>Host</span>::<span class='ident'>Ipv6</span>(<span class='ident'>addr</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>IpAddr</span>::<span class='ident'>V6</span>(<span class='ident'>addr</span>)),
@@ -654,7 +655,7 @@
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;heapsize&quot;</span>)]</span>
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>HeapSizeOf</span><span class='op'>&gt;</span> <span class='ident'>HeapSizeOf</span> <span class='kw'>for</span> <span class='ident'>Host</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>heap_size_of_children</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Host</span>::<span class='ident'>Domain</span>(<span class='kw-2'>ref</span> <span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='ident'>s</span>.<span class='ident'>heap_size_of_children</span>(),
             _ <span class='op'>=&gt;</span> <span class='number'>0</span>,
         }
@@ -664,7 +665,7 @@
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Host</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
     <span class='doccomment'>/// Return a copy of `self` that owns an allocated `String` but does not borrow an `&amp;Url`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_owned</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Host</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Host</span>::<span class='ident'>Domain</span>(<span class='ident'>domain</span>) <span class='op'>=&gt;</span> <span class='ident'>Host</span>::<span class='ident'>Domain</span>(<span class='ident'>domain</span>.<span class='ident'>to_owned</span>()),
             <span class='ident'>Host</span>::<span class='ident'>Ipv4</span>(<span class='ident'>address</span>) <span class='op'>=&gt;</span> <span class='ident'>Host</span>::<span class='ident'>Ipv4</span>(<span class='ident'>address</span>),
             <span class='ident'>Host</span>::<span class='ident'>Ipv6</span>(<span class='ident'>address</span>) <span class='op'>=&gt;</span> <span class='ident'>Host</span>::<span class='ident'>Ipv6</span>(<span class='ident'>address</span>),
@@ -700,7 +701,7 @@
 
 <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>S</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>str</span><span class='op'>&gt;&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Host</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>Host</span>::<span class='ident'>Domain</span>(<span class='kw-2'>ref</span> <span class='ident'>domain</span>) <span class='op'>=&gt;</span> <span class='ident'>domain</span>.<span class='ident'>as_ref</span>().<span class='ident'>fmt</span>(<span class='ident'>f</span>),
             <span class='ident'>Host</span>::<span class='ident'>Ipv4</span>(<span class='kw-2'>ref</span> <span class='ident'>addr</span>) <span class='op'>=&gt;</span> <span class='ident'>addr</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
             <span class='ident'>Host</span>::<span class='ident'>Ipv6</span>(<span class='kw-2'>ref</span> <span class='ident'>addr</span>) <span class='op'>=&gt;</span> {
@@ -886,7 +887,7 @@
     <span class='kw'>if</span> <span class='ident'>ipv4</span> <span class='op'>&gt;</span> <span class='ident'>u32</span>::<span class='ident'>max_value</span>() <span class='op'>&gt;&gt;</span> (<span class='number'>8</span> <span class='op'>*</span> <span class='ident'>numbers</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>u32</span>)  {
         <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>ParseError</span>::<span class='ident'>InvalidIpv4Address</span>);
     }
-    <span class='kw'>if</span> <span class='ident'>numbers</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='op'>*</span><span class='ident'>x</span> <span class='op'>&gt;</span> <span class='number'>255</span>) {
+    <span class='kw'>if</span> <span class='ident'>numbers</span>.<span class='ident'>iter</span>().<span class='ident'>any</span>(<span class='op'>|</span><span class='ident'>x</span><span class='op'>|</span> <span class='kw-2'>*</span><span class='ident'>x</span> <span class='op'>&gt;</span> <span class='number'>255</span>) {
         <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>ParseError</span>::<span class='ident'>InvalidIpv4Address</span>);
     }
     <span class='kw'>for</span> (<span class='ident'>counter</span>, <span class='ident'>n</span>) <span class='kw'>in</span> <span class='ident'>numbers</span>.<span class='ident'>iter</span>().<span class='ident'>enumerate</span>() {
@@ -984,8 +985,8 @@
                     <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>value</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>digit</span> <span class='kw'>as</span> <span class='ident'>u16</span>),
                     <span class='prelude-val'>Some</span>(<span class='number'>0</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>ParseError</span>::<span class='ident'>InvalidIpv6Address</span>),  <span class='comment'>// No leading zero</span>
                     <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>v</span>) <span class='op'>=&gt;</span> {
-                        <span class='op'>*</span><span class='ident'>v</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>v</span> <span class='op'>*</span> <span class='number'>10</span> <span class='op'>+</span> <span class='ident'>digit</span> <span class='kw'>as</span> <span class='ident'>u16</span>;
-                        <span class='kw'>if</span> <span class='op'>*</span><span class='ident'>v</span> <span class='op'>&gt;</span> <span class='number'>255</span> {
+                        <span class='kw-2'>*</span><span class='ident'>v</span> <span class='op'>=</span> <span class='kw-2'>*</span><span class='ident'>v</span> <span class='op'>*</span> <span class='number'>10</span> <span class='op'>+</span> <span class='ident'>digit</span> <span class='kw'>as</span> <span class='ident'>u16</span>;
+                        <span class='kw'>if</span> <span class='kw-2'>*</span><span class='ident'>v</span> <span class='op'>&gt;</span> <span class='number'>255</span> {
                             <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>ParseError</span>::<span class='ident'>InvalidIpv6Address</span>)
                         }
                     }

@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.4/src/server/response.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.6/src/server/response.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>response.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -524,7 +525,7 @@
 
     <span class='doccomment'>/// The headers of this response.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>headers</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>header</span>::<span class='ident'>Headers</span> { <span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='ident'>headers</span> }
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>headers</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>header</span>::<span class='ident'>Headers</span> { <span class='kw-2'>&amp;</span><span class='kw-2'>*</span><span class='self'>self</span>.<span class='ident'>headers</span> }
 
     <span class='doccomment'>/// Construct a Response from its constituent parts.</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
@@ -569,7 +570,7 @@
             <span class='ident'>status</span>::<span class='ident'>StatusCode</span>::<span class='ident'>NoContent</span> <span class='op'>|</span> <span class='ident'>status</span>::<span class='ident'>StatusCode</span>::<span class='ident'>NotModified</span> <span class='op'>=&gt;</span> <span class='ident'>Body</span>::<span class='ident'>Empty</span>,
             <span class='ident'>c</span> <span class='kw'>if</span> <span class='ident'>c</span>.<span class='ident'>class</span>() <span class='op'>==</span> <span class='ident'>status</span>::<span class='ident'>StatusClass</span>::<span class='ident'>Informational</span> <span class='op'>=&gt;</span> <span class='ident'>Body</span>::<span class='ident'>Empty</span>,
             _ <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>cl</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>::<span class='op'>&lt;</span><span class='ident'>header</span>::<span class='ident'>ContentLength</span><span class='op'>&gt;</span>() {
-                <span class='ident'>Body</span>::<span class='ident'>Sized</span>(<span class='op'>*</span><span class='op'>*</span><span class='ident'>cl</span>)
+                <span class='ident'>Body</span>::<span class='ident'>Sized</span>(<span class='kw-2'>*</span><span class='kw-2'>*</span><span class='ident'>cl</span>)
             } <span class='kw'>else</span> {
                 <span class='ident'>Body</span>::<span class='ident'>Chunked</span>
             }
@@ -811,7 +812,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='ident'>MockStream</span>::<span class='ident'>new</span>();
         {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>Response</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>stream</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>headers</span>);
-            <span class='op'>*</span><span class='ident'>res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>NotFound</span>;
+            <span class='kw-2'>*</span><span class='ident'>res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>NotFound</span>;
         }
 
         <span class='macro'>lines</span><span class='macro'>!</span> { <span class='ident'>stream</span> <span class='op'>=</span>
@@ -840,8 +841,8 @@
         <span class='kw'>let</span> <span class='ident'>join_handle</span> <span class='op'>=</span> <span class='ident'>thread</span>::<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='ident'>inner_stream</span>.<span class='ident'>lock</span>().<span class='ident'>unwrap</span>();
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>Response</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='op'>*</span><span class='ident'>stream</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>headers</span>);
-            <span class='op'>*</span><span class='ident'>res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>NotFound</span>;
+            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>Response</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span><span class='ident'>stream</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>headers</span>);
+            <span class='kw-2'>*</span><span class='ident'>res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>NotFound</span>;
 
             <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;inside&quot;</span>)
         });
@@ -872,7 +873,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='ident'>MockStream</span>::<span class='ident'>new</span>();
         {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>Response</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>stream</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>headers</span>);
-            <span class='op'>*</span><span class='ident'>res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>NotFound</span>;
+            <span class='kw-2'>*</span><span class='ident'>res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>NotFound</span>;
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='ident'>res</span>.<span class='ident'>start</span>().<span class='ident'>unwrap</span>();
             <span class='ident'>stream</span>.<span class='ident'>write_all</span>(<span class='string'>b&quot;foo&quot;</span>).<span class='ident'>unwrap</span>();
         }
@@ -896,7 +897,7 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='ident'>MockStream</span>::<span class='ident'>new</span>();
         {
             <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='ident'>Response</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>stream</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>headers</span>);
-            <span class='op'>*</span><span class='ident'>res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>NoContent</span>;
+            <span class='kw-2'>*</span><span class='ident'>res</span>.<span class='ident'>status_mut</span>() <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>NoContent</span>;
             <span class='ident'>res</span>.<span class='ident'>start</span>().<span class='ident'>unwrap</span>();
         }
 

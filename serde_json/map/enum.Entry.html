@@ -9,6 +9,7 @@
 
     <title>serde_json::map::Entry - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -74,7 +75,7 @@ returns a mutable reference to the value in the entry.</p>
 <span class='ident'>map</span>.<span class='ident'>entry</span>(<span class='string'>&quot;serde&quot;</span>).<span class='ident'>or_insert</span>(<span class='macro'>json</span><span class='macro'>!</span>(<span class='number'>12</span>));
 
 <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>map</span>[<span class='string'>&quot;serde&quot;</span>], <span class='number'>12</span>);</pre>
-</div><h4 id='method.or_insert_with' class='method'><span id='or_insert_with.v' class='invisible'><code>fn <a href='#method.or_insert_with' class='fnname'>or_insert_with</a>&lt;F&gt;(self, default: F) -&gt; &amp;'a mut <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a> <span class='where'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() -&gt; <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a></span></code></span></h4>
+</div><h4 id='method.or_insert_with' class='method'><span id='or_insert_with.v' class='invisible'><code>fn <a href='#method.or_insert_with' class='fnname'>or_insert_with</a>&lt;F&gt;(self, default: F) -&gt; &amp;'a mut <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a> <span class='where fmt-newline'>where F: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>() -&gt; <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a></span></code></span></h4>
 <div class='docblock'><p>Ensures a value is in the entry by inserting the result of the default
 function if empty, and returns a mutable reference to the value in the
 entry.</p>

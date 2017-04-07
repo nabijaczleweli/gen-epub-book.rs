@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/zip-0.2.1/src/crc32.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/zip-0.2.3/src/crc32.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>crc32.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -170,7 +171,7 @@
 <span class='doccomment'>//! Helper module to compute a CRC32 checksum</span>
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='op'>*</span>;
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>prelude</span>::<span class='kw-2'>*</span>;
 
 <span class='kw'>static</span> <span class='ident'>CRC32_TABLE</span> : [<span class='ident'>u32</span>; <span class='number'>256</span>] <span class='op'>=</span> [
 	<span class='number'>0x00000000</span>, <span class='number'>0x77073096</span>, <span class='number'>0xee0e612c</span>, <span class='number'>0x990951ba</span>, <span class='number'>0x076dc419</span>, <span class='number'>0x706af48f</span>,

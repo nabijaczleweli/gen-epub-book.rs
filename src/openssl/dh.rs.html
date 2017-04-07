@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.7/src/dh.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/dh.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>dh.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -253,14 +254,14 @@
     <span class='kw'>use</span> <span class='ident'>ffi</span>;
     <span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>DH_set0_pqg</span>(<span class='ident'>dh</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>DH</span>,
-                              <span class='ident'>p</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>BIGNUM</span>,
-                              <span class='ident'>q</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>BIGNUM</span>,
-                              <span class='ident'>g</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>BIGNUM</span>)
+    <span class='kw'>pub</span> <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>DH_set0_pqg</span>(<span class='ident'>dh</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>DH</span>,
+                              <span class='ident'>p</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>BIGNUM</span>,
+                              <span class='ident'>q</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>BIGNUM</span>,
+                              <span class='ident'>g</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>BIGNUM</span>)
                               <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
-        (<span class='op'>*</span><span class='ident'>dh</span>).<span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>p</span>;
-        (<span class='op'>*</span><span class='ident'>dh</span>).<span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>q</span>;
-        (<span class='op'>*</span><span class='ident'>dh</span>).<span class='ident'>g</span> <span class='op'>=</span> <span class='ident'>g</span>;
+        (<span class='kw-2'>*</span><span class='ident'>dh</span>).<span class='ident'>p</span> <span class='op'>=</span> <span class='ident'>p</span>;
+        (<span class='kw-2'>*</span><span class='ident'>dh</span>).<span class='ident'>q</span> <span class='op'>=</span> <span class='ident'>q</span>;
+        (<span class='kw-2'>*</span><span class='ident'>dh</span>).<span class='ident'>g</span> <span class='op'>=</span> <span class='ident'>g</span>;
         <span class='number'>1</span>
     }
 }

@@ -9,6 +9,7 @@
 
     <title>datetime.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../../main.css">
     
@@ -2516,7 +2517,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_year</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_year</span>(<span class='ident'>year</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_year</span>(<span class='ident'>year</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with the month number (starting from 1) changed.</span>
@@ -2538,7 +2539,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_month</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>month</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_month</span>(<span class='ident'>month</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_month</span>(<span class='ident'>month</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with the month number (starting from 0) changed.</span>
@@ -2560,7 +2561,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_month0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>month0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_month0</span>(<span class='ident'>month0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_month0</span>(<span class='ident'>month0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with the day of month (starting from 1) changed.</span>
@@ -2581,7 +2582,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_day</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>day</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_day</span>(<span class='ident'>day</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_day</span>(<span class='ident'>day</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with the day of month (starting from 0) changed.</span>
@@ -2602,7 +2603,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_day0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>day0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_day0</span>(<span class='ident'>day0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_day0</span>(<span class='ident'>day0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with the day of year (starting from 1) changed.</span>
@@ -2630,7 +2631,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_ordinal</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ordinal</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_ordinal</span>(<span class='ident'>ordinal</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_ordinal</span>(<span class='ident'>ordinal</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with the day of year (starting from 0) changed.</span>
@@ -2658,7 +2659,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_ordinal0</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>ordinal0</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_ordinal0</span>(<span class='ident'>ordinal0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>date</span>.<span class='ident'>with_ordinal0</span>(<span class='ident'>ordinal0</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>d</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>date</span>: <span class='ident'>d</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 }
 
@@ -2753,7 +2754,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_hour</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>hour</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>time</span>.<span class='ident'>with_hour</span>(<span class='ident'>hour</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>t</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>time</span>: <span class='ident'>t</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>time</span>.<span class='ident'>with_hour</span>(<span class='ident'>hour</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>t</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>time</span>: <span class='ident'>t</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with the minute number changed.</span>
@@ -2775,7 +2776,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_minute</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>min</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>time</span>.<span class='ident'>with_minute</span>(<span class='ident'>min</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>t</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>time</span>: <span class='ident'>t</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>time</span>.<span class='ident'>with_minute</span>(<span class='ident'>min</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>t</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>time</span>: <span class='ident'>t</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with the second number changed.</span>
@@ -2799,7 +2800,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_second</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>sec</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>time</span>.<span class='ident'>with_second</span>(<span class='ident'>sec</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>t</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>time</span>: <span class='ident'>t</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>time</span>.<span class='ident'>with_second</span>(<span class='ident'>sec</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>t</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>time</span>: <span class='ident'>t</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 
     <span class='doccomment'>/// Makes a new `NaiveDateTime` with nanoseconds since the whole non-leap second changed.</span>
@@ -2826,7 +2827,7 @@
     <span class='doccomment'>/// ~~~~</span>
     <span class='attribute'>#[<span class='ident'>inline</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>with_nanosecond</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>nano</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>NaiveDateTime</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>time</span>.<span class='ident'>with_nanosecond</span>(<span class='ident'>nano</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>t</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>time</span>: <span class='ident'>t</span>, ..<span class='op'>*</span><span class='self'>self</span> })
+        <span class='self'>self</span>.<span class='ident'>time</span>.<span class='ident'>with_nanosecond</span>(<span class='ident'>nano</span>).<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>t</span><span class='op'>|</span> <span class='ident'>NaiveDateTime</span> { <span class='ident'>time</span>: <span class='ident'>t</span>, ..<span class='kw-2'>*</span><span class='self'>self</span> })
     }
 }
 

@@ -9,6 +9,7 @@
 
     <title>serde_json::de::from_str - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -48,7 +49,7 @@
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a class='srclink' href='../../src/serde_json/de.rs.html#1087-1091' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn from_str&lt;T&gt;(s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../../serde_json/type.Result.html' title='serde_json::Result'>Result</a>&lt;T&gt; <span class='where'>where T: <a class='trait' href='../../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></pre><div class='docblock'><p>Deserialize an instance of type <code>T</code> from a string of JSON text.</p>
+<pre class='rust fn'>pub fn from_str&lt;T&gt;(s: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../../serde_json/type.Result.html' title='serde_json::Result'>Result</a>&lt;T&gt; <span class='where fmt-newline'>where T: <a class='trait' href='../../serde/de/trait.Deserialize.html' title='serde::de::Deserialize'>Deserialize</a></span></pre><div class='docblock'><p>Deserialize an instance of type <code>T</code> from a string of JSON text.</p>
 
 <p>This conversion can fail if the structure of the Value does not match the
 structure expected by <code>T</code>, for example if <code>T</code> is a struct type but the Value

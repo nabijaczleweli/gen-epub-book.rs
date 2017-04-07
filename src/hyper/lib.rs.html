@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.4/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.10.6/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -419,8 +420,8 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>language_tags</span>::<span class='ident'>LanguageTag</span>;
 
 <span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>todo</span>(
-    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>tt</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> (<span class='kw'>if</span> <span class='macro'>cfg</span><span class='macro'>!</span>(<span class='ident'>not</span>(<span class='ident'>ndebug</span>)) {
-        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;TODO: {:?}&quot;</span>, <span class='macro'>format_args</span><span class='macro'>!</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>)<span class='op'>*</span>))
+    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>:<span class='ident'>tt</span>)<span class='kw-2'>*</span>) <span class='op'>=&gt;</span> (<span class='kw'>if</span> <span class='macro'>cfg</span><span class='macro'>!</span>(<span class='ident'>not</span>(<span class='ident'>ndebug</span>)) {
+        <span class='macro'>trace</span><span class='macro'>!</span>(<span class='string'>&quot;TODO: {:?}&quot;</span>, <span class='macro'>format_args</span><span class='macro'>!</span>($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>arg</span>)<span class='kw-2'>*</span>))
     })
 );
 
@@ -457,7 +458,7 @@
 
 <span class='doccomment'>/// Re-exporting the mime crate, for convenience.</span>
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>mime</span> {
-    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>mime_crate</span>::<span class='op'>*</span>;
+    <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>mime_crate</span>::<span class='kw-2'>*</span>;
 }
 
 <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>unconditional_recursion</span>)]</span>

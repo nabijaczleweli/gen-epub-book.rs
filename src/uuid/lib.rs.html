@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -1420,7 +1421,7 @@
 <span class='doccomment'>/// Converts a ParseError to a string.</span>
 <span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>ParseError</span> {
     <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
+        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
             <span class='ident'>ParseError</span>::<span class='ident'>InvalidLength</span>(<span class='ident'>found</span>) <span class='op'>=&gt;</span> {
                 <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>,
                        <span class='string'>&quot;Invalid length; expecting {} or {} chars, found {}&quot;</span>,
@@ -1656,10 +1657,10 @@
     <span class='kw'>fn</span> <span class='ident'>set_variant</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>UuidVariant</span>) {
         <span class='comment'>// Octet 8 contains the variant in the most significant 3 bits</span>
         <span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>v</span> {
-            <span class='ident'>UuidVariant</span>::<span class='ident'>NCS</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='kw-2'>&amp;</span> <span class='number'>0x7f</span>,                <span class='comment'>// b0xx...</span>
-            <span class='ident'>UuidVariant</span>::<span class='ident'>RFC4122</span> <span class='op'>=&gt;</span> (<span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='kw-2'>&amp;</span> <span class='number'>0x3f</span>) <span class='op'>|</span> <span class='number'>0x80</span>,   <span class='comment'>// b10x...</span>
-            <span class='ident'>UuidVariant</span>::<span class='ident'>Microsoft</span> <span class='op'>=&gt;</span> (<span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='kw-2'>&amp;</span> <span class='number'>0x1f</span>) <span class='op'>|</span> <span class='number'>0xc0</span>, <span class='comment'>// b110...</span>
-            <span class='ident'>UuidVariant</span>::<span class='ident'>Future</span> <span class='op'>=&gt;</span> (<span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='kw-2'>&amp;</span> <span class='number'>0x1f</span>) <span class='op'>|</span> <span class='number'>0xe0</span>,    <span class='comment'>// b111...</span>
+            <span class='ident'>UuidVariant</span>::<span class='ident'>NCS</span> <span class='op'>=&gt;</span> <span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='op'>&amp;</span> <span class='number'>0x7f</span>,                <span class='comment'>// b0xx...</span>
+            <span class='ident'>UuidVariant</span>::<span class='ident'>RFC4122</span> <span class='op'>=&gt;</span> (<span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='op'>&amp;</span> <span class='number'>0x3f</span>) <span class='op'>|</span> <span class='number'>0x80</span>,   <span class='comment'>// b10x...</span>
+            <span class='ident'>UuidVariant</span>::<span class='ident'>Microsoft</span> <span class='op'>=&gt;</span> (<span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='op'>&amp;</span> <span class='number'>0x1f</span>) <span class='op'>|</span> <span class='number'>0xc0</span>, <span class='comment'>// b110...</span>
+            <span class='ident'>UuidVariant</span>::<span class='ident'>Future</span> <span class='op'>=&gt;</span> (<span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] <span class='op'>&amp;</span> <span class='number'>0x1f</span>) <span class='op'>|</span> <span class='number'>0xe0</span>,    <span class='comment'>// b111...</span>
         }
     }
 
@@ -1671,10 +1672,10 @@
     <span class='doccomment'>/// * [Variant Reference](http://tools.ietf.org/html/rfc4122#section-4.1.1)</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_variant</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>UuidVariant</span><span class='op'>&gt;</span> {
         <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>8</span>] {
-            <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='kw-2'>&amp;</span> <span class='number'>0x80</span> <span class='op'>==</span> <span class='number'>0x00</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>UuidVariant</span>::<span class='ident'>NCS</span>),
-            <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='kw-2'>&amp;</span> <span class='number'>0xc0</span> <span class='op'>==</span> <span class='number'>0x80</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>UuidVariant</span>::<span class='ident'>RFC4122</span>),
-            <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='kw-2'>&amp;</span> <span class='number'>0xe0</span> <span class='op'>==</span> <span class='number'>0xc0</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>UuidVariant</span>::<span class='ident'>Microsoft</span>),
-            <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='kw-2'>&amp;</span> <span class='number'>0xe0</span> <span class='op'>==</span> <span class='number'>0xe0</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>UuidVariant</span>::<span class='ident'>Future</span>),
+            <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&amp;</span> <span class='number'>0x80</span> <span class='op'>==</span> <span class='number'>0x00</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>UuidVariant</span>::<span class='ident'>NCS</span>),
+            <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&amp;</span> <span class='number'>0xc0</span> <span class='op'>==</span> <span class='number'>0x80</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>UuidVariant</span>::<span class='ident'>RFC4122</span>),
+            <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&amp;</span> <span class='number'>0xe0</span> <span class='op'>==</span> <span class='number'>0xc0</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>UuidVariant</span>::<span class='ident'>Microsoft</span>),
+            <span class='ident'>x</span> <span class='kw'>if</span> <span class='ident'>x</span> <span class='op'>&amp;</span> <span class='number'>0xe0</span> <span class='op'>==</span> <span class='number'>0xe0</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>UuidVariant</span>::<span class='ident'>Future</span>),
             _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
         }
     }
@@ -1682,7 +1683,7 @@
     <span class='doccomment'>/// Specifies the version number of the `Uuid`.</span>
     <span class='attribute'>#[<span class='ident'>allow</span>(<span class='ident'>dead_code</span>)]</span>
     <span class='kw'>fn</span> <span class='ident'>set_version</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>UuidVersion</span>) {
-        <span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>6</span>] <span class='op'>=</span> (<span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>6</span>] <span class='kw-2'>&amp;</span> <span class='number'>0xF</span>) <span class='op'>|</span> ((<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>4</span>);
+        <span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>6</span>] <span class='op'>=</span> (<span class='self'>self</span>.<span class='ident'>bytes</span>[<span class='number'>6</span>] <span class='op'>&amp;</span> <span class='number'>0xF</span>) <span class='op'>|</span> ((<span class='ident'>v</span> <span class='kw'>as</span> <span class='ident'>u8</span>) <span class='op'>&lt;&lt;</span> <span class='number'>4</span>);
     }
 
     <span class='doccomment'>/// Returns the version number of the `Uuid`.</span>
@@ -1877,7 +1878,7 @@
 
 <span class='kw'>fn</span> <span class='ident'>copy_memory</span>(<span class='ident'>dst</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>], <span class='ident'>src</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) {
     <span class='kw'>for</span> (<span class='ident'>slot</span>, <span class='ident'>val</span>) <span class='kw'>in</span> <span class='ident'>dst</span>.<span class='ident'>iter_mut</span>().<span class='ident'>zip</span>(<span class='ident'>src</span>.<span class='ident'>iter</span>()) {
-        <span class='op'>*</span><span class='ident'>slot</span> <span class='op'>=</span> <span class='op'>*</span><span class='ident'>val</span>;
+        <span class='kw-2'>*</span><span class='ident'>slot</span> <span class='op'>=</span> <span class='kw-2'>*</span><span class='ident'>val</span>;
     }
 }
 
@@ -1979,7 +1980,7 @@
 <span class='kw'>mod</span> <span class='ident'>tests</span> {
     <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>std</span>;
 
-    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>std</span>::<span class='ident'>prelude</span>::<span class='ident'>v1</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>std</span>::<span class='ident'>prelude</span>::<span class='ident'>v1</span>::<span class='kw-2'>*</span>;
 
     <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>NAMESPACE_DNS</span>, <span class='ident'>NAMESPACE_URL</span>, <span class='ident'>NAMESPACE_OID</span>, <span class='ident'>NAMESPACE_X500</span>};
     <span class='kw'>use</span> <span class='kw'>super</span>::{<span class='ident'>Uuid</span>, <span class='ident'>UuidVariant</span>, <span class='ident'>UuidVersion</span>};
@@ -2056,7 +2057,7 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_new_v5</span>() {
         <span class='kw'>for</span> <span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>ns</span>, <span class='kw-2'>ref</span> <span class='ident'>name</span>, _) <span class='kw'>in</span> <span class='ident'>FIXTURE_V5</span> {
-            <span class='kw'>let</span> <span class='ident'>uuid</span> <span class='op'>=</span> <span class='ident'>Uuid</span>::<span class='ident'>new_v5</span>(<span class='op'>*</span><span class='ident'>ns</span>, <span class='op'>*</span><span class='ident'>name</span>);
+            <span class='kw'>let</span> <span class='ident'>uuid</span> <span class='op'>=</span> <span class='ident'>Uuid</span>::<span class='ident'>new_v5</span>(<span class='kw-2'>*</span><span class='ident'>ns</span>, <span class='kw-2'>*</span><span class='ident'>name</span>);
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>uuid</span>.<span class='ident'>get_version</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='ident'>UuidVersion</span>::<span class='ident'>Sha1</span>);
             <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>uuid</span>.<span class='ident'>get_variant</span>().<span class='ident'>unwrap</span>() <span class='op'>==</span> <span class='ident'>UuidVariant</span>::<span class='ident'>RFC4122</span>);
         }
@@ -2111,7 +2112,7 @@
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_parse_uuid_v4</span>() {
-        <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>ParseError</span>::<span class='op'>*</span>;
+        <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>ParseError</span>::<span class='kw-2'>*</span>;
 
         <span class='comment'>// Invalid</span>
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Uuid</span>::<span class='ident'>parse_str</span>(<span class='string'>&quot;&quot;</span>), <span class='prelude-val'>Err</span>(<span class='ident'>InvalidLength</span>(<span class='number'>0</span>)));
@@ -2212,8 +2213,8 @@
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_v5_to_hypenated_string</span>() {
         <span class='kw'>for</span> <span class='kw-2'>&amp;</span>(<span class='kw-2'>ref</span> <span class='ident'>ns</span>, <span class='kw-2'>ref</span> <span class='ident'>name</span>, <span class='kw-2'>ref</span> <span class='ident'>expected</span>) <span class='kw'>in</span> <span class='ident'>FIXTURE_V5</span> {
-            <span class='kw'>let</span> <span class='ident'>uuid</span> <span class='op'>=</span> <span class='ident'>Uuid</span>::<span class='ident'>new_v5</span>(<span class='op'>*</span><span class='ident'>ns</span>, <span class='op'>*</span><span class='ident'>name</span>);
-            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>uuid</span>.<span class='ident'>hyphenated</span>().<span class='ident'>to_string</span>(), <span class='op'>*</span><span class='ident'>expected</span>);
+            <span class='kw'>let</span> <span class='ident'>uuid</span> <span class='op'>=</span> <span class='ident'>Uuid</span>::<span class='ident'>new_v5</span>(<span class='kw-2'>*</span><span class='ident'>ns</span>, <span class='kw-2'>*</span><span class='ident'>name</span>);
+            <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>uuid</span>.<span class='ident'>hyphenated</span>().<span class='ident'>to_string</span>(), <span class='kw-2'>*</span><span class='ident'>expected</span>);
         }
     }
 

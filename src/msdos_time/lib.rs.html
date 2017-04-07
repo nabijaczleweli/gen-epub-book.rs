@@ -9,6 +9,7 @@
 
     <title>lib.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -325,12 +326,12 @@
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>msdos_to_tm</span>(<span class='ident'>ms</span>: <span class='ident'>MsDosDateTime</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Tm</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>seconds</span> <span class='op'>=</span> (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='kw-2'>&amp;</span> <span class='number'>0b0000000000011111</span>) <span class='op'>&lt;&lt;</span> <span class='number'>1</span>;
-        <span class='kw'>let</span> <span class='ident'>minutes</span> <span class='op'>=</span> (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='kw-2'>&amp;</span> <span class='number'>0b0000011111100000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>5</span>;
-        <span class='kw'>let</span> <span class='ident'>hours</span> <span class='op'>=</span>   (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='kw-2'>&amp;</span> <span class='number'>0b1111100000000000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>11</span>;
-        <span class='kw'>let</span> <span class='ident'>days</span> <span class='op'>=</span>    (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='kw-2'>&amp;</span> <span class='number'>0b0000000000011111</span>) <span class='op'>&gt;&gt;</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='ident'>months</span> <span class='op'>=</span>  (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='kw-2'>&amp;</span> <span class='number'>0b0000000111100000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>5</span>;
-        <span class='kw'>let</span> <span class='ident'>years</span> <span class='op'>=</span>   (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='kw-2'>&amp;</span> <span class='number'>0b1111111000000000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>9</span>;
+        <span class='kw'>let</span> <span class='ident'>seconds</span> <span class='op'>=</span> (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='op'>&amp;</span> <span class='number'>0b0000000000011111</span>) <span class='op'>&lt;&lt;</span> <span class='number'>1</span>;
+        <span class='kw'>let</span> <span class='ident'>minutes</span> <span class='op'>=</span> (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='op'>&amp;</span> <span class='number'>0b0000011111100000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>5</span>;
+        <span class='kw'>let</span> <span class='ident'>hours</span> <span class='op'>=</span>   (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='op'>&amp;</span> <span class='number'>0b1111100000000000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>11</span>;
+        <span class='kw'>let</span> <span class='ident'>days</span> <span class='op'>=</span>    (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='op'>&amp;</span> <span class='number'>0b0000000000011111</span>) <span class='op'>&gt;&gt;</span> <span class='number'>0</span>;
+        <span class='kw'>let</span> <span class='ident'>months</span> <span class='op'>=</span>  (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='op'>&amp;</span> <span class='number'>0b0000000111100000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>5</span>;
+        <span class='kw'>let</span> <span class='ident'>years</span> <span class='op'>=</span>   (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='op'>&amp;</span> <span class='number'>0b1111111000000000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>9</span>;
 
         <span class='comment'>// Month range: Dos [1..12], Tm [0..11]</span>
         <span class='comment'>// Year zero: Dos 1980, Tm 1900</span>
@@ -362,8 +363,8 @@
 <span class='kw'>mod</span> <span class='ident'>sys</span> {
     <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>MsDosDateTime</span>;
     <span class='kw'>use</span> <span class='ident'>time</span>::{<span class='self'>self</span>, <span class='ident'>Tm</span>};
-    <span class='kw'>use</span> <span class='ident'>winapi</span>::<span class='op'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>kernel32</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>winapi</span>::<span class='kw-2'>*</span>;
+    <span class='kw'>use</span> <span class='ident'>kernel32</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>msdos_to_tm</span>(<span class='ident'>ms</span>: <span class='ident'>MsDosDateTime</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Tm</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
@@ -422,7 +423,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
+    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
     <span class='kw'>use</span> <span class='ident'>time</span>::{<span class='self'>self</span>, <span class='ident'>Tm</span>};
 
     <span class='kw'>fn</span> <span class='ident'>check_date</span>(<span class='ident'>input</span>: <span class='ident'>Tm</span>, <span class='ident'>day</span>: <span class='ident'>i32</span>, <span class='ident'>month</span>: <span class='ident'>i32</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>) {

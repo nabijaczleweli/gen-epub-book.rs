@@ -9,6 +9,7 @@
 
     <title>url::PathSegmentsMut - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -105,7 +106,7 @@ unless it is also the initial slash (so this does nothing if <code>url.path() ==
 <p>See the documentation for <code>.extend()</code>.</p>
 
 <p>Returns <code>&amp;mut Self</code> so that method calls can be chained.</p>
-</div><h4 id='method.extend' class='method'><span id='extend.v' class='invisible'><code>fn <a href='#method.extend' class='fnname'>extend</a>&lt;I&gt;(&amp;mut self, segments: I) -&gt; &amp;mut Self <span class='where'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html' title='core::iter::traits::IntoIterator'>IntoIterator</a>, I::<a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html' title='core::iter::traits::IntoIterator'>Item</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;</span></code></span></h4>
+</div><h4 id='method.extend' class='method'><span id='extend.v' class='invisible'><code>fn <a href='#method.extend' class='fnname'>extend</a>&lt;I&gt;(&amp;mut self, segments: I) -&gt; &amp;mut Self <span class='where fmt-newline'>where I: <a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html' title='core::iter::traits::IntoIterator'>IntoIterator</a>, I::<a class='trait' href='https://doc.rust-lang.org/nightly/core/iter/traits/trait.IntoIterator.html' title='core::iter::traits::IntoIterator'>Item</a>: <a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;</span></code></span></h4>
 <div class='docblock'><p>Append each segment from the given iterator at the end of this URL’s path.</p>
 
 <p>Each segment is percent-encoded like in <code>Url::parse</code> or <code>Url::join</code>,

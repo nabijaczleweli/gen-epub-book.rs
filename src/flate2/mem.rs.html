@@ -9,6 +9,7 @@
 
     <title>mem.rs.html -- source</title>
 
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../../main.css">
     
@@ -526,7 +527,7 @@
 <span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>D</span>: <span class='ident'>Direction</span><span class='op'>&gt;</span> <span class='ident'>Sync</span> <span class='kw'>for</span> <span class='ident'>Stream</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span> {}
 
 <span class='kw'>trait</span> <span class='ident'>Direction</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>destroy</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>mz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>destroy</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>mz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span>;
 }
 
 <span class='kw'>enum</span> <span class='ident'>DirCompress</span> {}
@@ -684,7 +685,7 @@
                     <span class='ident'>output</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>],
                     <span class='ident'>flush</span>: <span class='ident'>Flush</span>)
                     <span class='op'>-&gt;</span> <span class='ident'>Status</span> {
-        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>next_in</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> _;
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>next_in</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _;
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>avail_in</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_uint</span>;
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>next_out</span> <span class='op'>=</span> <span class='ident'>output</span>.<span class='ident'>as_mut_ptr</span>();
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>avail_out</span> <span class='op'>=</span> <span class='ident'>output</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_uint</span>;
@@ -792,7 +793,7 @@
                       <span class='ident'>output</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> [<span class='ident'>u8</span>],
                       <span class='ident'>flush</span>: <span class='ident'>Flush</span>)
                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Status</span>, <span class='ident'>DataError</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>next_in</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>;
+        <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>next_in</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>as_ptr</span>() <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>u8</span>;
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>avail_in</span> <span class='op'>=</span> <span class='ident'>input</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_uint</span>;
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>next_out</span> <span class='op'>=</span> <span class='ident'>output</span>.<span class='ident'>as_mut_ptr</span>();
         <span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>raw</span>.<span class='ident'>avail_out</span> <span class='op'>=</span> <span class='ident'>output</span>.<span class='ident'>len</span>() <span class='kw'>as</span> <span class='ident'>c_uint</span>;
@@ -862,12 +863,12 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>Direction</span> <span class='kw'>for</span> <span class='ident'>DirCompress</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>destroy</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>mz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>destroy</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>mz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
         <span class='ident'>ffi</span>::<span class='ident'>mz_deflateEnd</span>(<span class='ident'>stream</span>)
     }
 }
 <span class='kw'>impl</span> <span class='ident'>Direction</span> <span class='kw'>for</span> <span class='ident'>DirDecompress</span> {
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>destroy</span>(<span class='ident'>stream</span>: <span class='op'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>mz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
+    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>destroy</span>(<span class='ident'>stream</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='ident'>ffi</span>::<span class='ident'>mz_stream</span>) <span class='op'>-&gt;</span> <span class='ident'>c_int</span> {
         <span class='ident'>ffi</span>::<span class='ident'>mz_inflateEnd</span>(<span class='ident'>stream</span>)
     }
 }
@@ -900,7 +901,7 @@
             <span class='number'>0xea</span>, <span class='number'>0x3e</span>, <span class='number'>0x00</span>, <span class='number'>0x94</span>, <span class='number'>0x85</span>, <span class='number'>0xeb</span>, <span class='number'>0xe4</span>, <span class='number'>0xa8</span>, <span class='number'>0x00</span>, <span class='number'>0x00</span>, <span class='number'>0x00</span>
         ];
 
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decoded</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>data</span>.<span class='ident'>len</span>()<span class='op'>*</span><span class='number'>2</span>);
+        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>decoded</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>with_capacity</span>(<span class='ident'>data</span>.<span class='ident'>len</span>()<span class='kw-2'>*</span><span class='number'>2</span>);
 
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>Decompress</span>::<span class='ident'>new</span>(<span class='bool-val'>false</span>);
         <span class='comment'>// decompressed whole deflate stream</span>

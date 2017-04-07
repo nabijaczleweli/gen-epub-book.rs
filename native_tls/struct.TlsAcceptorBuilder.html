@@ -9,6 +9,7 @@
 
     <title>native_tls::TlsAcceptorBuilder - Rust</title>
 
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
     <link rel="stylesheet" type="text/css" href="../rustdoc.css">
     <link rel="stylesheet" type="text/css" href="../main.css">
     
@@ -47,9 +48,9 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/native_tls/lib.rs.html#381' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/native_tls/lib.rs.html#413' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct TlsAcceptorBuilder(_);</pre><div class='docblock'><p>A builder for <code>TlsAcceptor</code>s.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../native_tls/struct.TlsAcceptorBuilder.html' title='native_tls::TlsAcceptorBuilder'>TlsAcceptorBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/native_tls/lib.rs.html#383-400' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../native_tls/struct.TlsAcceptorBuilder.html' title='native_tls::TlsAcceptorBuilder'>TlsAcceptorBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/native_tls/lib.rs.html#415-432' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.supported_protocols' class='method'><span id='supported_protocols.v' class='invisible'><code>fn <a href='#method.supported_protocols' class='fnname'>supported_protocols</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; protocols: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='enum' href='../native_tls/enum.Protocol.html' title='native_tls::Protocol'>Protocol</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='type' href='../native_tls/type.Result.html' title='native_tls::Result'>Result</a>&lt;&amp;mut <a class='struct' href='../native_tls/struct.TlsAcceptorBuilder.html' title='native_tls::TlsAcceptorBuilder'>TlsAcceptorBuilder</a>&gt;</code></span></h4>
 <div class='docblock'><p>Sets the protocols which the acceptor will support.</p>
 
@@ -57,7 +58,7 @@
 is subject to change.</p>
 </div><h4 id='method.build' class='method'><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>(self) -&gt; <a class='type' href='../native_tls/type.Result.html' title='native_tls::Result'>Result</a>&lt;<a class='struct' href='../native_tls/struct.TlsAcceptor.html' title='native_tls::TlsAcceptor'>TlsAcceptor</a>&gt;</code></span></h4>
 <div class='docblock'><p>Consumes the builder, returning a <code>TlsAcceptor</code>.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../native_tls/backend/openssl/trait.TlsAcceptorBuilderExt.html' title='native_tls::backend::openssl::TlsAcceptorBuilderExt'>TlsAcceptorBuilderExt</a> for <a class='struct' href='../native_tls/struct.TlsAcceptorBuilder.html' title='native_tls::TlsAcceptorBuilder'>TlsAcceptorBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/native_tls/imp/openssl.rs.html#236-244' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='../native_tls/backend/openssl/trait.TlsAcceptorBuilderExt.html' title='native_tls::backend::openssl::TlsAcceptorBuilderExt'>TlsAcceptorBuilderExt</a> for <a class='struct' href='../native_tls/struct.TlsAcceptorBuilder.html' title='native_tls::TlsAcceptorBuilder'>TlsAcceptorBuilder</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/native_tls/imp/openssl.rs.html#262-270' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.builder' class='method'><span id='builder.v' class='invisible'><code>fn <a href='../native_tls/backend/openssl/trait.TlsAcceptorBuilderExt.html#tymethod.builder' class='fnname'>builder</a>(&amp;self) -&gt; &amp;<a class='struct' href='../openssl/ssl/connector/struct.SslAcceptorBuilder.html' title='openssl::ssl::connector::SslAcceptorBuilder'>SslAcceptorBuilder</a></code></span></h4>
 <div class='docblock'><p>Returns a shared reference to the inner <code>SslAcceptorBuilder</code>.</p>
 </div><h4 id='method.builder_mut' class='method'><span id='builder_mut.v' class='invisible'><code>fn <a href='../native_tls/backend/openssl/trait.TlsAcceptorBuilderExt.html#tymethod.builder_mut' class='fnname'>builder_mut</a>(&amp;mut self) -&gt; &amp;mut <a class='struct' href='../openssl/ssl/connector/struct.SslAcceptorBuilder.html' title='openssl::ssl::connector::SslAcceptorBuilder'>SslAcceptorBuilder</a></code></span></h4>
