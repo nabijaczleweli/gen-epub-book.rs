@@ -38,6 +38,12 @@ Exit values and possible errors:
 
     Special case: '-' to write to stdout.
 
+  -S --separator <SEPARATOR>
+
+    Enable custom separator feature and set the separator.
+
+    Default: ":".
+
 ## DESCRIPTOR FORMAT
 
 The descriptor consists of multiple lines in the format *"Key: Value"*, unknown
@@ -154,4 +160,5 @@ Written by nabijaczleweli &lt;<nabijaczleweli@gmail.com>&gt;
 
 ## SEE ALSO
 
-&lt;<https://github.com/nabijaczleweli/gen-epub-book.rs>&gt;
+&lt;<https://github.com/nabijaczleweli/gen-epub-book.rs>&gt;<br />
+&lt;<https://nabijaczleweli.xyz/content/gen-epub-book>&gt;

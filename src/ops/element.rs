@@ -16,7 +16,7 @@ use chrono::{DateTime, FixedOffset};
 /// ```
 /// # use gen_epub_book::ops::BookElement;
 /// let input = "Image-Content: images/ch01.png";
-/// assert_eq!(&BookElement::parse(input).unwrap().unwrap().to_string(), input);
+/// assert_eq!(&BookElement::parse(input, ":").unwrap().unwrap().to_string(), input);
 /// ```
 #[derive(Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub enum BookElement {
@@ -108,7 +108,8 @@ pub enum BookElement {
 }
 
 impl BookElement {
-    /// (Hopefully) get a book element from a descriptor line,
+    /// (Hopefully) get a book element from a descriptor line with a specified
+    /// [separator](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator).
     ///
     /// If the line isn't a descripting line or the line uses an unknown key, `Ok(None)` is returned.
     ///
@@ -122,17 +123,20 @@ impl BookElement {
     ///
     /// ```
     /// # use gen_epub_book::ops::BookElement;
-    /// assert!(BookElement::parse("Date: Mon, 26 Dec 2016 02:01:20 +0100").is_err());
-    /// assert!(BookElement::parse("Network-Image-Content: http/i.imgur.com/ViQ2WED.jpg").is_err());
+    /// assert!(BookElement::parse("Date: Mon, 26 Dec 2016 02:01:20 +0100", ":").is_err());
+    /// assert!(BookElement::parse("Network-Image-Content: http/i.imgur.com/ViQ2WED.jpg",
+    ///                            ":").is_err());
     /// ```
     ///
     /// Not a description/unrecognised key:
     ///
     /// ```
     /// # use gen_epub_book::ops::BookElement;
-    /// assert_eq!(BookElement::parse("# comment"), Ok(None));
-    /// assert_eq!(BookElement::parse("NetworkImage_Content: that was a typo"), Ok(None));
-    /// assert_eq!(BookElement::parse("Workers all over the world, unite!"), Ok(None));
+    /// assert_eq!(BookElement::parse("# comment", ":"), Ok(None));
+    /// assert_eq!(BookElement::parse("NetworkImage_Content: that was a typo", ":"), Ok(None));
+    /// assert_eq!(BookElement::parse("Content: used colon instead of equal sign ->", "="),
+    ///            Ok(None));
+    /// assert_eq!(BookElement::parse("Workers all over the world, unite!", ":"), Ok(None));
     /// ```
     ///
     /// Correct:
@@ -143,20 +147,25 @@ impl BookElement {
     /// # fn main() {
     /// # use self::gen_epub_book::ops::BookElement;
     /// # use self::chrono::DateTime;
-    /// assert_eq!(BookElement::parse("Name: nabijaczleweli"),
+    /// assert_eq!(BookElement::parse("Name: nabijaczleweli", ":"),
     ///            Ok(Some(BookElement::Name("nabijaczleweli".to_string()))));
-    /// assert_eq!(BookElement::parse("Date: 2017-02-08T15:30:18+01:00"),
+    /// assert_eq!(BookElement::parse("Date = 2017-02-08T15:30:18+01:00", "="),
     ///            Ok(Some(BookElement::Date(
     ///              DateTime::parse_from_rfc3339("2017-02-08T15:30:18+01:00").unwrap()))));
+    /// assert_eq!(BookElement::parse("Language INCREDIBLE COMMUNISM pl", "INCREDIBLE COMMUNISM"),
+    ///            Ok(Some(BookElement::Language("pl".to_string()))));
     /// # }
     /// ```
-    pub fn parse(line: &str) -> Result<Option<BookElement>, Error> {
-        match line.find(':') {
+    pub fn parse(line: &str, separator: &str) -> Result<Option<BookElement>, Error> {
+        assert!(!separator.is_empty());
+
+        let line = line.trim();
+        match line.find(separator) {
             Some(i) => {
                 if i == line.len() - 1 {
                     Ok(None)
                 } else {
-                    let ctnt = line[i + 1..].trim();
+                    let ctnt = line[i + separator.len()..].trim();
                     match line[0..i].trim() {
                         "Name" => Ok(Some(BookElement::Name(ctnt.to_string()))),
                         "Content" => Ok(Some(BookElement::Content(PathBuf::from(ctnt)))),
@@ -214,6 +223,7 @@ impl BookElement {
     }
 }
 
+/// Format the element in a way that would make it `parse()`able again with the default separator.
 impl fmt::Display for BookElement {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         try!(write!(f, "{}: ", self.name()));

@@ -31,9 +31,10 @@ fn result_main() -> Result<(), Error> {
                 op: "open",
                 more: None,
             }
-        })))
+        })),
+                              &opts.separator)
     } else {
-        ops::parse_descriptor("stdin", &mut stdin())
+        ops::parse_descriptor("stdin", &mut stdin(), &opts.separator)
     });
 
     if opts.verbose {

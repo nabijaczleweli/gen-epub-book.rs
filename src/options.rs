@@ -25,8 +25,14 @@ pub struct Options {
     pub relative_root: (String, PathBuf),
     /// The file to insert the assembled ePub to, or `None` for stdout.
     pub output_file: Option<(String, PathBuf)>,
-    /// Whether to print more information. Default: false
+    /// Whether to print more information.
+    ///
+    /// Default: false
     pub verbose: bool,
+    /// Chosen [separator](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator).
+    ///
+    /// Default: `":"`
+    pub separator: String,
 }
 
 impl Options {
@@ -37,6 +43,7 @@ impl Options {
             .arg(Arg::from_usage("<SOURCE> 'File to assemble ePub from'").validator(Options::source_file_validator))
             .arg(Arg::from_usage("<TARGET> 'File to write'"))
             .arg(Arg::from_usage("-v --verbose 'Print more information'"))
+            .arg(Arg::from_usage("-S --separator SEPARATOR 'Custom separator'").default_value(":"))
             .get_matches();
 
         let source = Options::optional_fname_arg(matches.value_of("SOURCE").unwrap());
@@ -49,6 +56,7 @@ impl Options {
             },
             output_file: target.map(|tgt| (tgt.to_string(), PathBuf::from(tgt))),
             verbose: matches.is_present("verbose"),
+            separator: matches.value_of("separator").unwrap_or(":").to_string(),
         }
     }
 

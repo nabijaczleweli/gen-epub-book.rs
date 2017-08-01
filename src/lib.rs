@@ -61,6 +61,14 @@
 //! Special case: '-' to write to stdout.
 //! ```
 //!
+//! -S --separator &lt;SEPARATOR&gt;
+//!
+//! ```text
+//! Enable custom separator feature and set the separator.
+//!
+//! Default: ":".
+//! ```
+//!
 //! ## DESCRIPTOR FORMAT
 //!
 //! The descriptor consists of multiple lines in the format *"Key: Value"*, unknown
