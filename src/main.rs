@@ -57,10 +57,10 @@ fn result_main() -> Result<(), Error> {
 
     if let Some(ref outfile) = opts.output_file.as_ref() {
         if let Some(p) = outfile.1.parent() {
-            if !p.exists() && fs::create_dir_all(p).is_ok() && opts.verbose {
+            if !p.as_os_str().is_empty() && !p.exists() && fs::create_dir_all(p).is_ok() && opts.verbose {
                 let _ = writeln!(stderr(),
                                  "Created directory {}.",
-                                 outfile.0[..outfile.0.rfind('/').or_else(|| outfile.0.rfind('\\')).unwrap() + 1].to_string());
+                                 outfile.0[..outfile.0.rfind('/').or_else(|| outfile.0.rfind('\\')).map(|i| i + 1).unwrap_or(0)].to_string());
             }
         }
     }
