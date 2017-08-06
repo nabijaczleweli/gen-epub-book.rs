@@ -52,7 +52,7 @@ pub enum Error {
         actual: usize,
         /// How it should be.
         relation: &'static str,
-        /// WHat is should be.
+        /// What it should be.
         bound: usize,
     },
     /// A required book element is missing.

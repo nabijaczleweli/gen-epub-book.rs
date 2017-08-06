@@ -22,7 +22,7 @@ pub use self::book::{EPubContentType, EPubData, EPubBook};
 /// Uses `BookElement::parse()`, so it inherits all errors from there,
 /// adding only the error from splitting lines.
 ///
-/// Flattens out non-describing lines.
+/// Filters out non-describing lines.
 ///
 /// # Examples
 ///
