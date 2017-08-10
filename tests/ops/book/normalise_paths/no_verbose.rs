@@ -25,7 +25,9 @@ fn correct() {
     assert_eq!(book.normalise_paths(&("$TEMP/ops-book-normalise-paths-no-verbose-correct/".to_string(), tf.clone()), false, &mut buf),
                Ok(()));
     assert_eq!(book.cover,
-               Some(("cover".to_string(), PathBuf::from("cover.png"), EPubContentType::File(tf.join("cover.png").canonicalize().unwrap()))));
+               Some(("cover-content-4".to_string(),
+                     PathBuf::from("cover-data-4.html"),
+                     EPubContentType::Raw(r#"<center><img src="cover.png" alt="cover.png"></img></center>"#.to_string()))));
     assert!(buf.is_empty());
 }
 
@@ -45,11 +47,13 @@ fn nonexistant() {
                                     false,
                                     &mut buf),
                Err(Error::FileNotFound {
-                   who: "Cover",
+                   who: "Content, Image or Include",
                    path: tf.join("cover.png"),
                }));
     assert_eq!(book.cover,
-               Some(("cover".to_string(), PathBuf::from("cover.png"), EPubContentType::File(PathBuf::from("cover.png")))));
+               Some(("cover-content-4".to_string(),
+                     PathBuf::from("cover-data-4.html"),
+                     EPubContentType::Raw(r#"<center><img src="cover.png" alt="cover.png"></img></center>"#.to_string()))));
     assert!(buf.is_empty());
 }
 
@@ -74,6 +78,8 @@ fn bad_type() {
                    path: tf.join("cover.png"),
                }));
     assert_eq!(book.cover,
-               Some(("cover".to_string(), PathBuf::from("cover.png"), EPubContentType::File(PathBuf::from("cover.png")))));
+               Some(("cover-content-4".to_string(),
+                     PathBuf::from("cover-data-4.html"),
+                     EPubContentType::Raw(r#"<center><img src="cover.png" alt="cover.png"></img></center>"#.to_string()))));
     assert!(buf.is_empty());
 }

@@ -1,8 +1,8 @@
 use self::super::super::util::{CONTENT_TABLE_HEADER, CONTAINER, MIME_TYPE, write_string_content, xhtml_path_id, book_filename, xhtml_url_id, download_to};
+use mime_guess::{Mime, guess_mime_type_opt};
 use self::super::{BookElement, find_title};
 use zip::write::{ZipWriter, FileOptions};
 use chrono::{DateTime, FixedOffset};
-use mime_guess::guess_mime_type_opt;
 use std::io::{self, Write, Seek};
 use std::collections::BTreeSet;
 use self::super::super::Error;
@@ -79,9 +79,10 @@ impl EPubBook {
     /// assert_eq!(book.author, "nabijaczleweli".to_string());
     /// assert_eq!(book.date, DateTime::parse_from_rfc3339("2017-02-08T15:30:18+01:00").unwrap());
     /// assert_eq!(book.language, "en-GB".to_string());
-    /// assert_eq!(book.cover, Some(("examples-cover".to_string(),
-    ///                              PathBuf::from("examples-cover.png"),
-    ///                              EPubContentType::File(PathBuf::from("examples/cover.png")))));
+    /// assert_eq!(book.cover, Some(("cover-content-1".to_string(),
+    ///                              PathBuf::from("cover-data-1.html"),
+    ///                              EPubContentType::Raw("<center><img src=\"examples-cover.png\" \
+    ///                                                    alt=\"examples-cover.png\"></img></center>".to_string()))));
     /// # }
     /// ```
     pub fn from_elements<E: IntoIterator<Item = BookElement>>(elems: E) -> Result<EPubBook, Error> {
@@ -105,26 +106,36 @@ impl EPubBook {
                     non_content.push((xhtml_path_id(&c), fname.clone(), EPubContentType::File(c)));
                     content.push((format!("image-content-{}", i),
                                   PathBuf::from(format!("image-data-{}.html", i)),
-                                  EPubContentType::Raw(format!(r#"<center><img src="{}"></img></center>"#, fname.display()))));
+                                  EPubContentType::Raw(format!(r#"<center><img src="{}" alt="{0}"></img></center>"#, fname.display()))));
                 }
                 BookElement::NetworkImageContent(c) => {
                     let fname = c.path_segments().unwrap().last().unwrap().to_string();
                     non_content.push((xhtml_url_id(&c).to_string(), PathBuf::from(&fname), EPubContentType::Network(c)));
                     content.push((format!("network-image-content-{}", i),
                                   PathBuf::from(format!("network-image-data-{}.html", i)),
-                                  EPubContentType::Raw(format!(r#"<center><img src="{}"></img></center>"#, fname))));
+                                  EPubContentType::Raw(format!(r#"<center><img src="{}" alt="{0}"></img></center>"#, fname))));
                 }
                 BookElement::Cover(c) => {
-                    cover = try!(EPubBook::handle_essential_element(cover,
-                                                                    (xhtml_path_id(&c), book_filename(&c), EPubContentType::File(c)),
-                                                                    "Cover and Network-Cover"))
+                    let fname = book_filename(&c);
+                    non_content.push(try!(EPubBook::handle_essential_element(cover,
+                                                                             (xhtml_path_id(&c), fname.clone(), EPubContentType::File(c)),
+                                                                             "Cover and Network-Cover"))
+                        .unwrap());
+                    cover = Some((format!("cover-content-{}", i),
+                                  PathBuf::from(format!("cover-data-{}.html", i)),
+                                  EPubContentType::Raw(format!(r#"<center><img src="{}" alt="{0}"></img></center>"#, fname.display()))));
                 }
                 BookElement::NetworkCover(c) => {
-                    cover = try!(EPubBook::handle_essential_element(cover,
-                                                                    (format!("network-cover-{}", xhtml_url_id(&c)),
-                                                                     PathBuf::from(c.path_segments().unwrap().last().unwrap()),
-                                                                     EPubContentType::Network(c)),
-                                                                    "Cover and Network-Cover"))
+                    let fname = PathBuf::from(c.path_segments().unwrap().last().unwrap());
+                    non_content.push(try!(EPubBook::handle_essential_element(cover,
+                                                                             (format!("network-cover-{}", xhtml_url_id(&c)),
+                                                                              fname.clone(),
+                                                                              EPubContentType::Network(c)),
+                                                                             "Cover and Network-Cover"))
+                        .unwrap());
+                    cover = Some((format!("network-cover-content-{}", i),
+                                  PathBuf::from(format!("network-cover-data-{}.html", i)),
+                                  EPubContentType::Raw(format!(r#"<center><img src="{}" alt="{0}"></img></center>"#, fname.display()))));
                 }
                 BookElement::Include(c) => non_content.push((xhtml_path_id(&c), book_filename(&c), EPubContentType::File(c))),
                 BookElement::NetworkInclude(c) => {
@@ -185,9 +196,10 @@ impl EPubBook {
     /// # }
     /// # book.normalise_paths(&("$TEMP/ops-epub-book-normalise-paths-0/".to_string(), tf.clone()), false, &mut
     /// vec![]).unwrap();
-    /// # assert_eq!(book.cover, Some(("cover".to_string(),
-    /// #                              PathBuf::from("cover.png"),
-    /// #                              EPubContentType::File(tf.join("cover.png").canonicalize().unwrap()))));
+    /// # assert_eq!(book.cover, Some(("cover-content-1".to_string(),
+    /// #                              PathBuf::from("cover-data-1.html"),
+    /// #                              EPubContentType::Raw("<center><img src=\"cover.png\" \
+    /// #                                                    alt=\"cover.png\"></img></center>".to_string()))));
     /// # }
     /// ```
     pub fn normalise_paths<W: Write>(&mut self, relroot: &(String, PathBuf), verbose: bool, verb_out: &mut W) -> Result<(), Error> {
@@ -342,10 +354,7 @@ impl EPubBook {
                               r#"    <item href="{}" id="{}" media-type="{}" />"#,
                               fname.display(),
                               id,
-                              try!(guess_mime_type_opt(&fname).ok_or(Error::WrongFileState {
-                                  what: "of recognised extension",
-                                  path: fname.clone(),
-                              })))
+                              try!(EPubBook::guess_type(&fname)))
                     .map_err(|_| EPubBook::zip_error("write", "content table manifest content")));
             }
         }
@@ -443,5 +452,18 @@ impl EPubBook {
         }
 
         Ok(())
+    }
+
+    fn guess_type(fname: &PathBuf) -> Result<Mime, Error> {
+        guess_mime_type_opt(&fname)
+            .map(|mime| if mime == "text/html".parse().unwrap() {
+                xhtml
+            } else {
+                "application/xhtml+xml".parse().unwrap()
+            })
+            .ok_or(Error::WrongFileState {
+                what: "of recognised extension",
+                path: fname.clone(),
+            })
     }
 }

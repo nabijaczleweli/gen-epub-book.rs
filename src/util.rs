@@ -46,24 +46,16 @@ pub fn uppercase_first(s: &str) -> String {
 
 /// Get the (X)HTML ID from a path.
 ///
-/// Replaces slashes with `-`s and removes all `../`s, `./`s and the extension.
+/// Replaces slashes with `-`s, `.`s with `_` and removes all `../`s, `./`s and the extension.
 ///
 /// # Examples
 ///
 /// ```
 /// # use gen_epub_book::util::xhtml_path_id;
-/// assert_eq!(&xhtml_path_id("./abolish/the/../burgeoisie.html"), "abolish-the-burgeoisie");
+/// assert_eq!(&xhtml_path_id("./abolish/the/../burgeoisie.html"), "abolish-the-burgeoisie_html");
 /// ```
 pub fn xhtml_path_id<P: AsRef<Path>>(p: P) -> String {
-    p.as_ref()
-        .with_extension("")
-        .to_string_lossy()
-        .replace('\u{FFFD}', "")
-        .replace('\\', "/")
-        .replace("../", "")
-        .replace("./", "")
-        .replace('/', "-")
-        .replace('.', "_")
+    book_filename(p).to_string_lossy().replace('.', "_")
 }
 
 /// Get filename to use for file specified by path.
@@ -76,11 +68,14 @@ pub fn xhtml_path_id<P: AsRef<Path>>(p: P) -> String {
 /// assert_eq!(&book_filename("./abolish/the/../burgeoisie.html"), Path::new("abolish-the-burgeoisie.html"));
 /// ```
 pub fn book_filename<P: AsRef<Path>>(p: P) -> PathBuf {
-    let mut f = PathBuf::from(xhtml_path_id(p.as_ref()));
-    if let Some(e) = p.as_ref().extension() {
-        f.set_extension(e);
-    }
-    f
+    p.as_ref()
+        .to_string_lossy()
+        .replace('\u{FFFD}', "")
+        .replace('\\', "/")
+        .replace("../", "")
+        .replace("./", "")
+        .replace('/', "-")
+        .into()
 }
 
 /// Get the (X)HTML ID from a URL.
@@ -95,12 +90,11 @@ pub fn book_filename<P: AsRef<Path>>(p: P) -> PathBuf {
 /// # use url::Url;
 /// assert_eq!(xhtml_url_id(
 ///   &Url::parse("https://upload.wikimedia.org/2000px-Recycle_symbol_Taiwan.svg.png").unwrap()),
-///   "2000px-Recycle_symbol_Taiwan");
+///   "2000px-Recycle_symbol_Taiwan_svg_png");
 /// # }
 /// ```
-pub fn xhtml_url_id(url: &Url) -> &str {
-    let fname = url.path_segments().unwrap().last().unwrap();
-    &fname[0..fname.find('.').unwrap_or(fname.len() - 1)]
+pub fn xhtml_url_id(url: &Url) -> String {
+    url.path_segments().unwrap().last().unwrap().replace('.', "_")
 }
 
 /// Write the string content in an acceptable form.

@@ -33,7 +33,9 @@ fn file_cover() {
     assert_eq!(book.date, DateTime::parse_from_rfc3339("2017-02-08T15:30:18+01:00").unwrap());
     assert_eq!(book.language, "en-GB".to_string());
     assert_eq!(book.cover,
-               Some(("examples-cover".to_string(), PathBuf::from("examples-cover.png"), EPubContentType::File(PathBuf::from("examples/cover.png")))));
+               Some(("cover-content-2".to_string(),
+                     PathBuf::from("cover-data-2.html"),
+                     EPubContentType::Raw(r#"<center><img src="examples-cover.png" alt="examples-cover.png"></img></center>"#.to_string()))));
 }
 
 #[test]
@@ -50,7 +52,7 @@ fn network_cover() {
     assert_eq!(book.date, DateTime::parse_from_rfc3339("2017-02-08T15:30:18+01:00").unwrap());
     assert_eq!(book.language, "en-GB".to_string());
     assert_eq!(book.cover,
-               Some(("network-cover-ViQ2WED".to_string(),
-                     PathBuf::from("ViQ2WED.jpg"),
-                     EPubContentType::Network(Url::parse("http://i.imgur.com/ViQ2WED.jpg").unwrap()))));
+               Some(("network-cover-content-2".to_string(),
+                     PathBuf::from("network-cover-data-2.html"),
+                     EPubContentType::Raw(r#"<center><img src="ViQ2WED.jpg" alt="ViQ2WED.jpg"></img></center>"#.to_string()))));
 }
