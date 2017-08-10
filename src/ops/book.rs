@@ -457,9 +457,9 @@ impl EPubBook {
     fn guess_type(fname: &PathBuf) -> Result<Mime, Error> {
         guess_mime_type_opt(&fname)
             .map(|mime| if mime == "text/html".parse().unwrap() {
-                xhtml
-            } else {
                 "application/xhtml+xml".parse().unwrap()
+            } else {
+                mime
             })
             .ok_or(Error::WrongFileState {
                 what: "of recognised extension",

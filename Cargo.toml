@@ -15,15 +15,15 @@ authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 [dependencies]
 lazy_static = "0.2"
 mime_guess = "1.8"
-reqwest = "0.4"
-chrono = "0.3"
+reqwest = "0.7"
+chrono = "0.4"
 regex = "0.2"
-clap = "2.20"
-url = "1.4"
+clap = "2.26"
+url = "1.5"
 zip = "0.2"
 
 [dependencies.uuid]
-version = "0.4"
+version = "0.5"
 features = ["v4"]
 
 
