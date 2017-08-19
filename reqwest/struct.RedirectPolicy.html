@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>reqwest</a></p><script>window.sidebarCurrent = {name: 'RedirectPolicy', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct RedirectPolicy</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>reqwest</a></p><script>window.sidebarCurrent = {name: 'RedirectPolicy', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,8 +43,8 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>reqwest</a>::<wbr><a class='struct' href=''>RedirectPolicy</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>reqwest</a>::<wbr><a class="struct" href=''>RedirectPolicy</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
@@ -53,14 +53,14 @@
 
 <p>The default value will catch redirect loops, and has a maximum of 10
 redirects it will follow in a chain before returning an error.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../reqwest/struct.RedirectPolicy.html' title='reqwest::RedirectPolicy'>RedirectPolicy</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/redirect.rs.html#14-80' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.limited' class='method'><span id='limited.v' class='invisible'><code>fn <a href='#method.limited' class='fnname'>limited</a>(max: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='struct' href='../reqwest/struct.RedirectPolicy.html' title='reqwest::RedirectPolicy'>RedirectPolicy</a></code></span></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../reqwest/struct.RedirectPolicy.html" title="struct reqwest::RedirectPolicy">RedirectPolicy</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/redirect.rs.html#14-80' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.limited' class="method"><span id='limited.v' class='invisible'><code>fn <a href='#method.limited' class='fnname'>limited</a>(max: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>) -&gt; <a class="struct" href="../reqwest/struct.RedirectPolicy.html" title="struct reqwest::RedirectPolicy">RedirectPolicy</a></code></span></h4>
 <div class='docblock'><p>Create a RedirectPolicy with a maximum number of redirects.</p>
 
 <p>A <code>Error::TooManyRedirects</code> will be returned if the max is reached.</p>
-</div><h4 id='method.none' class='method'><span id='none.v' class='invisible'><code>fn <a href='#method.none' class='fnname'>none</a>() -&gt; <a class='struct' href='../reqwest/struct.RedirectPolicy.html' title='reqwest::RedirectPolicy'>RedirectPolicy</a></code></span></h4>
+</div><h4 id='method.none' class="method"><span id='none.v' class='invisible'><code>fn <a href='#method.none' class='fnname'>none</a>() -&gt; <a class="struct" href="../reqwest/struct.RedirectPolicy.html" title="struct reqwest::RedirectPolicy">RedirectPolicy</a></code></span></h4>
 <div class='docblock'><p>Create a RedirectPolicy that does not follow any redirect.</p>
-</div><h4 id='method.custom' class='method'><span id='custom.v' class='invisible'><code>fn <a href='#method.custom' class='fnname'>custom</a>&lt;T&gt;(policy: T) -&gt; <a class='struct' href='../reqwest/struct.RedirectPolicy.html' title='reqwest::RedirectPolicy'>RedirectPolicy</a> <span class='where fmt-newline'>where T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html' title='core::ops::Fn'>Fn</a>(&amp;<a class='struct' href='../reqwest/struct.Url.html' title='reqwest::Url'>Url</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../reqwest/struct.Url.html' title='reqwest::Url'>Url</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='type' href='../reqwest/type.Result.html' title='reqwest::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>&gt; + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> + 'static</span></code></span></h4>
+</div><h4 id='method.custom' class="method"><span id='custom.v' class='invisible'><code>fn <a href='#method.custom' class='fnname'>custom</a>&lt;T&gt;(policy: T) -&gt; <a class="struct" href="../reqwest/struct.RedirectPolicy.html" title="struct reqwest::RedirectPolicy">RedirectPolicy</a> <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/trait.Fn.html" title="trait core::ops::Fn">Fn</a>(&amp;<a class="struct" href="../reqwest/struct.Url.html" title="struct reqwest::Url">Url</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../reqwest/struct.Url.html" title="struct reqwest::Url">Url</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>) -&gt; <a class="type" href="../reqwest/type.Result.html" title="type reqwest::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> + 'static,&nbsp;</span></code></span></h4>
 <div class='docblock'><p>Create a custom RedirectPolicy using the passed function.</p>
 
 <h1 id='note' class='section-header'><a href='#note'>Note</a></h1>
@@ -72,22 +72,22 @@ The custom policy should have some way of handling those.</p>
 return values.</p>
 
 <h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
-<pre class='rust rust-example-rendered'>
-<span class='ident'>client</span>.<span class='ident'>redirect</span>(<span class='ident'>RedirectPolicy</span>::<span class='ident'>custom</span>(<span class='op'>|</span><span class='ident'>next</span>, <span class='ident'>previous</span><span class='op'>|</span> {
-    <span class='kw'>if</span> <span class='ident'>previous</span>.<span class='ident'>len</span>() <span class='op'>&gt;</span> <span class='number'>5</span> {
-        <span class='prelude-val'>Err</span>(<span class='ident'>reqwest</span>::<span class='ident'>Error</span>::<span class='ident'>TooManyRedirects</span>)
-    } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>next</span>.<span class='ident'>host_str</span>() <span class='op'>==</span> <span class='prelude-val'>Some</span>(<span class='string'>&quot;example.domain&quot;</span>) {
-        <span class='comment'>// prevent redirects to &#39;example.domain&#39;</span>
-        <span class='prelude-val'>Ok</span>(<span class='bool-val'>false</span>)
-    } <span class='kw'>else</span> {
-        <span class='prelude-val'>Ok</span>(<span class='bool-val'>true</span>)
+<pre class="rust rust-example-rendered">
+<span class="ident">client</span>.<span class="ident">redirect</span>(<span class="ident">RedirectPolicy</span>::<span class="ident">custom</span>(<span class="op">|</span><span class="ident">next</span>, <span class="ident">previous</span><span class="op">|</span> {
+    <span class="kw">if</span> <span class="ident">previous</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">5</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">reqwest</span>::<span class="ident">Error</span>::<span class="ident">TooManyRedirects</span>)
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">next</span>.<span class="ident">host_str</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="string">&quot;example.domain&quot;</span>) {
+        <span class="comment">// prevent redirects to &#39;example.domain&#39;</span>
+        <span class="prelude-val">Ok</span>(<span class="bool-val">false</span>)
+    } <span class="kw">else</span> {
+        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
     }
 }));</pre>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../reqwest/struct.RedirectPolicy.html' title='reqwest::RedirectPolicy'>RedirectPolicy</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/redirect.rs.html#9' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../reqwest/struct.RedirectPolicy.html" title="struct reqwest::RedirectPolicy">RedirectPolicy</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/redirect.rs.html#9' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html' title='core::default::Default'>Default</a> for <a class='struct' href='../reqwest/struct.RedirectPolicy.html' title='reqwest::RedirectPolicy'>RedirectPolicy</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/redirect.rs.html#82-86' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.default' class='method'><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../reqwest/struct.RedirectPolicy.html' title='reqwest::RedirectPolicy'>RedirectPolicy</a></code></span></h4>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html" title="trait core::default::Default">Default</a> for <a class="struct" href="../reqwest/struct.RedirectPolicy.html" title="struct reqwest::RedirectPolicy">RedirectPolicy</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/redirect.rs.html#82-86' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../reqwest/struct.RedirectPolicy.html" title="struct reqwest::RedirectPolicy">RedirectPolicy</a></code></span></h4>
 <div class='docblock'><p>Returns the &quot;default value&quot; for a type. <a href="https://doc.rust-lang.org/nightly/core/default/trait.Default.html#tymethod.default">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -146,7 +146,6 @@ return values.</p>
         window.rootPath = "../";
         window.currentCrate = "reqwest";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>openssl</a>::<wbr><a href='index.html'>types</a></p><script>window.sidebarCurrent = {name: 'OpenSslType', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait OpenSslType</p><div class="block items"><ul><li><a href="#associated-types">Associated Types</a></li><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>openssl</a>::<wbr><a href='index.html'>types</a></p><script>window.sidebarCurrent = {name: 'OpenSslType', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,70 +43,72 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>openssl</a>::<wbr><a href='index.html'>types</a>::<wbr><a class='trait' href=''>OpenSslType</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>openssl</a>::<wbr><a href='index.html'>types</a>::<wbr><a class="trait" href=''>OpenSslType</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a class='srclink' href='../../src/foreign_types/lib.rs.html#180-192' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub trait OpenSslType <span class='where fmt-newline'>where Self::<a class='trait' href='../../openssl/types/trait.OpenSslType.html' title='openssl::types::OpenSslType'>Ref</a>::<a class='trait' href='../../openssl/types/trait.OpenSslTypeRef.html' title='openssl::types::OpenSslTypeRef'>CType</a> == Self::<a class='trait' href='../../openssl/types/trait.OpenSslType.html' title='openssl::types::OpenSslType'>CType</a></span> {
-    type <a href='#associatedtype.CType' class='type'>CType</a>;
-    type <a href='#associatedtype.Ref' class='type'>Ref</a>: <a class='trait' href='../../openssl/types/trait.OpenSslTypeRef.html' title='openssl::types::OpenSslTypeRef'>ForeignTypeRef</a>;
-    unsafe fn <a href='#tymethod.from_ptr' class='fnname'>from_ptr</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a>Self::<a class='trait' href='../../openssl/types/trait.OpenSslType.html' title='openssl::types::OpenSslType'>CType</a>) -&gt; Self;
-    fn <a href='#tymethod.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a>Self::<a class='trait' href='../../openssl/types/trait.OpenSslType.html' title='openssl::types::OpenSslType'>CType</a>;
+<pre class='rust trait'>pub trait OpenSslType <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;Self::<a class="trait" href="../../openssl/types/trait.OpenSslType.html" title="trait openssl::types::OpenSslType">Ref</a> as <a class="trait" href="../../openssl/types/trait.OpenSslTypeRef.html" title="trait openssl::types::OpenSslTypeRef">ForeignTypeRef</a>&gt;::<a class="trait" href="../../openssl/types/trait.OpenSslTypeRef.html" title="trait openssl::types::OpenSslTypeRef">CType</a> == Self::<a class="trait" href="../../openssl/types/trait.OpenSslType.html" title="trait openssl::types::OpenSslType">CType</a>,&nbsp;</span>{
+    type <a href='#associatedtype.CType' class="type">CType</a>;
+    type <a href='#associatedtype.Ref' class="type">Ref</a>: <a class="trait" href="../../openssl/types/trait.OpenSslTypeRef.html" title="trait openssl::types::OpenSslTypeRef">ForeignTypeRef</a>;
+    unsafe fn <a href='#tymethod.from_ptr' class='fnname'>from_ptr</a>(ptr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a>Self::<a class="trait" href="../../openssl/types/trait.OpenSslType.html" title="trait openssl::types::OpenSslType">CType</a>) -&gt; Self;
+    fn <a href='#tymethod.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a>Self::<a class="trait" href="../../openssl/types/trait.OpenSslType.html" title="trait openssl::types::OpenSslType">CType</a>;
 }</pre><div class='docblock'><p>A type implemented by wrappers over foreign types.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.CType' class='method'><span id='CType.t' class='invisible'><code>type <a href='#associatedtype.CType' class='type'>CType</a></code></span></h3><div class='docblock'><p>The raw C type.</p>
-</div><h3 id='associatedtype.Ref' class='method'><span id='Ref.t' class='invisible'><code>type <a href='#associatedtype.Ref' class='type'>Ref</a>: <a class='trait' href='../../openssl/types/trait.OpenSslTypeRef.html' title='openssl::types::OpenSslTypeRef'>ForeignTypeRef</a></code></span></h3><div class='docblock'><p>The type representing a reference to this type.</p>
+        <h3 id='associatedtype.CType' class='method'><span id='CType.t' class='invisible'><code>type <a href='#associatedtype.CType' class="type">CType</a></code></span></h3><div class='docblock'><p>The raw C type.</p>
+</div><h3 id='associatedtype.Ref' class='method'><span id='Ref.t' class='invisible'><code>type <a href='#associatedtype.Ref' class="type">Ref</a>: <a class="trait" href="../../openssl/types/trait.OpenSslTypeRef.html" title="trait openssl::types::OpenSslTypeRef">ForeignTypeRef</a></code></span></h3><div class='docblock'><p>The type representing a reference to this type.</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.from_ptr' class='method'><span id='from_ptr.v' class='invisible'><code>unsafe fn <a href='#tymethod.from_ptr' class='fnname'>from_ptr</a>(ptr: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a>Self::<a class='trait' href='../../openssl/types/trait.OpenSslType.html' title='openssl::types::OpenSslType'>CType</a>) -&gt; Self</code></span></h3><div class='docblock'><p>Constructs an instance of this type from its raw type.</p>
-</div><h3 id='tymethod.as_ptr' class='method'><span id='as_ptr.v' class='invisible'><code>fn <a href='#tymethod.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.pointer.html'>*mut </a>Self::<a class='trait' href='../../openssl/types/trait.OpenSslType.html' title='openssl::types::OpenSslType'>CType</a></code></span></h3><div class='docblock'><p>Returns a raw pointer to the wrapped value.</p>
+        <h3 id='tymethod.from_ptr' class='method'><span id='from_ptr.v' class='invisible'><code>unsafe fn <a href='#tymethod.from_ptr' class='fnname'>from_ptr</a>(ptr: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a>Self::<a class="trait" href="../../openssl/types/trait.OpenSslType.html" title="trait openssl::types::OpenSslType">CType</a>) -&gt; Self</code></span></h3><div class='docblock'><p>Constructs an instance of this type from its raw type.</p>
+</div><h3 id='tymethod.as_ptr' class='method'><span id='as_ptr.v' class='invisible'><code>fn <a href='#tymethod.as_ptr' class='fnname'>as_ptr</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.pointer.html">*mut </a>Self::<a class="trait" href="../../openssl/types/trait.OpenSslType.html" title="trait openssl::types::OpenSslType">CType</a></code></span></h3><div class='docblock'><p>Returns a raw pointer to the wrapped value.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl ForeignType for <a class='struct' href='../../openssl/asn1/struct.Asn1GeneralizedTime.html' title='openssl::asn1::Asn1GeneralizedTime'>Asn1GeneralizedTime</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/asn1/struct.Asn1Time.html' title='openssl::asn1::Asn1Time'>Asn1Time</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/asn1/struct.Asn1String.html' title='openssl::asn1::Asn1String'>Asn1String</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/asn1/struct.Asn1Integer.html' title='openssl::asn1::Asn1Integer'>Asn1Integer</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/asn1/struct.Asn1BitString.html' title='openssl::asn1::Asn1BitString'>Asn1BitString</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/asn1/struct.Asn1Object.html' title='openssl::asn1::Asn1Object'>Asn1Object</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/bn/struct.BigNumContext.html' title='openssl::bn::BigNumContext'>BigNumContext</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/bn/struct.BigNum.html' title='openssl::bn::BigNum'>BigNum</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/conf/struct.Conf.html' title='openssl::conf::Conf'>Conf</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/dh/struct.Dh.html' title='openssl::dh::Dh'>Dh</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/dsa/struct.Dsa.html' title='openssl::dsa::Dsa'>Dsa</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ec/struct.EcGroup.html' title='openssl::ec::EcGroup'>EcGroup</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ec/struct.EcPoint.html' title='openssl::ec::EcPoint'>EcPoint</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ec/struct.EcKey.html' title='openssl::ec::EcKey'>EcKey</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ec/struct.EcKeyBuilder.html' title='openssl::ec::EcKeyBuilder'>EcKeyBuilder</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ocsp/struct.OcspBasicResponse.html' title='openssl::ocsp::OcspBasicResponse'>OcspBasicResponse</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ocsp/struct.OcspCertId.html' title='openssl::ocsp::OcspCertId'>OcspCertId</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ocsp/struct.OcspResponse.html' title='openssl::ocsp::OcspResponse'>OcspResponse</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ocsp/struct.OcspRequest.html' title='openssl::ocsp::OcspRequest'>OcspRequest</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ocsp/struct.OcspOneReq.html' title='openssl::ocsp::OcspOneReq'>OcspOneReq</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/pkcs12/struct.Pkcs12.html' title='openssl::pkcs12::Pkcs12'>Pkcs12</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/pkey/struct.PKey.html' title='openssl::pkey::PKey'>PKey</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/rsa/struct.Rsa.html' title='openssl::rsa::Rsa'>Rsa</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ssl/struct.SslContext.html' title='openssl::ssl::SslContext'>SslContext</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ssl/struct.SslCipher.html' title='openssl::ssl::SslCipher'>SslCipher</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ssl/struct.SslSession.html' title='openssl::ssl::SslSession'>SslSession</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/ssl/struct.Ssl.html' title='openssl::ssl::Ssl'>Ssl</a></code></li>
-<li><code>impl&lt;T:&nbsp;<a class='trait' href='../../openssl/stack/trait.Stackable.html' title='openssl::stack::Stackable'>Stackable</a>&gt; ForeignType for <a class='struct' href='../../openssl/stack/struct.Stack.html' title='openssl::stack::Stack'>Stack</a>&lt;T&gt;</code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/string/struct.OpensslString.html' title='openssl::string::OpensslString'>OpensslString</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/store/struct.X509StoreBuilder.html' title='openssl::x509::store::X509StoreBuilder'>X509StoreBuilder</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/store/struct.X509Store.html' title='openssl::x509::store::X509Store'>X509Store</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/struct.X509StoreContext.html' title='openssl::x509::X509StoreContext'>X509StoreContext</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/struct.X509.html' title='openssl::x509::X509'>X509</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/struct.X509Extension.html' title='openssl::x509::X509Extension'>X509Extension</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/struct.X509Name.html' title='openssl::x509::X509Name'>X509Name</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/struct.X509NameEntry.html' title='openssl::x509::X509NameEntry'>X509NameEntry</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/struct.X509Req.html' title='openssl::x509::X509Req'>X509Req</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/struct.GeneralName.html' title='openssl::x509::GeneralName'>GeneralName</a></code></li>
-<li><code>impl ForeignType for <a class='struct' href='../../openssl/x509/struct.X509Algorithm.html' title='openssl::x509::X509Algorithm'>X509Algorithm</a></code></li>
+    <li><code>impl ForeignType for <a class="struct" href="../../openssl/asn1/struct.Asn1GeneralizedTime.html" title="struct openssl::asn1::Asn1GeneralizedTime">Asn1GeneralizedTime</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/asn1/struct.Asn1Time.html" title="struct openssl::asn1::Asn1Time">Asn1Time</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/asn1/struct.Asn1String.html" title="struct openssl::asn1::Asn1String">Asn1String</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/asn1/struct.Asn1Integer.html" title="struct openssl::asn1::Asn1Integer">Asn1Integer</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/asn1/struct.Asn1BitString.html" title="struct openssl::asn1::Asn1BitString">Asn1BitString</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/asn1/struct.Asn1Object.html" title="struct openssl::asn1::Asn1Object">Asn1Object</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/bn/struct.BigNumContext.html" title="struct openssl::bn::BigNumContext">BigNumContext</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/bn/struct.BigNum.html" title="struct openssl::bn::BigNum">BigNum</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/cms/struct.CmsContentInfo.html" title="struct openssl::cms::CmsContentInfo">CmsContentInfo</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/conf/struct.Conf.html" title="struct openssl::conf::Conf">Conf</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/dh/struct.Dh.html" title="struct openssl::dh::Dh">Dh</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/dsa/struct.Dsa.html" title="struct openssl::dsa::Dsa">Dsa</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ec/struct.EcGroup.html" title="struct openssl::ec::EcGroup">EcGroup</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ec/struct.EcPoint.html" title="struct openssl::ec::EcPoint">EcPoint</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ec/struct.EcKey.html" title="struct openssl::ec::EcKey">EcKey</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ec/struct.EcKeyBuilder.html" title="struct openssl::ec::EcKeyBuilder">EcKeyBuilder</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ocsp/struct.OcspBasicResponse.html" title="struct openssl::ocsp::OcspBasicResponse">OcspBasicResponse</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ocsp/struct.OcspCertId.html" title="struct openssl::ocsp::OcspCertId">OcspCertId</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ocsp/struct.OcspResponse.html" title="struct openssl::ocsp::OcspResponse">OcspResponse</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ocsp/struct.OcspRequest.html" title="struct openssl::ocsp::OcspRequest">OcspRequest</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ocsp/struct.OcspOneReq.html" title="struct openssl::ocsp::OcspOneReq">OcspOneReq</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/pkcs12/struct.Pkcs12.html" title="struct openssl::pkcs12::Pkcs12">Pkcs12</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/pkey/struct.PKey.html" title="struct openssl::pkey::PKey">PKey</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/pkey/struct.PKeyCtx.html" title="struct openssl::pkey::PKeyCtx">PKeyCtx</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/rsa/struct.Rsa.html" title="struct openssl::rsa::Rsa">Rsa</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ssl/struct.SslContext.html" title="struct openssl::ssl::SslContext">SslContext</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ssl/struct.SslCipher.html" title="struct openssl::ssl::SslCipher">SslCipher</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ssl/struct.SslSession.html" title="struct openssl::ssl::SslSession">SslSession</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/ssl/struct.Ssl.html" title="struct openssl::ssl::Ssl">Ssl</a></code></li>
+<li><code>impl&lt;T:&nbsp;<a class="trait" href="../../openssl/stack/trait.Stackable.html" title="trait openssl::stack::Stackable">Stackable</a>&gt; ForeignType for <a class="struct" href="../../openssl/stack/struct.Stack.html" title="struct openssl::stack::Stack">Stack</a>&lt;T&gt;</code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/string/struct.OpensslString.html" title="struct openssl::string::OpensslString">OpensslString</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/store/struct.X509StoreBuilder.html" title="struct openssl::x509::store::X509StoreBuilder">X509StoreBuilder</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/store/struct.X509Store.html" title="struct openssl::x509::store::X509Store">X509Store</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/struct.X509StoreContext.html" title="struct openssl::x509::X509StoreContext">X509StoreContext</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/struct.X509.html" title="struct openssl::x509::X509">X509</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/struct.X509Extension.html" title="struct openssl::x509::X509Extension">X509Extension</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/struct.X509Name.html" title="struct openssl::x509::X509Name">X509Name</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/struct.X509NameEntry.html" title="struct openssl::x509::X509NameEntry">X509NameEntry</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/struct.X509Req.html" title="struct openssl::x509::X509Req">X509Req</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/struct.GeneralName.html" title="struct openssl::x509::GeneralName">GeneralName</a></code></li>
+<li><code>impl ForeignType for <a class="struct" href="../../openssl/x509/struct.X509Algorithm.html" title="struct openssl::x509::X509Algorithm">X509Algorithm</a></code></li>
 </ul><script type="text/javascript" async
                          src="../../implementors/foreign_types/trait.OpenSslType.js">
                  </script></section>
@@ -166,7 +168,6 @@
         window.rootPath = "../../";
         window.currentCrate = "openssl";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

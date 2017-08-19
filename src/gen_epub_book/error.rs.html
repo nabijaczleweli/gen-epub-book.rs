@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -175,136 +175,136 @@
 <span id="130">130</span>
 <span id="131">131</span>
 <span id="132">132</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::<span class='ident'>util</span>::<span class='ident'>uppercase_first</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::<span class='ident'>PathBuf</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">uppercase_first</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
 
 
-<span class='doccomment'>/// Enum representing all possible ways the application can fail.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Hash</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Error</span> {
-    <span class='doccomment'>/// An I/O error occured.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This includes higher-level I/O errors like FS ones.</span>
-    <span class='ident'>Io</span> {
-        <span class='doccomment'>/// The file the I/O operation regards.</span>
-        <span class='ident'>desc</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// The failed operation.</span>
-        <span class='doccomment'>///</span>
-        <span class='doccomment'>/// This should be lowercase and imperative (&quot;create&quot;, &quot;open&quot;).</span>
-        <span class='ident'>op</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// Additional data.</span>
-        <span class='ident'>more</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// Enum representing all possible ways the application can fail.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
+    <span class="doccomment">/// An I/O error occured.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This includes higher-level I/O errors like FS ones.</span>
+    <span class="ident">Io</span> {
+        <span class="doccomment">/// The file the I/O operation regards.</span>
+        <span class="ident">desc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="doccomment">/// The failed operation.</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// This should be lowercase and imperative (&quot;create&quot;, &quot;open&quot;).</span>
+        <span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="doccomment">/// Additional data.</span>
+        <span class="ident">more</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>,
     },
-    <span class='doccomment'>/// A parsing error occured.</span>
-    <span class='ident'>Parse</span> {
-        <span class='doccomment'>/// What failed to parse.</span>
-        <span class='doccomment'>///</span>
-        <span class='doccomment'>/// Something like &quot;URL&quot;, &quot;datetime&quot;.</span>
-        <span class='ident'>tp</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// Where the thing that failed to parse would go, were it to parese properly.</span>
-        <span class='ident'>wher</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// Additional data.</span>
-        <span class='ident'>more</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;</span>,
+    <span class="doccomment">/// A parsing error occured.</span>
+    <span class="ident">Parse</span> {
+        <span class="doccomment">/// What failed to parse.</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// Something like &quot;URL&quot;, &quot;datetime&quot;.</span>
+        <span class="ident">tp</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="doccomment">/// Where the thing that failed to parse would go, were it to parese properly.</span>
+        <span class="ident">wher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="doccomment">/// Additional data.</span>
+        <span class="ident">more</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span>,
     },
-    <span class='doccomment'>/// A requested file doesn&#39;t exist.</span>
-    <span class='ident'>FileNotFound</span> {
-        <span class='doccomment'>/// What requested the file.</span>
-        <span class='ident'>who</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// The file that should exist.</span>
-        <span class='ident'>path</span>: <span class='ident'>PathBuf</span>,
+    <span class="doccomment">/// A requested file doesn&#39;t exist.</span>
+    <span class="ident">FileNotFound</span> {
+        <span class="doccomment">/// What requested the file.</span>
+        <span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="doccomment">/// The file that should exist.</span>
+        <span class="ident">path</span>: <span class="ident">PathBuf</span>,
     },
-    <span class='doccomment'>/// A path is in a wrong state.</span>
-    <span class='ident'>WrongFileState</span> {
-        <span class='doccomment'>/// What the file is not.</span>
-        <span class='ident'>what</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// The file that should be.</span>
-        <span class='ident'>path</span>: <span class='ident'>PathBuf</span>,
+    <span class="doccomment">/// A path is in a wrong state.</span>
+    <span class="ident">WrongFileState</span> {
+        <span class="doccomment">/// What the file is not.</span>
+        <span class="ident">what</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="doccomment">/// The file that should be.</span>
+        <span class="ident">path</span>: <span class="ident">PathBuf</span>,
     },
-    <span class='doccomment'>/// An incorrect amount of book elements.</span>
-    <span class='ident'>WrongElementAmount</span> {
-        <span class='doccomment'>/// The element&#39;s name.</span>
-        <span class='ident'>element</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// Current amount.</span>
-        <span class='ident'>actual</span>: <span class='ident'>usize</span>,
-        <span class='doccomment'>/// How it should be.</span>
-        <span class='ident'>relation</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-        <span class='doccomment'>/// WHat is should be.</span>
-        <span class='ident'>bound</span>: <span class='ident'>usize</span>,
+    <span class="doccomment">/// An incorrect amount of book elements.</span>
+    <span class="ident">WrongElementAmount</span> {
+        <span class="doccomment">/// The element&#39;s name.</span>
+        <span class="ident">element</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="doccomment">/// Current amount.</span>
+        <span class="ident">actual</span>: <span class="ident">usize</span>,
+        <span class="doccomment">/// How it should be.</span>
+        <span class="ident">relation</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+        <span class="doccomment">/// What it should be.</span>
+        <span class="ident">bound</span>: <span class="ident">usize</span>,
     },
-    <span class='doccomment'>/// A required book element is missing.</span>
-    <span class='ident'>RequiredElementMissing</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>),
+    <span class="doccomment">/// A required book element is missing.</span>
+    <span class="ident">RequiredElementMissing</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>),
 }
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> {
-    <span class='doccomment'>/// Write the error message to the specified output stream.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// # use gen_epub_book::Error;</span>
-    <span class='doccomment'>/// # use std::iter::FromIterator;</span>
-    <span class='doccomment'>/// let mut out = Vec::new();</span>
-    <span class='doccomment'>/// Error::Io {</span>
-    <span class='doccomment'>///     desc: &quot;network&quot;,</span>
-    <span class='doccomment'>///     op: &quot;write&quot;,</span>
-    <span class='doccomment'>///     more: Some(&quot;full buffer&quot;),</span>
-    <span class='doccomment'>/// }.print_error(&amp;mut out);</span>
-    <span class='doccomment'>/// assert_eq!(String::from_iter(out.iter().map(|&amp;i| i as char)),</span>
-    <span class='doccomment'>///            &quot;Writing network failed: full buffer.\n&quot;.to_string());</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>print_error</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>err_out</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Error</span>::<span class='ident'>Io</span> { <span class='ident'>desc</span>, <span class='ident'>op</span>, <span class='ident'>more</span> } <span class='op'>=&gt;</span> {
-                <span class='comment'>// Strip the last &#39;e&#39;, if any, so we get correct inflection for continuous times</span>
-                <span class='kw'>let</span> <span class='ident'>op</span> <span class='op'>=</span> <span class='ident'>uppercase_first</span>(<span class='kw'>if</span> <span class='ident'>op</span>.<span class='ident'>ends_with</span>(<span class='string'>&#39;e&#39;</span>) {
-                    <span class='kw-2'>&amp;</span><span class='ident'>op</span>[..<span class='ident'>op</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>]
-                } <span class='kw'>else</span> {
-                    <span class='ident'>op</span>
+<span class="kw">impl</span> <span class="ident">Error</span> {
+    <span class="doccomment">/// Write the error message to the specified output stream.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use gen_epub_book::Error;</span>
+    <span class="doccomment">/// # use std::iter::FromIterator;</span>
+    <span class="doccomment">/// let mut out = Vec::new();</span>
+    <span class="doccomment">/// Error::Io {</span>
+    <span class="doccomment">///     desc: &quot;network&quot;,</span>
+    <span class="doccomment">///     op: &quot;write&quot;,</span>
+    <span class="doccomment">///     more: Some(&quot;full buffer&quot;),</span>
+    <span class="doccomment">/// }.print_error(&amp;mut out);</span>
+    <span class="doccomment">/// assert_eq!(String::from_iter(out.iter().map(|&amp;i| i as char)),</span>
+    <span class="doccomment">///            &quot;Writing network failed: full buffer.\n&quot;.to_string());</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">print_error</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">err_out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Error</span>::<span class="ident">Io</span> { <span class="ident">desc</span>, <span class="ident">op</span>, <span class="ident">more</span> } <span class="op">=&gt;</span> {
+                <span class="comment">// Strip the last &#39;e&#39;, if any, so we get correct inflection for continuous times</span>
+                <span class="kw">let</span> <span class="ident">op</span> <span class="op">=</span> <span class="ident">uppercase_first</span>(<span class="kw">if</span> <span class="ident">op</span>.<span class="ident">ends_with</span>(<span class="string">&#39;e&#39;</span>) {
+                    <span class="kw-2">&amp;</span><span class="ident">op</span>[..<span class="ident">op</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>]
+                } <span class="kw">else</span> {
+                    <span class="ident">op</span>
                 });
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;{}ing {} failed&quot;</span>, <span class='ident'>op</span>, <span class='ident'>desc</span>).<span class='ident'>unwrap</span>();
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>more</span>) <span class='op'>=</span> <span class='ident'>more</span> {
-                    <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;: {}&quot;</span>, <span class='ident'>more</span>).<span class='ident'>unwrap</span>();
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;{}ing {} failed&quot;</span>, <span class="ident">op</span>, <span class="ident">desc</span>).<span class="ident">unwrap</span>();
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">more</span>) <span class="op">=</span> <span class="ident">more</span> {
+                    <span class="macro">write</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;: {}&quot;</span>, <span class="ident">more</span>).<span class="ident">unwrap</span>();
                 }
-                <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;.&quot;</span>).<span class='ident'>unwrap</span>();
+                <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;.&quot;</span>).<span class="ident">unwrap</span>();
             }
-            <span class='ident'>Error</span>::<span class='ident'>Parse</span> { <span class='ident'>tp</span>, <span class='ident'>wher</span>, <span class='ident'>more</span> } <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;Failed to parse {} for {}&quot;</span>, <span class='ident'>tp</span>, <span class='ident'>wher</span>).<span class='ident'>unwrap</span>();
-                <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>more</span>) <span class='op'>=</span> <span class='ident'>more</span> {
-                    <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;: {}&quot;</span>, <span class='ident'>more</span>).<span class='ident'>unwrap</span>();
+            <span class="ident">Error</span>::<span class="ident">Parse</span> { <span class="ident">tp</span>, <span class="ident">wher</span>, <span class="ident">more</span> } <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;Failed to parse {} for {}&quot;</span>, <span class="ident">tp</span>, <span class="ident">wher</span>).<span class="ident">unwrap</span>();
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">more</span>) <span class="op">=</span> <span class="ident">more</span> {
+                    <span class="macro">write</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;: {}&quot;</span>, <span class="ident">more</span>).<span class="ident">unwrap</span>();
                 }
-                <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;.&quot;</span>).<span class='ident'>unwrap</span>();
+                <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;.&quot;</span>).<span class="ident">unwrap</span>();
             }
-            <span class='ident'>Error</span>::<span class='ident'>FileNotFound</span> { <span class='ident'>who</span>, <span class='kw-2'>ref</span> <span class='ident'>path</span> } <span class='op'>=&gt;</span> <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;File {} for {} not found.&quot;</span>, <span class='ident'>path</span>.<span class='ident'>display</span>(), <span class='ident'>who</span>).<span class='ident'>unwrap</span>(),
-            <span class='ident'>Error</span>::<span class='ident'>WrongFileState</span> { <span class='ident'>what</span>, <span class='kw-2'>ref</span> <span class='ident'>path</span> } <span class='op'>=&gt;</span> <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;File {} is not {}.&quot;</span>, <span class='ident'>path</span>.<span class='ident'>display</span>(), <span class='ident'>what</span>).<span class='ident'>unwrap</span>(),
-            <span class='ident'>Error</span>::<span class='ident'>WrongElementAmount</span> { <span class='ident'>element</span>, <span class='ident'>actual</span>, <span class='ident'>relation</span>, <span class='ident'>bound</span> } <span class='op'>=&gt;</span> {
-                <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;Wrong amount of {} elements: {}, must be {} {}.&quot;</span>, <span class='ident'>element</span>, <span class='ident'>actual</span>, <span class='ident'>relation</span>, <span class='ident'>bound</span>).<span class='ident'>unwrap</span>()
+            <span class="ident">Error</span>::<span class="ident">FileNotFound</span> { <span class="ident">who</span>, <span class="kw-2">ref</span> <span class="ident">path</span> } <span class="op">=&gt;</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;File {} for {} not found.&quot;</span>, <span class="ident">path</span>.<span class="ident">display</span>(), <span class="ident">who</span>).<span class="ident">unwrap</span>(),
+            <span class="ident">Error</span>::<span class="ident">WrongFileState</span> { <span class="ident">what</span>, <span class="kw-2">ref</span> <span class="ident">path</span> } <span class="op">=&gt;</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;File {} is not {}.&quot;</span>, <span class="ident">path</span>.<span class="ident">display</span>(), <span class="ident">what</span>).<span class="ident">unwrap</span>(),
+            <span class="ident">Error</span>::<span class="ident">WrongElementAmount</span> { <span class="ident">element</span>, <span class="ident">actual</span>, <span class="ident">relation</span>, <span class="ident">bound</span> } <span class="op">=&gt;</span> {
+                <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;Wrong amount of {} elements: {}, must be {} {}.&quot;</span>, <span class="ident">element</span>, <span class="ident">actual</span>, <span class="ident">relation</span>, <span class="ident">bound</span>).<span class="ident">unwrap</span>()
             }
-            <span class='ident'>Error</span>::<span class='ident'>RequiredElementMissing</span>(<span class='ident'>element</span>) <span class='op'>=&gt;</span> <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;Required element {} not specified.&quot;</span>, <span class='ident'>element</span>).<span class='ident'>unwrap</span>(),
+            <span class="ident">Error</span>::<span class="ident">RequiredElementMissing</span>(<span class="ident">element</span>) <span class="op">=&gt;</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">err_out</span>, <span class="string">&quot;Required element {} not specified.&quot;</span>, <span class="ident">element</span>).<span class="ident">unwrap</span>(),
         }
     }
 
-    <span class='doccomment'>/// Get the executable exit value from an `Error` instance.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Examples</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='doccomment'>/// # use gen_epub_book::Error;</span>
-    <span class='doccomment'>/// assert_eq!(Error::Io {</span>
-    <span class='doccomment'>///     desc: &quot;&quot;,</span>
-    <span class='doccomment'>///     op: &quot;&quot;,</span>
-    <span class='doccomment'>///     more: None,</span>
-    <span class='doccomment'>/// }.exit_value(), 1);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>exit_value</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>i32</span> {
-        <span class='kw'>match</span> <span class='kw-2'>*</span><span class='self'>self</span> {
-            <span class='ident'>Error</span>::<span class='ident'>Io</span> { .. } <span class='op'>=&gt;</span> <span class='number'>1</span>,
-            <span class='ident'>Error</span>::<span class='ident'>Parse</span> { .. } <span class='op'>=&gt;</span> <span class='number'>2</span>,
-            <span class='ident'>Error</span>::<span class='ident'>FileNotFound</span> { .. } <span class='op'>=&gt;</span> <span class='number'>3</span>,
-            <span class='ident'>Error</span>::<span class='ident'>WrongFileState</span> { .. } <span class='op'>=&gt;</span> <span class='number'>4</span>,
-            <span class='ident'>Error</span>::<span class='ident'>WrongElementAmount</span> { .. } <span class='op'>=&gt;</span> <span class='number'>5</span>,
-            <span class='ident'>Error</span>::<span class='ident'>RequiredElementMissing</span>(..) <span class='op'>=&gt;</span> <span class='number'>6</span>,
+    <span class="doccomment">/// Get the executable exit value from an `Error` instance.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use gen_epub_book::Error;</span>
+    <span class="doccomment">/// assert_eq!(Error::Io {</span>
+    <span class="doccomment">///     desc: &quot;&quot;,</span>
+    <span class="doccomment">///     op: &quot;&quot;,</span>
+    <span class="doccomment">///     more: None,</span>
+    <span class="doccomment">/// }.exit_value(), 1);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">exit_value</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Error</span>::<span class="ident">Io</span> { .. } <span class="op">=&gt;</span> <span class="number">1</span>,
+            <span class="ident">Error</span>::<span class="ident">Parse</span> { .. } <span class="op">=&gt;</span> <span class="number">2</span>,
+            <span class="ident">Error</span>::<span class="ident">FileNotFound</span> { .. } <span class="op">=&gt;</span> <span class="number">3</span>,
+            <span class="ident">Error</span>::<span class="ident">WrongFileState</span> { .. } <span class="op">=&gt;</span> <span class="number">4</span>,
+            <span class="ident">Error</span>::<span class="ident">WrongElementAmount</span> { .. } <span class="op">=&gt;</span> <span class="number">5</span>,
+            <span class="ident">Error</span>::<span class="ident">RequiredElementMissing</span>(..) <span class="op">=&gt;</span> <span class="number">6</span>,
         }
     }
 }
@@ -366,7 +366,6 @@
         window.rootPath = "../../";
         window.currentCrate = "gen_epub_book";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

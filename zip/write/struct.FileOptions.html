@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>zip</a>::<wbr><a href='index.html'>write</a></p><script>window.sidebarCurrent = {name: 'FileOptions', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct FileOptions</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='../index.html'>zip</a>::<wbr><a href='index.html'>write</a></p><script>window.sidebarCurrent = {name: 'FileOptions', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,30 +43,36 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>zip</a>::<wbr><a href='index.html'>write</a>::<wbr><a class='struct' href=''>FileOptions</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>zip</a>::<wbr><a href='index.html'>write</a>::<wbr><a class="struct" href=''>FileOptions</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/zip/write.rs.html#74-78' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/zip/write.rs.html#75-79' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct FileOptions { /* fields omitted */ }</pre><div class='docblock'><p>Metadata for a file to be written</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../zip/write/struct.FileOptions.html' title='zip::write::FileOptions'>FileOptions</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/zip/write.rs.html#80-115' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.default' class='method'><span id='default.v' class='invisible'><code>fn <a href='#method.default' class='fnname'>default</a>() -&gt; <a class='struct' href='../../zip/write/struct.FileOptions.html' title='zip::write::FileOptions'>FileOptions</a></code></span></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../../zip/write/struct.FileOptions.html" title="struct zip::write::FileOptions">FileOptions</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/zip/write.rs.html#81-116' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.default' class="method"><span id='default.v' class='invisible'><code>fn <a href='#method.default' class='fnname'>default</a>() -&gt; <a class="struct" href="../../zip/write/struct.FileOptions.html" title="struct zip::write::FileOptions">FileOptions</a></code></span></h4>
 <div class='docblock'><p>Construct a new FileOptions object</p>
-</div><h4 id='method.compression_method' class='method'><span id='compression_method.v' class='invisible'><code>fn <a href='#method.compression_method' class='fnname'>compression_method</a>(self, method: <a class='enum' href='../../zip/enum.CompressionMethod.html' title='zip::CompressionMethod'>CompressionMethod</a>) -&gt; <a class='struct' href='../../zip/write/struct.FileOptions.html' title='zip::write::FileOptions'>FileOptions</a></code></span></h4>
+</div><h4 id='method.compression_method' class="method"><span id='compression_method.v' class='invisible'><code>fn <a href='#method.compression_method' class='fnname'>compression_method</a>(self, method: <a class="enum" href="../../zip/enum.CompressionMethod.html" title="enum zip::CompressionMethod">CompressionMethod</a>) -&gt; <a class="struct" href="../../zip/write/struct.FileOptions.html" title="struct zip::write::FileOptions">FileOptions</a></code></span></h4>
 <div class='docblock'><p>Set the compression method for the new file</p>
 
 <p>The default is <code>CompressionMethod::Deflated</code></p>
-</div><h4 id='method.last_modified_time' class='method'><span id='last_modified_time.v' class='invisible'><code>fn <a href='#method.last_modified_time' class='fnname'>last_modified_time</a>(self, mod_time: <a class='struct' href='../../time/struct.Tm.html' title='time::Tm'>Tm</a>) -&gt; <a class='struct' href='../../zip/write/struct.FileOptions.html' title='zip::write::FileOptions'>FileOptions</a></code></span></h4>
+</div><h4 id='method.last_modified_time' class="method"><span id='last_modified_time.v' class='invisible'><code>fn <a href='#method.last_modified_time' class='fnname'>last_modified_time</a>(self, mod_time: <a class="struct" href="../../time/struct.Tm.html" title="struct time::Tm">Tm</a>) -&gt; <a class="struct" href="../../zip/write/struct.FileOptions.html" title="struct zip::write::FileOptions">FileOptions</a></code></span></h4>
 <div class='docblock'><p>Set the last modified time</p>
 
 <p>The default is the current timestamp</p>
-</div><h4 id='method.unix_permissions' class='method'><span id='unix_permissions.v' class='invisible'><code>fn <a href='#method.unix_permissions' class='fnname'>unix_permissions</a>(self, mode: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='struct' href='../../zip/write/struct.FileOptions.html' title='zip::write::FileOptions'>FileOptions</a></code></span></h4>
+</div><h4 id='method.unix_permissions' class="method"><span id='unix_permissions.v' class='invisible'><code>fn <a href='#method.unix_permissions' class='fnname'>unix_permissions</a>(self, mode: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; <a class="struct" href="../../zip/write/struct.FileOptions.html" title="struct zip::write::FileOptions">FileOptions</a></code></span></h4>
 <div class='docblock'><p>Set the permissions for the new file.</p>
 
 <p>The format is represented with unix-style permissions.
 The default is <code>0o644</code>, which represents <code>rw-r--r--</code> for files,
 and <code>0o755</code>, which represents <code>rwxr-xr-x</code> for directories</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> for <a class="struct" href="../../zip/write/struct.FileOptions.html" title="struct zip::write::FileOptions">FileOptions</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/zip/write.rs.html#74' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../../zip/write/struct.FileOptions.html" title="struct zip::write::FileOptions">FileOptions</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/zip/write.rs.html#74' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../../zip/write/struct.FileOptions.html" title="struct zip::write::FileOptions">FileOptions</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 
@@ -124,7 +130,6 @@ and <code>0o755</code>, which represents <code>rwxr-xr-x</code> for directories<
         window.rootPath = "../../";
         window.currentCrate = "zip";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

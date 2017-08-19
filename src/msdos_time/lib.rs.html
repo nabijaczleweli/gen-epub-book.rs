@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -267,229 +267,229 @@
 <span id="222">222</span>
 <span id="223">223</span>
 <span id="224">224</span>
-</pre><pre class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
+</pre><pre class="rust ">
+<span class="attribute">#<span class="op">!</span>[<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
 
-<span class='doccomment'>//! This crate converts a `Tm` struct to an `MsDosDateTime` and vice-versa</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! MsDosDateTime is based on a FAT datetime and is a compact representation of a date.</span>
-<span class='doccomment'>//! It is currently mostly used in zip files.</span>
+<span class="doccomment">//! This crate converts a `Tm` struct to an `MsDosDateTime` and vice-versa</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! MsDosDateTime is based on a FAT datetime and is a compact representation of a date.</span>
+<span class="doccomment">//! It is currently mostly used in zip files.</span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>time</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>kernel32</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>winapi</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">time</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">kernel32</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">winapi</span>;
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>time</span>::<span class='ident'>Tm</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="kw">use</span> <span class="ident">time</span>::<span class="ident">Tm</span>;
 
-<span class='doccomment'>/// Struct representing the date and time part of an MsDos datetime</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>MsDosDateTime</span> {
-    <span class='doccomment'>/// Part representing the date</span>
-    <span class='kw'>pub</span> <span class='ident'>datepart</span>: <span class='ident'>u16</span>,
-    <span class='doccomment'>/// Part representing the time</span>
-    <span class='kw'>pub</span> <span class='ident'>timepart</span>: <span class='ident'>u16</span>,
+<span class="doccomment">/// Struct representing the date and time part of an MsDos datetime</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MsDosDateTime</span> {
+    <span class="doccomment">/// Part representing the date</span>
+    <span class="kw">pub</span> <span class="ident">datepart</span>: <span class="ident">u16</span>,
+    <span class="doccomment">/// Part representing the time</span>
+    <span class="kw">pub</span> <span class="ident">timepart</span>: <span class="ident">u16</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>MsDosDateTime</span> {
-    <span class='doccomment'>/// Constructor of an MsDos datetime, from the raw representation</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>time</span>: <span class='ident'>u16</span>, <span class='ident'>date</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='ident'>MsDosDateTime</span> {
-        <span class='ident'>MsDosDateTime</span> {
-            <span class='ident'>datepart</span>: <span class='ident'>date</span>,
-            <span class='ident'>timepart</span>: <span class='ident'>time</span>,
+<span class="kw">impl</span> <span class="ident">MsDosDateTime</span> {
+    <span class="doccomment">/// Constructor of an MsDos datetime, from the raw representation</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">time</span>: <span class="ident">u16</span>, <span class="ident">date</span>: <span class="ident">u16</span>) <span class="op">-&gt;</span> <span class="ident">MsDosDateTime</span> {
+        <span class="ident">MsDosDateTime</span> {
+            <span class="ident">datepart</span>: <span class="ident">date</span>,
+            <span class="ident">timepart</span>: <span class="ident">time</span>,
         }
     }
 }
 
-<span class='doccomment'>/// Trait to convert a time representation to and from a MsDosDateTime</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>TmMsDosExt</span> : <span class='ident'>Sized</span> {
-    <span class='doccomment'>/// Convert a value to MsDosDateTime</span>
-    <span class='kw'>fn</span> <span class='ident'>to_msdos</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>MsDosDateTime</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
-    <span class='doccomment'>/// Construct a value from an MsDosDateTime</span>
-    <span class='kw'>fn</span> <span class='ident'>from_msdos</span>(<span class='ident'>MsDosDateTime</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+<span class="doccomment">/// Trait to convert a time representation to and from a MsDosDateTime</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">TmMsDosExt</span> : <span class="ident">Sized</span> {
+    <span class="doccomment">/// Convert a value to MsDosDateTime</span>
+    <span class="kw">fn</span> <span class="ident">to_msdos</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MsDosDateTime</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Construct a value from an MsDosDateTime</span>
+    <span class="kw">fn</span> <span class="ident">from_msdos</span>(<span class="ident">MsDosDateTime</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>TmMsDosExt</span> <span class='kw'>for</span> <span class='ident'>Tm</span> {
-    <span class='kw'>fn</span> <span class='ident'>to_msdos</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>MsDosDateTime</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='ident'>sys</span>::<span class='ident'>tm_to_msdos</span>(<span class='self'>self</span>)
+<span class="kw">impl</span> <span class="ident">TmMsDosExt</span> <span class="kw">for</span> <span class="ident">Tm</span> {
+    <span class="kw">fn</span> <span class="ident">to_msdos</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MsDosDateTime</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">sys</span>::<span class="ident">tm_to_msdos</span>(<span class="self">self</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>from_msdos</span>(<span class='ident'>ms</span>: <span class='ident'>MsDosDateTime</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='ident'>sys</span>::<span class='ident'>msdos_to_tm</span>(<span class='ident'>ms</span>)
+    <span class="kw">fn</span> <span class="ident">from_msdos</span>(<span class="ident">ms</span>: <span class="ident">MsDosDateTime</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">sys</span>::<span class="ident">msdos_to_tm</span>(<span class="ident">ms</span>)
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>windows</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>sys</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>MsDosDateTime</span>;
-    <span class='kw'>use</span> <span class='ident'>time</span>::{<span class='self'>self</span>, <span class='ident'>Tm</span>};
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
+<span class="kw">mod</span> <span class="ident">sys</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">MsDosDateTime</span>;
+    <span class="kw">use</span> <span class="ident">time</span>::{<span class="self">self</span>, <span class="ident">Tm</span>};
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>msdos_to_tm</span>(<span class='ident'>ms</span>: <span class='ident'>MsDosDateTime</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Tm</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>seconds</span> <span class='op'>=</span> (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='op'>&amp;</span> <span class='number'>0b0000000000011111</span>) <span class='op'>&lt;&lt;</span> <span class='number'>1</span>;
-        <span class='kw'>let</span> <span class='ident'>minutes</span> <span class='op'>=</span> (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='op'>&amp;</span> <span class='number'>0b0000011111100000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>5</span>;
-        <span class='kw'>let</span> <span class='ident'>hours</span> <span class='op'>=</span>   (<span class='ident'>ms</span>.<span class='ident'>timepart</span> <span class='op'>&amp;</span> <span class='number'>0b1111100000000000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>11</span>;
-        <span class='kw'>let</span> <span class='ident'>days</span> <span class='op'>=</span>    (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='op'>&amp;</span> <span class='number'>0b0000000000011111</span>) <span class='op'>&gt;&gt;</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='ident'>months</span> <span class='op'>=</span>  (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='op'>&amp;</span> <span class='number'>0b0000000111100000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>5</span>;
-        <span class='kw'>let</span> <span class='ident'>years</span> <span class='op'>=</span>   (<span class='ident'>ms</span>.<span class='ident'>datepart</span> <span class='op'>&amp;</span> <span class='number'>0b1111111000000000</span>) <span class='op'>&gt;&gt;</span> <span class='number'>9</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">msdos_to_tm</span>(<span class="ident">ms</span>: <span class="ident">MsDosDateTime</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Tm</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">seconds</span> <span class="op">=</span> (<span class="ident">ms</span>.<span class="ident">timepart</span> <span class="op">&amp;</span> <span class="number">0b0000000000011111</span>) <span class="op">&lt;&lt;</span> <span class="number">1</span>;
+        <span class="kw">let</span> <span class="ident">minutes</span> <span class="op">=</span> (<span class="ident">ms</span>.<span class="ident">timepart</span> <span class="op">&amp;</span> <span class="number">0b0000011111100000</span>) <span class="op">&gt;&gt;</span> <span class="number">5</span>;
+        <span class="kw">let</span> <span class="ident">hours</span> <span class="op">=</span>   (<span class="ident">ms</span>.<span class="ident">timepart</span> <span class="op">&amp;</span> <span class="number">0b1111100000000000</span>) <span class="op">&gt;&gt;</span> <span class="number">11</span>;
+        <span class="kw">let</span> <span class="ident">days</span> <span class="op">=</span>    (<span class="ident">ms</span>.<span class="ident">datepart</span> <span class="op">&amp;</span> <span class="number">0b0000000000011111</span>) <span class="op">&gt;&gt;</span> <span class="number">0</span>;
+        <span class="kw">let</span> <span class="ident">months</span> <span class="op">=</span>  (<span class="ident">ms</span>.<span class="ident">datepart</span> <span class="op">&amp;</span> <span class="number">0b0000000111100000</span>) <span class="op">&gt;&gt;</span> <span class="number">5</span>;
+        <span class="kw">let</span> <span class="ident">years</span> <span class="op">=</span>   (<span class="ident">ms</span>.<span class="ident">datepart</span> <span class="op">&amp;</span> <span class="number">0b1111111000000000</span>) <span class="op">&gt;&gt;</span> <span class="number">9</span>;
 
-        <span class='comment'>// Month range: Dos [1..12], Tm [0..11]</span>
-        <span class='comment'>// Year zero: Dos 1980, Tm 1900</span>
+        <span class="comment">// Month range: Dos [1..12], Tm [0..11]</span>
+        <span class="comment">// Year zero: Dos 1980, Tm 1900</span>
 
-        <span class='kw'>let</span> <span class='ident'>tm</span> <span class='op'>=</span> <span class='ident'>Tm</span> {
-            <span class='ident'>tm_sec</span>: <span class='ident'>seconds</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_min</span>: <span class='ident'>minutes</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_hour</span>: <span class='ident'>hours</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_mday</span>: <span class='ident'>days</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_mon</span>: <span class='ident'>months</span> <span class='kw'>as</span> <span class='ident'>i32</span> <span class='op'>-</span> <span class='number'>1</span>,
-            <span class='ident'>tm_year</span>: <span class='ident'>years</span> <span class='kw'>as</span> <span class='ident'>i32</span> <span class='op'>+</span> <span class='number'>80</span>,
-            ..<span class='ident'>time</span>::<span class='ident'>empty_tm</span>()
+        <span class="kw">let</span> <span class="ident">tm</span> <span class="op">=</span> <span class="ident">Tm</span> {
+            <span class="ident">tm_sec</span>: <span class="ident">seconds</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_min</span>: <span class="ident">minutes</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_hour</span>: <span class="ident">hours</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_mday</span>: <span class="ident">days</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_mon</span>: <span class="ident">months</span> <span class="kw">as</span> <span class="ident">i32</span> <span class="op">-</span> <span class="number">1</span>,
+            <span class="ident">tm_year</span>: <span class="ident">years</span> <span class="kw">as</span> <span class="ident">i32</span> <span class="op">+</span> <span class="number">80</span>,
+            ..<span class="ident">time</span>::<span class="ident">empty_tm</span>()
         };
 
-        <span class='comment'>// Re-parse the possibly incorrect timestamp to get a correct one.</span>
-        <span class='comment'>// This ensures every value will be in range</span>
-        <span class='comment'>// TODO: Check if this will only panic on Windows, or also other platforms</span>
-        <span class='prelude-val'>Ok</span>(<span class='ident'>time</span>::<span class='ident'>at_utc</span>(<span class='ident'>tm</span>.<span class='ident'>to_timespec</span>()))
+        <span class="comment">// Re-parse the possibly incorrect timestamp to get a correct one.</span>
+        <span class="comment">// This ensures every value will be in range</span>
+        <span class="comment">// TODO: Check if this will only panic on Windows, or also other platforms</span>
+        <span class="prelude-val">Ok</span>(<span class="ident">time</span>::<span class="ident">at_utc</span>(<span class="ident">tm</span>.<span class="ident">to_timespec</span>()))
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tm_to_msdos</span>(<span class='ident'>tm</span>: <span class='kw-2'>&amp;</span><span class='ident'>Tm</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>MsDosDateTime</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>timepart</span> <span class='op'>=</span> ((<span class='ident'>tm</span>.<span class='ident'>tm_sec</span> <span class='op'>&gt;&gt;</span> <span class='number'>1</span>) <span class='op'>|</span> (<span class='ident'>tm</span>.<span class='ident'>tm_min</span> <span class='op'>&lt;&lt;</span> <span class='number'>5</span>) <span class='op'>|</span> (<span class='ident'>tm</span>.<span class='ident'>tm_hour</span> <span class='op'>&lt;&lt;</span> <span class='number'>11</span>)) <span class='kw'>as</span> <span class='ident'>u16</span>;
-        <span class='kw'>let</span> <span class='ident'>datepart</span> <span class='op'>=</span> (<span class='ident'>tm</span>.<span class='ident'>tm_mday</span> <span class='op'>|</span> ((<span class='ident'>tm</span>.<span class='ident'>tm_mon</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='op'>&lt;&lt;</span> <span class='number'>5</span>) <span class='op'>|</span> ((<span class='ident'>tm</span>.<span class='ident'>tm_year</span> <span class='op'>-</span> <span class='number'>80</span>) <span class='op'>&lt;&lt;</span> <span class='number'>9</span>)) <span class='kw'>as</span> <span class='ident'>u16</span>;
-        <span class='prelude-val'>Ok</span>(<span class='ident'>MsDosDateTime</span> { <span class='ident'>datepart</span>: <span class='ident'>datepart</span>, <span class='ident'>timepart</span>: <span class='ident'>timepart</span> })
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tm_to_msdos</span>(<span class="ident">tm</span>: <span class="kw-2">&amp;</span><span class="ident">Tm</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MsDosDateTime</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">timepart</span> <span class="op">=</span> ((<span class="ident">tm</span>.<span class="ident">tm_sec</span> <span class="op">&gt;&gt;</span> <span class="number">1</span>) <span class="op">|</span> (<span class="ident">tm</span>.<span class="ident">tm_min</span> <span class="op">&lt;&lt;</span> <span class="number">5</span>) <span class="op">|</span> (<span class="ident">tm</span>.<span class="ident">tm_hour</span> <span class="op">&lt;&lt;</span> <span class="number">11</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
+        <span class="kw">let</span> <span class="ident">datepart</span> <span class="op">=</span> (<span class="ident">tm</span>.<span class="ident">tm_mday</span> <span class="op">|</span> ((<span class="ident">tm</span>.<span class="ident">tm_mon</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">&lt;&lt;</span> <span class="number">5</span>) <span class="op">|</span> ((<span class="ident">tm</span>.<span class="ident">tm_year</span> <span class="op">-</span> <span class="number">80</span>) <span class="op">&lt;&lt;</span> <span class="number">9</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">MsDosDateTime</span> { <span class="ident">datepart</span>: <span class="ident">datepart</span>, <span class="ident">timepart</span>: <span class="ident">timepart</span> })
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>windows</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>sys</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>MsDosDateTime</span>;
-    <span class='kw'>use</span> <span class='ident'>time</span>::{<span class='self'>self</span>, <span class='ident'>Tm</span>};
-    <span class='kw'>use</span> <span class='ident'>winapi</span>::<span class='kw-2'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>kernel32</span>::<span class='kw-2'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+<span class="kw">mod</span> <span class="ident">sys</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">MsDosDateTime</span>;
+    <span class="kw">use</span> <span class="ident">time</span>::{<span class="self">self</span>, <span class="ident">Tm</span>};
+    <span class="kw">use</span> <span class="ident">winapi</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">kernel32</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>msdos_to_tm</span>(<span class='ident'>ms</span>: <span class='ident'>MsDosDateTime</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Tm</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>datepart</span>: <span class='ident'>WORD</span> <span class='op'>=</span> <span class='ident'>ms</span>.<span class='ident'>datepart</span>;
-        <span class='kw'>let</span> <span class='ident'>timepart</span>: <span class='ident'>WORD</span> <span class='op'>=</span> <span class='ident'>ms</span>.<span class='ident'>timepart</span>;
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>filetime</span>: <span class='ident'>FILETIME</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>zeroed</span>() };
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>systemtime</span>: <span class='ident'>SYSTEMTIME</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>zeroed</span>() };
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">msdos_to_tm</span>(<span class="ident">ms</span>: <span class="ident">MsDosDateTime</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Tm</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">datepart</span>: <span class="ident">WORD</span> <span class="op">=</span> <span class="ident">ms</span>.<span class="ident">datepart</span>;
+        <span class="kw">let</span> <span class="ident">timepart</span>: <span class="ident">WORD</span> <span class="op">=</span> <span class="ident">ms</span>.<span class="ident">timepart</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">filetime</span>: <span class="ident">FILETIME</span> <span class="op">=</span> <span class="kw">unsafe</span> { ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">zeroed</span>() };
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">systemtime</span>: <span class="ident">SYSTEMTIME</span> <span class="op">=</span> <span class="kw">unsafe</span> { ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">zeroed</span>() };
 
-        <span class='kw'>if</span> <span class='kw'>unsafe</span> { <span class='ident'>DosDateTimeToFileTime</span>(<span class='ident'>datepart</span>, <span class='ident'>timepart</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>filetime</span>) } <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>last_os_error</span>());
+        <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">DosDateTimeToFileTime</span>(<span class="ident">datepart</span>, <span class="ident">timepart</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">filetime</span>) } <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">last_os_error</span>());
         }
 
-        <span class='kw'>if</span> <span class='kw'>unsafe</span> { <span class='ident'>FileTimeToSystemTime</span>(<span class='kw-2'>&amp;</span><span class='ident'>filetime</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>systemtime</span>) } <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>last_os_error</span>());
+        <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">FileTimeToSystemTime</span>(<span class="kw-2">&amp;</span><span class="ident">filetime</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">systemtime</span>) } <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">last_os_error</span>());
         }
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>Tm</span> {
-            <span class='ident'>tm_sec</span>: <span class='ident'>systemtime</span>.<span class='ident'>wSecond</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_min</span>: <span class='ident'>systemtime</span>.<span class='ident'>wMinute</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_hour</span>: <span class='ident'>systemtime</span>.<span class='ident'>wHour</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_mday</span>: <span class='ident'>systemtime</span>.<span class='ident'>wDay</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_wday</span>: <span class='ident'>systemtime</span>.<span class='ident'>wDayOfWeek</span> <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_mon</span>: (<span class='ident'>systemtime</span>.<span class='ident'>wMonth</span> <span class='op'>-</span> <span class='number'>1</span>) <span class='kw'>as</span> <span class='ident'>i32</span>,
-            <span class='ident'>tm_year</span>: (<span class='ident'>systemtime</span>.<span class='ident'>wYear</span> <span class='op'>-</span> <span class='number'>1900</span>) <span class='kw'>as</span> <span class='ident'>i32</span>,
-            ..<span class='ident'>time</span>::<span class='ident'>empty_tm</span>()
+        <span class="prelude-val">Ok</span>(<span class="ident">Tm</span> {
+            <span class="ident">tm_sec</span>: <span class="ident">systemtime</span>.<span class="ident">wSecond</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_min</span>: <span class="ident">systemtime</span>.<span class="ident">wMinute</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_hour</span>: <span class="ident">systemtime</span>.<span class="ident">wHour</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_mday</span>: <span class="ident">systemtime</span>.<span class="ident">wDay</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_wday</span>: <span class="ident">systemtime</span>.<span class="ident">wDayOfWeek</span> <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_mon</span>: (<span class="ident">systemtime</span>.<span class="ident">wMonth</span> <span class="op">-</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">i32</span>,
+            <span class="ident">tm_year</span>: (<span class="ident">systemtime</span>.<span class="ident">wYear</span> <span class="op">-</span> <span class="number">1900</span>) <span class="kw">as</span> <span class="ident">i32</span>,
+            ..<span class="ident">time</span>::<span class="ident">empty_tm</span>()
         })
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>tm_to_msdos</span>(<span class='ident'>tm</span>: <span class='kw-2'>&amp;</span><span class='ident'>Tm</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>MsDosDateTime</span>, <span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>systemtime</span> <span class='op'>=</span> <span class='ident'>SYSTEMTIME</span> {
-            <span class='ident'>wYear</span>: (<span class='ident'>tm</span>.<span class='ident'>tm_year</span> <span class='op'>+</span> <span class='number'>1900</span>) <span class='kw'>as</span> <span class='ident'>WORD</span>,
-            <span class='ident'>wMonth</span>: (<span class='ident'>tm</span>.<span class='ident'>tm_mon</span> <span class='op'>+</span> <span class='number'>1</span>) <span class='kw'>as</span> <span class='ident'>WORD</span>,
-            <span class='ident'>wDayOfWeek</span>: <span class='ident'>tm</span>.<span class='ident'>tm_wday</span> <span class='kw'>as</span> <span class='ident'>WORD</span>,
-            <span class='ident'>wDay</span>: <span class='ident'>tm</span>.<span class='ident'>tm_mday</span> <span class='kw'>as</span> <span class='ident'>WORD</span>,
-            <span class='ident'>wHour</span>: <span class='ident'>tm</span>.<span class='ident'>tm_hour</span> <span class='kw'>as</span> <span class='ident'>WORD</span>,
-            <span class='ident'>wMinute</span>: <span class='ident'>tm</span>.<span class='ident'>tm_min</span> <span class='kw'>as</span> <span class='ident'>WORD</span>,
-            <span class='ident'>wSecond</span>: <span class='ident'>tm</span>.<span class='ident'>tm_sec</span> <span class='kw'>as</span> <span class='ident'>WORD</span>,
-            <span class='ident'>wMilliseconds</span>: <span class='number'>0</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">tm_to_msdos</span>(<span class="ident">tm</span>: <span class="kw-2">&amp;</span><span class="ident">Tm</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MsDosDateTime</span>, <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">systemtime</span> <span class="op">=</span> <span class="ident">SYSTEMTIME</span> {
+            <span class="ident">wYear</span>: (<span class="ident">tm</span>.<span class="ident">tm_year</span> <span class="op">+</span> <span class="number">1900</span>) <span class="kw">as</span> <span class="ident">WORD</span>,
+            <span class="ident">wMonth</span>: (<span class="ident">tm</span>.<span class="ident">tm_mon</span> <span class="op">+</span> <span class="number">1</span>) <span class="kw">as</span> <span class="ident">WORD</span>,
+            <span class="ident">wDayOfWeek</span>: <span class="ident">tm</span>.<span class="ident">tm_wday</span> <span class="kw">as</span> <span class="ident">WORD</span>,
+            <span class="ident">wDay</span>: <span class="ident">tm</span>.<span class="ident">tm_mday</span> <span class="kw">as</span> <span class="ident">WORD</span>,
+            <span class="ident">wHour</span>: <span class="ident">tm</span>.<span class="ident">tm_hour</span> <span class="kw">as</span> <span class="ident">WORD</span>,
+            <span class="ident">wMinute</span>: <span class="ident">tm</span>.<span class="ident">tm_min</span> <span class="kw">as</span> <span class="ident">WORD</span>,
+            <span class="ident">wSecond</span>: <span class="ident">tm</span>.<span class="ident">tm_sec</span> <span class="kw">as</span> <span class="ident">WORD</span>,
+            <span class="ident">wMilliseconds</span>: <span class="number">0</span>,
         };
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>filetime</span> <span class='op'>=</span> <span class='kw'>unsafe</span> { ::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>zeroed</span>() };
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>datepart</span> : <span class='ident'>WORD</span> <span class='op'>=</span> <span class='number'>0</span>;
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>timepart</span> : <span class='ident'>WORD</span> <span class='op'>=</span> <span class='number'>0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">filetime</span> <span class="op">=</span> <span class="kw">unsafe</span> { ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">zeroed</span>() };
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">datepart</span> : <span class="ident">WORD</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">timepart</span> : <span class="ident">WORD</span> <span class="op">=</span> <span class="number">0</span>;
 
-        <span class='kw'>if</span> <span class='kw'>unsafe</span> { <span class='ident'>SystemTimeToFileTime</span>(<span class='kw-2'>&amp;</span><span class='ident'>systemtime</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>filetime</span>) } <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>last_os_error</span>());
+        <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">SystemTimeToFileTime</span>(<span class="kw-2">&amp;</span><span class="ident">systemtime</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">filetime</span>) } <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">last_os_error</span>());
         }
 
-        <span class='kw'>if</span> <span class='kw'>unsafe</span> { <span class='ident'>FileTimeToDosDateTime</span>(<span class='kw-2'>&amp;</span><span class='ident'>filetime</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>datepart</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>timepart</span>) } <span class='op'>==</span> <span class='number'>0</span> {
-            <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>last_os_error</span>());
+        <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">FileTimeToDosDateTime</span>(<span class="kw-2">&amp;</span><span class="ident">filetime</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">datepart</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">timepart</span>) } <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">last_os_error</span>());
         }
 
-        <span class='prelude-val'>Ok</span>(<span class='ident'>MsDosDateTime</span> { <span class='ident'>datepart</span>: <span class='ident'>datepart</span>, <span class='ident'>timepart</span>: <span class='ident'>timepart</span> })
+        <span class="prelude-val">Ok</span>(<span class="ident">MsDosDateTime</span> { <span class="ident">datepart</span>: <span class="ident">datepart</span>, <span class="ident">timepart</span>: <span class="ident">timepart</span> })
     }
 }
 
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
-    <span class='kw'>use</span> <span class='ident'>time</span>::{<span class='self'>self</span>, <span class='ident'>Tm</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">test</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="ident">time</span>::{<span class="self">self</span>, <span class="ident">Tm</span>};
 
-    <span class='kw'>fn</span> <span class='ident'>check_date</span>(<span class='ident'>input</span>: <span class='ident'>Tm</span>, <span class='ident'>day</span>: <span class='ident'>i32</span>, <span class='ident'>month</span>: <span class='ident'>i32</span>, <span class='ident'>year</span>: <span class='ident'>i32</span>) {
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>tm_mday</span>, <span class='ident'>day</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>tm_mon</span> <span class='op'>+</span> <span class='number'>1</span>, <span class='ident'>month</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>tm_year</span> <span class='op'>+</span> <span class='number'>1900</span>, <span class='ident'>year</span>);
+    <span class="kw">fn</span> <span class="ident">check_date</span>(<span class="ident">input</span>: <span class="ident">Tm</span>, <span class="ident">day</span>: <span class="ident">i32</span>, <span class="ident">month</span>: <span class="ident">i32</span>, <span class="ident">year</span>: <span class="ident">i32</span>) {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">input</span>.<span class="ident">tm_mday</span>, <span class="ident">day</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">input</span>.<span class="ident">tm_mon</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">month</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">input</span>.<span class="ident">tm_year</span> <span class="op">+</span> <span class="number">1900</span>, <span class="ident">year</span>);
     }
 
-    <span class='kw'>fn</span> <span class='ident'>check_time</span>(<span class='ident'>input</span>: <span class='ident'>Tm</span>, <span class='ident'>hour</span>: <span class='ident'>i32</span>, <span class='ident'>minute</span>: <span class='ident'>i32</span>, <span class='ident'>second</span>: <span class='ident'>i32</span>) {
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>tm_hour</span>, <span class='ident'>hour</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>tm_min</span>, <span class='ident'>minute</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>input</span>.<span class='ident'>tm_sec</span>, <span class='ident'>second</span>);
+    <span class="kw">fn</span> <span class="ident">check_time</span>(<span class="ident">input</span>: <span class="ident">Tm</span>, <span class="ident">hour</span>: <span class="ident">i32</span>, <span class="ident">minute</span>: <span class="ident">i32</span>, <span class="ident">second</span>: <span class="ident">i32</span>) {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">input</span>.<span class="ident">tm_hour</span>, <span class="ident">hour</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">input</span>.<span class="ident">tm_min</span>, <span class="ident">minute</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">input</span>.<span class="ident">tm_sec</span>, <span class="ident">second</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>dos_zero</span>() {
-        <span class='comment'>// The 0 date is not a correct msdos date</span>
-        <span class='comment'>// We assert here that it does not panic. What it will return is undefined.</span>
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>Tm</span>::<span class='ident'>from_msdos</span>(<span class='ident'>MsDosDateTime</span>::<span class='ident'>new</span>(<span class='number'>0</span>, <span class='number'>0</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">dos_zero</span>() {
+        <span class="comment">// The 0 date is not a correct msdos date</span>
+        <span class="comment">// We assert here that it does not panic. What it will return is undefined.</span>
+        <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">Tm</span>::<span class="ident">from_msdos</span>(<span class="ident">MsDosDateTime</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>));
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>dos_smallest</span>() {
-        <span class='comment'>// This is the actual smallest date possible</span>
-        <span class='kw'>let</span> <span class='ident'>tm</span> <span class='op'>=</span> <span class='ident'>Tm</span>::<span class='ident'>from_msdos</span>(<span class='ident'>MsDosDateTime</span>::<span class='ident'>new</span>(<span class='number'>0</span>, <span class='number'>0b100001</span>)).<span class='ident'>unwrap</span>();
-        <span class='ident'>check_date</span>(<span class='ident'>tm</span>, <span class='number'>1</span>, <span class='number'>1</span>, <span class='number'>1980</span>);
-        <span class='ident'>check_time</span>(<span class='ident'>tm</span>, <span class='number'>0</span>, <span class='number'>0</span>, <span class='number'>0</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">dos_smallest</span>() {
+        <span class="comment">// This is the actual smallest date possible</span>
+        <span class="kw">let</span> <span class="ident">tm</span> <span class="op">=</span> <span class="ident">Tm</span>::<span class="ident">from_msdos</span>(<span class="ident">MsDosDateTime</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0b100001</span>)).<span class="ident">unwrap</span>();
+        <span class="ident">check_date</span>(<span class="ident">tm</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1980</span>);
+        <span class="ident">check_time</span>(<span class="ident">tm</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>dos_today</span>() {
-        <span class='kw'>let</span> <span class='ident'>tm</span> <span class='op'>=</span> <span class='ident'>Tm</span>::<span class='ident'>from_msdos</span>(<span class='ident'>MsDosDateTime</span>::<span class='ident'>new</span>(<span class='number'>0b01001_100000_10101</span>, <span class='number'>0b0100011_0110_11110</span>)).<span class='ident'>unwrap</span>();
-        <span class='ident'>check_date</span>(<span class='ident'>tm</span>, <span class='number'>30</span>, <span class='number'>6</span>, <span class='number'>2015</span>);
-        <span class='ident'>check_time</span>(<span class='ident'>tm</span>, <span class='number'>9</span>, <span class='number'>32</span>, <span class='number'>42</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">dos_today</span>() {
+        <span class="kw">let</span> <span class="ident">tm</span> <span class="op">=</span> <span class="ident">Tm</span>::<span class="ident">from_msdos</span>(<span class="ident">MsDosDateTime</span>::<span class="ident">new</span>(<span class="number">0b01001_100000_10101</span>, <span class="number">0b0100011_0110_11110</span>)).<span class="ident">unwrap</span>();
+        <span class="ident">check_date</span>(<span class="ident">tm</span>, <span class="number">30</span>, <span class="number">6</span>, <span class="number">2015</span>);
+        <span class="ident">check_time</span>(<span class="ident">tm</span>, <span class="number">9</span>, <span class="number">32</span>, <span class="number">42</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>zero_dos</span>() {
-        <span class='kw'>let</span> <span class='ident'>tm</span> <span class='op'>=</span> <span class='ident'>Tm</span> {
-            <span class='ident'>tm_year</span>: <span class='number'>80</span>,
-            <span class='ident'>tm_mon</span>: <span class='number'>0</span>,
-            <span class='ident'>tm_mday</span>: <span class='number'>1</span>,
-            <span class='ident'>tm_hour</span>: <span class='number'>0</span>,
-            <span class='ident'>tm_min</span>: <span class='number'>0</span>,
-            <span class='ident'>tm_sec</span>: <span class='number'>0</span>,
-            ..<span class='ident'>time</span>::<span class='ident'>empty_tm</span>()
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">zero_dos</span>() {
+        <span class="kw">let</span> <span class="ident">tm</span> <span class="op">=</span> <span class="ident">Tm</span> {
+            <span class="ident">tm_year</span>: <span class="number">80</span>,
+            <span class="ident">tm_mon</span>: <span class="number">0</span>,
+            <span class="ident">tm_mday</span>: <span class="number">1</span>,
+            <span class="ident">tm_hour</span>: <span class="number">0</span>,
+            <span class="ident">tm_min</span>: <span class="number">0</span>,
+            <span class="ident">tm_sec</span>: <span class="number">0</span>,
+            ..<span class="ident">time</span>::<span class="ident">empty_tm</span>()
         };
-        <span class='kw'>let</span> <span class='ident'>ms</span> <span class='op'>=</span> <span class='ident'>tm</span>.<span class='ident'>to_msdos</span>().<span class='ident'>unwrap</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ms</span>.<span class='ident'>datepart</span>, <span class='number'>0b100001</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ms</span>.<span class='ident'>timepart</span>, <span class='number'>0</span>);
+        <span class="kw">let</span> <span class="ident">ms</span> <span class="op">=</span> <span class="ident">tm</span>.<span class="ident">to_msdos</span>().<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">ms</span>.<span class="ident">datepart</span>, <span class="number">0b100001</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">ms</span>.<span class="ident">timepart</span>, <span class="number">0</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>today_dos</span>() {
-        <span class='kw'>let</span> <span class='ident'>tm</span> <span class='op'>=</span> <span class='ident'>Tm</span> {
-            <span class='ident'>tm_year</span>: <span class='number'>115</span>,
-            <span class='ident'>tm_mon</span>: <span class='number'>5</span>,
-            <span class='ident'>tm_mday</span>: <span class='number'>30</span>,
-            <span class='ident'>tm_hour</span>: <span class='number'>9</span>,
-            <span class='ident'>tm_min</span>: <span class='number'>32</span>,
-            <span class='ident'>tm_sec</span>: <span class='number'>42</span>,
-            ..<span class='ident'>time</span>::<span class='ident'>empty_tm</span>()
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">today_dos</span>() {
+        <span class="kw">let</span> <span class="ident">tm</span> <span class="op">=</span> <span class="ident">Tm</span> {
+            <span class="ident">tm_year</span>: <span class="number">115</span>,
+            <span class="ident">tm_mon</span>: <span class="number">5</span>,
+            <span class="ident">tm_mday</span>: <span class="number">30</span>,
+            <span class="ident">tm_hour</span>: <span class="number">9</span>,
+            <span class="ident">tm_min</span>: <span class="number">32</span>,
+            <span class="ident">tm_sec</span>: <span class="number">42</span>,
+            ..<span class="ident">time</span>::<span class="ident">empty_tm</span>()
         };
-        <span class='kw'>let</span> <span class='ident'>ms</span> <span class='op'>=</span> <span class='ident'>tm</span>.<span class='ident'>to_msdos</span>().<span class='ident'>unwrap</span>();
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ms</span>.<span class='ident'>datepart</span>, <span class='number'>0b0100011_0110_11110</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>ms</span>.<span class='ident'>timepart</span>, <span class='number'>0b01001_100000_10101</span>);
+        <span class="kw">let</span> <span class="ident">ms</span> <span class="op">=</span> <span class="ident">tm</span>.<span class="ident">to_msdos</span>().<span class="ident">unwrap</span>();
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">ms</span>.<span class="ident">datepart</span>, <span class="number">0b0100011_0110_11110</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">ms</span>.<span class="ident">timepart</span>, <span class="number">0b01001_100000_10101</span>);
     }
 }
 </pre>
@@ -550,7 +550,6 @@
         window.rootPath = "../../";
         window.currentCrate = "msdos_time";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

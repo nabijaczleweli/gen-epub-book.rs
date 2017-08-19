@@ -1,5 +1,6 @@
 (function() {var implementors = {};
 implementors["hyper"] = [];
+implementors["hyper_native_tls"] = [];
 implementors["reqwest"] = [];
 implementors["traitobject"] = [];
 

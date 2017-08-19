@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.10/src/ec.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.17/src/ec.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>ec.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -527,489 +527,723 @@
 <span id="482">482</span>
 <span id="483">483</span>
 <span id="484">484</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>ffi</span>;
-<span class='kw'>use</span> <span class='ident'>foreign_types</span>::{<span class='ident'>ForeignType</span>, <span class='ident'>ForeignTypeRef</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>ptr</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>mem</span>;
-<span class='kw'>use</span> <span class='ident'>libc</span>::<span class='ident'>c_int</span>;
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">ffi</span>;
+<span class="kw">use</span> <span class="ident">foreign_types</span>::{<span class="ident">ForeignType</span>, <span class="ident">ForeignTypeRef</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 
-<span class='kw'>use</span> {<span class='ident'>cvt</span>, <span class='ident'>cvt_n</span>, <span class='ident'>cvt_p</span>, <span class='ident'>init</span>};
-<span class='kw'>use</span> <span class='ident'>bn</span>::{<span class='ident'>BigNumRef</span>, <span class='ident'>BigNumContextRef</span>};
-<span class='kw'>use</span> <span class='ident'>error</span>::<span class='ident'>ErrorStack</span>;
-<span class='kw'>use</span> <span class='ident'>nid</span>::<span class='ident'>Nid</span>;
+<span class="kw">use</span> {<span class="ident">cvt</span>, <span class="ident">cvt_n</span>, <span class="ident">cvt_p</span>, <span class="ident">init</span>};
+<span class="kw">use</span> <span class="ident">bn</span>::{<span class="ident">BigNumRef</span>, <span class="ident">BigNumContextRef</span>};
+<span class="kw">use</span> <span class="ident">error</span>::<span class="ident">ErrorStack</span>;
+<span class="kw">use</span> <span class="ident">nid</span>::<span class="ident">Nid</span>;
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>POINT_CONVERSION_COMPRESSED</span>: <span class='ident'>PointConversionForm</span> <span class='op'>=</span>
-    <span class='ident'>PointConversionForm</span>(<span class='ident'>ffi</span>::<span class='ident'>point_conversion_form_t</span>::<span class='ident'>POINT_CONVERSION_COMPRESSED</span>);
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">POINT_CONVERSION_COMPRESSED</span>: <span class="ident">PointConversionForm</span> <span class="op">=</span>
+    <span class="ident">PointConversionForm</span>(<span class="ident">ffi</span>::<span class="ident">point_conversion_form_t</span>::<span class="ident">POINT_CONVERSION_COMPRESSED</span>);
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>POINT_CONVERSION_UNCOMPRESSED</span>: <span class='ident'>PointConversionForm</span> <span class='op'>=</span>
-    <span class='ident'>PointConversionForm</span>(<span class='ident'>ffi</span>::<span class='ident'>point_conversion_form_t</span>::<span class='ident'>POINT_CONVERSION_UNCOMPRESSED</span>);
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">POINT_CONVERSION_UNCOMPRESSED</span>: <span class="ident">PointConversionForm</span> <span class="op">=</span>
+    <span class="ident">PointConversionForm</span>(<span class="ident">ffi</span>::<span class="ident">point_conversion_form_t</span>::<span class="ident">POINT_CONVERSION_UNCOMPRESSED</span>);
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>POINT_CONVERSION_HYBRID</span>: <span class='ident'>PointConversionForm</span> <span class='op'>=</span>
-    <span class='ident'>PointConversionForm</span>(<span class='ident'>ffi</span>::<span class='ident'>point_conversion_form_t</span>::<span class='ident'>POINT_CONVERSION_HYBRID</span>);
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">POINT_CONVERSION_HYBRID</span>: <span class="ident">PointConversionForm</span> <span class="op">=</span>
+    <span class="ident">PointConversionForm</span>(<span class="ident">ffi</span>::<span class="ident">point_conversion_form_t</span>::<span class="ident">POINT_CONVERSION_HYBRID</span>);
 
-<span class='comment'>// OPENSSL_EC_EXPLICIT_CURVE, but that was only added in 1.1.</span>
-<span class='comment'>// Man page documents that 0 can be used in older versions.</span>
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>EXPLICIT_CURVE</span>: <span class='ident'>Asn1Flag</span> <span class='op'>=</span> <span class='ident'>Asn1Flag</span>(<span class='number'>0</span>);
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>NAMED_CURVE</span>: <span class='ident'>Asn1Flag</span> <span class='op'>=</span> <span class='ident'>Asn1Flag</span>(<span class='ident'>ffi</span>::<span class='ident'>OPENSSL_EC_NAMED_CURVE</span>);
+<span class="comment">// OPENSSL_EC_EXPLICIT_CURVE, but that was only added in 1.1.</span>
+<span class="comment">// Man page documents that 0 can be used in older versions.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">EXPLICIT_CURVE</span>: <span class="ident">Asn1Flag</span> <span class="op">=</span> <span class="ident">Asn1Flag</span>(<span class="number">0</span>);
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NAMED_CURVE</span>: <span class="ident">Asn1Flag</span> <span class="op">=</span> <span class="ident">Asn1Flag</span>(<span class="ident">ffi</span>::<span class="ident">OPENSSL_EC_NAMED_CURVE</span>);
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>PointConversionForm</span>(<span class='ident'>ffi</span>::<span class='ident'>point_conversion_form_t</span>);
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PointConversionForm</span>(<span class="ident">ffi</span>::<span class="ident">point_conversion_form_t</span>);
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Asn1Flag</span>(<span class='ident'>c_int</span>);
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Asn1Flag</span>(<span class="ident">c_int</span>);
 
-<span class='macro'>foreign_type</span><span class='macro'>!</span> {
-    <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_GROUP</span>;
-    <span class='kw'>fn</span> <span class='ident'>drop</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_GROUP_free</span>;
+<span class="macro">foreign_type</span><span class="macro">!</span> {
+    <span class="kw">type</span> <span class="ident">CType</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_GROUP</span>;
+    <span class="kw">fn</span> <span class="ident">drop</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_GROUP_free</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EcGroup</span>;
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EcGroupRef</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EcGroup</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EcGroupRef</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>EcGroup</span> {
-    <span class='doccomment'>/// Returns the group of a standard named curve.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>: <span class='ident'>Nid</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>EcGroup</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>init</span>();
-            <span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_GROUP_new_by_curve_name</span>(<span class='ident'>nid</span>.<span class='ident'>as_raw</span>())).<span class='ident'>map</span>(<span class='ident'>EcGroup</span>)
+<span class="kw">impl</span> <span class="ident">EcGroup</span> {
+    <span class="doccomment">/// Returns the group of a standard named curve.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_curve_name</span>(<span class="ident">nid</span>: <span class="ident">Nid</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcGroup</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">init</span>();
+            <span class="ident">cvt_p</span>(<span class="ident">ffi</span>::<span class="ident">EC_GROUP_new_by_curve_name</span>(<span class="ident">nid</span>.<span class="ident">as_raw</span>())).<span class="ident">map</span>(<span class="ident">EcGroup</span>)
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>EcGroupRef</span> {
-    <span class='doccomment'>/// Places the components of a curve over a prime field in the provided `BigNum`s.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>components_gfp</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                          <span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumRef</span>,
-                          <span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumRef</span>,
-                          <span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumRef</span>,
-                          <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumContextRef</span>)
-                          <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_GROUP_get_curve_GFp</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                            <span class='ident'>p</span>.<span class='ident'>as_ptr</span>(),
-                                            <span class='ident'>a</span>.<span class='ident'>as_ptr</span>(),
-                                            <span class='ident'>b</span>.<span class='ident'>as_ptr</span>(),
-                                            <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>()))
-                .<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+<span class="kw">impl</span> <span class="ident">EcGroupRef</span> {
+    <span class="doccomment">/// Places the components of a curve over a prime field in the provided `BigNum`s.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">components_gfp</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumRef</span>,
+        <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumRef</span>,
+        <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumRef</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_GROUP_get_curve_GFp</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">p</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">a</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">b</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
         }
     }
 
-    <span class='doccomment'>/// Places the components of a curve over a binary field in the provided `BigNum`s.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>components_gf2m</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                           <span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumRef</span>,
-                           <span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumRef</span>,
-                           <span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumRef</span>,
-                           <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumContextRef</span>)
-                           <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_GROUP_get_curve_GF2m</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                             <span class='ident'>p</span>.<span class='ident'>as_ptr</span>(),
-                                             <span class='ident'>a</span>.<span class='ident'>as_ptr</span>(),
-                                             <span class='ident'>b</span>.<span class='ident'>as_ptr</span>(),
-                                             <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>()))
-                .<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+    <span class="doccomment">/// Places the components of a curve over a binary field in the provided `BigNum`s.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">osslconf</span> <span class="op">=</span> <span class="string">&quot;OPENSSL_NO_EC2M&quot;</span>))]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">components_gf2m</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumRef</span>,
+        <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumRef</span>,
+        <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumRef</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_GROUP_get_curve_GF2m</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">p</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">a</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">b</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
         }
     }
 
-    <span class='doccomment'>/// Returns the degree of the curve.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>degree</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u32</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>ffi</span>::<span class='ident'>EC_GROUP_get_degree</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>()) <span class='kw'>as</span> <span class='ident'>u32</span> }
+    <span class="doccomment">/// Returns the degree of the curve.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">degree</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="kw">unsafe</span> { <span class="ident">ffi</span>::<span class="ident">EC_GROUP_get_degree</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>()) <span class="kw">as</span> <span class="ident">u32</span> }
     }
 
-    <span class='doccomment'>/// Places the order of the curve in the provided `BigNum`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>order</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                 <span class='ident'>order</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumRef</span>,
-                 <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumContextRef</span>)
-                 <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_GROUP_get_order</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>order</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>())).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+    <span class="doccomment">/// Places the order of the curve in the provided `BigNum`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">order</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">order</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumRef</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_GROUP_get_order</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">order</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
         }
     }
 
-    <span class='doccomment'>/// Sets the flag determining if the group corresponds to a named curve or must be explicitly</span>
-    <span class='doccomment'>/// parameterized.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This defaults to `EXPLICIT_CURVE` in OpenSSL 1.0.1 and 1.0.2, but `NAMED_CURVE` in OpenSSL</span>
-    <span class='doccomment'>/// 1.1.0.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_asn1_flag</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>flag</span>: <span class='ident'>Asn1Flag</span>) {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>ffi</span>::<span class='ident'>EC_GROUP_set_asn1_flag</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>flag</span>.<span class='number'>0</span>);
+    <span class="doccomment">/// Sets the flag determining if the group corresponds to a named curve or must be explicitly</span>
+    <span class="doccomment">/// parameterized.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This defaults to `EXPLICIT_CURVE` in OpenSSL 1.0.1 and 1.0.2, but `NAMED_CURVE` in OpenSSL</span>
+    <span class="doccomment">/// 1.1.0.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_asn1_flag</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">flag</span>: <span class="ident">Asn1Flag</span>) {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">EC_GROUP_set_asn1_flag</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">flag</span>.<span class="number">0</span>);
         }
     }
 }
 
-<span class='macro'>foreign_type</span><span class='macro'>!</span> {
-    <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_POINT</span>;
-    <span class='kw'>fn</span> <span class='ident'>drop</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_POINT_free</span>;
+<span class="macro">foreign_type</span><span class="macro">!</span> {
+    <span class="kw">type</span> <span class="ident">CType</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_POINT</span>;
+    <span class="kw">fn</span> <span class="ident">drop</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_POINT_free</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EcPoint</span>;
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EcPointRef</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EcPoint</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EcPointRef</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>EcPointRef</span> {
-    <span class='doccomment'>/// Computes `a + b`, storing the result in `self`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>add</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-               <span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>,
-               <span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcPointRef</span>,
-               <span class='ident'>b</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcPointRef</span>,
-               <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumContextRef</span>)
-               <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_POINT_add</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>a</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>b</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>()))
-                .<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+<span class="kw">impl</span> <span class="ident">EcPointRef</span> {
+    <span class="doccomment">/// Computes `a + b`, storing the result in `self`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>,
+        <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">EcPointRef</span>,
+        <span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="ident">EcPointRef</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_POINT_add</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">a</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">b</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
         }
     }
 
-    <span class='doccomment'>/// Computes `q * m`, storing the result in `self`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mul</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-               <span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>,
-               <span class='ident'>q</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcPointRef</span>,
-               <span class='ident'>m</span>: <span class='kw-2'>&amp;</span><span class='ident'>BigNumRef</span>,
-               <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='ident'>BigNumContextRef</span>)
-               <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_POINT_mul</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>ptr</span>::<span class='ident'>null</span>(),
-                                  <span class='ident'>q</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>m</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>()))
-                .<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+    <span class="doccomment">/// Computes `q * m`, storing the result in `self`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mul</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>,
+        <span class="ident">q</span>: <span class="kw-2">&amp;</span><span class="ident">EcPointRef</span>,
+        <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumRef</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_POINT_mul</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ptr</span>::<span class="ident">null</span>(),
+                <span class="ident">q</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">m</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
         }
     }
 
-    <span class='doccomment'>/// Computes `generator * n`, storing the result ing `self`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mul_generator</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-                         <span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>,
-                         <span class='ident'>n</span>: <span class='kw-2'>&amp;</span><span class='ident'>BigNumRef</span>,
-                         <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='ident'>BigNumContextRef</span>)
-                         <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_POINT_mul</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>n</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>ptr</span>::<span class='ident'>null</span>(),
-                                  <span class='ident'>ptr</span>::<span class='ident'>null</span>(),
-                                  <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>()))
-                .<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+    <span class="doccomment">/// Computes `generator * n`, storing the result ing `self`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mul_generator</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>,
+        <span class="ident">n</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumRef</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_POINT_mul</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">n</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ptr</span>::<span class="ident">null</span>(),
+                <span class="ident">ptr</span>::<span class="ident">null</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
         }
     }
 
-    <span class='doccomment'>/// Computes `generator * n + q * m`, storing the result in `self`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>mul_full</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-                    <span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>,
-                    <span class='ident'>n</span>: <span class='kw-2'>&amp;</span><span class='ident'>BigNumRef</span>,
-                    <span class='ident'>q</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcPointRef</span>,
-                    <span class='ident'>m</span>: <span class='kw-2'>&amp;</span><span class='ident'>BigNumRef</span>,
-                    <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumContextRef</span>)
-                    <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_POINT_mul</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>n</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>q</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>m</span>.<span class='ident'>as_ptr</span>(),
-                                  <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>()))
-                .<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+    <span class="doccomment">/// Computes `generator * n + q * m`, storing the result in `self`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mul_full</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>,
+        <span class="ident">n</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumRef</span>,
+        <span class="ident">q</span>: <span class="kw-2">&amp;</span><span class="ident">EcPointRef</span>,
+        <span class="ident">m</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumRef</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_POINT_mul</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">n</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">q</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">m</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
         }
     }
 
-    <span class='doccomment'>/// Inverts `self`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>invert</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>, <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='ident'>BigNumContextRef</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_POINT_invert</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(), <span class='self'>self</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>())).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ())
+    <span class="doccomment">/// Inverts `self`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">invert</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>, <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumContextRef</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_POINT_invert</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ())
         }
     }
 
-    <span class='doccomment'>/// Serializes the point to a binary representation.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_bytes</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-                    <span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>,
-                    <span class='ident'>form</span>: <span class='ident'>PointConversionForm</span>,
-                    <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumContextRef</span>)
-                    <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_POINT_point2oct</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(),
-                                              <span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                              <span class='ident'>form</span>.<span class='number'>0</span>,
-                                              <span class='ident'>ptr</span>::<span class='ident'>null_mut</span>(),
-                                              <span class='number'>0</span>,
-                                              <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>());
-            <span class='kw'>if</span> <span class='ident'>len</span> <span class='op'>==</span> <span class='number'>0</span> {
-                <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>ErrorStack</span>::<span class='ident'>get</span>());
+    <span class="doccomment">/// Serializes the point to a binary representation.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_bytes</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>,
+        <span class="ident">form</span>: <span class="ident">PointConversionForm</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_POINT_point2oct</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">form</span>.<span class="number">0</span>,
+                <span class="ident">ptr</span>::<span class="ident">null_mut</span>(),
+                <span class="number">0</span>,
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            );
+            <span class="kw">if</span> <span class="ident">len</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ErrorStack</span>::<span class="ident">get</span>());
             }
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='number'>0</span>; <span class='ident'>len</span>];
-            <span class='kw'>let</span> <span class='ident'>len</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_POINT_point2oct</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(),
-                                              <span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                              <span class='ident'>form</span>.<span class='number'>0</span>,
-                                              <span class='ident'>buf</span>.<span class='ident'>as_mut_ptr</span>(),
-                                              <span class='ident'>len</span>,
-                                              <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>());
-            <span class='kw'>if</span> <span class='ident'>len</span> <span class='op'>==</span> <span class='number'>0</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>ErrorStack</span>::<span class='ident'>get</span>())
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Ok</span>(<span class='ident'>buf</span>)
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span>; <span class="ident">len</span>];
+            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_POINT_point2oct</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">form</span>.<span class="number">0</span>,
+                <span class="ident">buf</span>.<span class="ident">as_mut_ptr</span>(),
+                <span class="ident">len</span>,
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            );
+            <span class="kw">if</span> <span class="ident">len</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">ErrorStack</span>::<span class="ident">get</span>())
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">buf</span>)
             }
         }
     }
 
-    <span class='doccomment'>/// Determines if this point is equal to another.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>,
-              <span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>,
-              <span class='ident'>other</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcPointRef</span>,
-              <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumContextRef</span>)
-              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>bool</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>res</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt_n</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_POINT_cmp</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(),
-                                                   <span class='self'>self</span>.<span class='ident'>as_ptr</span>(),
-                                                   <span class='ident'>other</span>.<span class='ident'>as_ptr</span>(),
-                                                   <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>())));
-            <span class='prelude-val'>Ok</span>(<span class='ident'>res</span> <span class='op'>==</span> <span class='number'>0</span>)
+    <span class="doccomment">/// Determines if this point is equal to another.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">eq</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>,
+        <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="ident">EcPointRef</span>,
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cvt_n</span>(<span class="ident">ffi</span>::<span class="ident">EC_POINT_cmp</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">other</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )));
+            <span class="prelude-val">Ok</span>(<span class="ident">res</span> <span class="op">==</span> <span class="number">0</span>)
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>EcPoint</span> {
-    <span class='doccomment'>/// Creates a new point on the specified curve.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>EcPoint</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_POINT_new</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>())).<span class='ident'>map</span>(<span class='ident'>EcPoint</span>) }
+<span class="kw">impl</span> <span class="ident">EcPoint</span> {
+    <span class="doccomment">/// Creates a new point on the specified curve.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcPoint</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> { <span class="ident">cvt_p</span>(<span class="ident">ffi</span>::<span class="ident">EC_POINT_new</span>(<span class="ident">group</span>.<span class="ident">as_ptr</span>())).<span class="ident">map</span>(<span class="ident">EcPoint</span>) }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_bytes</span>(<span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>,
-                      <span class='ident'>buf</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>],
-                      <span class='ident'>ctx</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BigNumContextRef</span>)
-                      <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>EcPoint</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='ident'>point</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>EcPoint</span>::<span class='ident'>new</span>(<span class='ident'>group</span>));
-        <span class='kw'>unsafe</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_POINT_oct2point</span>(<span class='ident'>group</span>.<span class='ident'>as_ptr</span>(),
-                                             <span class='ident'>point</span>.<span class='ident'>as_ptr</span>(),
-                                             <span class='ident'>buf</span>.<span class='ident'>as_ptr</span>(),
-                                             <span class='ident'>buf</span>.<span class='ident'>len</span>(),
-                                             <span class='ident'>ctx</span>.<span class='ident'>as_ptr</span>())));
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_bytes</span>(
+        <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>,
+        <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+        <span class="ident">ctx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BigNumContextRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcPoint</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EcPoint</span>::<span class="ident">new</span>(<span class="ident">group</span>));
+        <span class="kw">unsafe</span> {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_POINT_oct2point</span>(
+                <span class="ident">group</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">point</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">buf</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">buf</span>.<span class="ident">len</span>(),
+                <span class="ident">ctx</span>.<span class="ident">as_ptr</span>(),
+            )));
         }
-        <span class='prelude-val'>Ok</span>(<span class='ident'>point</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">point</span>)
     }
 }
 
-<span class='macro'>foreign_type</span><span class='macro'>!</span> {
-    <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_KEY</span>;
-    <span class='kw'>fn</span> <span class='ident'>drop</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_KEY_free</span>;
+<span class="macro">foreign_type</span><span class="macro">!</span> {
+    <span class="kw">type</span> <span class="ident">CType</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_KEY</span>;
+    <span class="kw">fn</span> <span class="ident">drop</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_KEY_free</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EcKey</span>;
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EcKeyRef</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EcKey</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EcKeyRef</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>EcKeyRef</span> {
-    <span class='macro'>private_key_to_pem</span><span class='macro'>!</span>(<span class='ident'>ffi</span>::<span class='ident'>PEM_write_bio_ECPrivateKey</span>);
-    <span class='macro'>private_key_to_der</span><span class='macro'>!</span>(<span class='ident'>ffi</span>::<span class='ident'>i2d_ECPrivateKey</span>);
+<span class="kw">impl</span> <span class="ident">EcKeyRef</span> {
+    <span class="macro">private_key_to_pem</span><span class="macro">!</span>(<span class="ident">ffi</span>::<span class="ident">PEM_write_bio_ECPrivateKey</span>);
+    <span class="macro">private_key_to_der</span><span class="macro">!</span>(<span class="ident">ffi</span>::<span class="ident">i2d_ECPrivateKey</span>);
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>group</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_KEY_get0_group</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>());
-            <span class='kw'>if</span> <span class='ident'>ptr</span>.<span class='ident'>is_null</span>() {
-                <span class='prelude-val'>None</span>
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>EcGroupRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">group</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_KEY_get0_group</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>());
+            <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">None</span>
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">EcGroupRef</span>::<span class="ident">from_ptr</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _))
             }
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>public_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>EcPointRef</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_KEY_get0_public_key</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>());
-            <span class='kw'>if</span> <span class='ident'>ptr</span>.<span class='ident'>is_null</span>() {
-                <span class='prelude-val'>None</span>
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>EcPointRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">public_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">EcPointRef</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_KEY_get0_public_key</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>());
+            <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">None</span>
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">EcPointRef</span>::<span class="ident">from_ptr</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _))
             }
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>private_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>BigNumRef</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>ptr</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_KEY_get0_private_key</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>());
-            <span class='kw'>if</span> <span class='ident'>ptr</span>.<span class='ident'>is_null</span>() {
-                <span class='prelude-val'>None</span>
-            } <span class='kw'>else</span> {
-                <span class='prelude-val'>Some</span>(<span class='ident'>BigNumRef</span>::<span class='ident'>from_ptr</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _))
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">private_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">BigNumRef</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_KEY_get0_private_key</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>());
+            <span class="kw">if</span> <span class="ident">ptr</span>.<span class="ident">is_null</span>() {
+                <span class="prelude-val">None</span>
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">BigNumRef</span>::<span class="ident">from_ptr</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _))
             }
         }
     }
 
-    <span class='doccomment'>/// Checks the key for validity.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>check_key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> { <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_KEY_check_key</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>())).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> ()) }
+    <span class="doccomment">/// Checks the key for validity.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">check_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> { <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_check_key</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>())).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> ()) }
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_owned</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcKey</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> { <span class="ident">cvt_p</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_dup</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>())).<span class="ident">map</span>(<span class="ident">EcKey</span>) }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>EcKey</span> {
-    <span class='doccomment'>/// Constructs an `EcKey` corresponding to a known curve.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// It will not have an associated public or private key. This kind of key is primarily useful</span>
-    <span class='doccomment'>/// to be provided to the `set_tmp_ecdh` methods on `Ssl` and `SslContextBuilder`.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>: <span class='ident'>Nid</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>EcKey</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>init</span>();
-            <span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_KEY_new_by_curve_name</span>(<span class='ident'>nid</span>.<span class='ident'>as_raw</span>())).<span class='ident'>map</span>(<span class='ident'>EcKey</span>)
+<span class="kw">impl</span> <span class="ident">EcKey</span> {
+    <span class="doccomment">/// Constructs an `EcKey` corresponding to a known curve.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It will not have an associated public or private key. This kind of key is primarily useful</span>
+    <span class="doccomment">/// to be provided to the `set_tmp_ecdh` methods on `Ssl` and `SslContextBuilder`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_curve_name</span>(<span class="ident">nid</span>: <span class="ident">Nid</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcKey</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">init</span>();
+            <span class="ident">cvt_p</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_new_by_curve_name</span>(<span class="ident">nid</span>.<span class="ident">as_raw</span>())).<span class="ident">map</span>(<span class="ident">EcKey</span>)
         }
     }
 
-    <span class='doccomment'>/// Constructs an `EcKey` from the specified group with the associated `EcPoint`, public_key.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This will only have the associated public_key.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// # Example</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```no_run</span>
-    <span class='doccomment'>/// use openssl::bn::BigNumContext;</span>
-    <span class='doccomment'>/// use openssl::ec::*;</span>
-    <span class='doccomment'>/// use openssl::nid;</span>
-    <span class='doccomment'>/// use openssl::pkey::PKey;</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// // get bytes from somewhere, i.e. this will not produce a valid key</span>
-    <span class='doccomment'>/// let public_key: Vec&lt;u8&gt; = vec![];</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// // create an EcKey from the binary form of a EcPoint</span>
-    <span class='doccomment'>/// let group = EcGroup::from_curve_name(nid::SECP256K1).unwrap();</span>
-    <span class='doccomment'>/// let mut ctx = BigNumContext::new().unwrap();</span>
-    <span class='doccomment'>/// let point = EcPoint::from_bytes(&amp;group, &amp;public_key, &amp;mut ctx).unwrap();</span>
-    <span class='doccomment'>/// let key = EcKey::from_public_key(&amp;group, &amp;point);</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_public_key</span>(<span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>, <span class='ident'>public_key</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcPointRef</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>EcKey</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>EcKeyBuilder</span>::<span class='ident'>new</span>());
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>builder</span>.<span class='ident'>set_group</span>(<span class='ident'>group</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>builder</span>.<span class='ident'>set_public_key</span>(<span class='ident'>public_key</span>));
-        <span class='prelude-val'>Ok</span>(<span class='ident'>builder</span>.<span class='ident'>build</span>())
+    <span class="doccomment">/// Constructs an `EcKey` from the specified group with the associated `EcPoint`, public_key.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This will only have the associated public_key.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```no_run</span>
+    <span class="doccomment">/// use openssl::bn::BigNumContext;</span>
+    <span class="doccomment">/// use openssl::ec::*;</span>
+    <span class="doccomment">/// use openssl::nid;</span>
+    <span class="doccomment">/// use openssl::pkey::PKey;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // get bytes from somewhere, i.e. this will not produce a valid key</span>
+    <span class="doccomment">/// let public_key: Vec&lt;u8&gt; = vec![];</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // create an EcKey from the binary form of a EcPoint</span>
+    <span class="doccomment">/// let group = EcGroup::from_curve_name(nid::SECP256K1).unwrap();</span>
+    <span class="doccomment">/// let mut ctx = BigNumContext::new().unwrap();</span>
+    <span class="doccomment">/// let point = EcPoint::from_bytes(&amp;group, &amp;public_key, &amp;mut ctx).unwrap();</span>
+    <span class="doccomment">/// let key = EcKey::from_public_key(&amp;group, &amp;point);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_public_key</span>(
+        <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>,
+        <span class="ident">public_key</span>: <span class="kw-2">&amp;</span><span class="ident">EcPointRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcKey</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EcKeyBuilder</span>::<span class="ident">new</span>());
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">builder</span>.<span class="ident">set_group</span>(<span class="ident">group</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">builder</span>.<span class="ident">set_public_key</span>(<span class="ident">public_key</span>));
+        <span class="prelude-val">Ok</span>(<span class="ident">builder</span>.<span class="ident">build</span>())
     }
 
-    <span class='doccomment'>/// Generates a new public/private key pair on the specified curve.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>generate</span>(<span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>EcKey</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>builder</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>EcKeyBuilder</span>::<span class='ident'>new</span>());
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>builder</span>.<span class='ident'>set_group</span>(<span class='ident'>group</span>));
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>builder</span>.<span class='ident'>generate_key</span>());
-        <span class='prelude-val'>Ok</span>(<span class='ident'>builder</span>.<span class='ident'>build</span>())
+    <span class="doccomment">/// Generates a new public/private key pair on the specified curve.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate</span>(<span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcKey</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EcKeyBuilder</span>::<span class="ident">new</span>());
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">builder</span>.<span class="ident">set_group</span>(<span class="ident">group</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">builder</span>.<span class="ident">generate_key</span>());
+        <span class="prelude-val">Ok</span>(<span class="ident">builder</span>.<span class="ident">build</span>())
     }
 
-    <span class='attribute'>#[<span class='ident'>deprecated</span>(<span class='ident'>since</span> <span class='op'>=</span> <span class='string'>&quot;0.9.2&quot;</span>, <span class='ident'>note</span> <span class='op'>=</span> <span class='string'>&quot;use from_curve_name&quot;</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new_by_curve_name</span>(<span class='ident'>nid</span>: <span class='ident'>Nid</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>EcKey</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='ident'>EcKey</span>::<span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>)
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.9.2&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;use from_curve_name&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_by_curve_name</span>(<span class="ident">nid</span>: <span class="ident">Nid</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcKey</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="ident">EcKey</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>)
     }
 
-    <span class='macro'>private_key_from_pem</span><span class='macro'>!</span>(<span class='ident'>EcKey</span>, <span class='ident'>ffi</span>::<span class='ident'>PEM_read_bio_ECPrivateKey</span>);
-    <span class='macro'>private_key_from_der</span><span class='macro'>!</span>(<span class='ident'>EcKey</span>, <span class='ident'>ffi</span>::<span class='ident'>d2i_ECPrivateKey</span>);
+    <span class="macro">private_key_from_pem</span><span class="macro">!</span>(<span class="ident">EcKey</span>, <span class="ident">ffi</span>::<span class="ident">PEM_read_bio_ECPrivateKey</span>);
+    <span class="macro">private_key_from_der</span><span class="macro">!</span>(<span class="ident">EcKey</span>, <span class="ident">ffi</span>::<span class="ident">d2i_ECPrivateKey</span>);
 }
 
 
-<span class='macro'>foreign_type</span><span class='macro'>!</span> {
-    <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_KEY</span>;
-    <span class='kw'>fn</span> <span class='ident'>drop</span> <span class='op'>=</span> <span class='ident'>ffi</span>::<span class='ident'>EC_KEY_free</span>;
+<span class="macro">foreign_type</span><span class="macro">!</span> {
+    <span class="kw">type</span> <span class="ident">CType</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_KEY</span>;
+    <span class="kw">fn</span> <span class="ident">drop</span> <span class="op">=</span> <span class="ident">ffi</span>::<span class="ident">EC_KEY_free</span>;
 
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EcKeyBuilder</span>;
-    <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>EcKeyBuilderRef</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EcKeyBuilder</span>;
+    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EcKeyBuilderRef</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>EcKeyBuilder</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>EcKeyBuilder</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>init</span>();
-            <span class='ident'>cvt_p</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_KEY_new</span>()).<span class='ident'>map</span>(<span class='ident'>EcKeyBuilder</span>)
+<span class="kw">impl</span> <span class="ident">EcKeyBuilder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EcKeyBuilder</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">init</span>();
+            <span class="ident">cvt_p</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_new</span>()).<span class="ident">map</span>(<span class="ident">EcKeyBuilder</span>)
         }
     }
 
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>build</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>EcKey</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>EcKey</span>::<span class='ident'>from_ptr</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>());
-            <span class='ident'>mem</span>::<span class='ident'>forget</span>(<span class='self'>self</span>);
-            <span class='ident'>key</span>
-        }
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>EcKeyBuilderRef</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_group</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>group</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcGroupRef</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>EcKeyBuilderRef</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_KEY_set_group</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>group</span>.<span class='ident'>as_ptr</span>())).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='self'>self</span>)
-        }
-    }
-
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_public_key</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-                          <span class='ident'>public_key</span>: <span class='kw-2'>&amp;</span><span class='ident'>EcPointRef</span>)
-                          <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>EcKeyBuilderRef</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_KEY_set_public_key</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>(), <span class='ident'>public_key</span>.<span class='ident'>as_ptr</span>())).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='self'>self</span>)
-        }
-    }
-
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>generate_key</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>EcKeyBuilderRef</span>, <span class='ident'>ErrorStack</span><span class='op'>&gt;</span> {
-        <span class='kw'>unsafe</span> {
-            <span class='ident'>cvt</span>(<span class='ident'>ffi</span>::<span class='ident'>EC_KEY_generate_key</span>(<span class='self'>self</span>.<span class='ident'>as_ptr</span>())).<span class='ident'>map</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='self'>self</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">EcKey</span> {
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">EcKey</span>::<span class="ident">from_ptr</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>());
+            <span class="ident">mem</span>::<span class="ident">forget</span>(<span class="self">self</span>);
+            <span class="ident">key</span>
         }
     }
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>bn</span>::<span class='ident'>BigNumContext</span>;
-    <span class='kw'>use</span> <span class='ident'>nid</span>;
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='kw-2'>*</span>;
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>key_new_by_curve_name</span>() {
-        <span class='ident'>EcKey</span>::<span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>::<span class='ident'>X9_62_PRIME256V1</span>).<span class='ident'>unwrap</span>();
+<span class="kw">impl</span> <span class="ident">EcKeyBuilderRef</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_group</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">group</span>: <span class="kw-2">&amp;</span><span class="ident">EcGroupRef</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">EcKeyBuilderRef</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> { <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_set_group</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">group</span>.<span class="ident">as_ptr</span>())).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> <span class="self">self</span>) }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>generate</span>() {
-        <span class='kw'>let</span> <span class='ident'>group</span> <span class='op'>=</span> <span class='ident'>EcGroup</span>::<span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>::<span class='ident'>X9_62_PRIME256V1</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>EcKey</span>::<span class='ident'>generate</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>key</span>.<span class='ident'>public_key</span>().<span class='ident'>unwrap</span>();
-        <span class='ident'>key</span>.<span class='ident'>private_key</span>().<span class='ident'>unwrap</span>();
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_public_key</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">public_key</span>: <span class="kw-2">&amp;</span><span class="ident">EcPointRef</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">EcKeyBuilderRef</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_set_public_key</span>(
+                <span class="self">self</span>.<span class="ident">as_ptr</span>(),
+                <span class="ident">public_key</span>.<span class="ident">as_ptr</span>(),
+            )).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> <span class="self">self</span>)
+        }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>point_new</span>() {
-        <span class='kw'>let</span> <span class='ident'>group</span> <span class='op'>=</span> <span class='ident'>EcGroup</span>::<span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>::<span class='ident'>X9_62_PRIME256V1</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>EcPoint</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>).<span class='ident'>unwrap</span>();
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_key</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">EcKeyBuilderRef</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> { <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_generate_key</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>())).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> <span class="self">self</span>) }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>point_bytes</span>() {
-        <span class='kw'>let</span> <span class='ident'>group</span> <span class='op'>=</span> <span class='ident'>EcGroup</span>::<span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>::<span class='ident'>X9_62_PRIME256V1</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>EcKey</span>::<span class='ident'>generate</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>point</span> <span class='op'>=</span> <span class='ident'>key</span>.<span class='ident'>public_key</span>().<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ctx</span> <span class='op'>=</span> <span class='ident'>BigNumContext</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>point</span>.<span class='ident'>to_bytes</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>, <span class='ident'>POINT_CONVERSION_COMPRESSED</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ctx</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>point2</span> <span class='op'>=</span> <span class='ident'>EcPoint</span>::<span class='ident'>from_bytes</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>, <span class='kw-2'>&amp;</span><span class='ident'>bytes</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ctx</span>).<span class='ident'>unwrap</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>point</span>.<span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>, <span class='kw-2'>&amp;</span><span class='ident'>point2</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ctx</span>).<span class='ident'>unwrap</span>());
+    <span class="doccomment">/// Sets the public key based on affine coordinates.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_public_key_affine_coordinates</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+                                             <span class="ident">x</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumRef</span>,
+                                             <span class="ident">y</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumRef</span>)
+                                             <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">EcKeyBuilderRef</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_set_public_key_affine_coordinates</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), 
+	                                                      <span class="ident">x</span>.<span class="ident">as_ptr</span>(), 
+							      <span class="ident">y</span>.<span class="ident">as_ptr</span>())
+	    ).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> <span class="self">self</span>)
+        }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>mul_generator</span>() {
-        <span class='kw'>let</span> <span class='ident'>group</span> <span class='op'>=</span> <span class='ident'>EcGroup</span>::<span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>::<span class='ident'>X9_62_PRIME256V1</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>EcKey</span>::<span class='ident'>generate</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ctx</span> <span class='op'>=</span> <span class='ident'>BigNumContext</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>public_key</span> <span class='op'>=</span> <span class='ident'>EcPoint</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>).<span class='ident'>unwrap</span>();
-        <span class='ident'>public_key</span>.<span class='ident'>mul_generator</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>, <span class='ident'>key</span>.<span class='ident'>private_key</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ctx</span>).<span class='ident'>unwrap</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>public_key</span>.<span class='ident'>eq</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>, <span class='ident'>key</span>.<span class='ident'>public_key</span>().<span class='ident'>unwrap</span>(), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ctx</span>).<span class='ident'>unwrap</span>());
+    <span class="doccomment">/// Sets the private key.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_private_key</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+			   <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">BigNumRef</span>)
+			   <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">EcKeyBuilderRef</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">cvt</span>(<span class="ident">ffi</span>::<span class="ident">EC_KEY_set_private_key</span>(<span class="self">self</span>.<span class="ident">as_ptr</span>(), <span class="ident">key</span>.<span class="ident">as_ptr</span>())).<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> <span class="self">self</span>)
+        }
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">test</span> {
+    <span class="kw">use</span> <span class="ident">bn</span>::{<span class="ident">BigNum</span>, <span class="ident">BigNumContext</span>};
+    <span class="kw">use</span> <span class="ident">nid</span>;
+    <span class="kw">use</span> <span class="ident">data_encoding</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">key_new_by_curve_name</span>() {
+        <span class="ident">EcKey</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>key_from_public_key</span>() {
-        <span class='kw'>let</span> <span class='ident'>group</span> <span class='op'>=</span> <span class='ident'>EcGroup</span>::<span class='ident'>from_curve_name</span>(<span class='ident'>nid</span>::<span class='ident'>X9_62_PRIME256V1</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='ident'>EcKey</span>::<span class='ident'>generate</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ctx</span> <span class='op'>=</span> <span class='ident'>BigNumContext</span>::<span class='ident'>new</span>().<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>bytes</span> <span class='op'>=</span> <span class='ident'>key</span>.<span class='ident'>public_key</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_bytes</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>, <span class='ident'>POINT_CONVERSION_COMPRESSED</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ctx</span>).<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">generate</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">EcGroup</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">EcKey</span>::<span class="ident">generate</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+        <span class="ident">key</span>.<span class="ident">public_key</span>().<span class="ident">unwrap</span>();
+        <span class="ident">key</span>.<span class="ident">private_key</span>().<span class="ident">unwrap</span>();
+    }
 
-        <span class='ident'>drop</span>(<span class='ident'>key</span>);
-        <span class='kw'>let</span> <span class='ident'>public_key</span> <span class='op'>=</span> <span class='ident'>EcPoint</span>::<span class='ident'>from_bytes</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>, <span class='kw-2'>&amp;</span><span class='ident'>bytes</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>ctx</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>ec_key</span> <span class='op'>=</span> <span class='ident'>EcKey</span>::<span class='ident'>from_public_key</span>(<span class='kw-2'>&amp;</span><span class='ident'>group</span>, <span class='kw-2'>&amp;</span><span class='ident'>public_key</span>).<span class='ident'>unwrap</span>();
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ec_key</span>.<span class='ident'>check_key</span>().<span class='ident'>is_ok</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ec_key</span>.<span class='ident'>public_key</span>().<span class='ident'>is_some</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>ec_key</span>.<span class='ident'>private_key</span>().<span class='ident'>is_none</span>());
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">dup</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">EcGroup</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">EcKey</span>::<span class="ident">generate</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+        <span class="ident">key</span>.<span class="ident">to_owned</span>().<span class="ident">unwrap</span>();
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">point_new</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">EcGroup</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
+        <span class="ident">EcPoint</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">point_bytes</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">EcGroup</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">EcKey</span>::<span class="ident">generate</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">public_key</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">BigNumContext</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">point</span>
+            .<span class="ident">to_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>, <span class="ident">POINT_CONVERSION_COMPRESSED</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ctx</span>)
+            .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">point2</span> <span class="op">=</span> <span class="ident">EcPoint</span>::<span class="ident">from_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>, <span class="kw-2">&amp;</span><span class="ident">bytes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ctx</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">point</span>.<span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>, <span class="kw-2">&amp;</span><span class="ident">point2</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ctx</span>).<span class="ident">unwrap</span>());
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">mul_generator</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">EcGroup</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">EcKey</span>::<span class="ident">generate</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">BigNumContext</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">public_key</span> <span class="op">=</span> <span class="ident">EcPoint</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+        <span class="ident">public_key</span>
+            .<span class="ident">mul_generator</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>, <span class="ident">key</span>.<span class="ident">private_key</span>().<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ctx</span>)
+            .<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">public_key</span>
+                .<span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>, <span class="ident">key</span>.<span class="ident">public_key</span>().<span class="ident">unwrap</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ctx</span>)
+                .<span class="ident">unwrap</span>()
+        );
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">key_from_public_key</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">EcGroup</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">EcKey</span>::<span class="ident">generate</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">BigNumContext</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">key</span>.<span class="ident">public_key</span>()
+            .<span class="ident">unwrap</span>()
+            .<span class="ident">to_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>, <span class="ident">POINT_CONVERSION_COMPRESSED</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ctx</span>)
+            .<span class="ident">unwrap</span>();
+
+        <span class="ident">drop</span>(<span class="ident">key</span>);
+        <span class="kw">let</span> <span class="ident">public_key</span> <span class="op">=</span> <span class="ident">EcPoint</span>::<span class="ident">from_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>, <span class="kw-2">&amp;</span><span class="ident">bytes</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ctx</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">ec_key</span> <span class="op">=</span> <span class="ident">EcKey</span>::<span class="ident">from_public_key</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>, <span class="kw-2">&amp;</span><span class="ident">public_key</span>).<span class="ident">unwrap</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ec_key</span>.<span class="ident">check_key</span>().<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ec_key</span>.<span class="ident">public_key</span>().<span class="ident">is_some</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ec_key</span>.<span class="ident">private_key</span>().<span class="ident">is_none</span>());
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">key_from_affine_coordinates</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">EcGroup</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">data_encoding</span>::<span class="ident">base64url</span>::<span class="ident">decode_nopad</span>(<span class="string">&quot;MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4&quot;</span>.<span class="ident">as_bytes</span>())
+            .<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">y</span> <span class="op">=</span> <span class="ident">data_encoding</span>::<span class="ident">base64url</span>::<span class="ident">decode_nopad</span>(<span class="string">&quot;4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM&quot;</span>.<span class="ident">as_bytes</span>())
+            .<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">xbn</span> <span class="op">=</span> <span class="ident">BigNum</span>::<span class="ident">from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">ybn</span> <span class="op">=</span> <span class="ident">BigNum</span>::<span class="ident">from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">y</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">EcKeyBuilder</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+        <span class="ident">builder</span>.<span class="ident">set_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+        <span class="ident">builder</span>.<span class="ident">set_public_key_affine_coordinates</span>(<span class="kw-2">&amp;</span><span class="ident">xbn</span>, <span class="kw-2">&amp;</span><span class="ident">ybn</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">ec_key</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">build</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ec_key</span>.<span class="ident">check_key</span>().<span class="ident">is_ok</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ec_key</span>.<span class="ident">public_key</span>().<span class="ident">is_some</span>());
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">set_private_key</span>() {
+        <span class="kw">let</span> <span class="ident">group</span> <span class="op">=</span> <span class="ident">EcGroup</span>::<span class="ident">from_curve_name</span>(<span class="ident">nid</span>::<span class="ident">X9_62_PRIME256V1</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">d</span> <span class="op">=</span> <span class="ident">data_encoding</span>::<span class="ident">base64url</span>::<span class="ident">decode_nopad</span>(<span class="string">&quot;870MB6gfuTJ4HtUnUvYMyJpr5eUZNP4Bk43bVdj3eAE&quot;</span>.<span class="ident">as_bytes</span>())
+            .<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">dbn</span> <span class="op">=</span> <span class="ident">BigNum</span>::<span class="ident">from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">d</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">EcKeyBuilder</span>::<span class="ident">new</span>().<span class="ident">unwrap</span>();
+        <span class="ident">builder</span>.<span class="ident">set_group</span>(<span class="kw-2">&amp;</span><span class="ident">group</span>).<span class="ident">unwrap</span>();
+        <span class="ident">builder</span>.<span class="ident">set_private_key</span>(<span class="kw-2">&amp;</span><span class="ident">dbn</span>).<span class="ident">unwrap</span>();
+
+        <span class="kw">let</span> <span class="ident">ec_key</span> <span class="op">=</span> <span class="ident">builder</span>.<span class="ident">build</span>();
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ec_key</span>.<span class="ident">private_key</span>().<span class="ident">is_some</span>());
     }
 }
 </pre>
@@ -1070,7 +1304,6 @@
         window.rootPath = "../../";
         window.currentCrate = "openssl";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>serde</a></p><script>window.sidebarCurrent = {name: 'de', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module de</p><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'><a href='../index.html'>serde</a></p><script>window.sidebarCurrent = {name: 'de', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,12 +43,12 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>serde</a>::<wbr><a class='mod' href=''>de</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>serde</a>::<wbr><a class="mod" href=''>de</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/serde/de/mod.rs.html#1-1531' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/serde/de/mod.rs.html#1-1535' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Generic data structure deserialization framework.</p>
 
 <p>The two most important traits in this module are <code>Deserialize</code> and
@@ -126,6 +126,10 @@ One example is <code>&amp;str</code>.</p>
 <li>Rc&lt;T&gt;</li>
 <li>Arc&lt;T&gt;</li>
 <li>Cow&lt;&#39;a, T&gt;</li>
+<li>Cell&lt;T&gt;</li>
+<li>RefCell&lt;T&gt;</li>
+<li>Mutex&lt;T&gt;</li>
+<li>RwLock&lt;T&gt;</li>
 </ul></li>
 <li><strong>Collection types</strong>:
 
@@ -162,16 +166,16 @@ One example is <code>&amp;str</code>.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='value/index.html'
-                                  title='serde::de::value'>value</a></td>
+                           <td><a class="mod" href="value/index.html"
+                                  title='mod serde::de::value'>value</a></td>
                            <td class='docblock-short'>
                                 <p>This module supports deserializing from primitives with the <code>ValueDeserializer</code> trait.</p>
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Unexpected.html'
-                                  title='serde::de::Unexpected'>Unexpected</a></td>
+                           <td><a class="enum" href="enum.Unexpected.html"
+                                  title='enum serde::de::Unexpected'>Unexpected</a></td>
                            <td class='docblock-short'>
                                 <p><code>Unexpected</code> represents an unexpected invocation of any one of the <code>Visitor</code>
 trait methods.</p>
@@ -179,16 +183,16 @@ trait methods.</p>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Deserialize.html'
-                                  title='serde::de::Deserialize'>Deserialize</a></td>
+                           <td><a class="trait" href="trait.Deserialize.html"
+                                  title='trait serde::de::Deserialize'>Deserialize</a></td>
                            <td class='docblock-short'>
                                 <p>A <strong>data structure</strong> that can be deserialized from any data format supported
 by Serde.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.DeserializeSeed.html'
-                                  title='serde::de::DeserializeSeed'>DeserializeSeed</a></td>
+                           <td><a class="trait" href="trait.DeserializeSeed.html"
+                                  title='trait serde::de::DeserializeSeed'>DeserializeSeed</a></td>
                            <td class='docblock-short'>
                                 <p><code>DeserializeSeed</code> is the stateful form of the <code>Deserialize</code> trait. If you
 ever find yourself looking for a way to pass data into a <code>Deserialize</code> impl,
@@ -196,16 +200,16 @@ this trait is the way to do it.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Deserializer.html'
-                                  title='serde::de::Deserializer'>Deserializer</a></td>
+                           <td><a class="trait" href="trait.Deserializer.html"
+                                  title='trait serde::de::Deserializer'>Deserializer</a></td>
                            <td class='docblock-short'>
                                 <p>A <strong>data format</strong> that can deserialize any data structure supported by
 Serde.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.EnumVisitor.html'
-                                  title='serde::de::EnumVisitor'>EnumVisitor</a></td>
+                           <td><a class="trait" href="trait.EnumVisitor.html"
+                                  title='trait serde::de::EnumVisitor'>EnumVisitor</a></td>
                            <td class='docblock-short'>
                                 <p><code>EnumVisitor</code> is a visitor that is created by the <code>Deserializer</code> and passed
 to the <code>Deserialize</code> in order to identify which variant of an enum to
@@ -213,8 +217,8 @@ deserialize.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Error.html'
-                                  title='serde::de::Error'>Error</a></td>
+                           <td><a class="trait" href="trait.Error.html"
+                                  title='trait serde::de::Error'>Error</a></td>
                            <td class='docblock-short'>
                                 <p>The <code>Error</code> trait allows <code>Deserialize</code> implementations to create descriptive
 error messages belonging to the <code>Deserializer</code> against which they are
@@ -222,30 +226,30 @@ currently running.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Expected.html'
-                                  title='serde::de::Expected'>Expected</a></td>
+                           <td><a class="trait" href="trait.Expected.html"
+                                  title='trait serde::de::Expected'>Expected</a></td>
                            <td class='docblock-short'>
                                 <p><code>Expected</code> represents an explanation of what data a <code>Visitor</code> was expecting
 to receive.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.MapVisitor.html'
-                                  title='serde::de::MapVisitor'>MapVisitor</a></td>
+                           <td><a class="trait" href="trait.MapVisitor.html"
+                                  title='trait serde::de::MapVisitor'>MapVisitor</a></td>
                            <td class='docblock-short'>
                                 <p><code>MapVisitor</code> visits each item in a sequence.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SeqVisitor.html'
-                                  title='serde::de::SeqVisitor'>SeqVisitor</a></td>
+                           <td><a class="trait" href="trait.SeqVisitor.html"
+                                  title='trait serde::de::SeqVisitor'>SeqVisitor</a></td>
                            <td class='docblock-short'>
                                 <p><code>SeqVisitor</code> visits each item in a sequence.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.VariantVisitor.html'
-                                  title='serde::de::VariantVisitor'>VariantVisitor</a></td>
+                           <td><a class="trait" href="trait.VariantVisitor.html"
+                                  title='trait serde::de::VariantVisitor'>VariantVisitor</a></td>
                            <td class='docblock-short'>
                                 <p><code>VariantVisitor</code> is a visitor that is created by the <code>Deserializer</code> and
 passed to the <code>Deserialize</code> to deserialize the content of a particular enum
@@ -253,8 +257,8 @@ variant.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Visitor.html'
-                                  title='serde::de::Visitor'>Visitor</a></td>
+                           <td><a class="trait" href="trait.Visitor.html"
+                                  title='trait serde::de::Visitor'>Visitor</a></td>
                            <td class='docblock-short'>
                                 <p>This trait represents a visitor that walks through a deserializer.</p>
                            </td>
@@ -315,7 +319,6 @@ variant.</p>
         window.rootPath = "../../";
         window.currentCrate = "serde";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

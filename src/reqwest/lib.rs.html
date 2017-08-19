@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -178,141 +178,141 @@
 <span id="133">133</span>
 <span id="134">134</span>
 <span id="135">135</span>
-</pre><pre class='rust '>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>warnings</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>missing_docs</span>)]</span>
+</pre><pre class="rust ">
+<span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">warnings</span>)]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 
-<span class='doccomment'>//! # reqwest</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The `reqwest` crate provides a convenient, higher-level HTTP Client.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! It handles many of the things that most people just expect an HTTP client</span>
-<span class='doccomment'>//! to do for them.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! - Uses system-native TLS</span>
-<span class='doccomment'>//! - Plain bodies, JSON, urlencoded, (TODO: multipart)</span>
-<span class='doccomment'>//! - Customizable redirect policy</span>
-<span class='doccomment'>//! - (TODO: Cookies)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The `reqwest::Client` is synchronous, making it a great fit for</span>
-<span class='doccomment'>//! applications that only require a few HTTP requests, and wish to handle</span>
-<span class='doccomment'>//! them synchronously. When [hyper][] releases with asynchronous support,</span>
-<span class='doccomment'>//! `reqwest` will be updated to use it internally, but still provide a</span>
-<span class='doccomment'>//! synchronous Client, for convenience. A `reqwest::async::Client` will also</span>
-<span class='doccomment'>//! be added.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Making a GET request</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! For a single request, you can use the `get` shortcut method.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```no_run</span>
-<span class='doccomment'>//! let resp = reqwest::get(&quot;https://www.rust-lang.org&quot;).unwrap();</span>
-<span class='doccomment'>//! assert!(resp.status().is_success());</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! If you plan to perform multiple requests, it is best to create a [`Client`][client]</span>
-<span class='doccomment'>//! and reuse it, taking advantage of keep-alive connection pooling.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ## Making POST requests (or setting request bodies)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! There are several ways you can set the body of a request. The basic one is</span>
-<span class='doccomment'>//! by using the `body()` method of a [`RequestBuilder`][builder]. This lets you set the</span>
-<span class='doccomment'>//! exact raw bytes of what the body should be. It accepts various types,</span>
-<span class='doccomment'>//! including `String`, `Vec&lt;u8&gt;`, and `File`. If you wish to pass a custom</span>
-<span class='doccomment'>//! Reader, you can use the `reqwest::Body::new()` constructor.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```no_run</span>
-<span class='doccomment'>//! let client = reqwest::Client::new().unwrap();</span>
-<span class='doccomment'>//! let res = client.post(&quot;http://httpbin.org/post&quot;)</span>
-<span class='doccomment'>//!     .body(&quot;the exact body that is sent&quot;)</span>
-<span class='doccomment'>//!     .send();</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### Forms</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! It&#39;s very common to want to send form data in a request body. This can be</span>
-<span class='doccomment'>//! done with any type that can be serialized into form data.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This can be an array of tuples, or a `HashMap`, or a custom type that</span>
-<span class='doccomment'>//! implements [`Serialize`][serde].</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```no_run</span>
-<span class='doccomment'>//! // This will POST a body of `foo=bar&amp;baz=quux`</span>
-<span class='doccomment'>//! let params = [(&quot;foo&quot;, &quot;bar&quot;), (&quot;baz&quot;, &quot;quux&quot;)];</span>
-<span class='doccomment'>//! let client = reqwest::Client::new().unwrap();</span>
-<span class='doccomment'>//! let res = client.post(&quot;http://httpbin.org/post&quot;)</span>
-<span class='doccomment'>//!     .form(&amp;params)</span>
-<span class='doccomment'>//!     .send();</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ### JSON</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! There is also a `json` method helper on the [`RequestBuilder`][builder] that works in</span>
-<span class='doccomment'>//! a similar fashion the `form` method. It can take any value that can be</span>
-<span class='doccomment'>//! serialized into JSON.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```no_run</span>
-<span class='doccomment'>//! # use std::collections::HashMap;</span>
-<span class='doccomment'>//! // This will POST a body of `{&quot;lang&quot;:&quot;rust&quot;,&quot;body&quot;:&quot;json&quot;}`</span>
-<span class='doccomment'>//! let mut map = HashMap::new();</span>
-<span class='doccomment'>//! map.insert(&quot;lang&quot;, &quot;rust&quot;);</span>
-<span class='doccomment'>//! map.insert(&quot;body&quot;, &quot;json&quot;);</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let client = reqwest::Client::new().unwrap();</span>
-<span class='doccomment'>//! let res = client.post(&quot;http://httpbin.org/post&quot;)</span>
-<span class='doccomment'>//!     .json(&amp;map)</span>
-<span class='doccomment'>//!     .send();</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! [hyper]: http://hyper.rs</span>
-<span class='doccomment'>//! [client]: ./struct.Client.html</span>
-<span class='doccomment'>//! [builder]: ./client/struct.RequestBuilder.html</span>
-<span class='doccomment'>//! [serde]: http://serde.rs</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>hyper</span>;
+<span class="doccomment">//! # reqwest</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `reqwest` crate provides a convenient, higher-level HTTP Client.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! It handles many of the things that most people just expect an HTTP client</span>
+<span class="doccomment">//! to do for them.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! - Uses system-native TLS</span>
+<span class="doccomment">//! - Plain bodies, JSON, urlencoded, (TODO: multipart)</span>
+<span class="doccomment">//! - Customizable redirect policy</span>
+<span class="doccomment">//! - (TODO: Cookies)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `reqwest::Client` is synchronous, making it a great fit for</span>
+<span class="doccomment">//! applications that only require a few HTTP requests, and wish to handle</span>
+<span class="doccomment">//! them synchronously. When [hyper][] releases with asynchronous support,</span>
+<span class="doccomment">//! `reqwest` will be updated to use it internally, but still provide a</span>
+<span class="doccomment">//! synchronous Client, for convenience. A `reqwest::async::Client` will also</span>
+<span class="doccomment">//! be added.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Making a GET request</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! For a single request, you can use the `get` shortcut method.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```no_run</span>
+<span class="doccomment">//! let resp = reqwest::get(&quot;https://www.rust-lang.org&quot;).unwrap();</span>
+<span class="doccomment">//! assert!(resp.status().is_success());</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! If you plan to perform multiple requests, it is best to create a [`Client`][client]</span>
+<span class="doccomment">//! and reuse it, taking advantage of keep-alive connection pooling.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Making POST requests (or setting request bodies)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! There are several ways you can set the body of a request. The basic one is</span>
+<span class="doccomment">//! by using the `body()` method of a [`RequestBuilder`][builder]. This lets you set the</span>
+<span class="doccomment">//! exact raw bytes of what the body should be. It accepts various types,</span>
+<span class="doccomment">//! including `String`, `Vec&lt;u8&gt;`, and `File`. If you wish to pass a custom</span>
+<span class="doccomment">//! Reader, you can use the `reqwest::Body::new()` constructor.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```no_run</span>
+<span class="doccomment">//! let client = reqwest::Client::new().unwrap();</span>
+<span class="doccomment">//! let res = client.post(&quot;http://httpbin.org/post&quot;)</span>
+<span class="doccomment">//!     .body(&quot;the exact body that is sent&quot;)</span>
+<span class="doccomment">//!     .send();</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### Forms</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! It&#39;s very common to want to send form data in a request body. This can be</span>
+<span class="doccomment">//! done with any type that can be serialized into form data.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This can be an array of tuples, or a `HashMap`, or a custom type that</span>
+<span class="doccomment">//! implements [`Serialize`][serde].</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```no_run</span>
+<span class="doccomment">//! // This will POST a body of `foo=bar&amp;baz=quux`</span>
+<span class="doccomment">//! let params = [(&quot;foo&quot;, &quot;bar&quot;), (&quot;baz&quot;, &quot;quux&quot;)];</span>
+<span class="doccomment">//! let client = reqwest::Client::new().unwrap();</span>
+<span class="doccomment">//! let res = client.post(&quot;http://httpbin.org/post&quot;)</span>
+<span class="doccomment">//!     .form(&amp;params)</span>
+<span class="doccomment">//!     .send();</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### JSON</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! There is also a `json` method helper on the [`RequestBuilder`][builder] that works in</span>
+<span class="doccomment">//! a similar fashion the `form` method. It can take any value that can be</span>
+<span class="doccomment">//! serialized into JSON.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```no_run</span>
+<span class="doccomment">//! # use std::collections::HashMap;</span>
+<span class="doccomment">//! // This will POST a body of `{&quot;lang&quot;:&quot;rust&quot;,&quot;body&quot;:&quot;json&quot;}`</span>
+<span class="doccomment">//! let mut map = HashMap::new();</span>
+<span class="doccomment">//! map.insert(&quot;lang&quot;, &quot;rust&quot;);</span>
+<span class="doccomment">//! map.insert(&quot;body&quot;, &quot;json&quot;);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let client = reqwest::Client::new().unwrap();</span>
+<span class="doccomment">//! let res = client.post(&quot;http://httpbin.org/post&quot;)</span>
+<span class="doccomment">//!     .json(&amp;map)</span>
+<span class="doccomment">//!     .send();</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [hyper]: http://hyper.rs</span>
+<span class="doccomment">//! [client]: ./struct.Client.html</span>
+<span class="doccomment">//! [builder]: ./client/struct.RequestBuilder.html</span>
+<span class="doccomment">//! [serde]: http://serde.rs</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">hyper</span>;
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span> <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>log</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>hyper_native_tls</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_json</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde_urlencoded</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>url</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">log</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">hyper_native_tls</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_json</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_urlencoded</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">url</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>client</span>::<span class='ident'>IntoUrl</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>HyperError</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>method</span>::<span class='ident'>Method</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>status</span>::<span class='ident'>StatusCode</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>version</span>::<span class='ident'>HttpVersion</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>Url</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>ParseError</span> <span class='kw'>as</span> <span class='ident'>UrlError</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">IntoUrl</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">HyperError</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">method</span>::<span class="ident">Method</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">version</span>::<span class="ident">HttpVersion</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">Url</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">ParseError</span> <span class="kw">as</span> <span class="ident">UrlError</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>client</span>::{<span class='ident'>Client</span>, <span class='ident'>Response</span>, <span class='ident'>RequestBuilder</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>error</span>::{<span class='ident'>Error</span>, <span class='prelude-ty'>Result</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>body</span>::<span class='ident'>Body</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>redirect</span>::<span class='ident'>RedirectPolicy</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">client</span>::{<span class="ident">Client</span>, <span class="ident">Response</span>, <span class="ident">RequestBuilder</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">body</span>::<span class="ident">Body</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">redirect</span>::<span class="ident">RedirectPolicy</span>;
 
-<span class='kw'>mod</span> <span class='ident'>body</span>;
-<span class='kw'>mod</span> <span class='ident'>client</span>;
-<span class='kw'>mod</span> <span class='ident'>error</span>;
-<span class='kw'>mod</span> <span class='ident'>redirect</span>;
+<span class="kw">mod</span> <span class="ident">body</span>;
+<span class="kw">mod</span> <span class="ident">client</span>;
+<span class="kw">mod</span> <span class="ident">error</span>;
+<span class="kw">mod</span> <span class="ident">redirect</span>;
 
 
-<span class='doccomment'>/// Shortcut method to quickly make a `GET` request.</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>IntoUrl</span><span class='op'>&gt;</span>(<span class='ident'>url</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> ::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>client</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>new</span>());
-    <span class='ident'>client</span>.<span class='ident'>get</span>(<span class='ident'>url</span>).<span class='ident'>send</span>()
+<span class="doccomment">/// Shortcut method to quickly make a `GET` request.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="ident">url</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Client</span>::<span class="ident">new</span>());
+    <span class="ident">client</span>.<span class="ident">get</span>(<span class="ident">url</span>).<span class="ident">send</span>()
 }
 
-<span class='kw'>fn</span> <span class='ident'>_assert_impls</span>() {
-    <span class='kw'>fn</span> <span class='ident'>assert_send</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Send</span><span class='op'>&gt;</span>() {}
-    <span class='kw'>fn</span> <span class='ident'>assert_sync</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Sync</span><span class='op'>&gt;</span>() {}
+<span class="kw">fn</span> <span class="ident">_assert_impls</span>() {
+    <span class="kw">fn</span> <span class="ident">assert_send</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Send</span><span class="op">&gt;</span>() {}
+    <span class="kw">fn</span> <span class="ident">assert_sync</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Sync</span><span class="op">&gt;</span>() {}
 
-    <span class='ident'>assert_send</span>::<span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;</span>();
-    <span class='ident'>assert_sync</span>::<span class='op'>&lt;</span><span class='ident'>Client</span><span class='op'>&gt;</span>();
+    <span class="ident">assert_send</span>::<span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>();
+    <span class="ident">assert_sync</span>::<span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span>();
 
-    <span class='ident'>assert_send</span>::<span class='op'>&lt;</span><span class='ident'>RequestBuilder</span><span class='op'>&gt;</span>();
-    <span class='ident'>assert_send</span>::<span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&gt;</span>();
+    <span class="ident">assert_send</span>::<span class="op">&lt;</span><span class="ident">RequestBuilder</span><span class="op">&gt;</span>();
+    <span class="ident">assert_send</span>::<span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span>();
 }
 </pre>
 </section>
@@ -372,7 +372,6 @@
         window.rootPath = "../../";
         window.currentCrate = "reqwest";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

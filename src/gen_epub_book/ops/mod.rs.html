@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -143,106 +143,106 @@
 <span id="98"> 98</span>
 <span id="99"> 99</span>
 <span id="100">100</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Main functions doing actual work.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! First, use `parse_descriptor()` to get an element list from a descriptor file,</span>
-<span class='doccomment'>//! then construct an `EPubBook::from_elements()`, validate and absolutise paths via</span>
-<span class='doccomment'>//! `EPubBook::normalise_paths()` and write the book with `EPubBook::write_zip()`.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Main functions doing actual work.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! First, use `parse_descriptor()` to get an element list from a descriptor file,</span>
+<span class="doccomment">//! then construct an `EPubBook::from_elements()`, validate and absolutise paths via</span>
+<span class="doccomment">//! `EPubBook::normalise_paths()` and write the book with `EPubBook::write_zip()`.</span>
 
 
-<span class='kw'>mod</span> <span class='ident'>book</span>;
-<span class='kw'>mod</span> <span class='ident'>element</span>;
+<span class="kw">mod</span> <span class="ident">book</span>;
+<span class="kw">mod</span> <span class="ident">element</span>;
 
-<span class='kw'>use</span> <span class='ident'>regex</span>::<span class='ident'>Regex</span>;
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::<span class='ident'>Error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>::<span class='ident'>FromIterator</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>BufReader</span>, <span class='ident'>BufRead</span>, <span class='ident'>Read</span>};
+<span class="kw">use</span> <span class="ident">regex</span>::<span class="ident">Regex</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">FromIterator</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">BufReader</span>, <span class="ident">BufRead</span>, <span class="ident">Read</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>element</span>::<span class='ident'>BookElement</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>book</span>::{<span class='ident'>EPubContentType</span>, <span class='ident'>EPubData</span>, <span class='ident'>EPubBook</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">element</span>::<span class="ident">BookElement</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">book</span>::{<span class="ident">EPubContentType</span>, <span class="ident">EPubData</span>, <span class="ident">EPubBook</span>};
 
 
-<span class='doccomment'>/// Parse the whole descriptor, stopping at the first encountered error</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Uses `BookElement::parse()`, so it inherits all errors from there,</span>
-<span class='doccomment'>/// adding only the error from splitting lines.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Flattens out non-describing lines.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # extern crate gen_epub_book;</span>
-<span class='doccomment'>/// # extern crate chrono;</span>
-<span class='doccomment'>/// # fn main() {</span>
-<span class='doccomment'>/// # use chrono::DateTime;</span>
-<span class='doccomment'>/// # use std::path::PathBuf;</span>
-<span class='doccomment'>/// # use gen_epub_book::ops::{BookElement, parse_descriptor};</span>
-<span class='doccomment'>/// assert_eq!(parse_descriptor(&quot;string input&quot;, &amp;mut &amp;b&quot;\</span>
-<span class='doccomment'>///         This is a very simple thing that should prove unproblematic to parse\n\</span>
-<span class='doccomment'>///         \n\</span>
-<span class='doccomment'>///         Name: Simple ePub demonstration\n\</span>
-<span class='doccomment'>///         Cover: cover.png\n\</span>
-<span class='doccomment'>///         \n\</span>
-<span class='doccomment'>///         Image-Content: simple/chapter_image.png\n\</span>
-<span class='doccomment'>///         Content: simple/ctnt.html\n\</span>
-<span class='doccomment'>///         \n\</span>
-<span class='doccomment'>///         Author: nabijaczleweli\n\</span>
-<span class='doccomment'>///         Date: 2017-02-08T15:30:18+01:00\n\</span>
-<span class='doccomment'>///         Language: en-GB\n&quot;[..]),</span>
-<span class='doccomment'>///     Ok(vec![</span>
-<span class='doccomment'>///         BookElement::Name(&quot;Simple ePub demonstration&quot;.to_string()),</span>
-<span class='doccomment'>///         BookElement::Cover(PathBuf::from(&quot;cover.png&quot;)),</span>
-<span class='doccomment'>///         BookElement::ImageContent(PathBuf::from(&quot;simple/chapter_image.png&quot;)),</span>
-<span class='doccomment'>///         BookElement::Content(PathBuf::from(&quot;simple/ctnt.html&quot;)),</span>
-<span class='doccomment'>///         BookElement::Author(&quot;nabijaczleweli&quot;.to_string()),</span>
-<span class='doccomment'>///         BookElement::Date(DateTime::parse_from_rfc3339(&quot;2017-02-08T15:30:18+01:00&quot;).unwrap()),</span>
-<span class='doccomment'>///         BookElement::Language(&quot;en-GB&quot;.to_string())]));</span>
-<span class='doccomment'>/// # }</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_descriptor</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span><span class='op'>&gt;</span>(<span class='ident'>desc</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>from</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>BookElement</span><span class='op'>&gt;</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>elems</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>BookElement</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='prelude-ty'>Result</span>::<span class='ident'>from_iter</span>(<span class='ident'>BufReader</span>::<span class='ident'>new</span>(<span class='ident'>from</span>)
-        .<span class='ident'>lines</span>()
-        .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> {
-            <span class='ident'>r</span>.<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> {
-                <span class='ident'>Error</span>::<span class='ident'>Io</span> {
-                    <span class='ident'>desc</span>: <span class='ident'>desc</span>,
-                    <span class='ident'>op</span>: <span class='string'>&quot;read&quot;</span>,
-                    <span class='ident'>more</span>: <span class='prelude-val'>Some</span>(<span class='string'>&quot;line split&quot;</span>),
+<span class="doccomment">/// Parse the whole descriptor, stopping at the first encountered error</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Uses `BookElement::parse()`, so it inherits all errors from there,</span>
+<span class="doccomment">/// adding only the error from splitting lines.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Filters out non-describing lines.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # extern crate gen_epub_book;</span>
+<span class="doccomment">/// # extern crate chrono;</span>
+<span class="doccomment">/// # fn main() {</span>
+<span class="doccomment">/// # use chrono::DateTime;</span>
+<span class="doccomment">/// # use std::path::PathBuf;</span>
+<span class="doccomment">/// # use gen_epub_book::ops::{BookElement, parse_descriptor};</span>
+<span class="doccomment">/// assert_eq!(parse_descriptor(&quot;string input&quot;, &amp;mut &amp;b&quot;\</span>
+<span class="doccomment">///         This is a very simple thing that should prove unproblematic to parse\n\</span>
+<span class="doccomment">///         \n\</span>
+<span class="doccomment">///         Name: Simple ePub demonstration\n\</span>
+<span class="doccomment">///         Cover: cover.png\n\</span>
+<span class="doccomment">///         \n\</span>
+<span class="doccomment">///         Image-Content: simple/chapter_image.png\n\</span>
+<span class="doccomment">///         Content: simple/ctnt.html\n\</span>
+<span class="doccomment">///         \n\</span>
+<span class="doccomment">///         Author: nabijaczleweli\n\</span>
+<span class="doccomment">///         Date: 2017-02-08T15:30:18+01:00\n\</span>
+<span class="doccomment">///         Language: en-GB\n&quot;[..]),</span>
+<span class="doccomment">///     Ok(vec![</span>
+<span class="doccomment">///         BookElement::Name(&quot;Simple ePub demonstration&quot;.to_string()),</span>
+<span class="doccomment">///         BookElement::Cover(PathBuf::from(&quot;cover.png&quot;)),</span>
+<span class="doccomment">///         BookElement::ImageContent(PathBuf::from(&quot;simple/chapter_image.png&quot;)),</span>
+<span class="doccomment">///         BookElement::Content(PathBuf::from(&quot;simple/ctnt.html&quot;)),</span>
+<span class="doccomment">///         BookElement::Author(&quot;nabijaczleweli&quot;.to_string()),</span>
+<span class="doccomment">///         BookElement::Date(DateTime::parse_from_rfc3339(&quot;2017-02-08T15:30:18+01:00&quot;).unwrap()),</span>
+<span class="doccomment">///         BookElement::Language(&quot;en-GB&quot;.to_string())]));</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_descriptor</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">desc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">BookElement</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">elems</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BookElement</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="prelude-ty">Result</span>::<span class="ident">from_iter</span>(<span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">from</span>)
+        .<span class="ident">lines</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> {
+            <span class="ident">r</span>.<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> {
+                <span class="ident">Error</span>::<span class="ident">Io</span> {
+                    <span class="ident">desc</span>: <span class="ident">desc</span>,
+                    <span class="ident">op</span>: <span class="string">&quot;read&quot;</span>,
+                    <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;line split&quot;</span>),
                 }
             })
         })
-        .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>r</span><span class='op'>|</span> <span class='ident'>r</span>.<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>l</span><span class='op'>|</span> <span class='ident'>BookElement</span>::<span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='ident'>l</span>)))
-        .<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span>_<span class='op'>&gt;&gt;</span>()));
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">r</span><span class="op">|</span> <span class="ident">r</span>.<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">BookElement</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="ident">l</span>)))
+        .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;&gt;</span>()));
 
-    <span class='prelude-val'>Ok</span>(<span class='ident'>elems</span>.<span class='ident'>into_iter</span>().<span class='ident'>flat_map</span>(<span class='op'>|</span><span class='ident'>o</span><span class='op'>|</span> <span class='ident'>o</span>).<span class='ident'>collect</span>())
+    <span class="prelude-val">Ok</span>(<span class="ident">elems</span>.<span class="ident">into_iter</span>().<span class="ident">flat_map</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>).<span class="ident">collect</span>())
 }
 
-<span class='doccomment'>/// Find an ePub title line in the specified input stream.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The title line contains `&lt;!-- ePub title: &quot;TOC_NAME&quot; --&gt;`, where `TOC_NAME` is any string not containing the `&quot;` character.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # use gen_epub_book::ops::find_title;</span>
-<span class='doccomment'>/// assert_eq!(find_title(&amp;mut &amp;br#&quot;L1\nL &lt;!-- ePub title: &quot;TTL&quot; --&gt;2\nL3&quot;#[..]),</span>
-<span class='doccomment'>///            Some(&quot;TTL&quot;.to_string()));</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>find_title</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span><span class='op'>&gt;</span>(<span class='ident'>i</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-    <span class='macro'>lazy_static</span><span class='macro'>!</span> {
-        <span class='kw'>static</span> <span class='kw-2'>ref</span> <span class='ident'>TITLE_RGX</span>: <span class='ident'>Regex</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r#&quot;&lt;!-- ePub title: &quot;([^&quot;]+)&quot; --&gt;&quot;#</span>).<span class='ident'>unwrap</span>();
+<span class="doccomment">/// Find an ePub title line in the specified input stream.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The title line contains `&lt;!-- ePub title: &quot;TOC_NAME&quot; --&gt;`, where `TOC_NAME` is any string not containing the `&quot;` character.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use gen_epub_book::ops::find_title;</span>
+<span class="doccomment">/// assert_eq!(find_title(&amp;mut &amp;br#&quot;L1\nL &lt;!-- ePub title: &quot;TTL&quot; --&gt;2\nL3&quot;#[..]),</span>
+<span class="doccomment">///            Some(&quot;TTL&quot;.to_string()));</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">find_title</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">i</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="macro">lazy_static</span><span class="macro">!</span> {
+        <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">TITLE_RGX</span>: <span class="ident">Regex</span> <span class="op">=</span> <span class="ident">Regex</span>::<span class="ident">new</span>(<span class="string">r#&quot;&lt;!-- ePub title: &quot;([^&quot;]+)&quot; --&gt;&quot;#</span>).<span class="ident">unwrap</span>();
     }
 
-    <span class='ident'>BufReader</span>::<span class='ident'>new</span>(<span class='ident'>i</span>)
-        .<span class='ident'>lines</span>()
-        .<span class='ident'>find</span>(<span class='op'>|</span><span class='ident'>l</span><span class='op'>|</span> <span class='kw'>if</span> <span class='ident'>l</span>.<span class='ident'>is_ok</span>() {
-            <span class='ident'>TITLE_RGX</span>.<span class='ident'>is_match</span>(<span class='kw-2'>&amp;</span><span class='ident'>l</span>.<span class='ident'>as_ref</span>().<span class='ident'>unwrap</span>())
-        } <span class='kw'>else</span> {
-            <span class='bool-val'>false</span>
+    <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">i</span>)
+        .<span class="ident">lines</span>()
+        .<span class="ident">find</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">l</span>.<span class="ident">is_ok</span>() {
+            <span class="ident">TITLE_RGX</span>.<span class="ident">is_match</span>(<span class="kw-2">&amp;</span><span class="ident">l</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>())
+        } <span class="kw">else</span> {
+            <span class="bool-val">false</span>
         })
-        .<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>l</span><span class='op'>|</span> <span class='ident'>TITLE_RGX</span>.<span class='ident'>captures</span>(<span class='kw-2'>&amp;</span><span class='ident'>l</span>.<span class='ident'>unwrap</span>()).<span class='ident'>unwrap</span>().<span class='ident'>get</span>(<span class='number'>1</span>).<span class='ident'>unwrap</span>().<span class='ident'>as_str</span>().<span class='ident'>to_string</span>())
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> <span class="ident">TITLE_RGX</span>.<span class="ident">captures</span>(<span class="kw-2">&amp;</span><span class="ident">l</span>.<span class="ident">unwrap</span>()).<span class="ident">unwrap</span>().<span class="ident">get</span>(<span class="number">1</span>).<span class="ident">unwrap</span>().<span class="ident">as_str</span>().<span class="ident">to_string</span>())
 }
 </pre>
 </section>
@@ -302,7 +302,6 @@
         window.rootPath = "../../../";
         window.currentCrate = "gen_epub_book";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>

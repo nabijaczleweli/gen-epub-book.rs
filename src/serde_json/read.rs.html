@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.9/src/read.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.10/src/read.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>read.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -667,656 +667,630 @@
 <span id="622">622</span>
 <span id="623">623</span>
 <span id="624">624</span>
-<span id="625">625</span>
-<span id="626">626</span>
-<span id="627">627</span>
-<span id="628">628</span>
-<span id="629">629</span>
-<span id="630">630</span>
-<span id="631">631</span>
-<span id="632">632</span>
-<span id="633">633</span>
-<span id="634">634</span>
-<span id="635">635</span>
-<span id="636">636</span>
-<span id="637">637</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::{<span class='ident'>char</span>, <span class='ident'>cmp</span>, <span class='ident'>io</span>, <span class='ident'>str</span>};
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">char</span>, <span class="ident">cmp</span>, <span class="ident">io</span>, <span class="ident">str</span>};
 
-<span class='kw'>use</span> <span class='ident'>serde</span>::<span class='ident'>iter</span>::<span class='ident'>LineColIterator</span>;
+<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">iter</span>::<span class="ident">LineColIterator</span>;
 
-<span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>error</span>::{<span class='ident'>Error</span>, <span class='ident'>ErrorCode</span>, <span class='prelude-ty'>Result</span>};
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">error</span>::{<span class="ident">Error</span>, <span class="ident">ErrorCode</span>, <span class="prelude-ty">Result</span>};
 
-<span class='doccomment'>/// Trait used by the deserializer for iterating over input. This is manually</span>
-<span class='doccomment'>/// &quot;specialized&quot; for iterating over &amp;[u8]. Once feature(specialization) is</span>
-<span class='doccomment'>/// stable we can use actual specialization.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This trait is sealed and cannot be implemented for types outside of</span>
-<span class='doccomment'>/// `serde_json`.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Read</span>: <span class='ident'>private</span>::<span class='ident'>Sealed</span> {
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>;
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>peek</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>;
+<span class="doccomment">/// Trait used by the deserializer for iterating over input. This is manually</span>
+<span class="doccomment">/// &quot;specialized&quot; for iterating over &amp;[u8]. Once feature(specialization) is</span>
+<span class="doccomment">/// stable we can use actual specialization.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This trait is sealed and cannot be implemented for types outside of</span>
+<span class="doccomment">/// `serde_json`.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Read</span>: <span class="ident">private</span>::<span class="ident">Sealed</span> {
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>;
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">peek</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>;
 
-    <span class='doccomment'>/// Only valid after a call to peek(). Discards the peeked byte.</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>discard</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>);
+    <span class="doccomment">/// Only valid after a call to peek(). Discards the peeked byte.</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">discard</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>);
 
-    <span class='doccomment'>/// Position of the most recent call to next().</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The most recent call was probably next() and not peek(), but this method</span>
-    <span class='doccomment'>/// should try to return a sensible result if the most recent call was</span>
-    <span class='doccomment'>/// actually peek() because we don&#39;t always know.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Only called in case of an error, so performance is not important.</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span>;
+    <span class="doccomment">/// Position of the most recent call to next().</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The most recent call was probably next() and not peek(), but this method</span>
+    <span class="doccomment">/// should try to return a sensible result if the most recent call was</span>
+    <span class="doccomment">/// actually peek() because we don&#39;t always know.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Only called in case of an error, so performance is not important.</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span>;
 
-    <span class='doccomment'>/// Position of the most recent call to peek().</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The most recent call was probably peek() and not next(), but this method</span>
-    <span class='doccomment'>/// should try to return a sensible result if the most recent call was</span>
-    <span class='doccomment'>/// actually next() because we don&#39;t always know.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Only called in case of an error, so performance is not important.</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>peek_position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span>;
+    <span class="doccomment">/// Position of the most recent call to peek().</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The most recent call was probably peek() and not next(), but this method</span>
+    <span class="doccomment">/// should try to return a sensible result if the most recent call was</span>
+    <span class="doccomment">/// actually next() because we don&#39;t always know.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Only called in case of an error, so performance is not important.</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">peek_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span>;
 
-    <span class='doccomment'>/// Assumes the previous byte was a quotation mark. Parses a JSON-escaped</span>
-    <span class='doccomment'>/// string until the next quotation mark using the given scratch space if</span>
-    <span class='doccomment'>/// necessary. The scratch space is initially empty.</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='ident'>str</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Assumes the previous byte was a quotation mark. Parses a JSON-escaped</span>
+    <span class="doccomment">/// string until the next quotation mark using the given scratch space if</span>
+    <span class="doccomment">/// necessary. The scratch space is initially empty.</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">parse_str</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Assumes the previous byte was a quotation mark. Parses a JSON-escaped</span>
-    <span class='doccomment'>/// string until the next quotation mark using the given scratch space if</span>
-    <span class='doccomment'>/// necessary. The scratch space is initially empty.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This function returns the raw bytes in the string with escape sequences</span>
-    <span class='doccomment'>/// expanded but without performing unicode validation.</span>
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_str_raw</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+    <span class="doccomment">/// Assumes the previous byte was a quotation mark. Parses a JSON-escaped</span>
+    <span class="doccomment">/// string until the next quotation mark using the given scratch space if</span>
+    <span class="doccomment">/// necessary. The scratch space is initially empty.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function returns the raw bytes in the string with escape sequences</span>
+    <span class="doccomment">/// expanded but without performing unicode validation.</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">parse_str_raw</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]<span class="op">&gt;</span>;
 }
 
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Position</span> {
-    <span class='kw'>pub</span> <span class='ident'>line</span>: <span class='ident'>usize</span>,
-    <span class='kw'>pub</span> <span class='ident'>column</span>: <span class='ident'>usize</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Position</span> {
+    <span class="kw">pub</span> <span class="ident">line</span>: <span class="ident">usize</span>,
+    <span class="kw">pub</span> <span class="ident">column</span>: <span class="ident">usize</span>,
 }
 
-<span class='doccomment'>/// JSON input source that reads from an iterator of bytes.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IteratorRead</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>,
+<span class="doccomment">/// JSON input source that reads from an iterator of bytes.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IteratorRead</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>,
 {
-    <span class='ident'>iter</span>: <span class='ident'>LineColIterator</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span>,
-    <span class='doccomment'>/// Temporary storage of peeked byte.</span>
-    <span class='ident'>ch</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
+    <span class="ident">iter</span>: <span class="ident">LineColIterator</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Temporary storage of peeked byte.</span>
+    <span class="ident">ch</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 }
 
-<span class='doccomment'>/// JSON input source that reads from a std::io input stream.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>IoRead</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>R</span>: <span class='ident'>io</span>::<span class='ident'>Read</span>
+<span class="doccomment">/// JSON input source that reads from a std::io input stream.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IoRead</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">io</span>::<span class="ident">Read</span>
 {
-    <span class='ident'>delegate</span>: <span class='ident'>IteratorRead</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='ident'>Bytes</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;&gt;</span>,
+    <span class="ident">delegate</span>: <span class="ident">IteratorRead</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="ident">Bytes</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;&gt;</span>,
 }
 
-<span class='doccomment'>/// JSON input source that reads from a slice of bytes.</span>
-<span class='comment'>//</span>
-<span class='comment'>// This is more efficient than other iterators because peek() can be read-only</span>
-<span class='comment'>// and we can compute line/col position only if an error happens.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>SliceRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>slice</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>],
-    <span class='doccomment'>/// Index of the *next* byte that will be returned by next() or peek().</span>
-    <span class='ident'>index</span>: <span class='ident'>usize</span>,
+<span class="doccomment">/// JSON input source that reads from a slice of bytes.</span>
+<span class="comment">//</span>
+<span class="comment">// This is more efficient than other iterators because peek() can be read-only</span>
+<span class="comment">// and we can compute line/col position only if an error happens.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SliceRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
+    <span class="doccomment">/// Index of the *next* byte that will be returned by next() or peek().</span>
+    <span class="ident">index</span>: <span class="ident">usize</span>,
 }
 
-<span class='doccomment'>/// JSON input source that reads from a UTF-8 string.</span>
-<span class='comment'>//</span>
-<span class='comment'>// Able to elide UTF-8 checks by assuming that the input is valid UTF-8.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>StrRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='ident'>delegate</span>: <span class='ident'>SliceRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// JSON input source that reads from a UTF-8 string.</span>
+<span class="comment">//</span>
+<span class="comment">// Able to elide UTF-8 checks by assuming that the input is valid UTF-8.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StrRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">delegate</span>: <span class="ident">SliceRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
 }
 
-<span class='comment'>// Prevent users from implementing the Read trait.</span>
-<span class='kw'>mod</span> <span class='ident'>private</span> {
-    <span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Sealed</span> {}
+<span class="comment">// Prevent users from implementing the Read trait.</span>
+<span class="kw">mod</span> <span class="ident">private</span> {
+    <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Sealed</span> {}
 }
 
-<span class='comment'>//////////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">//////////////////////////////////////////////////////////////////////////////</span>
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span> <span class='ident'>IteratorRead</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>,
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span> <span class="ident">IteratorRead</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>,
 {
-    <span class='doccomment'>/// Create a JSON input source to read from an iterator of bytes.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>iter</span>: <span class='ident'>Iter</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>IteratorRead</span> {
-            <span class='ident'>iter</span>: <span class='ident'>LineColIterator</span>::<span class='ident'>new</span>(<span class='ident'>iter</span>),
-            <span class='ident'>ch</span>: <span class='prelude-val'>None</span>,
+    <span class="doccomment">/// Create a JSON input source to read from an iterator of bytes.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">iter</span>: <span class="ident">Iter</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">IteratorRead</span> {
+            <span class="ident">iter</span>: <span class="ident">LineColIterator</span>::<span class="ident">new</span>(<span class="ident">iter</span>),
+            <span class="ident">ch</span>: <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span> <span class='ident'>private</span>::<span class='ident'>Sealed</span> <span class='kw'>for</span> <span class='ident'>IteratorRead</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span> <span class="ident">private</span>::<span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">IteratorRead</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {}
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span> <span class='ident'>IteratorRead</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span> <span class="ident">IteratorRead</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>
 {
-    <span class='kw'>fn</span> <span class='ident'>parse_str_bytes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>T</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-        <span class='ident'>validate</span>: <span class='ident'>bool</span>,
-        <span class='ident'>result</span>: <span class='ident'>F</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='lifetime'>&#39;s</span>,
-              <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='self'>Self</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
+    <span class="kw">fn</span> <span class="ident">parse_str_bytes</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+        <span class="ident">validate</span>: <span class="ident">bool</span>,
+        <span class="ident">result</span>: <span class="ident">F</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;s</span>,
+              <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     {
-        <span class='kw'>loop</span> {
-            <span class='kw'>let</span> <span class='ident'>ch</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>next</span>()) {
-                <span class='prelude-val'>Some</span>(<span class='ident'>ch</span>) <span class='op'>=&gt;</span> <span class='ident'>ch</span>,
-                <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='ident'>error</span>(<span class='self'>self</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingString</span>);
-                }
-            };
-            <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>ESCAPE</span>[<span class='ident'>ch</span> <span class='kw'>as</span> <span class='ident'>usize</span>] {
-                <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='ident'>ch</span>);
-                <span class='kw'>continue</span>;
+        <span class="kw">loop</span> {
+            <span class="kw">let</span> <span class="ident">ch</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">next_or_eof</span>(<span class="self">self</span>));
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">ESCAPE</span>[<span class="ident">ch</span> <span class="kw">as</span> <span class="ident">usize</span>] {
+                <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="ident">ch</span>);
+                <span class="kw">continue</span>;
             }
-            <span class='kw'>match</span> <span class='ident'>ch</span> {
-                <span class='string'>b&#39;&quot;&#39;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>return</span> <span class='ident'>result</span>(<span class='self'>self</span>, <span class='ident'>scratch</span>);
+            <span class="kw">match</span> <span class="ident">ch</span> {
+                <span class="string">b&#39;&quot;&#39;</span> <span class="op">=&gt;</span> {
+                    <span class="kw">return</span> <span class="ident">result</span>(<span class="self">self</span>, <span class="ident">scratch</span>);
                 }
-                <span class='string'>b&#39;\\&#39;</span> <span class='op'>=&gt;</span> {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_escape</span>(<span class='self'>self</span>, <span class='ident'>scratch</span>));
+                <span class="string">b&#39;\\&#39;</span> <span class="op">=&gt;</span> {
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="ident">parse_escape</span>(<span class="self">self</span>, <span class="ident">scratch</span>));
                 }
-                _ <span class='op'>=&gt;</span> {
-                    <span class='kw'>if</span> <span class='ident'>validate</span> {
-                        <span class='kw'>return</span> <span class='ident'>error</span>(<span class='self'>self</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidUnicodeCodePoint</span>);
+                _ <span class="op">=&gt;</span> {
+                    <span class="kw">if</span> <span class="ident">validate</span> {
+                        <span class="kw">return</span> <span class="ident">error</span>(<span class="self">self</span>, <span class="ident">ErrorCode</span>::<span class="ident">InvalidUnicodeCodePoint</span>);
                     }
-                    <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='ident'>ch</span>);
+                    <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="ident">ch</span>);
                 }
             }
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span> <span class='ident'>Read</span> <span class='kw'>for</span> <span class='ident'>IteratorRead</span><span class='op'>&lt;</span><span class='ident'>Iter</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>Iter</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>,
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">IteratorRead</span><span class="op">&lt;</span><span class="ident">Iter</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">Iter</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>,
 {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>ch</span>.<span class='ident'>take</span>() {
-            <span class='prelude-val'>Some</span>(<span class='ident'>ch</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>ch</span>)),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>() {
-                    <span class='prelude-val'>Some</span>(<span class='prelude-val'>Err</span>(<span class='ident'>err</span>)) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>err</span>),
-                    <span class='prelude-val'>Some</span>(<span class='prelude-val'>Ok</span>(<span class='ident'>ch</span>)) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>ch</span>)),
-                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>),
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">ch</span>.<span class="ident">take</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">ch</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">ch</span>)),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>() {
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">ch</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">ch</span>)),
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
                 }
             }
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>peek</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>ch</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>ch</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>Some</span>(<span class='ident'>ch</span>)),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>next</span>() {
-                    <span class='prelude-val'>Some</span>(<span class='prelude-val'>Err</span>(<span class='ident'>err</span>)) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>err</span>),
-                    <span class='prelude-val'>Some</span>(<span class='prelude-val'>Ok</span>(<span class='ident'>ch</span>)) <span class='op'>=&gt;</span> {
-                        <span class='self'>self</span>.<span class='ident'>ch</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>ch</span>);
-                        <span class='prelude-val'>Ok</span>(<span class='self'>self</span>.<span class='ident'>ch</span>)
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">peek</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">ch</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">ch</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">ch</span>)),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="kw">match</span> <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">next</span>() {
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
+                    <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">ch</span>)) <span class="op">=&gt;</span> {
+                        <span class="self">self</span>.<span class="ident">ch</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ch</span>);
+                        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">ch</span>)
                     }
-                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Ok</span>(<span class='prelude-val'>None</span>),
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
                 }
             }
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>discard</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>ch</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">discard</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">ch</span> <span class="op">=</span> <span class="prelude-val">None</span>;
     }
 
-    <span class='kw'>fn</span> <span class='ident'>position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='ident'>Position</span> {
-            <span class='ident'>line</span>: <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>line</span>(),
-            <span class='ident'>column</span>: <span class='self'>self</span>.<span class='ident'>iter</span>.<span class='ident'>col</span>(),
+    <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="ident">Position</span> {
+            <span class="ident">line</span>: <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">line</span>(),
+            <span class="ident">column</span>: <span class="self">self</span>.<span class="ident">iter</span>.<span class="ident">col</span>(),
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>peek_position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='comment'>// The LineColIterator updates its position during peek() so it has the</span>
-        <span class='comment'>// right one here.</span>
-        <span class='self'>self</span>.<span class='ident'>position</span>()
+    <span class="kw">fn</span> <span class="ident">peek_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="comment">// The LineColIterator updates its position during peek() so it has the</span>
+        <span class="comment">// right one here.</span>
+        <span class="self">self</span>.<span class="ident">position</span>()
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>parse_str_bytes</span>(<span class='ident'>scratch</span>, <span class='bool-val'>true</span>, <span class='ident'>as_str</span>)
+    <span class="kw">fn</span> <span class="ident">parse_str</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">parse_str_bytes</span>(<span class="ident">scratch</span>, <span class="bool-val">true</span>, <span class="ident">as_str</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_str_raw</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>parse_str_bytes</span>(<span class='ident'>scratch</span>, <span class='bool-val'>false</span>, <span class='op'>|</span>_, <span class='ident'>bytes</span><span class='op'>|</span> <span class='prelude-val'>Ok</span>(<span class='ident'>bytes</span>))
+    <span class="kw">fn</span> <span class="ident">parse_str_raw</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">parse_str_bytes</span>(<span class="ident">scratch</span>, <span class="bool-val">false</span>, <span class="op">|</span>_, <span class="ident">bytes</span><span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="ident">bytes</span>))
     }
 }
 
-<span class='comment'>//////////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">//////////////////////////////////////////////////////////////////////////////</span>
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span> <span class='ident'>IoRead</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>R</span>: <span class='ident'>io</span>::<span class='ident'>Read</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">IoRead</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">io</span>::<span class="ident">Read</span>
 {
-    <span class='doccomment'>/// Create a JSON input source to read from a std::io input stream.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>reader</span>: <span class='ident'>R</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>IoRead</span> {
-            <span class='ident'>delegate</span>: <span class='ident'>IteratorRead</span>::<span class='ident'>new</span>(<span class='ident'>reader</span>.<span class='ident'>bytes</span>()),
+    <span class="doccomment">/// Create a JSON input source to read from a std::io input stream.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">reader</span>: <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">IoRead</span> {
+            <span class="ident">delegate</span>: <span class="ident">IteratorRead</span>::<span class="ident">new</span>(<span class="ident">reader</span>.<span class="ident">bytes</span>()),
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span> <span class='ident'>private</span>::<span class='ident'>Sealed</span> <span class='kw'>for</span> <span class='ident'>IoRead</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>R</span>: <span class='ident'>io</span>::<span class='ident'>Read</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">private</span>::<span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">IoRead</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">io</span>::<span class="ident">Read</span> {}
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span> <span class='ident'>Read</span> <span class='kw'>for</span> <span class='ident'>IoRead</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>R</span>: <span class='ident'>io</span>::<span class='ident'>Read</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">IoRead</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">io</span>::<span class="ident">Read</span>
 {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>next</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">next</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>peek</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>peek</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">peek</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">peek</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>discard</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>discard</span>();
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">discard</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">discard</span>();
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>position</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">position</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>peek_position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>peek_position</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">peek_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">peek_position</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>parse_str</span>(<span class='ident'>scratch</span>)
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_str</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">parse_str</span>(<span class="ident">scratch</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_str_raw</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>parse_str_raw</span>(<span class='ident'>scratch</span>)
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">parse_str_raw</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">parse_str_raw</span>(<span class="ident">scratch</span>)
     }
 }
 
-<span class='comment'>//////////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">//////////////////////////////////////////////////////////////////////////////</span>
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>SliceRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create a JSON input source to read from a slice of bytes.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>slice</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>SliceRead</span> {
-            <span class='ident'>slice</span>: <span class='ident'>slice</span>,
-            <span class='ident'>index</span>: <span class='number'>0</span>,
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">SliceRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a JSON input source to read from a slice of bytes.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">SliceRead</span> {
+            <span class="ident">slice</span>: <span class="ident">slice</span>,
+            <span class="ident">index</span>: <span class="number">0</span>,
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>position_of_index</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>i</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>Position</span> {
-            <span class='ident'>line</span>: <span class='number'>1</span>,
-            <span class='ident'>column</span>: <span class='number'>0</span>,
+    <span class="kw">fn</span> <span class="ident">position_of_index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">Position</span> {
+            <span class="ident">line</span>: <span class="number">1</span>,
+            <span class="ident">column</span>: <span class="number">0</span>,
         };
-        <span class='kw'>for</span> <span class='ident'>ch</span> <span class='kw'>in</span> <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>slice</span>[..<span class='ident'>i</span>] {
-            <span class='kw'>match</span> <span class='kw-2'>*</span><span class='ident'>ch</span> {
-                <span class='string'>b&#39;\n&#39;</span> <span class='op'>=&gt;</span> {
-                    <span class='ident'>pos</span>.<span class='ident'>line</span> <span class='op'>+=</span> <span class='number'>1</span>;
-                    <span class='ident'>pos</span>.<span class='ident'>column</span> <span class='op'>=</span> <span class='number'>0</span>;
+        <span class="kw">for</span> <span class="ident">ch</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slice</span>[..<span class="ident">i</span>] {
+            <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">ch</span> {
+                <span class="string">b&#39;\n&#39;</span> <span class="op">=&gt;</span> {
+                    <span class="ident">pos</span>.<span class="ident">line</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="ident">pos</span>.<span class="ident">column</span> <span class="op">=</span> <span class="number">0</span>;
                 }
-                _ <span class='op'>=&gt;</span> {
-                    <span class='ident'>pos</span>.<span class='ident'>column</span> <span class='op'>+=</span> <span class='number'>1</span>;
+                _ <span class="op">=&gt;</span> {
+                    <span class="ident">pos</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="number">1</span>;
                 }
             }
         }
-        <span class='ident'>pos</span>
+        <span class="ident">pos</span>
     }
 
-    <span class='doccomment'>/// The big optimization here over IteratorRead is that if the string</span>
-    <span class='doccomment'>/// contains no backslash escape sequences, the returned &amp;str is a slice of</span>
-    <span class='doccomment'>/// the raw JSON data so we avoid copying into the scratch space.</span>
-    <span class='kw'>fn</span> <span class='ident'>parse_str_bytes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>T</span>, <span class='ident'>F</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-        <span class='ident'>validate</span>: <span class='ident'>bool</span>,
-        <span class='ident'>result</span>: <span class='ident'>F</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='lifetime'>&#39;s</span>,
-              <span class='ident'>F</span>: <span class='ident'>FnOnce</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='self'>Self</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span>,
+    <span class="doccomment">/// The big optimization here over IteratorRead is that if the string</span>
+    <span class="doccomment">/// contains no backslash escape sequences, the returned &amp;str is a slice of</span>
+    <span class="doccomment">/// the raw JSON data so we avoid copying into the scratch space.</span>
+    <span class="kw">fn</span> <span class="ident">parse_str_bytes</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">T</span>, <span class="ident">F</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+        <span class="ident">validate</span>: <span class="ident">bool</span>,
+        <span class="ident">result</span>: <span class="ident">F</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="lifetime">&#39;s</span>,
+              <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="self">Self</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
     {
-        <span class='comment'>// Index of the first byte not yet copied into the scratch space.</span>
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>start</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>index</span>;
+        <span class="comment">// Index of the first byte not yet copied into the scratch space.</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">index</span>;
 
-        <span class='kw'>loop</span> {
-            <span class='kw'>while</span> <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>slice</span>.<span class='ident'>len</span>() <span class='op'>&amp;&amp;</span>
-                  <span class='op'>!</span><span class='ident'>ESCAPE</span>[<span class='self'>self</span>.<span class='ident'>slice</span>[<span class='self'>self</span>.<span class='ident'>index</span>] <span class='kw'>as</span> <span class='ident'>usize</span>] {
-                <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
+        <span class="kw">loop</span> {
+            <span class="kw">while</span> <span class="self">self</span>.<span class="ident">index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span>
+                  <span class="op">!</span><span class="ident">ESCAPE</span>[<span class="self">self</span>.<span class="ident">slice</span>[<span class="self">self</span>.<span class="ident">index</span>] <span class="kw">as</span> <span class="ident">usize</span>] {
+                <span class="self">self</span>.<span class="ident">index</span> <span class="op">+=</span> <span class="number">1</span>;
             }
-            <span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>==</span> <span class='self'>self</span>.<span class='ident'>slice</span>.<span class='ident'>len</span>() {
-                <span class='kw'>return</span> <span class='ident'>error</span>(<span class='self'>self</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingString</span>);
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">index</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>() {
+                <span class="kw">return</span> <span class="ident">error</span>(<span class="self">self</span>, <span class="ident">ErrorCode</span>::<span class="ident">EofWhileParsingString</span>);
             }
-            <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>slice</span>[<span class='self'>self</span>.<span class='ident'>index</span>] {
-                <span class='string'>b&#39;&quot;&#39;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>let</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>scratch</span>.<span class='ident'>is_empty</span>() {
-                        <span class='comment'>// Fast path: return a slice of the raw JSON without any</span>
-                        <span class='comment'>// copying.</span>
-                        <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>slice</span>[<span class='ident'>start</span>..<span class='self'>self</span>.<span class='ident'>index</span>]
-                    } <span class='kw'>else</span> {
-                        <span class='ident'>scratch</span>.<span class='ident'>extend_from_slice</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>slice</span>[<span class='ident'>start</span> .. <span class='self'>self</span>.<span class='ident'>index</span>]);
-                        <span class='comment'>// &quot;as &amp;[u8]&quot; is required for rustc 1.8.0</span>
-                        <span class='ident'>scratch</span> <span class='kw'>as</span> <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]
+            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">slice</span>[<span class="self">self</span>.<span class="ident">index</span>] {
+                <span class="string">b&#39;&quot;&#39;</span> <span class="op">=&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">string</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">scratch</span>.<span class="ident">is_empty</span>() {
+                        <span class="comment">// Fast path: return a slice of the raw JSON without any</span>
+                        <span class="comment">// copying.</span>
+                        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slice</span>[<span class="ident">start</span>..<span class="self">self</span>.<span class="ident">index</span>]
+                    } <span class="kw">else</span> {
+                        <span class="ident">scratch</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slice</span>[<span class="ident">start</span> .. <span class="self">self</span>.<span class="ident">index</span>]);
+                        <span class="comment">// &quot;as &amp;[u8]&quot; is required for rustc 1.8.0</span>
+                        <span class="ident">scratch</span> <span class="kw">as</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]
                     };
-                    <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
-                    <span class='kw'>return</span> <span class='ident'>result</span>(<span class='self'>self</span>, <span class='ident'>string</span>);
+                    <span class="self">self</span>.<span class="ident">index</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="kw">return</span> <span class="ident">result</span>(<span class="self">self</span>, <span class="ident">string</span>);
                 }
-                <span class='string'>b&#39;\\&#39;</span> <span class='op'>=&gt;</span> {
-                    <span class='ident'>scratch</span>.<span class='ident'>extend_from_slice</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>slice</span>[<span class='ident'>start</span>..<span class='self'>self</span>.<span class='ident'>index</span>]);
-                    <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_escape</span>(<span class='self'>self</span>, <span class='ident'>scratch</span>));
-                    <span class='ident'>start</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>index</span>;
+                <span class="string">b&#39;\\&#39;</span> <span class="op">=&gt;</span> {
+                    <span class="ident">scratch</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">slice</span>[<span class="ident">start</span>..<span class="self">self</span>.<span class="ident">index</span>]);
+                    <span class="self">self</span>.<span class="ident">index</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="ident">parse_escape</span>(<span class="self">self</span>, <span class="ident">scratch</span>));
+                    <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">index</span>;
                 }
-                _ <span class='op'>=&gt;</span> {
-                    <span class='kw'>if</span> <span class='ident'>validate</span> {
-                        <span class='kw'>return</span> <span class='ident'>error</span>(<span class='self'>self</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidUnicodeCodePoint</span>);
+                _ <span class="op">=&gt;</span> {
+                    <span class="kw">if</span> <span class="ident">validate</span> {
+                        <span class="kw">return</span> <span class="ident">error</span>(<span class="self">self</span>, <span class="ident">ErrorCode</span>::<span class="ident">InvalidUnicodeCodePoint</span>);
                     }
-                    <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
+                    <span class="self">self</span>.<span class="ident">index</span> <span class="op">+=</span> <span class="number">1</span>;
                 }
             }
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>private</span>::<span class='ident'>Sealed</span> <span class='kw'>for</span> <span class='ident'>SliceRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">private</span>::<span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">SliceRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {}
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Read</span> <span class='kw'>for</span> <span class='ident'>SliceRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-        <span class='comment'>// `Ok(self.slice.get(self.index).map(|ch| { self.index += 1; *ch }))`</span>
-        <span class='comment'>// is about 10% slower.</span>
-        <span class='prelude-val'>Ok</span>(<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>slice</span>.<span class='ident'>len</span>() {
-            <span class='kw'>let</span> <span class='ident'>ch</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>slice</span>[<span class='self'>self</span>.<span class='ident'>index</span>];
-            <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
-            <span class='prelude-val'>Some</span>(<span class='ident'>ch</span>)
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">SliceRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="comment">// `Ok(self.slice.get(self.index).map(|ch| { self.index += 1; *ch }))`</span>
+        <span class="comment">// is about 10% slower.</span>
+        <span class="prelude-val">Ok</span>(<span class="kw">if</span> <span class="self">self</span>.<span class="ident">index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>() {
+            <span class="kw">let</span> <span class="ident">ch</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">slice</span>[<span class="self">self</span>.<span class="ident">index</span>];
+            <span class="self">self</span>.<span class="ident">index</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="prelude-val">Some</span>(<span class="ident">ch</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         })
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>peek</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-        <span class='comment'>// `Ok(self.slice.get(self.index).map(|ch| *ch))` is about 10% slower</span>
-        <span class='comment'>// for some reason.</span>
-        <span class='prelude-val'>Ok</span>(<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>&lt;</span> <span class='self'>self</span>.<span class='ident'>slice</span>.<span class='ident'>len</span>() {
-            <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>slice</span>[<span class='self'>self</span>.<span class='ident'>index</span>])
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">peek</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="comment">// `Ok(self.slice.get(self.index).map(|ch| *ch))` is about 10% slower</span>
+        <span class="comment">// for some reason.</span>
+        <span class="prelude-val">Ok</span>(<span class="kw">if</span> <span class="self">self</span>.<span class="ident">index</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>() {
+            <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">slice</span>[<span class="self">self</span>.<span class="ident">index</span>])
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         })
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>discard</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>+=</span> <span class='number'>1</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">discard</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">index</span> <span class="op">+=</span> <span class="number">1</span>;
     }
 
-    <span class='kw'>fn</span> <span class='ident'>position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='self'>self</span>.<span class='ident'>position_of_index</span>(<span class='self'>self</span>.<span class='ident'>index</span>)
+    <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="self">self</span>.<span class="ident">position_of_index</span>(<span class="self">self</span>.<span class="ident">index</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>peek_position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='comment'>// Cap it at slice.len() just in case the most recent call was next()</span>
-        <span class='comment'>// and it returned the last byte.</span>
-        <span class='self'>self</span>.<span class='ident'>position_of_index</span>(<span class='ident'>cmp</span>::<span class='ident'>min</span>(<span class='self'>self</span>.<span class='ident'>slice</span>.<span class='ident'>len</span>(), <span class='self'>self</span>.<span class='ident'>index</span> <span class='op'>+</span> <span class='number'>1</span>))
+    <span class="kw">fn</span> <span class="ident">peek_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="comment">// Cap it at slice.len() just in case the most recent call was next()</span>
+        <span class="comment">// and it returned the last byte.</span>
+        <span class="self">self</span>.<span class="ident">position_of_index</span>(<span class="ident">cmp</span>::<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">slice</span>.<span class="ident">len</span>(), <span class="self">self</span>.<span class="ident">index</span> <span class="op">+</span> <span class="number">1</span>))
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>parse_str_bytes</span>(<span class='ident'>scratch</span>, <span class='bool-val'>true</span>, <span class='ident'>as_str</span>)
+    <span class="kw">fn</span> <span class="ident">parse_str</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">parse_str_bytes</span>(<span class="ident">scratch</span>, <span class="bool-val">true</span>, <span class="ident">as_str</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_str_raw</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>parse_str_bytes</span>(<span class='ident'>scratch</span>, <span class='bool-val'>false</span>, <span class='op'>|</span>_, <span class='ident'>bytes</span><span class='op'>|</span> <span class='prelude-val'>Ok</span>(<span class='ident'>bytes</span>))
+    <span class="kw">fn</span> <span class="ident">parse_str_raw</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">parse_str_bytes</span>(<span class="ident">scratch</span>, <span class="bool-val">false</span>, <span class="op">|</span>_, <span class="ident">bytes</span><span class="op">|</span> <span class="prelude-val">Ok</span>(<span class="ident">bytes</span>))
     }
 
 }
 
-<span class='comment'>//////////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">//////////////////////////////////////////////////////////////////////////////</span>
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>StrRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Create a JSON input source to read from a UTF-8 string.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
-        <span class='ident'>StrRead</span> {
-            <span class='ident'>delegate</span>: <span class='ident'>SliceRead</span>::<span class='ident'>new</span>(<span class='ident'>s</span>.<span class='ident'>as_bytes</span>()),
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">StrRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a JSON input source to read from a UTF-8 string.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">StrRead</span> {
+            <span class="ident">delegate</span>: <span class="ident">SliceRead</span>::<span class="ident">new</span>(<span class="ident">s</span>.<span class="ident">as_bytes</span>()),
         }
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>private</span>::<span class='ident'>Sealed</span> <span class='kw'>for</span> <span class='ident'>StrRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">private</span>::<span class="ident">Sealed</span> <span class="kw">for</span> <span class="ident">StrRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {}
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Read</span> <span class='kw'>for</span> <span class='ident'>StrRead</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>next</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">StrRead</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">next</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>peek</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>peek</span>()
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">peek</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">peek</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>discard</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>discard</span>();
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">discard</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">discard</span>();
     }
 
-    <span class='kw'>fn</span> <span class='ident'>position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>position</span>()
+    <span class="kw">fn</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">position</span>()
     }
 
-    <span class='kw'>fn</span> <span class='ident'>peek_position</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Position</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>peek_position</span>()
+    <span class="kw">fn</span> <span class="ident">peek_position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Position</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">peek_position</span>()
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>parse_str_bytes</span>(<span class='ident'>scratch</span>, <span class='bool-val'>true</span>, <span class='op'>|</span>_, <span class='ident'>bytes</span><span class='op'>|</span> {
-            <span class='comment'>// The input is assumed to be valid UTF-8 and the \u-escapes are</span>
-            <span class='comment'>// checked along the way, so don&#39;t need to check here.</span>
-            <span class='prelude-val'>Ok</span>(<span class='kw'>unsafe</span> { <span class='ident'>str</span>::<span class='ident'>from_utf8_unchecked</span>(<span class='ident'>bytes</span>) })
+    <span class="kw">fn</span> <span class="ident">parse_str</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">parse_str_bytes</span>(<span class="ident">scratch</span>, <span class="bool-val">true</span>, <span class="op">|</span>_, <span class="ident">bytes</span><span class="op">|</span> {
+            <span class="comment">// The input is assumed to be valid UTF-8 and the \u-escapes are</span>
+            <span class="comment">// checked along the way, so don&#39;t need to check here.</span>
+            <span class="prelude-val">Ok</span>(<span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">bytes</span>) })
         })
     }
 
-    <span class='kw'>fn</span> <span class='ident'>parse_str_raw</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span><span class='op'>&gt;</span>(
-        <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='self'>self</span>,
-        <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>
-    ) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>delegate</span>.<span class='ident'>parse_str_raw</span>(<span class='ident'>scratch</span>)
+    <span class="kw">fn</span> <span class="ident">parse_str_raw</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">delegate</span>.<span class="ident">parse_str_raw</span>(<span class="ident">scratch</span>)
     }
 }
 
-<span class='comment'>//////////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">//////////////////////////////////////////////////////////////////////////////</span>
 
-<span class='kw'>const</span> <span class='ident'>CT</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='bool-val'>true</span>; <span class='comment'>// control character \x00...\x1F</span>
-<span class='kw'>const</span> <span class='ident'>QU</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='bool-val'>true</span>; <span class='comment'>// quote \x22</span>
-<span class='kw'>const</span> <span class='ident'>BS</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='bool-val'>true</span>; <span class='comment'>// backslash \x5C</span>
-<span class='kw'>const</span> <span class='ident'>O</span>: <span class='ident'>bool</span> <span class='op'>=</span> <span class='bool-val'>false</span>; <span class='comment'>// allow unescaped</span>
+<span class="kw">const</span> <span class="ident">CT</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="bool-val">true</span>; <span class="comment">// control character \x00...\x1F</span>
+<span class="kw">const</span> <span class="ident">QU</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="bool-val">true</span>; <span class="comment">// quote \x22</span>
+<span class="kw">const</span> <span class="ident">BS</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="bool-val">true</span>; <span class="comment">// backslash \x5C</span>
+<span class="kw">const</span> <span class="ident">O</span>: <span class="ident">bool</span> <span class="op">=</span> <span class="bool-val">false</span>; <span class="comment">// allow unescaped</span>
 
-<span class='comment'>// Lookup table of bytes that must be escaped. A value of true at index i means</span>
-<span class='comment'>// that byte i requires an escape sequence in the input.</span>
-<span class='attribute'>#[<span class='ident'>cfg_attr</span>(<span class='ident'>rustfmt</span>, <span class='ident'>rustfmt_skip</span>)]</span>
-<span class='kw'>static</span> <span class='ident'>ESCAPE</span>: [<span class='ident'>bool</span>; <span class='number'>256</span>] <span class='op'>=</span> [
-    <span class='comment'>//   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F</span>
-    <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='comment'>// 0</span>
-    <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='ident'>CT</span>, <span class='comment'>// 1</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='ident'>QU</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// 2</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// 3</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// 4</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='ident'>BS</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// 5</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// 6</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// 7</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// 8</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// 9</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// A</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// B</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// C</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// D</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// E</span>
-     <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>,  <span class='ident'>O</span>, <span class='comment'>// F</span>
+<span class="comment">// Lookup table of bytes that must be escaped. A value of true at index i means</span>
+<span class="comment">// that byte i requires an escape sequence in the input.</span>
+<span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">rustfmt</span>, <span class="ident">rustfmt_skip</span>)]</span>
+<span class="kw">static</span> <span class="ident">ESCAPE</span>: [<span class="ident">bool</span>; <span class="number">256</span>] <span class="op">=</span> [
+    <span class="comment">//   1   2   3   4   5   6   7   8   9   A   B   C   D   E   F</span>
+    <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="comment">// 0</span>
+    <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="ident">CT</span>, <span class="comment">// 1</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>, <span class="ident">QU</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// 2</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// 3</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// 4</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="ident">BS</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// 5</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// 6</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// 7</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// 8</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// 9</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// A</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// B</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// C</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// D</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// E</span>
+     <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>,  <span class="ident">O</span>, <span class="comment">// F</span>
 ];
 
-<span class='kw'>fn</span> <span class='ident'>error</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span>, <span class='ident'>T</span><span class='op'>&gt;</span>(<span class='ident'>read</span>: <span class='kw-2'>&amp;</span><span class='ident'>R</span>, <span class='ident'>reason</span>: <span class='ident'>ErrorCode</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>pos</span> <span class='op'>=</span> <span class='ident'>read</span>.<span class='ident'>position</span>();
-    <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>syntax</span>(<span class='ident'>reason</span>, <span class='ident'>pos</span>.<span class='ident'>line</span>, <span class='ident'>pos</span>.<span class='ident'>column</span>))
+<span class="kw">fn</span> <span class="ident">next_or_eof</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">read</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">read</span>.<span class="ident">next</span>()) {
+        <span class="prelude-val">Some</span>(<span class="ident">b</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">b</span>),
+        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">EofWhileParsingString</span>),
+    }
 }
 
-<span class='kw'>fn</span> <span class='ident'>as_str</span><span class='op'>&lt;</span><span class='lifetime'>&#39;s</span>, <span class='ident'>R</span>: <span class='ident'>Read</span><span class='op'>&gt;</span>(<span class='ident'>read</span>: <span class='kw-2'>&amp;</span><span class='ident'>R</span>, <span class='ident'>slice</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> [<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;s</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
-    <span class='ident'>str</span>::<span class='ident'>from_utf8</span>(<span class='ident'>slice</span>)
-        .<span class='ident'>or_else</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidUnicodeCodePoint</span>))
+<span class="kw">fn</span> <span class="ident">error</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span>, <span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">read</span>: <span class="kw-2">&amp;</span><span class="ident">R</span>, <span class="ident">reason</span>: <span class="ident">ErrorCode</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">pos</span> <span class="op">=</span> <span class="ident">read</span>.<span class="ident">position</span>();
+    <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">syntax</span>(<span class="ident">reason</span>, <span class="ident">pos</span>.<span class="ident">line</span>, <span class="ident">pos</span>.<span class="ident">column</span>))
 }
 
-<span class='doccomment'>/// Parses a JSON escape sequence and appends it into the scratch space. Assumes</span>
-<span class='doccomment'>/// the previous byte read was a backslash.</span>
-<span class='kw'>fn</span> <span class='ident'>parse_escape</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span><span class='op'>&gt;</span>(<span class='ident'>read</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span>, <span class='ident'>scratch</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='ident'>ch</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>()) {
-        <span class='prelude-val'>Some</span>(<span class='ident'>ch</span>) <span class='op'>=&gt;</span> <span class='ident'>ch</span>,
-        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-            <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingString</span>);
-        }
-    };
+<span class="kw">fn</span> <span class="ident">as_str</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">read</span>: <span class="kw-2">&amp;</span><span class="ident">R</span>, <span class="ident">slice</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">str</span><span class="op">&gt;</span> {
+    <span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="ident">slice</span>)
+        .<span class="ident">or_else</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">InvalidUnicodeCodePoint</span>))
+}
 
-    <span class='kw'>match</span> <span class='ident'>ch</span> {
-        <span class='string'>b&#39;&quot;&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='string'>b&#39;&quot;&#39;</span>),
-        <span class='string'>b&#39;\\&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='string'>b&#39;\\&#39;</span>),
-        <span class='string'>b&#39;/&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='string'>b&#39;/&#39;</span>),
-        <span class='string'>b&#39;b&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='string'>b&#39;\x08&#39;</span>),
-        <span class='string'>b&#39;f&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='string'>b&#39;\x0c&#39;</span>),
-        <span class='string'>b&#39;n&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='string'>b&#39;\n&#39;</span>),
-        <span class='string'>b&#39;r&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='string'>b&#39;\r&#39;</span>),
-        <span class='string'>b&#39;t&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>scratch</span>.<span class='ident'>push</span>(<span class='string'>b&#39;\t&#39;</span>),
-        <span class='string'>b&#39;u&#39;</span> <span class='op'>=&gt;</span> {
-            <span class='kw'>let</span> <span class='ident'>c</span> <span class='op'>=</span>
-                <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>decode_hex_escape</span>(<span class='ident'>read</span>)) {
-                    <span class='number'>0xDC00</span>...<span class='number'>0xDFFF</span> <span class='op'>=&gt;</span> {
-                        <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>LoneLeadingSurrogateInHexEscape</span>);
+<span class="doccomment">/// Parses a JSON escape sequence and appends it into the scratch space. Assumes</span>
+<span class="doccomment">/// the previous byte read was a backslash.</span>
+<span class="kw">fn</span> <span class="ident">parse_escape</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">read</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>, <span class="ident">scratch</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">ch</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">next_or_eof</span>(<span class="ident">read</span>));
+
+    <span class="kw">match</span> <span class="ident">ch</span> {
+        <span class="string">b&#39;&quot;&#39;</span> <span class="op">=&gt;</span> <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="string">b&#39;&quot;&#39;</span>),
+        <span class="string">b&#39;\\&#39;</span> <span class="op">=&gt;</span> <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="string">b&#39;\\&#39;</span>),
+        <span class="string">b&#39;/&#39;</span> <span class="op">=&gt;</span> <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="string">b&#39;/&#39;</span>),
+        <span class="string">b&#39;b&#39;</span> <span class="op">=&gt;</span> <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="string">b&#39;\x08&#39;</span>),
+        <span class="string">b&#39;f&#39;</span> <span class="op">=&gt;</span> <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="string">b&#39;\x0c&#39;</span>),
+        <span class="string">b&#39;n&#39;</span> <span class="op">=&gt;</span> <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="string">b&#39;\n&#39;</span>),
+        <span class="string">b&#39;r&#39;</span> <span class="op">=&gt;</span> <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="string">b&#39;\r&#39;</span>),
+        <span class="string">b&#39;t&#39;</span> <span class="op">=&gt;</span> <span class="ident">scratch</span>.<span class="ident">push</span>(<span class="string">b&#39;\t&#39;</span>),
+        <span class="string">b&#39;u&#39;</span> <span class="op">=&gt;</span> {
+            <span class="kw">let</span> <span class="ident">c</span> <span class="op">=</span>
+                <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">decode_hex_escape</span>(<span class="ident">read</span>)) {
+                    <span class="number">0xDC00</span>...<span class="number">0xDFFF</span> <span class="op">=&gt;</span> {
+                        <span class="kw">return</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">LoneLeadingSurrogateInHexEscape</span>);
                     }
 
-                    <span class='comment'>// Non-BMP characters are encoded as a sequence of</span>
-                    <span class='comment'>// two hex escapes, representing UTF-16 surrogates.</span>
-                    <span class='ident'>n1</span> @ <span class='number'>0xD800</span>...<span class='number'>0xDBFF</span> <span class='op'>=&gt;</span> {
-                        <span class='kw'>match</span> (<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>()),
-                               <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>())) {
-                            (<span class='prelude-val'>Some</span>(<span class='string'>b&#39;\\&#39;</span>), <span class='prelude-val'>Some</span>(<span class='string'>b&#39;u&#39;</span>)) <span class='op'>=&gt;</span> (),
-                            _ <span class='op'>=&gt;</span> {
-                                <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>UnexpectedEndOfHexEscape</span>);
-                            }
+                    <span class="comment">// Non-BMP characters are encoded as a sequence of</span>
+                    <span class="comment">// two hex escapes, representing UTF-16 surrogates.</span>
+                    <span class="ident">n1</span> @ <span class="number">0xD800</span>...<span class="number">0xDBFF</span> <span class="op">=&gt;</span> {
+                        <span class="kw">if</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">next_or_eof</span>(<span class="ident">read</span>)) <span class="op">!=</span> <span class="string">b&#39;\\&#39;</span> {
+                            <span class="kw">return</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">UnexpectedEndOfHexEscape</span>);
+                        }
+                        <span class="kw">if</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">next_or_eof</span>(<span class="ident">read</span>)) <span class="op">!=</span> <span class="string">b&#39;u&#39;</span> {
+                            <span class="kw">return</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">UnexpectedEndOfHexEscape</span>);
                         }
 
-                        <span class='kw'>let</span> <span class='ident'>n2</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>decode_hex_escape</span>(<span class='ident'>read</span>));
+                        <span class="kw">let</span> <span class="ident">n2</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">decode_hex_escape</span>(<span class="ident">read</span>));
 
-                        <span class='kw'>if</span> <span class='ident'>n2</span> <span class='op'>&lt;</span> <span class='number'>0xDC00</span> <span class='op'>||</span> <span class='ident'>n2</span> <span class='op'>&gt;</span> <span class='number'>0xDFFF</span> {
-                            <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>LoneLeadingSurrogateInHexEscape</span>);
+                        <span class="kw">if</span> <span class="ident">n2</span> <span class="op">&lt;</span> <span class="number">0xDC00</span> <span class="op">||</span> <span class="ident">n2</span> <span class="op">&gt;</span> <span class="number">0xDFFF</span> {
+                            <span class="kw">return</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">LoneLeadingSurrogateInHexEscape</span>);
                         }
 
-                        <span class='kw'>let</span> <span class='ident'>n</span> <span class='op'>=</span> (((<span class='ident'>n1</span> <span class='op'>-</span> <span class='number'>0xD800</span>) <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>&lt;&lt;</span> <span class='number'>10</span> <span class='op'>|</span>
-                                 (<span class='ident'>n2</span> <span class='op'>-</span> <span class='number'>0xDC00</span>) <span class='kw'>as</span> <span class='ident'>u32</span>) <span class='op'>+</span>
-                                <span class='number'>0x1_0000</span>;
+                        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> (((<span class="ident">n1</span> <span class="op">-</span> <span class="number">0xD800</span>) <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">10</span> <span class="op">|</span>
+                                 (<span class="ident">n2</span> <span class="op">-</span> <span class="number">0xDC00</span>) <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">+</span>
+                                <span class="number">0x1_0000</span>;
 
-                        <span class='kw'>match</span> <span class='ident'>char</span>::<span class='ident'>from_u32</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u32</span>) {
-                            <span class='prelude-val'>Some</span>(<span class='ident'>c</span>) <span class='op'>=&gt;</span> <span class='ident'>c</span>,
-                            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                                <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidUnicodeCodePoint</span>);
+                        <span class="kw">match</span> <span class="ident">char</span>::<span class="ident">from_u32</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">u32</span>) {
+                            <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="ident">c</span>,
+                            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                                <span class="kw">return</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">InvalidUnicodeCodePoint</span>);
                             }
                         }
                     }
 
-                    <span class='ident'>n</span> <span class='op'>=&gt;</span> {
-                        <span class='kw'>match</span> <span class='ident'>char</span>::<span class='ident'>from_u32</span>(<span class='ident'>n</span> <span class='kw'>as</span> <span class='ident'>u32</span>) {
-                            <span class='prelude-val'>Some</span>(<span class='ident'>c</span>) <span class='op'>=&gt;</span> <span class='ident'>c</span>,
-                            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-                                <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidUnicodeCodePoint</span>);
+                    <span class="ident">n</span> <span class="op">=&gt;</span> {
+                        <span class="kw">match</span> <span class="ident">char</span>::<span class="ident">from_u32</span>(<span class="ident">n</span> <span class="kw">as</span> <span class="ident">u32</span>) {
+                            <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="ident">c</span>,
+                            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                                <span class="kw">return</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">InvalidUnicodeCodePoint</span>);
                             }
                         }
                     }
                 };
 
-            <span class='comment'>// FIXME: this allocation is required in order to be compatible with stable</span>
-            <span class='comment'>// rust, which doesn&#39;t support encoding a `char` into a stack buffer.</span>
-            <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>buf</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-            <span class='ident'>buf</span>.<span class='ident'>push</span>(<span class='ident'>c</span>);
-            <span class='ident'>scratch</span>.<span class='ident'>extend</span>(<span class='ident'>buf</span>.<span class='ident'>bytes</span>());
+            <span class="comment">// FIXME: this allocation is required in order to be compatible with stable</span>
+            <span class="comment">// rust, which doesn&#39;t support encoding a `char` into a stack buffer.</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+            <span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+            <span class="ident">scratch</span>.<span class="ident">extend</span>(<span class="ident">buf</span>.<span class="ident">bytes</span>());
         }
-        _ <span class='op'>=&gt;</span> {
-            <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidEscape</span>);
+        _ <span class="op">=&gt;</span> {
+            <span class="kw">return</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">InvalidEscape</span>);
         }
     }
 
-    <span class='prelude-val'>Ok</span>(())
+    <span class="prelude-val">Ok</span>(())
 }
 
-<span class='kw'>fn</span> <span class='ident'>decode_hex_escape</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span><span class='op'>&gt;</span>(<span class='ident'>read</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>u16</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>n</span> <span class='op'>=</span> <span class='number'>0</span>;
-    <span class='kw'>while</span> <span class='ident'>i</span> <span class='op'>&lt;</span> <span class='number'>4</span> <span class='op'>&amp;&amp;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>peek</span>()).<span class='ident'>is_some</span>() {
-        <span class='ident'>n</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>read</span>.<span class='ident'>next</span>()).<span class='ident'>unwrap_or</span>(<span class='string'>b&#39;\x00&#39;</span>) {
-            <span class='ident'>c</span> @ <span class='string'>b&#39;0&#39;</span>...<span class='string'>b&#39;9&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16_u16</span> <span class='op'>+</span> ((<span class='ident'>c</span> <span class='kw'>as</span> <span class='ident'>u16</span>) <span class='op'>-</span> (<span class='string'>b&#39;0&#39;</span> <span class='kw'>as</span> <span class='ident'>u16</span>)),
-            <span class='string'>b&#39;a&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;A&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16_u16</span> <span class='op'>+</span> <span class='number'>10_u16</span>,
-            <span class='string'>b&#39;b&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;B&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16_u16</span> <span class='op'>+</span> <span class='number'>11_u16</span>,
-            <span class='string'>b&#39;c&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;C&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16_u16</span> <span class='op'>+</span> <span class='number'>12_u16</span>,
-            <span class='string'>b&#39;d&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;D&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16_u16</span> <span class='op'>+</span> <span class='number'>13_u16</span>,
-            <span class='string'>b&#39;e&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;E&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16_u16</span> <span class='op'>+</span> <span class='number'>14_u16</span>,
-            <span class='string'>b&#39;f&#39;</span> <span class='op'>|</span> <span class='string'>b&#39;F&#39;</span> <span class='op'>=&gt;</span> <span class='ident'>n</span> <span class='op'>*</span> <span class='number'>16_u16</span> <span class='op'>+</span> <span class='number'>15_u16</span>,
-            _ <span class='op'>=&gt;</span> {
-                <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidEscape</span>);
+<span class="kw">fn</span> <span class="ident">decode_hex_escape</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span><span class="op">&gt;</span>(<span class="ident">read</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">n</span> <span class="op">=</span> <span class="number">0</span>;
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="number">4</span> {
+        <span class="ident">n</span> <span class="op">=</span> <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">next_or_eof</span>(<span class="ident">read</span>)) {
+            <span class="ident">c</span> @ <span class="string">b&#39;0&#39;</span>...<span class="string">b&#39;9&#39;</span> <span class="op">=&gt;</span> <span class="ident">n</span> <span class="op">*</span> <span class="number">16_u16</span> <span class="op">+</span> ((<span class="ident">c</span> <span class="kw">as</span> <span class="ident">u16</span>) <span class="op">-</span> (<span class="string">b&#39;0&#39;</span> <span class="kw">as</span> <span class="ident">u16</span>)),
+            <span class="string">b&#39;a&#39;</span> <span class="op">|</span> <span class="string">b&#39;A&#39;</span> <span class="op">=&gt;</span> <span class="ident">n</span> <span class="op">*</span> <span class="number">16_u16</span> <span class="op">+</span> <span class="number">10_u16</span>,
+            <span class="string">b&#39;b&#39;</span> <span class="op">|</span> <span class="string">b&#39;B&#39;</span> <span class="op">=&gt;</span> <span class="ident">n</span> <span class="op">*</span> <span class="number">16_u16</span> <span class="op">+</span> <span class="number">11_u16</span>,
+            <span class="string">b&#39;c&#39;</span> <span class="op">|</span> <span class="string">b&#39;C&#39;</span> <span class="op">=&gt;</span> <span class="ident">n</span> <span class="op">*</span> <span class="number">16_u16</span> <span class="op">+</span> <span class="number">12_u16</span>,
+            <span class="string">b&#39;d&#39;</span> <span class="op">|</span> <span class="string">b&#39;D&#39;</span> <span class="op">=&gt;</span> <span class="ident">n</span> <span class="op">*</span> <span class="number">16_u16</span> <span class="op">+</span> <span class="number">13_u16</span>,
+            <span class="string">b&#39;e&#39;</span> <span class="op">|</span> <span class="string">b&#39;E&#39;</span> <span class="op">=&gt;</span> <span class="ident">n</span> <span class="op">*</span> <span class="number">16_u16</span> <span class="op">+</span> <span class="number">14_u16</span>,
+            <span class="string">b&#39;f&#39;</span> <span class="op">|</span> <span class="string">b&#39;F&#39;</span> <span class="op">=&gt;</span> <span class="ident">n</span> <span class="op">*</span> <span class="number">16_u16</span> <span class="op">+</span> <span class="number">15_u16</span>,
+            _ <span class="op">=&gt;</span> {
+                <span class="kw">return</span> <span class="ident">error</span>(<span class="ident">read</span>, <span class="ident">ErrorCode</span>::<span class="ident">InvalidEscape</span>);
             }
         };
-
-        <span class='ident'>i</span> <span class='op'>+=</span> <span class='number'>1</span>;
     }
-
-    <span class='comment'>// Error out if we didn&#39;t parse 4 digits.</span>
-    <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>!=</span> <span class='number'>4</span> {
-        <span class='kw'>return</span> <span class='ident'>error</span>(<span class='ident'>read</span>, <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidEscape</span>);
-    }
-
-    <span class='prelude-val'>Ok</span>(<span class='ident'>n</span>)
+    <span class="prelude-val">Ok</span>(<span class="ident">n</span>)
 }
 </pre>
 </section>
@@ -1376,7 +1350,6 @@
         window.rootPath = "../../";
         window.currentCrate = "serde_json";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

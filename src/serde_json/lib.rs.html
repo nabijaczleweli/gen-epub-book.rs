@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.9/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.9.10/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -334,298 +334,298 @@
 <span id="289">289</span>
 <span id="290">290</span>
 <span id="291">291</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! # Serde JSON</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! JSON is a ubiquitous open-standard format that uses human-readable text to</span>
-<span class='doccomment'>//! transmit data objects consisting of key-value pairs.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```json,ignore</span>
-<span class='doccomment'>//! {</span>
-<span class='doccomment'>//!   &quot;name&quot;: &quot;John Doe&quot;,</span>
-<span class='doccomment'>//!   &quot;age&quot;: 43,</span>
-<span class='doccomment'>//!   &quot;address&quot;: {</span>
-<span class='doccomment'>//!     &quot;street&quot;: &quot;10 Downing Street&quot;,</span>
-<span class='doccomment'>//!     &quot;city&quot;: &quot;London&quot;</span>
-<span class='doccomment'>//!   },</span>
-<span class='doccomment'>//!   &quot;phones&quot;: [</span>
-<span class='doccomment'>//!     &quot;+44 1234567&quot;,</span>
-<span class='doccomment'>//!     &quot;+44 2345678&quot;</span>
-<span class='doccomment'>//!   ]</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! There are three common ways that you might find yourself needing to work</span>
-<span class='doccomment'>//! with JSON data in Rust.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!  - **As text data.** An unprocessed string of JSON data that you receive on</span>
-<span class='doccomment'>//!    an HTTP endpoint, read from a file, or prepare to send to a remote</span>
-<span class='doccomment'>//!    server.</span>
-<span class='doccomment'>//!  - **As an untyped or loosely typed representation.** Maybe you want to</span>
-<span class='doccomment'>//!    check that some JSON data is valid before passing it on, but without</span>
-<span class='doccomment'>//!    knowing the structure of what it contains. Or you want to do very basic</span>
-<span class='doccomment'>//!    manipulations like add a level of nesting.</span>
-<span class='doccomment'>//!  - **As a strongly typed Rust data structure.** When you expect all or most</span>
-<span class='doccomment'>//!    of your data to conform to a particular structure and want to get real</span>
-<span class='doccomment'>//!    work done without JSON&#39;s loosey-goosey nature tripping you up.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Serde JSON provides efficient, flexible, safe ways of converting data</span>
-<span class='doccomment'>//! between each of these representations.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # JSON to the Value enum</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Any valid JSON data can be manipulated in the following recursive enum</span>
-<span class='doccomment'>//! representation. This data structure is [`serde_json::Value`][value].</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! # use serde_json::{Number, Map};</span>
-<span class='doccomment'>//! # #[allow(dead_code)]</span>
-<span class='doccomment'>//! enum Value {</span>
-<span class='doccomment'>//!     Null,</span>
-<span class='doccomment'>//!     Bool(bool),</span>
-<span class='doccomment'>//!     Number(Number),</span>
-<span class='doccomment'>//!     String(String),</span>
-<span class='doccomment'>//!     Array(Vec&lt;Value&gt;),</span>
-<span class='doccomment'>//!     Object(Map&lt;String, Value&gt;),</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! A string of JSON data can be parsed into a `serde_json::Value` by the</span>
-<span class='doccomment'>//! [`serde_json::from_str`][from_str] function. There is also</span>
-<span class='doccomment'>//! [`from_slice`][from_slice] for parsing from a byte slice &amp;[u8],</span>
-<span class='doccomment'>//! [`from_iter`][from_iter] for parsing from an iterator of bytes, and</span>
-<span class='doccomment'>//! [`from_reader`][from_reader] for parsing from any `io::Read` like a File or</span>
-<span class='doccomment'>//! a TCP stream.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! # extern crate serde_json;</span>
-<span class='doccomment'>//! # use serde_json::Error;</span>
-<span class='doccomment'>//! # pub fn example() -&gt; Result&lt;(), Error&gt; {</span>
-<span class='doccomment'>//! use serde_json::Value;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let data = r#&quot; { &quot;name&quot;: &quot;John Doe&quot;, &quot;age&quot;: 43, ... } &quot;#;</span>
-<span class='doccomment'>//! let v: Value = serde_json::from_str(data)?;</span>
-<span class='doccomment'>//! println!(&quot;Please call {} at the number {}&quot;, v[&quot;name&quot;], v[&quot;phones&quot;][0]);</span>
-<span class='doccomment'>//! # Ok(()) }</span>
-<span class='doccomment'>//! # fn main() {}</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The `Value` representation is sufficient for very basic tasks but is brittle</span>
-<span class='doccomment'>//! and tedious to work with. Error handling is verbose to implement correctly,</span>
-<span class='doccomment'>//! for example imagine trying to detect the presence of unrecognized fields in</span>
-<span class='doccomment'>//! the input data. The compiler is powerless to help you when you make a</span>
-<span class='doccomment'>//! mistake, for example imagine typoing `v[&quot;name&quot;]` as `v[&quot;nmae&quot;]` in one of</span>
-<span class='doccomment'>//! the dozens of places it is used in your code.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # JSON to strongly typed data structures</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Serde provides a powerful way of mapping JSON data into Rust data structures</span>
-<span class='doccomment'>//! largely automatically.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! # extern crate serde_json;</span>
-<span class='doccomment'>//! # #[macro_use] extern crate serde_derive;</span>
-<span class='doccomment'>//! # use serde_json::Error;</span>
-<span class='doccomment'>//! # pub fn example() -&gt; Result&lt;(), Error&gt; {</span>
-<span class='doccomment'>//! #[derive(Serialize, Deserialize)]</span>
-<span class='doccomment'>//! struct Person {</span>
-<span class='doccomment'>//!     name: String,</span>
-<span class='doccomment'>//!     age: u8,</span>
-<span class='doccomment'>//!     address: Address,</span>
-<span class='doccomment'>//!     phones: Vec&lt;String&gt;,</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! #[derive(Serialize, Deserialize)]</span>
-<span class='doccomment'>//! struct Address {</span>
-<span class='doccomment'>//!     street: String,</span>
-<span class='doccomment'>//!     city: String,</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let data = r#&quot; { &quot;name&quot;: &quot;John Doe&quot;, &quot;age&quot;: 43, ... } &quot;#;</span>
-<span class='doccomment'>//! let p: Person = serde_json::from_str(data)?;</span>
-<span class='doccomment'>//! println!(&quot;Please call {} at the number {}&quot;, p.name, p.phones[0]);</span>
-<span class='doccomment'>//! # Ok(()) }</span>
-<span class='doccomment'>//! # fn main() {}</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This is the same `serde_json::from_str` function as before, but this time we</span>
-<span class='doccomment'>//! assign the return value to a variable of type `Person` so Serde JSON will</span>
-<span class='doccomment'>//! automatically interpret the input data as a `Person` and produce informative</span>
-<span class='doccomment'>//! error messages if the layout does not conform to what a `Person` is expected</span>
-<span class='doccomment'>//! to look like.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Any type that implements Serde&#39;s `Deserialize` trait can be deserialized</span>
-<span class='doccomment'>//! this way. This includes built-in Rust standard library types like `Vec&lt;T&gt;`</span>
-<span class='doccomment'>//! and `HashMap&lt;K, V&gt;`, as well as any structs or enums annotated with</span>
-<span class='doccomment'>//! `#[derive(Deserialize)]`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Once we have `p` of type `Person`, our IDE and the Rust compiler can help us</span>
-<span class='doccomment'>//! use it correctly like they do for any other Rust code. The IDE can</span>
-<span class='doccomment'>//! autocomplete field names to prevent typos, which was impossible in the</span>
-<span class='doccomment'>//! `serde_json::Value` representation. And the Rust compiler can check that</span>
-<span class='doccomment'>//! when we write `p.phones[0]`, then `p.phones` is guaranteed to be a</span>
-<span class='doccomment'>//! `Vec&lt;String&gt;` so indexing into it makes sense and produces a `String`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Constructing JSON</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Serde JSON provides a [`json!` macro][macro] to build `serde_json::Value`</span>
-<span class='doccomment'>//! objects with very natural JSON syntax. In order to use this macro,</span>
-<span class='doccomment'>//! `serde_json` needs to be imported with the `#[macro_use]` attribute.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! #[macro_use]</span>
-<span class='doccomment'>//! extern crate serde_json;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! fn main() {</span>
-<span class='doccomment'>//!     // The type of `john` is `serde_json::Value`</span>
-<span class='doccomment'>//!     let john = json!({</span>
-<span class='doccomment'>//!       &quot;name&quot;: &quot;John Doe&quot;,</span>
-<span class='doccomment'>//!       &quot;age&quot;: 43,</span>
-<span class='doccomment'>//!       &quot;phones&quot;: [</span>
-<span class='doccomment'>//!         &quot;+44 1234567&quot;,</span>
-<span class='doccomment'>//!         &quot;+44 2345678&quot;</span>
-<span class='doccomment'>//!       ]</span>
-<span class='doccomment'>//!     });</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     println!(&quot;first phone number: {}&quot;, john[&quot;phones&quot;][0]);</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // Convert to a string of JSON and print it out</span>
-<span class='doccomment'>//!     println!(&quot;{}&quot;, john.to_string());</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The `Value::to_string()` function converts a `serde_json::Value` into a</span>
-<span class='doccomment'>//! `String` of JSON text.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! One neat thing about the `json!` macro is that variables and expressions can</span>
-<span class='doccomment'>//! be interpolated directly into the JSON value as you are building it. Serde</span>
-<span class='doccomment'>//! will check at compile time that the value you are interpolating is able to</span>
-<span class='doccomment'>//! be represented as JSON.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! # #[macro_use] extern crate serde_json;</span>
-<span class='doccomment'>//! # fn random_phone() -&gt; u16 { 0 }</span>
-<span class='doccomment'>//! # fn main() {</span>
-<span class='doccomment'>//! let full_name = &quot;John Doe&quot;;</span>
-<span class='doccomment'>//! let age_last_year = 42;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // The type of `john` is `serde_json::Value`</span>
-<span class='doccomment'>//! let john = json!({</span>
-<span class='doccomment'>//!   &quot;name&quot;: full_name,</span>
-<span class='doccomment'>//!   &quot;age&quot;: age_last_year + 1,</span>
-<span class='doccomment'>//!   &quot;phones&quot;: [</span>
-<span class='doccomment'>//!     format!(&quot;+44 {}&quot;, random_phone())</span>
-<span class='doccomment'>//!   ]</span>
-<span class='doccomment'>//! });</span>
-<span class='doccomment'>//! # let _ = john;</span>
-<span class='doccomment'>//! # }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This is amazingly convenient but we have the problem we had before with</span>
-<span class='doccomment'>//! `Value` which is that the IDE and Rust compiler cannot help us if we get it</span>
-<span class='doccomment'>//! wrong. Serde JSON provides a better way of serializing strongly-typed data</span>
-<span class='doccomment'>//! structures into JSON text.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Serializing data structures</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! A data structure can be converted to a JSON string by</span>
-<span class='doccomment'>//! [`serde_json::to_string`][to_string]. There is also</span>
-<span class='doccomment'>//! [`serde_json::to_vec`][to_vec] which serializes to a `Vec&lt;u8&gt;` and</span>
-<span class='doccomment'>//! [`serde_json::to_writer`][to_writer] which serializes to any `io::Write`</span>
-<span class='doccomment'>//! such as a File or a TCP stream.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! # extern crate serde_json;</span>
-<span class='doccomment'>//! # #[macro_use] extern crate serde_derive;</span>
-<span class='doccomment'>//! # use serde_json::Error;</span>
-<span class='doccomment'>//! # pub fn example() -&gt; Result&lt;String, Error&gt; {</span>
-<span class='doccomment'>//! #[derive(Serialize, Deserialize)]</span>
-<span class='doccomment'>//! struct Address {</span>
-<span class='doccomment'>//!     street: String,</span>
-<span class='doccomment'>//!     city: String,</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let address = Address {</span>
-<span class='doccomment'>//!     street: &quot;10 Downing Street&quot;.to_owned(),</span>
-<span class='doccomment'>//!     city: &quot;London&quot;.to_owned(),</span>
-<span class='doccomment'>//! };</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! let j = serde_json::to_string(&amp;address)?;</span>
-<span class='doccomment'>//! # Ok(j) }</span>
-<span class='doccomment'>//! # fn main() {}</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Any type that implements Serde&#39;s `Serialize` trait can be serialized this</span>
-<span class='doccomment'>//! way. This includes built-in Rust standard library types like `Vec&lt;T&gt;` and</span>
-<span class='doccomment'>//! `HashMap&lt;K, V&gt;`, as well as any structs or enums annotated with</span>
-<span class='doccomment'>//! `#[derive(Serialize)]`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! [value]: https://docs.serde.rs/serde_json/value/enum.Value.html</span>
-<span class='doccomment'>//! [from_str]: https://docs.serde.rs/serde_json/de/fn.from_str.html</span>
-<span class='doccomment'>//! [from_slice]: https://docs.serde.rs/serde_json/de/fn.from_slice.html</span>
-<span class='doccomment'>//! [from_iter]: https://docs.serde.rs/serde_json/de/fn.from_iter.html</span>
-<span class='doccomment'>//! [from_reader]: https://docs.serde.rs/serde_json/de/fn.from_reader.html</span>
-<span class='doccomment'>//! [to_string]: https://docs.serde.rs/serde_json/ser/fn.to_string.html</span>
-<span class='doccomment'>//! [to_vec]: https://docs.serde.rs/serde_json/ser/fn.to_vec.html</span>
-<span class='doccomment'>//! [to_writer]: https://docs.serde.rs/serde_json/ser/fn.to_writer.html</span>
-<span class='doccomment'>//! [macro]: https://docs.serde.rs/serde_json/macro.json.html</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! # Serde JSON</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! JSON is a ubiquitous open-standard format that uses human-readable text to</span>
+<span class="doccomment">//! transmit data objects consisting of key-value pairs.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```json,ignore</span>
+<span class="doccomment">//! {</span>
+<span class="doccomment">//!   &quot;name&quot;: &quot;John Doe&quot;,</span>
+<span class="doccomment">//!   &quot;age&quot;: 43,</span>
+<span class="doccomment">//!   &quot;address&quot;: {</span>
+<span class="doccomment">//!     &quot;street&quot;: &quot;10 Downing Street&quot;,</span>
+<span class="doccomment">//!     &quot;city&quot;: &quot;London&quot;</span>
+<span class="doccomment">//!   },</span>
+<span class="doccomment">//!   &quot;phones&quot;: [</span>
+<span class="doccomment">//!     &quot;+44 1234567&quot;,</span>
+<span class="doccomment">//!     &quot;+44 2345678&quot;</span>
+<span class="doccomment">//!   ]</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! There are three common ways that you might find yourself needing to work</span>
+<span class="doccomment">//! with JSON data in Rust.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!  - **As text data.** An unprocessed string of JSON data that you receive on</span>
+<span class="doccomment">//!    an HTTP endpoint, read from a file, or prepare to send to a remote</span>
+<span class="doccomment">//!    server.</span>
+<span class="doccomment">//!  - **As an untyped or loosely typed representation.** Maybe you want to</span>
+<span class="doccomment">//!    check that some JSON data is valid before passing it on, but without</span>
+<span class="doccomment">//!    knowing the structure of what it contains. Or you want to do very basic</span>
+<span class="doccomment">//!    manipulations like add a level of nesting.</span>
+<span class="doccomment">//!  - **As a strongly typed Rust data structure.** When you expect all or most</span>
+<span class="doccomment">//!    of your data to conform to a particular structure and want to get real</span>
+<span class="doccomment">//!    work done without JSON&#39;s loosey-goosey nature tripping you up.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Serde JSON provides efficient, flexible, safe ways of converting data</span>
+<span class="doccomment">//! between each of these representations.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # JSON to the Value enum</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Any valid JSON data can be manipulated in the following recursive enum</span>
+<span class="doccomment">//! representation. This data structure is [`serde_json::Value`][value].</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! # use serde_json::{Number, Map};</span>
+<span class="doccomment">//! # #[allow(dead_code)]</span>
+<span class="doccomment">//! enum Value {</span>
+<span class="doccomment">//!     Null,</span>
+<span class="doccomment">//!     Bool(bool),</span>
+<span class="doccomment">//!     Number(Number),</span>
+<span class="doccomment">//!     String(String),</span>
+<span class="doccomment">//!     Array(Vec&lt;Value&gt;),</span>
+<span class="doccomment">//!     Object(Map&lt;String, Value&gt;),</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A string of JSON data can be parsed into a `serde_json::Value` by the</span>
+<span class="doccomment">//! [`serde_json::from_str`][from_str] function. There is also</span>
+<span class="doccomment">//! [`from_slice`][from_slice] for parsing from a byte slice &amp;[u8],</span>
+<span class="doccomment">//! [`from_iter`][from_iter] for parsing from an iterator of bytes, and</span>
+<span class="doccomment">//! [`from_reader`][from_reader] for parsing from any `io::Read` like a File or</span>
+<span class="doccomment">//! a TCP stream.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! # extern crate serde_json;</span>
+<span class="doccomment">//! # use serde_json::Error;</span>
+<span class="doccomment">//! # pub fn example() -&gt; Result&lt;(), Error&gt; {</span>
+<span class="doccomment">//! use serde_json::Value;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let data = r#&quot; { &quot;name&quot;: &quot;John Doe&quot;, &quot;age&quot;: 43, ... } &quot;#;</span>
+<span class="doccomment">//! let v: Value = serde_json::from_str(data)?;</span>
+<span class="doccomment">//! println!(&quot;Please call {} at the number {}&quot;, v[&quot;name&quot;], v[&quot;phones&quot;][0]);</span>
+<span class="doccomment">//! # Ok(()) }</span>
+<span class="doccomment">//! # fn main() {}</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `Value` representation is sufficient for very basic tasks but is brittle</span>
+<span class="doccomment">//! and tedious to work with. Error handling is verbose to implement correctly,</span>
+<span class="doccomment">//! for example imagine trying to detect the presence of unrecognized fields in</span>
+<span class="doccomment">//! the input data. The compiler is powerless to help you when you make a</span>
+<span class="doccomment">//! mistake, for example imagine typoing `v[&quot;name&quot;]` as `v[&quot;nmae&quot;]` in one of</span>
+<span class="doccomment">//! the dozens of places it is used in your code.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # JSON to strongly typed data structures</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Serde provides a powerful way of mapping JSON data into Rust data structures</span>
+<span class="doccomment">//! largely automatically.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! # extern crate serde_json;</span>
+<span class="doccomment">//! # #[macro_use] extern crate serde_derive;</span>
+<span class="doccomment">//! # use serde_json::Error;</span>
+<span class="doccomment">//! # pub fn example() -&gt; Result&lt;(), Error&gt; {</span>
+<span class="doccomment">//! #[derive(Serialize, Deserialize)]</span>
+<span class="doccomment">//! struct Person {</span>
+<span class="doccomment">//!     name: String,</span>
+<span class="doccomment">//!     age: u8,</span>
+<span class="doccomment">//!     address: Address,</span>
+<span class="doccomment">//!     phones: Vec&lt;String&gt;,</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! #[derive(Serialize, Deserialize)]</span>
+<span class="doccomment">//! struct Address {</span>
+<span class="doccomment">//!     street: String,</span>
+<span class="doccomment">//!     city: String,</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let data = r#&quot; { &quot;name&quot;: &quot;John Doe&quot;, &quot;age&quot;: 43, ... } &quot;#;</span>
+<span class="doccomment">//! let p: Person = serde_json::from_str(data)?;</span>
+<span class="doccomment">//! println!(&quot;Please call {} at the number {}&quot;, p.name, p.phones[0]);</span>
+<span class="doccomment">//! # Ok(()) }</span>
+<span class="doccomment">//! # fn main() {}</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This is the same `serde_json::from_str` function as before, but this time we</span>
+<span class="doccomment">//! assign the return value to a variable of type `Person` so Serde JSON will</span>
+<span class="doccomment">//! automatically interpret the input data as a `Person` and produce informative</span>
+<span class="doccomment">//! error messages if the layout does not conform to what a `Person` is expected</span>
+<span class="doccomment">//! to look like.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Any type that implements Serde&#39;s `Deserialize` trait can be deserialized</span>
+<span class="doccomment">//! this way. This includes built-in Rust standard library types like `Vec&lt;T&gt;`</span>
+<span class="doccomment">//! and `HashMap&lt;K, V&gt;`, as well as any structs or enums annotated with</span>
+<span class="doccomment">//! `#[derive(Deserialize)]`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Once we have `p` of type `Person`, our IDE and the Rust compiler can help us</span>
+<span class="doccomment">//! use it correctly like they do for any other Rust code. The IDE can</span>
+<span class="doccomment">//! autocomplete field names to prevent typos, which was impossible in the</span>
+<span class="doccomment">//! `serde_json::Value` representation. And the Rust compiler can check that</span>
+<span class="doccomment">//! when we write `p.phones[0]`, then `p.phones` is guaranteed to be a</span>
+<span class="doccomment">//! `Vec&lt;String&gt;` so indexing into it makes sense and produces a `String`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Constructing JSON</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Serde JSON provides a [`json!` macro][macro] to build `serde_json::Value`</span>
+<span class="doccomment">//! objects with very natural JSON syntax. In order to use this macro,</span>
+<span class="doccomment">//! `serde_json` needs to be imported with the `#[macro_use]` attribute.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! #[macro_use]</span>
+<span class="doccomment">//! extern crate serde_json;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! fn main() {</span>
+<span class="doccomment">//!     // The type of `john` is `serde_json::Value`</span>
+<span class="doccomment">//!     let john = json!({</span>
+<span class="doccomment">//!       &quot;name&quot;: &quot;John Doe&quot;,</span>
+<span class="doccomment">//!       &quot;age&quot;: 43,</span>
+<span class="doccomment">//!       &quot;phones&quot;: [</span>
+<span class="doccomment">//!         &quot;+44 1234567&quot;,</span>
+<span class="doccomment">//!         &quot;+44 2345678&quot;</span>
+<span class="doccomment">//!       ]</span>
+<span class="doccomment">//!     });</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     println!(&quot;first phone number: {}&quot;, john[&quot;phones&quot;][0]);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // Convert to a string of JSON and print it out</span>
+<span class="doccomment">//!     println!(&quot;{}&quot;, john.to_string());</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `Value::to_string()` function converts a `serde_json::Value` into a</span>
+<span class="doccomment">//! `String` of JSON text.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! One neat thing about the `json!` macro is that variables and expressions can</span>
+<span class="doccomment">//! be interpolated directly into the JSON value as you are building it. Serde</span>
+<span class="doccomment">//! will check at compile time that the value you are interpolating is able to</span>
+<span class="doccomment">//! be represented as JSON.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! # #[macro_use] extern crate serde_json;</span>
+<span class="doccomment">//! # fn random_phone() -&gt; u16 { 0 }</span>
+<span class="doccomment">//! # fn main() {</span>
+<span class="doccomment">//! let full_name = &quot;John Doe&quot;;</span>
+<span class="doccomment">//! let age_last_year = 42;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // The type of `john` is `serde_json::Value`</span>
+<span class="doccomment">//! let john = json!({</span>
+<span class="doccomment">//!   &quot;name&quot;: full_name,</span>
+<span class="doccomment">//!   &quot;age&quot;: age_last_year + 1,</span>
+<span class="doccomment">//!   &quot;phones&quot;: [</span>
+<span class="doccomment">//!     format!(&quot;+44 {}&quot;, random_phone())</span>
+<span class="doccomment">//!   ]</span>
+<span class="doccomment">//! });</span>
+<span class="doccomment">//! # let _ = john;</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This is amazingly convenient but we have the problem we had before with</span>
+<span class="doccomment">//! `Value` which is that the IDE and Rust compiler cannot help us if we get it</span>
+<span class="doccomment">//! wrong. Serde JSON provides a better way of serializing strongly-typed data</span>
+<span class="doccomment">//! structures into JSON text.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Serializing data structures</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A data structure can be converted to a JSON string by</span>
+<span class="doccomment">//! [`serde_json::to_string`][to_string]. There is also</span>
+<span class="doccomment">//! [`serde_json::to_vec`][to_vec] which serializes to a `Vec&lt;u8&gt;` and</span>
+<span class="doccomment">//! [`serde_json::to_writer`][to_writer] which serializes to any `io::Write`</span>
+<span class="doccomment">//! such as a File or a TCP stream.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! # extern crate serde_json;</span>
+<span class="doccomment">//! # #[macro_use] extern crate serde_derive;</span>
+<span class="doccomment">//! # use serde_json::Error;</span>
+<span class="doccomment">//! # pub fn example() -&gt; Result&lt;String, Error&gt; {</span>
+<span class="doccomment">//! #[derive(Serialize, Deserialize)]</span>
+<span class="doccomment">//! struct Address {</span>
+<span class="doccomment">//!     street: String,</span>
+<span class="doccomment">//!     city: String,</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let address = Address {</span>
+<span class="doccomment">//!     street: &quot;10 Downing Street&quot;.to_owned(),</span>
+<span class="doccomment">//!     city: &quot;London&quot;.to_owned(),</span>
+<span class="doccomment">//! };</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let j = serde_json::to_string(&amp;address)?;</span>
+<span class="doccomment">//! # Ok(j) }</span>
+<span class="doccomment">//! # fn main() {}</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Any type that implements Serde&#39;s `Serialize` trait can be serialized this</span>
+<span class="doccomment">//! way. This includes built-in Rust standard library types like `Vec&lt;T&gt;` and</span>
+<span class="doccomment">//! `HashMap&lt;K, V&gt;`, as well as any structs or enums annotated with</span>
+<span class="doccomment">//! `#[derive(Serialize)]`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [value]: https://docs.serde.rs/serde_json/value/enum.Value.html</span>
+<span class="doccomment">//! [from_str]: https://docs.serde.rs/serde_json/de/fn.from_str.html</span>
+<span class="doccomment">//! [from_slice]: https://docs.serde.rs/serde_json/de/fn.from_slice.html</span>
+<span class="doccomment">//! [from_iter]: https://docs.serde.rs/serde_json/de/fn.from_iter.html</span>
+<span class="doccomment">//! [from_reader]: https://docs.serde.rs/serde_json/de/fn.from_reader.html</span>
+<span class="doccomment">//! [to_string]: https://docs.serde.rs/serde_json/ser/fn.to_string.html</span>
+<span class="doccomment">//! [to_vec]: https://docs.serde.rs/serde_json/ser/fn.to_vec.html</span>
+<span class="doccomment">//! [to_writer]: https://docs.serde.rs/serde_json/ser/fn.to_writer.html</span>
+<span class="doccomment">//! [macro]: https://docs.serde.rs/serde_json/macro.json.html</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cargo-clippy&quot;</span>, <span class='ident'>deny</span>(<span class='ident'>clippy</span>, <span class='ident'>clippy_pedantic</span>))]</span>
-<span class='comment'>// Because of &quot;JavaScript&quot;... fixed in Manishearth/rust-clippy#1071</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cargo-clippy&quot;</span>, <span class='ident'>allow</span>(<span class='ident'>doc_markdown</span>))]</span>
-<span class='comment'>// Whitelisted clippy_pedantic lints</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;cargo-clippy&quot;</span>, <span class='ident'>allow</span>(
-<span class='comment'>// Deserializer::from_str, from_iter, into_iter</span>
-    <span class='ident'>should_implement_trait</span>,
-<span class='comment'>// integer and float ser/de requires these sorts of casts</span>
-    <span class='ident'>cast_possible_truncation</span>,
-    <span class='ident'>cast_possible_wrap</span>,
-    <span class='ident'>cast_precision_loss</span>,
-    <span class='ident'>cast_sign_loss</span>,
-<span class='comment'>// string ser/de uses indexing and slicing</span>
-    <span class='ident'>indexing_slicing</span>,
-<span class='comment'>// things are often more readable this way</span>
-    <span class='ident'>shadow_reuse</span>,
-    <span class='ident'>shadow_unrelated</span>,
-    <span class='ident'>single_match_else</span>,
-    <span class='ident'>stutter</span>,
-<span class='comment'>// not practical</span>
-    <span class='ident'>missing_docs_in_private_items</span>,
+<span class="attribute">#<span class="op">!</span>[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">deny</span>(<span class="ident">clippy</span>, <span class="ident">clippy_pedantic</span>))]</span>
+<span class="comment">// Because of &quot;JavaScript&quot;... fixed in Manishearth/rust-clippy#1071</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">doc_markdown</span>))]</span>
+<span class="comment">// Whitelisted clippy_pedantic lints</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(
+<span class="comment">// Deserializer::from_str, from_iter, into_iter</span>
+    <span class="ident">should_implement_trait</span>,
+<span class="comment">// integer and float ser/de requires these sorts of casts</span>
+    <span class="ident">cast_possible_truncation</span>,
+    <span class="ident">cast_possible_wrap</span>,
+    <span class="ident">cast_precision_loss</span>,
+    <span class="ident">cast_sign_loss</span>,
+<span class="comment">// string ser/de uses indexing and slicing</span>
+    <span class="ident">indexing_slicing</span>,
+<span class="comment">// things are often more readable this way</span>
+    <span class="ident">shadow_reuse</span>,
+    <span class="ident">shadow_unrelated</span>,
+    <span class="ident">single_match_else</span>,
+    <span class="ident">stutter</span>,
+<span class="comment">// not practical</span>
+    <span class="ident">missing_docs_in_private_items</span>,
 ))]</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>deny</span>(<span class='ident'>missing_docs</span>)]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>num_traits</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>core</span>;
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>serde</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>itoa</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>dtoa</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;preserve_order&quot;</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>linked_hash_map</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">num_traits</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">core</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">itoa</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">dtoa</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;preserve_order&quot;</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">linked_hash_map</span>;
 
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>inline</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>de</span>::{<span class='ident'>Deserializer</span>, <span class='ident'>StreamDeserializer</span>, <span class='ident'>from_iter</span>, <span class='ident'>from_reader</span>,
-                   <span class='ident'>from_slice</span>, <span class='ident'>from_str</span>};
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>inline</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>error</span>::{<span class='ident'>Error</span>, <span class='prelude-ty'>Result</span>};
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>inline</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>ser</span>::{<span class='ident'>Serializer</span>, <span class='ident'>to_string</span>, <span class='ident'>to_string_pretty</span>, <span class='ident'>to_vec</span>,
-                    <span class='ident'>to_vec_pretty</span>, <span class='ident'>to_writer</span>, <span class='ident'>to_writer_pretty</span>};
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>inline</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>value</span>::{<span class='ident'>Map</span>, <span class='ident'>Number</span>, <span class='ident'>Value</span>, <span class='ident'>from_value</span>, <span class='ident'>to_value</span>};
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">de</span>::{<span class="ident">Deserializer</span>, <span class="ident">StreamDeserializer</span>, <span class="ident">from_iter</span>, <span class="ident">from_reader</span>,
+                   <span class="ident">from_slice</span>, <span class="ident">from_str</span>};
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">error</span>::{<span class="ident">Error</span>, <span class="prelude-ty">Result</span>};
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">ser</span>::{<span class="ident">Serializer</span>, <span class="ident">to_string</span>, <span class="ident">to_string_pretty</span>, <span class="ident">to_vec</span>,
+                    <span class="ident">to_vec_pretty</span>, <span class="ident">to_writer</span>, <span class="ident">to_writer_pretty</span>};
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">value</span>::{<span class="ident">Map</span>, <span class="ident">Number</span>, <span class="ident">Value</span>, <span class="ident">from_value</span>, <span class="ident">to_value</span>};
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>mod</span> <span class='ident'>macros</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">mod</span> <span class="ident">macros</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>de</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>error</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>map</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>ser</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>value</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">de</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">error</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">map</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ser</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">value</span>;
 
-<span class='kw'>mod</span> <span class='ident'>number</span>;
-<span class='kw'>mod</span> <span class='ident'>read</span>;
+<span class="kw">mod</span> <span class="ident">number</span>;
+<span class="kw">mod</span> <span class="ident">read</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -684,7 +684,6 @@
         window.rootPath = "../../";
         window.currentCrate = "serde_json";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

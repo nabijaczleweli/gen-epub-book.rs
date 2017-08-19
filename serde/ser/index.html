@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>serde</a></p><script>window.sidebarCurrent = {name: 'ser', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
+        <p class='location'>Module ser</p><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'><a href='../index.html'>serde</a></p><script>window.sidebarCurrent = {name: 'ser', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,12 +43,12 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>serde</a>::<wbr><a class='mod' href=''>ser</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>serde</a>::<wbr><a class="mod" href=''>ser</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/serde/ser/mod.rs.html#1-915' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/serde/ser/mod.rs.html#1-919' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Generic data structure serialization framework.</p>
 
 <p>The two most important traits in this module are <code>Serialize</code> and
@@ -123,6 +123,10 @@ website</a>.</p>
 <li>Rc&lt;T&gt;</li>
 <li>Arc&lt;T&gt;</li>
 <li>Cow&lt;&#39;a, T&gt;</li>
+<li>Cell&lt;T&gt;</li>
+<li>RefCell&lt;T&gt;</li>
+<li>Mutex&lt;T&gt;</li>
+<li>RwLock&lt;T&gt;</li>
 </ul></li>
 <li><strong>Collection types</strong>:
 
@@ -160,8 +164,8 @@ website</a>.</p>
 </div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Impossible.html'
-                                  title='serde::ser::Impossible'>Impossible</a></td>
+                           <td><a class="struct" href="struct.Impossible.html"
+                                  title='struct serde::ser::Impossible'>Impossible</a></td>
                            <td class='docblock-short'>
                                 <p>Helper type for implementing a <code>Serializer</code> that does not support
 serializing one of the compound types.</p>
@@ -169,74 +173,74 @@ serializing one of the compound types.</p>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Error.html'
-                                  title='serde::ser::Error'>Error</a></td>
+                           <td><a class="trait" href="trait.Error.html"
+                                  title='trait serde::ser::Error'>Error</a></td>
                            <td class='docblock-short'>
                                 <p>Trait used by <code>Serialize</code> implementations to generically construct errors
 belonging to the <code>Serializer</code> against which they are currently running.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Serialize.html'
-                                  title='serde::ser::Serialize'>Serialize</a></td>
+                           <td><a class="trait" href="trait.Serialize.html"
+                                  title='trait serde::ser::Serialize'>Serialize</a></td>
                            <td class='docblock-short'>
                                 <p>A <strong>data structure</strong> that can be serialized into any data format supported
 by Serde.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SerializeMap.html'
-                                  title='serde::ser::SerializeMap'>SerializeMap</a></td>
+                           <td><a class="trait" href="trait.SerializeMap.html"
+                                  title='trait serde::ser::SerializeMap'>SerializeMap</a></td>
                            <td class='docblock-short'>
                                 <p>Returned from <code>Serializer::serialize_map</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SerializeSeq.html'
-                                  title='serde::ser::SerializeSeq'>SerializeSeq</a></td>
+                           <td><a class="trait" href="trait.SerializeSeq.html"
+                                  title='trait serde::ser::SerializeSeq'>SerializeSeq</a></td>
                            <td class='docblock-short'>
                                 <p>Returned from <code>Serializer::serialize_seq</code> and
 <code>Serializer::serialize_seq_fixed_size</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SerializeStruct.html'
-                                  title='serde::ser::SerializeStruct'>SerializeStruct</a></td>
+                           <td><a class="trait" href="trait.SerializeStruct.html"
+                                  title='trait serde::ser::SerializeStruct'>SerializeStruct</a></td>
                            <td class='docblock-short'>
                                 <p>Returned from <code>Serializer::serialize_struct</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SerializeStructVariant.html'
-                                  title='serde::ser::SerializeStructVariant'>SerializeStructVariant</a></td>
+                           <td><a class="trait" href="trait.SerializeStructVariant.html"
+                                  title='trait serde::ser::SerializeStructVariant'>SerializeStructVariant</a></td>
                            <td class='docblock-short'>
                                 <p>Returned from <code>Serializer::serialize_struct_variant</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SerializeTuple.html'
-                                  title='serde::ser::SerializeTuple'>SerializeTuple</a></td>
+                           <td><a class="trait" href="trait.SerializeTuple.html"
+                                  title='trait serde::ser::SerializeTuple'>SerializeTuple</a></td>
                            <td class='docblock-short'>
                                 <p>Returned from <code>Serializer::serialize_tuple</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SerializeTupleStruct.html'
-                                  title='serde::ser::SerializeTupleStruct'>SerializeTupleStruct</a></td>
+                           <td><a class="trait" href="trait.SerializeTupleStruct.html"
+                                  title='trait serde::ser::SerializeTupleStruct'>SerializeTupleStruct</a></td>
                            <td class='docblock-short'>
                                 <p>Returned from <code>Serializer::serialize_tuple_struct</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.SerializeTupleVariant.html'
-                                  title='serde::ser::SerializeTupleVariant'>SerializeTupleVariant</a></td>
+                           <td><a class="trait" href="trait.SerializeTupleVariant.html"
+                                  title='trait serde::ser::SerializeTupleVariant'>SerializeTupleVariant</a></td>
                            <td class='docblock-short'>
                                 <p>Returned from <code>Serializer::serialize_tuple_variant</code>.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='trait' href='trait.Serializer.html'
-                                  title='serde::ser::Serializer'>Serializer</a></td>
+                           <td><a class="trait" href="trait.Serializer.html"
+                                  title='trait serde::ser::Serializer'>Serializer</a></td>
                            <td class='docblock-short'>
                                 <p>A <strong>data format</strong> that can serialize any data structure supported by Serde.</p>
                            </td>
@@ -297,7 +301,6 @@ by Serde.</p>
         window.rootPath = "../../";
         window.currentCrate = "serde";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

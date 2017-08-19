@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>reqwest</a></p><script>window.sidebarCurrent = {name: 'Client', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Client</p><div class="block items"><ul><li><a href="#methods">Methods</a></li><li><a href="#implementations">Trait Implementations</a></li></ul></div><p class='location'><a href='index.html'>reqwest</a></p><script>window.sidebarCurrent = {name: 'Client', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,8 +43,8 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>reqwest</a>::<wbr><a class='struct' href=''>Client</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>reqwest</a>::<wbr><a class="struct" href=''>Client</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
@@ -56,24 +56,24 @@ are set to what is usually the most commonly desired value.</p>
 
 <p>The <code>Client</code> holds a connection pool internally, so it is advised that
 you create one and reuse it.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../reqwest/struct.Client.html' title='reqwest::Client'>Client</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/client.rs.html#32-81' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class='type' href='../reqwest/type.Result.html' title='reqwest::Result'>Result</a>&lt;<a class='struct' href='../reqwest/struct.Client.html' title='reqwest::Client'>Client</a>&gt;</code></span></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../reqwest/struct.Client.html" title="struct reqwest::Client">Client</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/client.rs.html#32-81' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>() -&gt; <a class="type" href="../reqwest/type.Result.html" title="type reqwest::Result">Result</a>&lt;<a class="struct" href="../reqwest/struct.Client.html" title="struct reqwest::Client">Client</a>&gt;</code></span></h4>
 <div class='docblock'><p>Constructs a new <code>Client</code>.</p>
-</div><h4 id='method.redirect' class='method'><span id='redirect.v' class='invisible'><code>fn <a href='#method.redirect' class='fnname'>redirect</a>(&amp;mut self, policy: <a class='struct' href='../reqwest/struct.RedirectPolicy.html' title='reqwest::RedirectPolicy'>RedirectPolicy</a>)</code></span></h4>
+</div><h4 id='method.redirect' class="method"><span id='redirect.v' class='invisible'><code>fn <a href='#method.redirect' class='fnname'>redirect</a>(&amp;mut self, policy: <a class="struct" href="../reqwest/struct.RedirectPolicy.html" title="struct reqwest::RedirectPolicy">RedirectPolicy</a>)</code></span></h4>
 <div class='docblock'><p>Set a <code>RedirectPolicy</code> for this client.</p>
-</div><h4 id='method.get' class='method'><span id='get.v' class='invisible'><code>fn <a href='#method.get' class='fnname'>get</a>&lt;U:&nbsp;<a class='trait' href='../reqwest/trait.IntoUrl.html' title='reqwest::IntoUrl'>IntoUrl</a>&gt;(&amp;self, url: U) -&gt; <a class='struct' href='../reqwest/struct.RequestBuilder.html' title='reqwest::RequestBuilder'>RequestBuilder</a></code></span></h4>
+</div><h4 id='method.get' class="method"><span id='get.v' class='invisible'><code>fn <a href='#method.get' class='fnname'>get</a>&lt;U:&nbsp;<a class="trait" href="../reqwest/trait.IntoUrl.html" title="trait reqwest::IntoUrl">IntoUrl</a>&gt;(&amp;self, url: U) -&gt; <a class="struct" href="../reqwest/struct.RequestBuilder.html" title="struct reqwest::RequestBuilder">RequestBuilder</a></code></span></h4>
 <div class='docblock'><p>Convenience method to make a <code>GET</code> request to a URL.</p>
-</div><h4 id='method.post' class='method'><span id='post.v' class='invisible'><code>fn <a href='#method.post' class='fnname'>post</a>&lt;U:&nbsp;<a class='trait' href='../reqwest/trait.IntoUrl.html' title='reqwest::IntoUrl'>IntoUrl</a>&gt;(&amp;self, url: U) -&gt; <a class='struct' href='../reqwest/struct.RequestBuilder.html' title='reqwest::RequestBuilder'>RequestBuilder</a></code></span></h4>
+</div><h4 id='method.post' class="method"><span id='post.v' class='invisible'><code>fn <a href='#method.post' class='fnname'>post</a>&lt;U:&nbsp;<a class="trait" href="../reqwest/trait.IntoUrl.html" title="trait reqwest::IntoUrl">IntoUrl</a>&gt;(&amp;self, url: U) -&gt; <a class="struct" href="../reqwest/struct.RequestBuilder.html" title="struct reqwest::RequestBuilder">RequestBuilder</a></code></span></h4>
 <div class='docblock'><p>Convenience method to make a <code>POST</code> request to a URL.</p>
-</div><h4 id='method.head' class='method'><span id='head.v' class='invisible'><code>fn <a href='#method.head' class='fnname'>head</a>&lt;U:&nbsp;<a class='trait' href='../reqwest/trait.IntoUrl.html' title='reqwest::IntoUrl'>IntoUrl</a>&gt;(&amp;self, url: U) -&gt; <a class='struct' href='../reqwest/struct.RequestBuilder.html' title='reqwest::RequestBuilder'>RequestBuilder</a></code></span></h4>
+</div><h4 id='method.head' class="method"><span id='head.v' class='invisible'><code>fn <a href='#method.head' class='fnname'>head</a>&lt;U:&nbsp;<a class="trait" href="../reqwest/trait.IntoUrl.html" title="trait reqwest::IntoUrl">IntoUrl</a>&gt;(&amp;self, url: U) -&gt; <a class="struct" href="../reqwest/struct.RequestBuilder.html" title="struct reqwest::RequestBuilder">RequestBuilder</a></code></span></h4>
 <div class='docblock'><p>Convenience method to make a <code>HEAD</code> request to a URL.</p>
-</div><h4 id='method.request' class='method'><span id='request.v' class='invisible'><code>fn <a href='#method.request' class='fnname'>request</a>&lt;U:&nbsp;<a class='trait' href='../reqwest/trait.IntoUrl.html' title='reqwest::IntoUrl'>IntoUrl</a>&gt;(&amp;self, method: <a class='enum' href='../reqwest/enum.Method.html' title='reqwest::Method'>Method</a>, url: U) -&gt; <a class='struct' href='../reqwest/struct.RequestBuilder.html' title='reqwest::RequestBuilder'>RequestBuilder</a></code></span></h4>
+</div><h4 id='method.request' class="method"><span id='request.v' class='invisible'><code>fn <a href='#method.request' class='fnname'>request</a>&lt;U:&nbsp;<a class="trait" href="../reqwest/trait.IntoUrl.html" title="trait reqwest::IntoUrl">IntoUrl</a>&gt;(&amp;self, method: <a class="enum" href="../reqwest/enum.Method.html" title="enum reqwest::Method">Method</a>, url: U) -&gt; <a class="struct" href="../reqwest/struct.RequestBuilder.html" title="struct reqwest::RequestBuilder">RequestBuilder</a></code></span></h4>
 <div class='docblock'><p>Start building a <code>Request</code> with the <code>Method</code> and <code>Url</code>.</p>
 
 <p>Returns a <code>RequestBuilder</code>, which will allow setting headers and
 request body before sending.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../reqwest/struct.Client.html' title='reqwest::Client'>Client</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/client.rs.html#83-89' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../reqwest/struct.Client.html" title="struct reqwest::Client">Client</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/reqwest/client.rs.html#83-89' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -132,7 +132,6 @@ request body before sending.</p>
         window.rootPath = "../";
         window.currentCrate = "reqwest";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

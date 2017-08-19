@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>podio</a></p><script>window.sidebarCurrent = {name: 'Endianness', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait Endianness</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='index.html'>podio</a></p><script>window.sidebarCurrent = {name: 'Endianness', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,26 +43,26 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>podio</a>::<wbr><a class='trait' href=''>Endianness</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='index.html'>podio</a>::<wbr><a class="trait" href=''>Endianness</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
                </span><a class='srclink' href='../src/podio/lib.rs.html#69-74' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait Endianness {
-    fn <a href='#tymethod.int_to_target' class='fnname'>int_to_target</a>&lt;T:&nbsp;<a class='trait' href='../podio/trait.EndianConvert.html' title='podio::EndianConvert'>EndianConvert</a>&gt;(val: T) -&gt; T;
-    fn <a href='#tymethod.int_from_target' class='fnname'>int_from_target</a>&lt;T:&nbsp;<a class='trait' href='../podio/trait.EndianConvert.html' title='podio::EndianConvert'>EndianConvert</a>&gt;(val: T) -&gt; T;
+    fn <a href='#tymethod.int_to_target' class='fnname'>int_to_target</a>&lt;T:&nbsp;<a class="trait" href="../podio/trait.EndianConvert.html" title="trait podio::EndianConvert">EndianConvert</a>&gt;(val: T) -&gt; T;
+    fn <a href='#tymethod.int_from_target' class='fnname'>int_from_target</a>&lt;T:&nbsp;<a class="trait" href="../podio/trait.EndianConvert.html" title="trait podio::EndianConvert">EndianConvert</a>&gt;(val: T) -&gt; T;
 }</pre><div class='docblock'><p>Trait implementing conversion methods for a specific endianness</p>
 </div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.int_to_target' class='method'><span id='int_to_target.v' class='invisible'><code>fn <a href='#tymethod.int_to_target' class='fnname'>int_to_target</a>&lt;T:&nbsp;<a class='trait' href='../podio/trait.EndianConvert.html' title='podio::EndianConvert'>EndianConvert</a>&gt;(val: T) -&gt; T</code></span></h3><div class='docblock'><p>Converts a value from the platform type to the specified endianness</p>
-</div><h3 id='tymethod.int_from_target' class='method'><span id='int_from_target.v' class='invisible'><code>fn <a href='#tymethod.int_from_target' class='fnname'>int_from_target</a>&lt;T:&nbsp;<a class='trait' href='../podio/trait.EndianConvert.html' title='podio::EndianConvert'>EndianConvert</a>&gt;(val: T) -&gt; T</code></span></h3><div class='docblock'><p>Converts a value from the sepcified endianness to the platform type</p>
+        <h3 id='tymethod.int_to_target' class='method'><span id='int_to_target.v' class='invisible'><code>fn <a href='#tymethod.int_to_target' class='fnname'>int_to_target</a>&lt;T:&nbsp;<a class="trait" href="../podio/trait.EndianConvert.html" title="trait podio::EndianConvert">EndianConvert</a>&gt;(val: T) -&gt; T</code></span></h3><div class='docblock'><p>Converts a value from the platform type to the specified endianness</p>
+</div><h3 id='tymethod.int_from_target' class='method'><span id='int_from_target.v' class='invisible'><code>fn <a href='#tymethod.int_from_target' class='fnname'>int_from_target</a>&lt;T:&nbsp;<a class="trait" href="../podio/trait.EndianConvert.html" title="trait podio::EndianConvert">EndianConvert</a>&gt;(val: T) -&gt; T</code></span></h3><div class='docblock'><p>Converts a value from the sepcified endianness to the platform type</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl Endianness for <a class='enum' href='../podio/enum.LittleEndian.html' title='podio::LittleEndian'>LittleEndian</a></code></li>
-<li><code>impl Endianness for <a class='enum' href='../podio/enum.BigEndian.html' title='podio::BigEndian'>BigEndian</a></code></li>
+    <li><code>impl Endianness for <a class="enum" href="../podio/enum.LittleEndian.html" title="enum podio::LittleEndian">LittleEndian</a></code></li>
+<li><code>impl Endianness for <a class="enum" href="../podio/enum.BigEndian.html" title="enum podio::BigEndian">BigEndian</a></code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/podio/trait.Endianness.js">
                  </script></section>
@@ -122,7 +122,6 @@
         window.rootPath = "../";
         window.currentCrate = "podio";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

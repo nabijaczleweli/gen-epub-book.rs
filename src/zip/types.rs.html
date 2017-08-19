@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/zip-0.2.3/src/types.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/zip-0.2.6/src/types.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>types.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -117,79 +117,79 @@
 <span id="72">72</span>
 <span id="73">73</span>
 <span id="74">74</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Types that specify what is contained in a ZIP.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Types that specify what is contained in a ZIP.</span>
 
-<span class='kw'>use</span> <span class='ident'>time</span>;
+<span class="kw">use</span> <span class="ident">time</span>;
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>System</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">System</span>
 {
-    <span class='ident'>Dos</span> <span class='op'>=</span> <span class='number'>0</span>,
-    <span class='ident'>Unix</span> <span class='op'>=</span> <span class='number'>3</span>,
-    <span class='ident'>Unknown</span>,
-    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='ident'>__Nonexhaustive</span>,
+    <span class="ident">Dos</span> <span class="op">=</span> <span class="number">0</span>,
+    <span class="ident">Unix</span> <span class="op">=</span> <span class="number">3</span>,
+    <span class="ident">Unknown</span>,
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="ident">__Nonexhaustive</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>System</span> {
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_u8</span>(<span class='ident'>system</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='ident'>System</span>
+<span class="kw">impl</span> <span class="ident">System</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_u8</span>(<span class="ident">system</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">System</span>
     {
-        <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>System</span>::<span class='kw-2'>*</span>;
+        <span class="kw">use</span> <span class="self">self</span>::<span class="ident">System</span>::<span class="kw-2">*</span>;
 
-        <span class='kw'>match</span> <span class='ident'>system</span> {
-            <span class='number'>0</span> <span class='op'>=&gt;</span> <span class='ident'>Dos</span>,
-            <span class='number'>3</span> <span class='op'>=&gt;</span> <span class='ident'>Unix</span>,
-            _ <span class='op'>=&gt;</span> <span class='ident'>Unknown</span>,
+        <span class="kw">match</span> <span class="ident">system</span> {
+            <span class="number">0</span> <span class="op">=&gt;</span> <span class="ident">Dos</span>,
+            <span class="number">3</span> <span class="op">=&gt;</span> <span class="ident">Unix</span>,
+            _ <span class="op">=&gt;</span> <span class="ident">Unknown</span>,
         }
     }
 }
 
-<span class='kw'>pub</span> <span class='kw'>const</span> <span class='ident'>DEFAULT_VERSION</span>: <span class='ident'>u8</span> <span class='op'>=</span> <span class='number'>20</span>;
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DEFAULT_VERSION</span>: <span class="ident">u8</span> <span class="op">=</span> <span class="number">20</span>;
 
-<span class='doccomment'>/// Structure representing a ZIP file.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>ZipFileData</span>
+<span class="doccomment">/// Structure representing a ZIP file.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ZipFileData</span>
 {
-    <span class='doccomment'>/// Compatibility of the file attribute information</span>
-    <span class='kw'>pub</span> <span class='ident'>system</span>: <span class='ident'>System</span>,
-    <span class='doccomment'>/// Specification version</span>
-    <span class='kw'>pub</span> <span class='ident'>version_made_by</span>: <span class='ident'>u8</span>,
-    <span class='doccomment'>/// True if the file is encrypted.</span>
-    <span class='kw'>pub</span> <span class='ident'>encrypted</span>: <span class='ident'>bool</span>,
-    <span class='doccomment'>/// Compression method used to store the file</span>
-    <span class='kw'>pub</span> <span class='ident'>compression_method</span>: ::<span class='ident'>compression</span>::<span class='ident'>CompressionMethod</span>,
-    <span class='doccomment'>/// Last modified time. This will only have a 2 second precision.</span>
-    <span class='kw'>pub</span> <span class='ident'>last_modified_time</span>: <span class='ident'>time</span>::<span class='ident'>Tm</span>,
-    <span class='doccomment'>/// CRC32 checksum</span>
-    <span class='kw'>pub</span> <span class='ident'>crc32</span>: <span class='ident'>u32</span>,
-    <span class='doccomment'>/// Size of the file in the ZIP</span>
-    <span class='kw'>pub</span> <span class='ident'>compressed_size</span>: <span class='ident'>u64</span>,
-    <span class='doccomment'>/// Size of the file when extracted</span>
-    <span class='kw'>pub</span> <span class='ident'>uncompressed_size</span>: <span class='ident'>u64</span>,
-    <span class='doccomment'>/// Name of the file</span>
-    <span class='kw'>pub</span> <span class='ident'>file_name</span>: <span class='ident'>String</span>,
-    <span class='doccomment'>/// Raw file name. To be used when file_name was incorrectly decoded.</span>
-    <span class='kw'>pub</span> <span class='ident'>file_name_raw</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;</span>,
-    <span class='doccomment'>/// File comment</span>
-    <span class='kw'>pub</span> <span class='ident'>file_comment</span>: <span class='ident'>String</span>,
-    <span class='doccomment'>/// Specifies where the local header of the file starts</span>
-    <span class='kw'>pub</span> <span class='ident'>header_start</span>: <span class='ident'>u64</span>,
-    <span class='doccomment'>/// Specifies where the compressed data of the file starts</span>
-    <span class='kw'>pub</span> <span class='ident'>data_start</span>: <span class='ident'>u64</span>,
-    <span class='doccomment'>/// External file attributes</span>
-    <span class='kw'>pub</span> <span class='ident'>external_attributes</span>: <span class='ident'>u32</span>,
+    <span class="doccomment">/// Compatibility of the file attribute information</span>
+    <span class="kw">pub</span> <span class="ident">system</span>: <span class="ident">System</span>,
+    <span class="doccomment">/// Specification version</span>
+    <span class="kw">pub</span> <span class="ident">version_made_by</span>: <span class="ident">u8</span>,
+    <span class="doccomment">/// True if the file is encrypted.</span>
+    <span class="kw">pub</span> <span class="ident">encrypted</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Compression method used to store the file</span>
+    <span class="kw">pub</span> <span class="ident">compression_method</span>: ::<span class="ident">compression</span>::<span class="ident">CompressionMethod</span>,
+    <span class="doccomment">/// Last modified time. This will only have a 2 second precision.</span>
+    <span class="kw">pub</span> <span class="ident">last_modified_time</span>: <span class="ident">time</span>::<span class="ident">Tm</span>,
+    <span class="doccomment">/// CRC32 checksum</span>
+    <span class="kw">pub</span> <span class="ident">crc32</span>: <span class="ident">u32</span>,
+    <span class="doccomment">/// Size of the file in the ZIP</span>
+    <span class="kw">pub</span> <span class="ident">compressed_size</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// Size of the file when extracted</span>
+    <span class="kw">pub</span> <span class="ident">uncompressed_size</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// Name of the file</span>
+    <span class="kw">pub</span> <span class="ident">file_name</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Raw file name. To be used when file_name was incorrectly decoded.</span>
+    <span class="kw">pub</span> <span class="ident">file_name_raw</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// File comment</span>
+    <span class="kw">pub</span> <span class="ident">file_comment</span>: <span class="ident">String</span>,
+    <span class="doccomment">/// Specifies where the local header of the file starts</span>
+    <span class="kw">pub</span> <span class="ident">header_start</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// Specifies where the compressed data of the file starts</span>
+    <span class="kw">pub</span> <span class="ident">data_start</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// External file attributes</span>
+    <span class="kw">pub</span> <span class="ident">external_attributes</span>: <span class="ident">u32</span>,
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
-<span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>system</span>() {
-        <span class='kw'>use</span> <span class='kw'>super</span>::<span class='ident'>System</span>;
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>System</span>::<span class='ident'>Dos</span> <span class='kw'>as</span> <span class='ident'>u16</span>, <span class='number'>0u16</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>System</span>::<span class='ident'>Unix</span> <span class='kw'>as</span> <span class='ident'>u16</span>, <span class='number'>3u16</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>System</span>::<span class='ident'>from_u8</span>(<span class='number'>0</span>), <span class='ident'>System</span>::<span class='ident'>Dos</span>);
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>System</span>::<span class='ident'>from_u8</span>(<span class='number'>3</span>), <span class='ident'>System</span>::<span class='ident'>Unix</span>);
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">test</span> {
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">system</span>() {
+        <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">System</span>;
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">System</span>::<span class="ident">Dos</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="number">0u16</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">System</span>::<span class="ident">Unix</span> <span class="kw">as</span> <span class="ident">u16</span>, <span class="number">3u16</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">System</span>::<span class="ident">from_u8</span>(<span class="number">0</span>), <span class="ident">System</span>::<span class="ident">Dos</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">System</span>::<span class="ident">from_u8</span>(<span class="number">3</span>), <span class="ident">System</span>::<span class="ident">Unix</span>);
     }
 }
 </pre>
@@ -250,7 +250,6 @@
         window.rootPath = "../../";
         window.currentCrate = "zip";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

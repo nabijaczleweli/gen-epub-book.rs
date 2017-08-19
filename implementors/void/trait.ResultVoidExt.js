@@ -1,4 +1,5 @@
 (function() {var implementors = {};
+implementors["thread_local"] = [];
 implementors["void"] = [];
 
             if (window.register_implementors) {

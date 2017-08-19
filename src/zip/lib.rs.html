@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/zip-0.2.3/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/zip-0.2.6/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -66,30 +66,30 @@
 <span id="21">21</span>
 <span id="22">22</span>
 <span id="23">23</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! A basic ZipReader/Writer crate</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! A basic ZipReader/Writer crate</span>
 
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;bzip2&quot;</span>)]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>bzip2</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>flate2</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>msdos_time</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>podio</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>time</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bzip2&quot;</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">bzip2</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">flate2</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">msdos_time</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">podio</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">time</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>read</span>::<span class='ident'>ZipArchive</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>write</span>::<span class='ident'>ZipWriter</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>compression</span>::<span class='ident'>CompressionMethod</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">read</span>::<span class="ident">ZipArchive</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">write</span>::<span class="ident">ZipWriter</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">compression</span>::<span class="ident">CompressionMethod</span>;
 
-<span class='kw'>mod</span> <span class='ident'>spec</span>;
-<span class='kw'>mod</span> <span class='ident'>crc32</span>;
-<span class='kw'>mod</span> <span class='ident'>types</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>read</span>;
-<span class='kw'>mod</span> <span class='ident'>compression</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>write</span>;
-<span class='kw'>mod</span> <span class='ident'>cp437</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>result</span>;
+<span class="kw">mod</span> <span class="ident">spec</span>;
+<span class="kw">mod</span> <span class="ident">crc32</span>;
+<span class="kw">mod</span> <span class="ident">types</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">read</span>;
+<span class="kw">mod</span> <span class="ident">compression</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">write</span>;
+<span class="kw">mod</span> <span class="ident">cp437</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">result</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -148,7 +148,6 @@
         window.rootPath = "../../";
         window.currentCrate = "zip";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

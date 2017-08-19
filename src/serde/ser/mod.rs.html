@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.13/src/ser/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-0.9.15/src/ser/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -958,920 +958,928 @@
 <span id="913">913</span>
 <span id="914">914</span>
 <span id="915">915</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Generic data structure serialization framework.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The two most important traits in this module are `Serialize` and</span>
-<span class='doccomment'>//! `Serializer`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!  - **A type that implements `Serialize` is a data structure** that can be</span>
-<span class='doccomment'>//!    serialized to any data format supported by Serde, and conversely</span>
-<span class='doccomment'>//!  - **A type that implements `Serializer` is a data format** that can</span>
-<span class='doccomment'>//!    serialize any data structure supported by Serde.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # The Serialize trait</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Serde provides `Serialize` implementations for many Rust primitive and</span>
-<span class='doccomment'>//! standard library types. The complete list is below. All of these can be</span>
-<span class='doccomment'>//! serialized using Serde out of the box.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Additionally, Serde provides a procedural macro called `serde_derive` to</span>
-<span class='doccomment'>//! automatically generate `Serialize` implementations for structs and enums in</span>
-<span class='doccomment'>//! your program. See the [codegen section of the manual][codegen] for how to</span>
-<span class='doccomment'>//! use this.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! In rare cases it may be necessary to implement `Serialize` manually for some</span>
-<span class='doccomment'>//! type in your program. See the [Implementing `Serialize`][impl-serialize]</span>
-<span class='doccomment'>//! section of the manual for more about this.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Third-party crates may provide `Serialize` implementations for types that</span>
-<span class='doccomment'>//! they expose. For example the `linked-hash-map` crate provides a</span>
-<span class='doccomment'>//! `LinkedHashMap&lt;K, V&gt;` type that is serializable by Serde because the crate</span>
-<span class='doccomment'>//! provides an implementation of `Serialize` for it.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # The Serializer trait</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! `Serializer` implementations are provided by third-party crates, for example</span>
-<span class='doccomment'>//! [`serde_json`][serde_json], [`serde_yaml`][serde_yaml] and</span>
-<span class='doccomment'>//! [`bincode`][bincode].</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! A partial list of well-maintained formats is given on the [Serde</span>
-<span class='doccomment'>//! website][data-formats].</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Implementations of Serialize provided by Serde</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!  - **Primitive types**:</span>
-<span class='doccomment'>//!    - bool</span>
-<span class='doccomment'>//!    - isize, i8, i16, i32, i64</span>
-<span class='doccomment'>//!    - usize, u8, u16, u32, u64</span>
-<span class='doccomment'>//!    - f32, f64</span>
-<span class='doccomment'>//!    - char</span>
-<span class='doccomment'>//!    - str</span>
-<span class='doccomment'>//!    - &amp;T and &amp;mut T</span>
-<span class='doccomment'>//!  - **Compound types**:</span>
-<span class='doccomment'>//!    - [T]</span>
-<span class='doccomment'>//!    - [T; 0] through [T; 32]</span>
-<span class='doccomment'>//!    - tuples up to size 16</span>
-<span class='doccomment'>//!  - **Common standard library types**:</span>
-<span class='doccomment'>//!    - String</span>
-<span class='doccomment'>//!    - Option\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - Result\&lt;T, E\&gt;</span>
-<span class='doccomment'>//!    - PhantomData\&lt;T\&gt;</span>
-<span class='doccomment'>//!  - **Wrapper types**:</span>
-<span class='doccomment'>//!    - Box\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - Rc\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - Arc\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - Cow\&lt;&#39;a, T\&gt;</span>
-<span class='doccomment'>//!  - **Collection types**:</span>
-<span class='doccomment'>//!    - BTreeMap\&lt;K, V\&gt;</span>
-<span class='doccomment'>//!    - BTreeSet\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - BinaryHeap\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - HashMap\&lt;K, V, H\&gt;</span>
-<span class='doccomment'>//!    - HashSet\&lt;T, H\&gt;</span>
-<span class='doccomment'>//!    - LinkedList\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - VecDeque\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - Vec\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - EnumSet\&lt;T\&gt; (unstable)</span>
-<span class='doccomment'>//!  - **Miscellaneous standard library types**:</span>
-<span class='doccomment'>//!    - Duration</span>
-<span class='doccomment'>//!    - Path</span>
-<span class='doccomment'>//!    - PathBuf</span>
-<span class='doccomment'>//!    - Range\&lt;T\&gt;</span>
-<span class='doccomment'>//!    - NonZero\&lt;T\&gt; (unstable)</span>
-<span class='doccomment'>//!  - **Net types**:</span>
-<span class='doccomment'>//!    - IpAddr</span>
-<span class='doccomment'>//!    - Ipv4Addr</span>
-<span class='doccomment'>//!    - Ipv6Addr</span>
-<span class='doccomment'>//!    - SocketAddr</span>
-<span class='doccomment'>//!    - SocketAddrV4</span>
-<span class='doccomment'>//!    - SocketAddrV6</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! [codegen]: https://serde.rs/codegen.html</span>
-<span class='doccomment'>//! [impl-serialize]: https://serde.rs/impl-serialize.html</span>
-<span class='doccomment'>//! [serde_json]: https://github.com/serde-rs/json</span>
-<span class='doccomment'>//! [serde_yaml]: https://github.com/dtolnay/serde-yaml</span>
-<span class='doccomment'>//! [bincode]: https://github.com/TyOverby/bincode</span>
-<span class='doccomment'>//! [data-formats]: https://serde.rs/#data-formats</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Generic data structure serialization framework.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The two most important traits in this module are `Serialize` and</span>
+<span class="doccomment">//! `Serializer`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!  - **A type that implements `Serialize` is a data structure** that can be</span>
+<span class="doccomment">//!    serialized to any data format supported by Serde, and conversely</span>
+<span class="doccomment">//!  - **A type that implements `Serializer` is a data format** that can</span>
+<span class="doccomment">//!    serialize any data structure supported by Serde.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # The Serialize trait</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Serde provides `Serialize` implementations for many Rust primitive and</span>
+<span class="doccomment">//! standard library types. The complete list is below. All of these can be</span>
+<span class="doccomment">//! serialized using Serde out of the box.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Additionally, Serde provides a procedural macro called `serde_derive` to</span>
+<span class="doccomment">//! automatically generate `Serialize` implementations for structs and enums in</span>
+<span class="doccomment">//! your program. See the [codegen section of the manual][codegen] for how to</span>
+<span class="doccomment">//! use this.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! In rare cases it may be necessary to implement `Serialize` manually for some</span>
+<span class="doccomment">//! type in your program. See the [Implementing `Serialize`][impl-serialize]</span>
+<span class="doccomment">//! section of the manual for more about this.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Third-party crates may provide `Serialize` implementations for types that</span>
+<span class="doccomment">//! they expose. For example the `linked-hash-map` crate provides a</span>
+<span class="doccomment">//! `LinkedHashMap&lt;K, V&gt;` type that is serializable by Serde because the crate</span>
+<span class="doccomment">//! provides an implementation of `Serialize` for it.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # The Serializer trait</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! `Serializer` implementations are provided by third-party crates, for example</span>
+<span class="doccomment">//! [`serde_json`][serde_json], [`serde_yaml`][serde_yaml] and</span>
+<span class="doccomment">//! [`bincode`][bincode].</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! A partial list of well-maintained formats is given on the [Serde</span>
+<span class="doccomment">//! website][data-formats].</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Implementations of Serialize provided by Serde</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!  - **Primitive types**:</span>
+<span class="doccomment">//!    - bool</span>
+<span class="doccomment">//!    - isize, i8, i16, i32, i64</span>
+<span class="doccomment">//!    - usize, u8, u16, u32, u64</span>
+<span class="doccomment">//!    - f32, f64</span>
+<span class="doccomment">//!    - char</span>
+<span class="doccomment">//!    - str</span>
+<span class="doccomment">//!    - &amp;T and &amp;mut T</span>
+<span class="doccomment">//!  - **Compound types**:</span>
+<span class="doccomment">//!    - [T]</span>
+<span class="doccomment">//!    - [T; 0] through [T; 32]</span>
+<span class="doccomment">//!    - tuples up to size 16</span>
+<span class="doccomment">//!  - **Common standard library types**:</span>
+<span class="doccomment">//!    - String</span>
+<span class="doccomment">//!    - Option\&lt;T\&gt;</span>
+<span class="doccomment">//!    - Result\&lt;T, E\&gt;</span>
+<span class="doccomment">//!    - PhantomData\&lt;T\&gt;</span>
+<span class="doccomment">//!  - **Wrapper types**:</span>
+<span class="doccomment">//!    - Box\&lt;T\&gt;</span>
+<span class="doccomment">//!    - Rc\&lt;T\&gt;</span>
+<span class="doccomment">//!    - Arc\&lt;T\&gt;</span>
+<span class="doccomment">//!    - Cow\&lt;&#39;a, T\&gt;</span>
+<span class="doccomment">//!    - Cell\&lt;T\&gt;</span>
+<span class="doccomment">//!    - RefCell\&lt;T\&gt;</span>
+<span class="doccomment">//!    - Mutex\&lt;T\&gt;</span>
+<span class="doccomment">//!    - RwLock\&lt;T\&gt;</span>
+<span class="doccomment">//!  - **Collection types**:</span>
+<span class="doccomment">//!    - BTreeMap\&lt;K, V\&gt;</span>
+<span class="doccomment">//!    - BTreeSet\&lt;T\&gt;</span>
+<span class="doccomment">//!    - BinaryHeap\&lt;T\&gt;</span>
+<span class="doccomment">//!    - HashMap\&lt;K, V, H\&gt;</span>
+<span class="doccomment">//!    - HashSet\&lt;T, H\&gt;</span>
+<span class="doccomment">//!    - LinkedList\&lt;T\&gt;</span>
+<span class="doccomment">//!    - VecDeque\&lt;T\&gt;</span>
+<span class="doccomment">//!    - Vec\&lt;T\&gt;</span>
+<span class="doccomment">//!    - EnumSet\&lt;T\&gt; (unstable)</span>
+<span class="doccomment">//!  - **Miscellaneous standard library types**:</span>
+<span class="doccomment">//!    - Duration</span>
+<span class="doccomment">//!    - Path</span>
+<span class="doccomment">//!    - PathBuf</span>
+<span class="doccomment">//!    - Range\&lt;T\&gt;</span>
+<span class="doccomment">//!    - NonZero\&lt;T\&gt; (unstable)</span>
+<span class="doccomment">//!  - **Net types**:</span>
+<span class="doccomment">//!    - IpAddr</span>
+<span class="doccomment">//!    - Ipv4Addr</span>
+<span class="doccomment">//!    - Ipv6Addr</span>
+<span class="doccomment">//!    - SocketAddr</span>
+<span class="doccomment">//!    - SocketAddrV4</span>
+<span class="doccomment">//!    - SocketAddrV6</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [codegen]: https://serde.rs/codegen.html</span>
+<span class="doccomment">//! [impl-serialize]: https://serde.rs/impl-serialize.html</span>
+<span class="doccomment">//! [serde_json]: https://github.com/serde-rs/json</span>
+<span class="doccomment">//! [serde_yaml]: https://github.com/dtolnay/serde-yaml</span>
+<span class="doccomment">//! [bincode]: https://github.com/TyOverby/bincode</span>
+<span class="doccomment">//! [data-formats]: https://serde.rs/#data-formats</span>
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>))]</span>
-<span class='kw'>use</span> <span class='ident'>error</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>))]</span>
+<span class="kw">use</span> <span class="ident">error</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>, <span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>)))]</span>
-<span class='kw'>use</span> <span class='ident'>collections</span>::<span class='ident'>string</span>::<span class='ident'>String</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>fmt</span>::<span class='ident'>Display</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>fmt</span>::<span class='ident'>Write</span>;
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>iter</span>::<span class='ident'>IntoIterator</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;collections&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>)))]</span>
+<span class="kw">use</span> <span class="ident">collections</span>::<span class="ident">string</span>::<span class="ident">String</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;collections&quot;</span>))]</span>
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">fmt</span>::<span class="ident">Write</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">iter</span>::<span class="ident">IntoIterator</span>;
 
-<span class='kw'>mod</span> <span class='ident'>impls</span>;
-<span class='kw'>mod</span> <span class='ident'>impossible</span>;
+<span class="kw">mod</span> <span class="ident">impls</span>;
+<span class="kw">mod</span> <span class="ident">impossible</span>;
 
-<span class='comment'>// Helpers used by generated code. Not public API.</span>
-<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>private</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>content</span>;
+<span class="comment">// Helpers used by generated code. Not public API.</span>
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">private</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;collections&quot;</span>))]</span>
+<span class="kw">mod</span> <span class="ident">content</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>impossible</span>::<span class='ident'>Impossible</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">impossible</span>::<span class="ident">Impossible</span>;
 
-<span class='comment'>///////////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">///////////////////////////////////////////////////////////////////////////////</span>
 
-<span class='doccomment'>/// Trait used by `Serialize` implementations to generically construct errors</span>
-<span class='doccomment'>/// belonging to the `Serializer` against which they are currently running.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Error</span>: <span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>error</span>::<span class='ident'>Error</span> {
-    <span class='doccomment'>/// Raised when a `Serialize` implementation encounters a general error</span>
-    <span class='doccomment'>/// while serializing a type.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The message should not be capitalized and should not end with a period.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// For example, a filesystem `Path` may refuse to serialize itself if it</span>
-    <span class='doccomment'>/// contains invalid UTF-8 data.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// # use serde::ser::{Serialize, Serializer, Error};</span>
-    <span class='doccomment'>/// # struct Path;</span>
-    <span class='doccomment'>/// # impl Path { fn to_str(&amp;self) -&gt; Option&lt;&amp;str&gt; { unimplemented!() } }</span>
-    <span class='doccomment'>/// impl Serialize for Path {</span>
-    <span class='doccomment'>///     fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;</span>
-    <span class='doccomment'>///         where S: Serializer</span>
-    <span class='doccomment'>///     {</span>
-    <span class='doccomment'>///         match self.to_str() {</span>
-    <span class='doccomment'>///             Some(s) =&gt; s.serialize(serializer),</span>
-    <span class='doccomment'>///             None =&gt; Err(Error::custom(&quot;path contains invalid UTF-8 characters&quot;)),</span>
-    <span class='doccomment'>///         }</span>
-    <span class='doccomment'>///     }</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Display</span><span class='op'>&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+<span class="doccomment">/// Trait used by `Serialize` implementations to generically construct errors</span>
+<span class="doccomment">/// belonging to the `Serializer` against which they are currently running.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Error</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="ident">error</span>::<span class="ident">Error</span> {
+    <span class="doccomment">/// Raised when a `Serialize` implementation encounters a general error</span>
+    <span class="doccomment">/// while serializing a type.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The message should not be capitalized and should not end with a period.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For example, a filesystem `Path` may refuse to serialize itself if it</span>
+    <span class="doccomment">/// contains invalid UTF-8 data.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # use serde::ser::{Serialize, Serializer, Error};</span>
+    <span class="doccomment">/// # struct Path;</span>
+    <span class="doccomment">/// # impl Path { fn to_str(&amp;self) -&gt; Option&lt;&amp;str&gt; { unimplemented!() } }</span>
+    <span class="doccomment">/// impl Serialize for Path {</span>
+    <span class="doccomment">///     fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;</span>
+    <span class="doccomment">///         where S: Serializer</span>
+    <span class="doccomment">///     {</span>
+    <span class="doccomment">///         match self.to_str() {</span>
+    <span class="doccomment">///             Some(s) =&gt; s.serialize(serializer),</span>
+    <span class="doccomment">///             None =&gt; Err(Error::custom(&quot;path contains invalid UTF-8 characters&quot;)),</span>
+    <span class="doccomment">///         }</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">custom</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Display</span><span class="op">&gt;</span>(<span class="ident">msg</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span>;
 }
 
-<span class='comment'>///////////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">///////////////////////////////////////////////////////////////////////////////</span>
 
-<span class='doccomment'>/// A **data structure** that can be serialized into any data format supported</span>
-<span class='doccomment'>/// by Serde.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Serde provides `Serialize` implementations for many Rust primitive and</span>
-<span class='doccomment'>/// standard library types. The complete list is [here][ser]. All of these can</span>
-<span class='doccomment'>/// be serialized using Serde out of the box.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Additionally, Serde provides a procedural macro called `serde_derive` to</span>
-<span class='doccomment'>/// automatically generate `Serialize` implementations for structs and enums in</span>
-<span class='doccomment'>/// your program. See the [codegen section of the manual][codegen] for how to</span>
-<span class='doccomment'>/// use this.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// In rare cases it may be necessary to implement `Serialize` manually for some</span>
-<span class='doccomment'>/// type in your program. See the [Implementing `Serialize`][impl-serialize]</span>
-<span class='doccomment'>/// section of the manual for more about this.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Third-party crates may provide `Serialize` implementations for types that</span>
-<span class='doccomment'>/// they expose. For example the `linked-hash-map` crate provides a</span>
-<span class='doccomment'>/// `LinkedHashMap&lt;K, V&gt;` type that is serializable by Serde because the crate</span>
-<span class='doccomment'>/// provides an implementation of `Serialize` for it.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// [ser]: https://docs.serde.rs/serde/ser/index.html</span>
-<span class='doccomment'>/// [codegen]: https://serde.rs/codegen.html</span>
-<span class='doccomment'>/// [impl-serialize]: https://serde.rs/impl-serialize.html</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Serialize</span> {
-    <span class='doccomment'>/// Serialize this value into the given Serde serializer.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// See the [Implementing `Serialize`][impl-serialize] section of the manual</span>
-    <span class='doccomment'>/// for more information about how to implement this method.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// [impl-serialize]: https://serde.rs/impl-serialize.html</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize</span><span class='op'>&lt;</span><span class='ident'>S</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>serializer</span>: <span class='ident'>S</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>S</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>S</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>S</span>: <span class='ident'>Serializer</span>;
+<span class="doccomment">/// A **data structure** that can be serialized into any data format supported</span>
+<span class="doccomment">/// by Serde.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Serde provides `Serialize` implementations for many Rust primitive and</span>
+<span class="doccomment">/// standard library types. The complete list is [here][ser]. All of these can</span>
+<span class="doccomment">/// be serialized using Serde out of the box.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Additionally, Serde provides a procedural macro called `serde_derive` to</span>
+<span class="doccomment">/// automatically generate `Serialize` implementations for structs and enums in</span>
+<span class="doccomment">/// your program. See the [codegen section of the manual][codegen] for how to</span>
+<span class="doccomment">/// use this.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// In rare cases it may be necessary to implement `Serialize` manually for some</span>
+<span class="doccomment">/// type in your program. See the [Implementing `Serialize`][impl-serialize]</span>
+<span class="doccomment">/// section of the manual for more about this.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Third-party crates may provide `Serialize` implementations for types that</span>
+<span class="doccomment">/// they expose. For example the `linked-hash-map` crate provides a</span>
+<span class="doccomment">/// `LinkedHashMap&lt;K, V&gt;` type that is serializable by Serde because the crate</span>
+<span class="doccomment">/// provides an implementation of `Serialize` for it.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [ser]: https://docs.serde.rs/serde/ser/index.html</span>
+<span class="doccomment">/// [codegen]: https://serde.rs/codegen.html</span>
+<span class="doccomment">/// [impl-serialize]: https://serde.rs/impl-serialize.html</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Serialize</span> {
+    <span class="doccomment">/// Serialize this value into the given Serde serializer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See the [Implementing `Serialize`][impl-serialize] section of the manual</span>
+    <span class="doccomment">/// for more information about how to implement this method.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [impl-serialize]: https://serde.rs/impl-serialize.html</span>
+    <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="prelude-val">Ok</span>, <span class="ident">S</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">S</span>: <span class="ident">Serializer</span>;
 }
 
-<span class='comment'>///////////////////////////////////////////////////////////////////////////////</span>
+<span class="comment">///////////////////////////////////////////////////////////////////////////////</span>
 
-<span class='doccomment'>/// A **data format** that can serialize any data structure supported by Serde.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The role of this trait is to define the serialization half of the Serde data</span>
-<span class='doccomment'>/// model, which is a way to categorize every Rust data structure into one of 28</span>
-<span class='doccomment'>/// possible types. Each method of the `Serializer` trait corresponds to one of</span>
-<span class='doccomment'>/// the types of the data model.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Implementations of `Serialize` map themselves into this data model by</span>
-<span class='doccomment'>/// invoking exactly one of the `Serializer` methods.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// The types that make up the Serde data model are:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///  - 12 primitive types:</span>
-<span class='doccomment'>///    - bool</span>
-<span class='doccomment'>///    - i8, i16, i32, i64</span>
-<span class='doccomment'>///    - u8, u16, u32, u64</span>
-<span class='doccomment'>///    - f32, f64</span>
-<span class='doccomment'>///    - char</span>
-<span class='doccomment'>///  - string</span>
-<span class='doccomment'>///  - byte array - [u8]</span>
-<span class='doccomment'>///  - option</span>
-<span class='doccomment'>///    - either none or some value</span>
-<span class='doccomment'>///  - unit</span>
-<span class='doccomment'>///    - unit is the type of () in Rust</span>
-<span class='doccomment'>///  - unit_struct</span>
-<span class='doccomment'>///    - for example `struct Unit` or `PhantomData&lt;T&gt;`</span>
-<span class='doccomment'>///  - unit_variant</span>
-<span class='doccomment'>///    - the `E::A` and `E::B` in `enum E { A, B }`</span>
-<span class='doccomment'>///  - newtype_struct</span>
-<span class='doccomment'>///    - for example `struct Millimeters(u8)`</span>
-<span class='doccomment'>///  - newtype_variant</span>
-<span class='doccomment'>///    - the `E::N` in `enum E { N(u8) }`</span>
-<span class='doccomment'>///  - seq</span>
-<span class='doccomment'>///    - a dynamically sized sequence of values, for example `Vec&lt;T&gt;` or</span>
-<span class='doccomment'>///      `HashSet&lt;T&gt;`</span>
-<span class='doccomment'>///  - seq_fixed_size</span>
-<span class='doccomment'>///    - a statically sized sequence of values for which the size will be known</span>
-<span class='doccomment'>///      at deserialization time without looking at the serialized data, for</span>
-<span class='doccomment'>///      example `[u64; 10]`</span>
-<span class='doccomment'>///  - tuple</span>
-<span class='doccomment'>///    - for example `(u8,)` or `(String, u64, Vec&lt;T&gt;)`</span>
-<span class='doccomment'>///  - tuple_struct</span>
-<span class='doccomment'>///    - for example `struct Rgb(u8, u8, u8)`</span>
-<span class='doccomment'>///  - tuple_variant</span>
-<span class='doccomment'>///    - the `E::T` in `enum E { T(u8, u8) }`</span>
-<span class='doccomment'>///  - map</span>
-<span class='doccomment'>///    - for example `BTreeMap&lt;K, V&gt;`</span>
-<span class='doccomment'>///  - struct</span>
-<span class='doccomment'>///    - a key-value pairing in which the keys will be known at deserialization</span>
-<span class='doccomment'>///      time without looking at the serialized data, for example `struct S { r:</span>
-<span class='doccomment'>///      u8, g: u8, b: u8 }`</span>
-<span class='doccomment'>///  - struct_variant</span>
-<span class='doccomment'>///    - the `E::S` in `enum E { S { r: u8, g: u8, b: u8 } }`</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Many Serde serializers produce text or binary data as output, for example</span>
-<span class='doccomment'>/// JSON or Bincode. This is not a requirement of the `Serializer` trait, and</span>
-<span class='doccomment'>/// there are serializers that do not produce text or binary output. One example</span>
-<span class='doccomment'>/// is the `serde_json::value::Serializer` (distinct from the main `serde_json`</span>
-<span class='doccomment'>/// serializer) that produces a `serde_json::Value` data structure in memory as</span>
-<span class='doccomment'>/// output.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Serializer</span>: <span class='ident'>Sized</span> {
-    <span class='doccomment'>/// The output type produced by this `Serializer` during successful</span>
-    <span class='doccomment'>/// serialization. Most serializers that produce text or binary output</span>
-    <span class='doccomment'>/// should set `Ok = ()` and serialize into an `io::Write` or buffer</span>
-    <span class='doccomment'>/// contained within the `Serializer` instance. Serializers that build</span>
-    <span class='doccomment'>/// in-memory data structures may be simplified by using `Ok` to propagate</span>
-    <span class='doccomment'>/// the data structure around.</span>
-    <span class='kw'>type</span> <span class='prelude-val'>Ok</span>;
+<span class="doccomment">/// A **data format** that can serialize any data structure supported by Serde.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The role of this trait is to define the serialization half of the Serde data</span>
+<span class="doccomment">/// model, which is a way to categorize every Rust data structure into one of 28</span>
+<span class="doccomment">/// possible types. Each method of the `Serializer` trait corresponds to one of</span>
+<span class="doccomment">/// the types of the data model.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Implementations of `Serialize` map themselves into this data model by</span>
+<span class="doccomment">/// invoking exactly one of the `Serializer` methods.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The types that make up the Serde data model are:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///  - 12 primitive types:</span>
+<span class="doccomment">///    - bool</span>
+<span class="doccomment">///    - i8, i16, i32, i64</span>
+<span class="doccomment">///    - u8, u16, u32, u64</span>
+<span class="doccomment">///    - f32, f64</span>
+<span class="doccomment">///    - char</span>
+<span class="doccomment">///  - string</span>
+<span class="doccomment">///  - byte array - [u8]</span>
+<span class="doccomment">///  - option</span>
+<span class="doccomment">///    - either none or some value</span>
+<span class="doccomment">///  - unit</span>
+<span class="doccomment">///    - unit is the type of () in Rust</span>
+<span class="doccomment">///  - unit_struct</span>
+<span class="doccomment">///    - for example `struct Unit` or `PhantomData&lt;T&gt;`</span>
+<span class="doccomment">///  - unit_variant</span>
+<span class="doccomment">///    - the `E::A` and `E::B` in `enum E { A, B }`</span>
+<span class="doccomment">///  - newtype_struct</span>
+<span class="doccomment">///    - for example `struct Millimeters(u8)`</span>
+<span class="doccomment">///  - newtype_variant</span>
+<span class="doccomment">///    - the `E::N` in `enum E { N(u8) }`</span>
+<span class="doccomment">///  - seq</span>
+<span class="doccomment">///    - a dynamically sized sequence of values, for example `Vec&lt;T&gt;` or</span>
+<span class="doccomment">///      `HashSet&lt;T&gt;`</span>
+<span class="doccomment">///  - seq_fixed_size</span>
+<span class="doccomment">///    - a statically sized sequence of values for which the size will be known</span>
+<span class="doccomment">///      at deserialization time without looking at the serialized data, for</span>
+<span class="doccomment">///      example `[u64; 10]`</span>
+<span class="doccomment">///  - tuple</span>
+<span class="doccomment">///    - for example `(u8,)` or `(String, u64, Vec&lt;T&gt;)`</span>
+<span class="doccomment">///  - tuple_struct</span>
+<span class="doccomment">///    - for example `struct Rgb(u8, u8, u8)`</span>
+<span class="doccomment">///  - tuple_variant</span>
+<span class="doccomment">///    - the `E::T` in `enum E { T(u8, u8) }`</span>
+<span class="doccomment">///  - map</span>
+<span class="doccomment">///    - for example `BTreeMap&lt;K, V&gt;`</span>
+<span class="doccomment">///  - struct</span>
+<span class="doccomment">///    - a key-value pairing in which the keys will be known at deserialization</span>
+<span class="doccomment">///      time without looking at the serialized data, for example `struct S { r:</span>
+<span class="doccomment">///      u8, g: u8, b: u8 }`</span>
+<span class="doccomment">///  - struct_variant</span>
+<span class="doccomment">///    - the `E::S` in `enum E { S { r: u8, g: u8, b: u8 } }`</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Many Serde serializers produce text or binary data as output, for example</span>
+<span class="doccomment">/// JSON or Bincode. This is not a requirement of the `Serializer` trait, and</span>
+<span class="doccomment">/// there are serializers that do not produce text or binary output. One example</span>
+<span class="doccomment">/// is the `serde_json::value::Serializer` (distinct from the main `serde_json`</span>
+<span class="doccomment">/// serializer) that produces a `serde_json::Value` data structure in memory as</span>
+<span class="doccomment">/// output.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Serializer</span>: <span class="ident">Sized</span> {
+    <span class="doccomment">/// The output type produced by this `Serializer` during successful</span>
+    <span class="doccomment">/// serialization. Most serializers that produce text or binary output</span>
+    <span class="doccomment">/// should set `Ok = ()` and serialize into an `io::Write` or buffer</span>
+    <span class="doccomment">/// contained within the `Serializer` instance. Serializers that build</span>
+    <span class="doccomment">/// in-memory data structures may be simplified by using `Ok` to propagate</span>
+    <span class="doccomment">/// the data structure around.</span>
+    <span class="kw">type</span> <span class="prelude-val">Ok</span>;
 
-    <span class='doccomment'>/// The error type when some error occurs during serialization.</span>
-    <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
+    <span class="doccomment">/// The error type when some error occurs during serialization.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>;
 
-    <span class='doccomment'>/// Type returned from `serialize_seq` and `serialize_seq_fixed_size` for</span>
-    <span class='doccomment'>/// serializing the content of the sequence.</span>
-    <span class='kw'>type</span> <span class='ident'>SerializeSeq</span>: <span class='ident'>SerializeSeq</span><span class='op'>&lt;</span><span class='prelude-val'>Ok</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>Error</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Type returned from `serialize_seq` and `serialize_seq_fixed_size` for</span>
+    <span class="doccomment">/// serializing the content of the sequence.</span>
+    <span class="kw">type</span> <span class="ident">SerializeSeq</span>: <span class="ident">SerializeSeq</span><span class="op">&lt;</span><span class="prelude-val">Ok</span> <span class="op">=</span> <span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Type returned from `serialize_tuple` for serializing the content of the</span>
-    <span class='doccomment'>/// tuple.</span>
-    <span class='kw'>type</span> <span class='ident'>SerializeTuple</span>: <span class='ident'>SerializeTuple</span><span class='op'>&lt;</span><span class='prelude-val'>Ok</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>Error</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Type returned from `serialize_tuple` for serializing the content of the</span>
+    <span class="doccomment">/// tuple.</span>
+    <span class="kw">type</span> <span class="ident">SerializeTuple</span>: <span class="ident">SerializeTuple</span><span class="op">&lt;</span><span class="prelude-val">Ok</span> <span class="op">=</span> <span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Type returned from `serialize_tuple_struct` for serializing the content</span>
-    <span class='doccomment'>/// of the tuple struct.</span>
-    <span class='kw'>type</span> <span class='ident'>SerializeTupleStruct</span>: <span class='ident'>SerializeTupleStruct</span><span class='op'>&lt;</span><span class='prelude-val'>Ok</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>Error</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Type returned from `serialize_tuple_struct` for serializing the content</span>
+    <span class="doccomment">/// of the tuple struct.</span>
+    <span class="kw">type</span> <span class="ident">SerializeTupleStruct</span>: <span class="ident">SerializeTupleStruct</span><span class="op">&lt;</span><span class="prelude-val">Ok</span> <span class="op">=</span> <span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Type returned from `serialize_tuple_variant` for serializing the content</span>
-    <span class='doccomment'>/// of the tuple variant.</span>
-    <span class='kw'>type</span> <span class='ident'>SerializeTupleVariant</span>: <span class='ident'>SerializeTupleVariant</span><span class='op'>&lt;</span><span class='prelude-val'>Ok</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>Error</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Type returned from `serialize_tuple_variant` for serializing the content</span>
+    <span class="doccomment">/// of the tuple variant.</span>
+    <span class="kw">type</span> <span class="ident">SerializeTupleVariant</span>: <span class="ident">SerializeTupleVariant</span><span class="op">&lt;</span><span class="prelude-val">Ok</span> <span class="op">=</span> <span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Type returned from `serialize_map` for serializing the content of the</span>
-    <span class='doccomment'>/// map.</span>
-    <span class='kw'>type</span> <span class='ident'>SerializeMap</span>: <span class='ident'>SerializeMap</span><span class='op'>&lt;</span><span class='prelude-val'>Ok</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>Error</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Type returned from `serialize_map` for serializing the content of the</span>
+    <span class="doccomment">/// map.</span>
+    <span class="kw">type</span> <span class="ident">SerializeMap</span>: <span class="ident">SerializeMap</span><span class="op">&lt;</span><span class="prelude-val">Ok</span> <span class="op">=</span> <span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Type returned from `serialize_struct` for serializing the content of the</span>
-    <span class='doccomment'>/// struct.</span>
-    <span class='kw'>type</span> <span class='ident'>SerializeStruct</span>: <span class='ident'>SerializeStruct</span><span class='op'>&lt;</span><span class='prelude-val'>Ok</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>Error</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Type returned from `serialize_struct` for serializing the content of the</span>
+    <span class="doccomment">/// struct.</span>
+    <span class="kw">type</span> <span class="ident">SerializeStruct</span>: <span class="ident">SerializeStruct</span><span class="op">&lt;</span><span class="prelude-val">Ok</span> <span class="op">=</span> <span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Type returned from `serialize_struct_variant` for serializing the</span>
-    <span class='doccomment'>/// content of the struct variant.</span>
-    <span class='kw'>type</span> <span class='ident'>SerializeStructVariant</span>: <span class='ident'>SerializeStructVariant</span><span class='op'>&lt;</span><span class='prelude-val'>Ok</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='ident'>Error</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Type returned from `serialize_struct_variant` for serializing the</span>
+    <span class="doccomment">/// content of the struct variant.</span>
+    <span class="kw">type</span> <span class="ident">SerializeStructVariant</span>: <span class="ident">SerializeStructVariant</span><span class="op">&lt;</span><span class="prelude-val">Ok</span> <span class="op">=</span> <span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="ident">Error</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `bool` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_bool</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `bool` value.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_bool</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize an `i8` value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the format does not differentiate between `i8` and `i64`, a</span>
-    <span class='doccomment'>/// reasonable implementation would be to cast the value to `i64` and</span>
-    <span class='doccomment'>/// forward to `serialize_i64`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_i8</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize an `i8` value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the format does not differentiate between `i8` and `i64`, a</span>
+    <span class="doccomment">/// reasonable implementation would be to cast the value to `i64` and</span>
+    <span class="doccomment">/// forward to `serialize_i64`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_i8</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">i8</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize an `i16` value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the format does not differentiate between `i16` and `i64`, a</span>
-    <span class='doccomment'>/// reasonable implementation would be to cast the value to `i64` and</span>
-    <span class='doccomment'>/// forward to `serialize_i64`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_i16</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize an `i16` value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the format does not differentiate between `i16` and `i64`, a</span>
+    <span class="doccomment">/// reasonable implementation would be to cast the value to `i64` and</span>
+    <span class="doccomment">/// forward to `serialize_i64`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_i16</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">i16</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize an `i32` value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the format does not differentiate between `i32` and `i64`, a</span>
-    <span class='doccomment'>/// reasonable implementation would be to cast the value to `i64` and</span>
-    <span class='doccomment'>/// forward to `serialize_i64`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_i32</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize an `i32` value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the format does not differentiate between `i32` and `i64`, a</span>
+    <span class="doccomment">/// reasonable implementation would be to cast the value to `i64` and</span>
+    <span class="doccomment">/// forward to `serialize_i64`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_i32</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize an `i64` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_i64</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>i64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize an `i64` value.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_i64</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">i64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `u8` value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the format does not differentiate between `u8` and `u64`, a</span>
-    <span class='doccomment'>/// reasonable implementation would be to cast the value to `u64` and</span>
-    <span class='doccomment'>/// forward to `serialize_u64`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_u8</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u8</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `u8` value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the format does not differentiate between `u8` and `u64`, a</span>
+    <span class="doccomment">/// reasonable implementation would be to cast the value to `u64` and</span>
+    <span class="doccomment">/// forward to `serialize_u64`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_u8</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `u16` value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the format does not differentiate between `u16` and `u64`, a</span>
-    <span class='doccomment'>/// reasonable implementation would be to cast the value to `u64` and</span>
-    <span class='doccomment'>/// forward to `serialize_u64`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_u16</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u16</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `u16` value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the format does not differentiate between `u16` and `u64`, a</span>
+    <span class="doccomment">/// reasonable implementation would be to cast the value to `u64` and</span>
+    <span class="doccomment">/// forward to `serialize_u64`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_u16</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">u16</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `u32` value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the format does not differentiate between `u32` and `u64`, a</span>
-    <span class='doccomment'>/// reasonable implementation would be to cast the value to `u64` and</span>
-    <span class='doccomment'>/// forward to `serialize_u64`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_u32</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `u32` value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the format does not differentiate between `u32` and `u64`, a</span>
+    <span class="doccomment">/// reasonable implementation would be to cast the value to `u64` and</span>
+    <span class="doccomment">/// forward to `serialize_u64`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_u32</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `u64` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_u64</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>u64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `u64` value.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_u64</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize an `f32` value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the format does not differentiate between `f32` and `f64`, a</span>
-    <span class='doccomment'>/// reasonable implementation would be to cast the value to `f64` and</span>
-    <span class='doccomment'>/// forward to `serialize_f64`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_f32</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>f32</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize an `f32` value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the format does not differentiate between `f32` and `f64`, a</span>
+    <span class="doccomment">/// reasonable implementation would be to cast the value to `f64` and</span>
+    <span class="doccomment">/// forward to `serialize_f64`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_f32</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">f32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize an `f64` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_f64</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>f64</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize an `f64` value.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_f64</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">f64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a character.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// If the format does not support characters, it is reasonable to serialize</span>
-    <span class='doccomment'>/// it as a single element `str` or a `u32`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_char</span>(<span class='self'>self</span>, <span class='ident'>v</span>: <span class='ident'>char</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a character.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If the format does not support characters, it is reasonable to serialize</span>
+    <span class="doccomment">/// it as a single element `str` or a `u32`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_char</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `&amp;str`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_str</span>(<span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `&amp;str`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_str</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a chunk of raw byte data.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Enables serializers to serialize byte slices more compactly or more</span>
-    <span class='doccomment'>/// efficiently than other types of slices. If no efficient implementation</span>
-    <span class='doccomment'>/// is available, a reasonable implementation would be to forward to</span>
-    <span class='doccomment'>/// `serialize_seq`. If forwarded, the implementation looks usually just</span>
-    <span class='doccomment'>/// like this:</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// let mut seq = self.serialize_seq(Some(value.len()))?;</span>
-    <span class='doccomment'>/// for b in value {</span>
-    <span class='doccomment'>///     seq.serialize_element(b)?;</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// seq.end()</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_bytes</span>(<span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>u8</span>]) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a chunk of raw byte data.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Enables serializers to serialize byte slices more compactly or more</span>
+    <span class="doccomment">/// efficiently than other types of slices. If no efficient implementation</span>
+    <span class="doccomment">/// is available, a reasonable implementation would be to forward to</span>
+    <span class="doccomment">/// `serialize_seq`. If forwarded, the implementation looks usually just</span>
+    <span class="doccomment">/// like this:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// let mut seq = self.serialize_seq(Some(value.len()))?;</span>
+    <span class="doccomment">/// for b in value {</span>
+    <span class="doccomment">///     seq.serialize_element(b)?;</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// seq.end()</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_bytes</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `None` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_none</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `None` value.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_none</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `Some(T)` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_some</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `Some(T)` value.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_some</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a `()` value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_unit</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a `()` value.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_unit</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a unit struct like `struct Unit` or `PhantomData&lt;T&gt;`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A reasonable implementation would be to forward to `serialize_unit`.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_unit_struct</span>(<span class='self'>self</span>, <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a unit struct like `struct Unit` or `PhantomData&lt;T&gt;`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A reasonable implementation would be to forward to `serialize_unit`.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_unit_struct</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a unit variant like `E::A` in `enum E { A, B }`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The `name` is the name of the enum, the `variant_index` is the index of</span>
-    <span class='doccomment'>/// this variant within the enum, and the `variant` is the name of the</span>
-    <span class='doccomment'>/// variant.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// A reasonable implementation would be to forward to `serialize_unit`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// match *self {</span>
-    <span class='doccomment'>///     E::A =&gt; serializer.serialize_unit_variant(&quot;E&quot;, 0, &quot;A&quot;),</span>
-    <span class='doccomment'>///     E::B =&gt; serializer.serialize_unit_variant(&quot;E&quot;, 1, &quot;B&quot;),</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_unit_variant</span>(<span class='self'>self</span>,
-                              <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                              <span class='ident'>variant_index</span>: <span class='ident'>usize</span>,
-                              <span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>)
-                              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a unit variant like `E::A` in `enum E { A, B }`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The `name` is the name of the enum, the `variant_index` is the index of</span>
+    <span class="doccomment">/// this variant within the enum, and the `variant` is the name of the</span>
+    <span class="doccomment">/// variant.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// A reasonable implementation would be to forward to `serialize_unit`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// match *self {</span>
+    <span class="doccomment">///     E::A =&gt; serializer.serialize_unit_variant(&quot;E&quot;, 0, &quot;A&quot;),</span>
+    <span class="doccomment">///     E::B =&gt; serializer.serialize_unit_variant(&quot;E&quot;, 1, &quot;B&quot;),</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_unit_variant</span>(<span class="self">self</span>,
+                              <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                              <span class="ident">variant_index</span>: <span class="ident">usize</span>,
+                              <span class="ident">variant</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>)
+                              <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a newtype struct like `struct Millimeters(u8)`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Serializers are encouraged to treat newtype structs as insignificant</span>
-    <span class='doccomment'>/// wrappers around the data they contain. A reasonable implementation would</span>
-    <span class='doccomment'>/// be to forward to `value.serialize(self)`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// serializer.serialize_newtype_struct(&quot;Millimeters&quot;, &amp;self.0)</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_newtype_struct</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
-                                                       <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                                       <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>)
-                                                       <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a newtype struct like `struct Millimeters(u8)`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Serializers are encouraged to treat newtype structs as insignificant</span>
+    <span class="doccomment">/// wrappers around the data they contain. A reasonable implementation would</span>
+    <span class="doccomment">/// be to forward to `value.serialize(self)`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// serializer.serialize_newtype_struct(&quot;Millimeters&quot;, &amp;self.0)</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_newtype_struct</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="self">self</span>,
+                                                       <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                                                       <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>)
+                                                       <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a newtype variant like `E::N` in `enum E { N(u8) }`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The `name` is the name of the enum, the `variant_index` is the index of</span>
-    <span class='doccomment'>/// this variant within the enum, and the `variant` is the name of the</span>
-    <span class='doccomment'>/// variant. The `value` is the data contained within this newtype variant.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// match *self {</span>
-    <span class='doccomment'>///     E::N(ref n) =&gt; serializer.serialize_newtype_variant(&quot;E&quot;, 0, &quot;N&quot;, n),</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_newtype_variant</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='self'>self</span>,
-                                                        <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                                        <span class='ident'>variant_index</span>: <span class='ident'>usize</span>,
-                                                        <span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                                        <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>)
-                                                        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a newtype variant like `E::N` in `enum E { N(u8) }`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The `name` is the name of the enum, the `variant_index` is the index of</span>
+    <span class="doccomment">/// this variant within the enum, and the `variant` is the name of the</span>
+    <span class="doccomment">/// variant. The `value` is the data contained within this newtype variant.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// match *self {</span>
+    <span class="doccomment">///     E::N(ref n) =&gt; serializer.serialize_newtype_variant(&quot;E&quot;, 0, &quot;N&quot;, n),</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_newtype_variant</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="self">self</span>,
+                                                        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                                                        <span class="ident">variant_index</span>: <span class="ident">usize</span>,
+                                                        <span class="ident">variant</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                                                        <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>)
+                                                        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Begin to serialize a dynamically sized sequence. This call must be</span>
-    <span class='doccomment'>/// followed by zero or more calls to `serialize_element`, then a call to</span>
-    <span class='doccomment'>/// `end`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The argument is the number of elements in the sequence, which may or may</span>
-    <span class='doccomment'>/// not be computable before the sequence is iterated. Some serializers only</span>
-    <span class='doccomment'>/// support sequences whose length is known up front.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// let mut seq = serializer.serialize_seq(Some(self.len()))?;</span>
-    <span class='doccomment'>/// for element in self {</span>
-    <span class='doccomment'>///     seq.serialize_element(element)?;</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// seq.end()</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_seq</span>(<span class='self'>self</span>, <span class='ident'>len</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>SerializeSeq</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Begin to serialize a dynamically sized sequence. This call must be</span>
+    <span class="doccomment">/// followed by zero or more calls to `serialize_element`, then a call to</span>
+    <span class="doccomment">/// `end`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The argument is the number of elements in the sequence, which may or may</span>
+    <span class="doccomment">/// not be computable before the sequence is iterated. Some serializers only</span>
+    <span class="doccomment">/// support sequences whose length is known up front.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// let mut seq = serializer.serialize_seq(Some(self.len()))?;</span>
+    <span class="doccomment">/// for element in self {</span>
+    <span class="doccomment">///     seq.serialize_element(element)?;</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// seq.end()</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_seq</span>(<span class="self">self</span>, <span class="ident">len</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">SerializeSeq</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Begin to serialize a statically sized sequence whose length will be</span>
-    <span class='doccomment'>/// known at deserialization time without looking at the serialized data.</span>
-    <span class='doccomment'>/// This call must be followed by zero or more calls to `serialize_element`,</span>
-    <span class='doccomment'>/// then a call to `end`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// let mut seq = serializer.serialize_seq_fixed_size(self.len())?;</span>
-    <span class='doccomment'>/// for element in self {</span>
-    <span class='doccomment'>///     seq.serialize_element(element)?;</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// seq.end()</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_seq_fixed_size</span>(<span class='self'>self</span>, <span class='ident'>size</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>SerializeSeq</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Begin to serialize a statically sized sequence whose length will be</span>
+    <span class="doccomment">/// known at deserialization time without looking at the serialized data.</span>
+    <span class="doccomment">/// This call must be followed by zero or more calls to `serialize_element`,</span>
+    <span class="doccomment">/// then a call to `end`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// let mut seq = serializer.serialize_seq_fixed_size(self.len())?;</span>
+    <span class="doccomment">/// for element in self {</span>
+    <span class="doccomment">///     seq.serialize_element(element)?;</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// seq.end()</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_seq_fixed_size</span>(<span class="self">self</span>, <span class="ident">size</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">SerializeSeq</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Begin to serialize a tuple. This call must be followed by zero or more</span>
-    <span class='doccomment'>/// calls to `serialize_element`, then a call to `end`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// let mut tup = serializer.serialize_tuple(3)?;</span>
-    <span class='doccomment'>/// tup.serialize_element(&amp;self.0)?;</span>
-    <span class='doccomment'>/// tup.serialize_element(&amp;self.1)?;</span>
-    <span class='doccomment'>/// tup.serialize_element(&amp;self.2)?;</span>
-    <span class='doccomment'>/// tup.end()</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_tuple</span>(<span class='self'>self</span>, <span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>SerializeTuple</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Begin to serialize a tuple. This call must be followed by zero or more</span>
+    <span class="doccomment">/// calls to `serialize_element`, then a call to `end`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// let mut tup = serializer.serialize_tuple(3)?;</span>
+    <span class="doccomment">/// tup.serialize_element(&amp;self.0)?;</span>
+    <span class="doccomment">/// tup.serialize_element(&amp;self.1)?;</span>
+    <span class="doccomment">/// tup.serialize_element(&amp;self.2)?;</span>
+    <span class="doccomment">/// tup.end()</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_tuple</span>(<span class="self">self</span>, <span class="ident">len</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">SerializeTuple</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Begin to serialize a tuple struct like `struct Rgb(u8, u8, u8)`. This</span>
-    <span class='doccomment'>/// call must be followed by zero or more calls to `serialize_field`, then a</span>
-    <span class='doccomment'>/// call to `end`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The `name` is the name of the tuple struct and the `len` is the number</span>
-    <span class='doccomment'>/// of data fields that will be serialized.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// let mut ts = serializer.serialize_tuple_struct(&quot;Rgb&quot;, 3)?;</span>
-    <span class='doccomment'>/// ts.serialize_field(&amp;self.0)?;</span>
-    <span class='doccomment'>/// ts.serialize_field(&amp;self.1)?;</span>
-    <span class='doccomment'>/// ts.serialize_field(&amp;self.2)?;</span>
-    <span class='doccomment'>/// ts.end()</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_tuple_struct</span>(<span class='self'>self</span>,
-                              <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                              <span class='ident'>len</span>: <span class='ident'>usize</span>)
-                              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>SerializeTupleStruct</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Begin to serialize a tuple struct like `struct Rgb(u8, u8, u8)`. This</span>
+    <span class="doccomment">/// call must be followed by zero or more calls to `serialize_field`, then a</span>
+    <span class="doccomment">/// call to `end`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The `name` is the name of the tuple struct and the `len` is the number</span>
+    <span class="doccomment">/// of data fields that will be serialized.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// let mut ts = serializer.serialize_tuple_struct(&quot;Rgb&quot;, 3)?;</span>
+    <span class="doccomment">/// ts.serialize_field(&amp;self.0)?;</span>
+    <span class="doccomment">/// ts.serialize_field(&amp;self.1)?;</span>
+    <span class="doccomment">/// ts.serialize_field(&amp;self.2)?;</span>
+    <span class="doccomment">/// ts.end()</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_tuple_struct</span>(<span class="self">self</span>,
+                              <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                              <span class="ident">len</span>: <span class="ident">usize</span>)
+                              <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">SerializeTupleStruct</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Begin to serialize a tuple variant like `E::T` in `enum E { T(u8, u8)</span>
-    <span class='doccomment'>/// }`. This call must be followed by zero or more calls to</span>
-    <span class='doccomment'>/// `serialize_field`, then a call to `end`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The `name` is the name of the enum, the `variant_index` is the index of</span>
-    <span class='doccomment'>/// this variant within the enum, the `variant` is the name of the variant,</span>
-    <span class='doccomment'>/// and the `len` is the number of data fields that will be serialized.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// match *self {</span>
-    <span class='doccomment'>///     E::T(ref a, ref b) =&gt; {</span>
-    <span class='doccomment'>///         let mut tv = serializer.serialize_tuple_variant(&quot;E&quot;, 0, &quot;T&quot;, 2)?;</span>
-    <span class='doccomment'>///         tv.serialize_field(a)?;</span>
-    <span class='doccomment'>///         tv.serialize_field(b)?;</span>
-    <span class='doccomment'>///         tv.end()</span>
-    <span class='doccomment'>///     }</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_tuple_variant</span>(<span class='self'>self</span>,
-                               <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                               <span class='ident'>variant_index</span>: <span class='ident'>usize</span>,
-                               <span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                               <span class='ident'>len</span>: <span class='ident'>usize</span>)
-                               <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>SerializeTupleVariant</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Begin to serialize a tuple variant like `E::T` in `enum E { T(u8, u8)</span>
+    <span class="doccomment">/// }`. This call must be followed by zero or more calls to</span>
+    <span class="doccomment">/// `serialize_field`, then a call to `end`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The `name` is the name of the enum, the `variant_index` is the index of</span>
+    <span class="doccomment">/// this variant within the enum, the `variant` is the name of the variant,</span>
+    <span class="doccomment">/// and the `len` is the number of data fields that will be serialized.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// match *self {</span>
+    <span class="doccomment">///     E::T(ref a, ref b) =&gt; {</span>
+    <span class="doccomment">///         let mut tv = serializer.serialize_tuple_variant(&quot;E&quot;, 0, &quot;T&quot;, 2)?;</span>
+    <span class="doccomment">///         tv.serialize_field(a)?;</span>
+    <span class="doccomment">///         tv.serialize_field(b)?;</span>
+    <span class="doccomment">///         tv.end()</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_tuple_variant</span>(<span class="self">self</span>,
+                               <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                               <span class="ident">variant_index</span>: <span class="ident">usize</span>,
+                               <span class="ident">variant</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                               <span class="ident">len</span>: <span class="ident">usize</span>)
+                               <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">SerializeTupleVariant</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Begin to serialize a map. This call must be followed by zero or more</span>
-    <span class='doccomment'>/// calls to `serialize_key` and `serialize_value`, then a call to `end`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The argument is the number of elements in the map, which may or may not</span>
-    <span class='doccomment'>/// be computable before the map is iterated. Some serializers only support</span>
-    <span class='doccomment'>/// maps whose length is known up front.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// let mut map = serializer.serialize_map(Some(self.len()))?;</span>
-    <span class='doccomment'>/// for (k, v) in self {</span>
-    <span class='doccomment'>///     map.serialize_entry(k, v)?;</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// map.end()</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_map</span>(<span class='self'>self</span>, <span class='ident'>len</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>SerializeMap</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Begin to serialize a map. This call must be followed by zero or more</span>
+    <span class="doccomment">/// calls to `serialize_key` and `serialize_value`, then a call to `end`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The argument is the number of elements in the map, which may or may not</span>
+    <span class="doccomment">/// be computable before the map is iterated. Some serializers only support</span>
+    <span class="doccomment">/// maps whose length is known up front.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// let mut map = serializer.serialize_map(Some(self.len()))?;</span>
+    <span class="doccomment">/// for (k, v) in self {</span>
+    <span class="doccomment">///     map.serialize_entry(k, v)?;</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// map.end()</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_map</span>(<span class="self">self</span>, <span class="ident">len</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">SerializeMap</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Begin to serialize a struct like `struct Rgb { r: u8, g: u8, b: u8 }`.</span>
-    <span class='doccomment'>/// This call must be followed by zero or more calls to `serialize_field`,</span>
-    <span class='doccomment'>/// then a call to `end`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The `name` is the name of the struct and the `len` is the number of</span>
-    <span class='doccomment'>/// data fields that will be serialized.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// let mut struc = serializer.serialize_struct(&quot;Rgb&quot;, 3)?;</span>
-    <span class='doccomment'>/// struc.serialize_field(&quot;r&quot;, &amp;self.r)?;</span>
-    <span class='doccomment'>/// struc.serialize_field(&quot;g&quot;, &amp;self.g)?;</span>
-    <span class='doccomment'>/// struc.serialize_field(&quot;b&quot;, &amp;self.b)?;</span>
-    <span class='doccomment'>/// struc.end()</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_struct</span>(<span class='self'>self</span>,
-                        <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                        <span class='ident'>len</span>: <span class='ident'>usize</span>)
-                        <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>SerializeStruct</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Begin to serialize a struct like `struct Rgb { r: u8, g: u8, b: u8 }`.</span>
+    <span class="doccomment">/// This call must be followed by zero or more calls to `serialize_field`,</span>
+    <span class="doccomment">/// then a call to `end`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The `name` is the name of the struct and the `len` is the number of</span>
+    <span class="doccomment">/// data fields that will be serialized.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// let mut struc = serializer.serialize_struct(&quot;Rgb&quot;, 3)?;</span>
+    <span class="doccomment">/// struc.serialize_field(&quot;r&quot;, &amp;self.r)?;</span>
+    <span class="doccomment">/// struc.serialize_field(&quot;g&quot;, &amp;self.g)?;</span>
+    <span class="doccomment">/// struc.serialize_field(&quot;b&quot;, &amp;self.b)?;</span>
+    <span class="doccomment">/// struc.end()</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_struct</span>(<span class="self">self</span>,
+                        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                        <span class="ident">len</span>: <span class="ident">usize</span>)
+                        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">SerializeStruct</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Begin to serialize a struct variant like `E::S` in `enum E { S { r: u8,</span>
-    <span class='doccomment'>/// g: u8, b: u8 } }`. This call must be followed by zero or more calls to</span>
-    <span class='doccomment'>/// `serialize_field`, then a call to `end`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The `name` is the name of the enum, the `variant_index` is the index of</span>
-    <span class='doccomment'>/// this variant within the enum, the `variant` is the name of the variant,</span>
-    <span class='doccomment'>/// and the `len` is the number of data fields that will be serialized.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust,ignore</span>
-    <span class='doccomment'>/// match *self {</span>
-    <span class='doccomment'>///     E::S { ref r, ref g, ref b } =&gt; {</span>
-    <span class='doccomment'>///         let mut sv = serializer.serialize_struct_variant(&quot;E&quot;, 0, &quot;S&quot;, 3)?;</span>
-    <span class='doccomment'>///         sv.serialize_field(&quot;r&quot;, r)?;</span>
-    <span class='doccomment'>///         sv.serialize_field(&quot;g&quot;, g)?;</span>
-    <span class='doccomment'>///         sv.serialize_field(&quot;b&quot;, b)?;</span>
-    <span class='doccomment'>///         sv.end()</span>
-    <span class='doccomment'>///     }</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_struct_variant</span>(<span class='self'>self</span>,
-                                <span class='ident'>name</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                <span class='ident'>variant_index</span>: <span class='ident'>usize</span>,
-                                <span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                <span class='ident'>len</span>: <span class='ident'>usize</span>)
-                                <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='ident'>SerializeStructVariant</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Begin to serialize a struct variant like `E::S` in `enum E { S { r: u8,</span>
+    <span class="doccomment">/// g: u8, b: u8 } }`. This call must be followed by zero or more calls to</span>
+    <span class="doccomment">/// `serialize_field`, then a call to `end`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The `name` is the name of the enum, the `variant_index` is the index of</span>
+    <span class="doccomment">/// this variant within the enum, the `variant` is the name of the variant,</span>
+    <span class="doccomment">/// and the `len` is the number of data fields that will be serialized.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust,ignore</span>
+    <span class="doccomment">/// match *self {</span>
+    <span class="doccomment">///     E::S { ref r, ref g, ref b } =&gt; {</span>
+    <span class="doccomment">///         let mut sv = serializer.serialize_struct_variant(&quot;E&quot;, 0, &quot;S&quot;, 3)?;</span>
+    <span class="doccomment">///         sv.serialize_field(&quot;r&quot;, r)?;</span>
+    <span class="doccomment">///         sv.serialize_field(&quot;g&quot;, g)?;</span>
+    <span class="doccomment">///         sv.serialize_field(&quot;b&quot;, b)?;</span>
+    <span class="doccomment">///         sv.end()</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">fn</span> <span class="ident">serialize_struct_variant</span>(<span class="self">self</span>,
+                                <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                                <span class="ident">variant_index</span>: <span class="ident">usize</span>,
+                                <span class="ident">variant</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                                <span class="ident">len</span>: <span class="ident">usize</span>)
+                                <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">SerializeStructVariant</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Collect an iterator as a sequence.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The default implementation serializes each item yielded by the iterator</span>
-    <span class='doccomment'>/// using `Self::SerializeSeq`. Implementors should not need to override</span>
-    <span class='doccomment'>/// this method.</span>
-    <span class='kw'>fn</span> <span class='ident'>collect_seq</span><span class='op'>&lt;</span><span class='ident'>I</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>iter</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>I</span>: <span class='ident'>IntoIterator</span>,
-              <span class='op'>&lt;</span><span class='ident'>I</span> <span class='kw'>as</span> <span class='ident'>IntoIterator</span><span class='op'>&gt;</span>::<span class='ident'>Item</span>: <span class='ident'>Serialize</span>
+    <span class="doccomment">/// Collect an iterator as a sequence.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default implementation serializes each item yielded by the iterator</span>
+    <span class="doccomment">/// using `Self::SerializeSeq`. Implementors should not need to override</span>
+    <span class="doccomment">/// this method.</span>
+    <span class="kw">fn</span> <span class="ident">collect_seq</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">iter</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span>,
+              <span class="op">&lt;</span><span class="ident">I</span> <span class="kw">as</span> <span class="ident">IntoIterator</span><span class="op">&gt;</span>::<span class="ident">Item</span>: <span class="ident">Serialize</span>
     {
-        <span class='kw'>let</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>.<span class='ident'>into_iter</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serializer</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_seq</span>(<span class='ident'>iter</span>.<span class='ident'>len_hint</span>()));
-        <span class='kw'>for</span> <span class='ident'>item</span> <span class='kw'>in</span> <span class='ident'>iter</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serializer</span>.<span class='ident'>serialize_element</span>(<span class='kw-2'>&amp;</span><span class='ident'>item</span>));
+        <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">into_iter</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">serializer</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">serialize_seq</span>(<span class="ident">iter</span>.<span class="ident">len_hint</span>()));
+        <span class="kw">for</span> <span class="ident">item</span> <span class="kw">in</span> <span class="ident">iter</span> {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">serializer</span>.<span class="ident">serialize_element</span>(<span class="kw-2">&amp;</span><span class="ident">item</span>));
         }
-        <span class='ident'>serializer</span>.<span class='ident'>end</span>()
+        <span class="ident">serializer</span>.<span class="ident">end</span>()
     }
 
-    <span class='doccomment'>/// Collect an iterator as a map.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The default implementation serializes each pair yielded by the iterator</span>
-    <span class='doccomment'>/// using `Self::SerializeMap`. Implementors should not need to override</span>
-    <span class='doccomment'>/// this method.</span>
-    <span class='kw'>fn</span> <span class='ident'>collect_map</span><span class='op'>&lt;</span><span class='ident'>K</span>, <span class='ident'>V</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>iter</span>: <span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>K</span>: <span class='ident'>Serialize</span>,
-              <span class='ident'>V</span>: <span class='ident'>Serialize</span>,
-              <span class='ident'>I</span>: <span class='ident'>IntoIterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> (<span class='ident'>K</span>, <span class='ident'>V</span>)<span class='op'>&gt;</span>
+    <span class="doccomment">/// Collect an iterator as a map.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default implementation serializes each pair yielded by the iterator</span>
+    <span class="doccomment">/// using `Self::SerializeMap`. Implementors should not need to override</span>
+    <span class="doccomment">/// this method.</span>
+    <span class="kw">fn</span> <span class="ident">collect_map</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">iter</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">K</span>: <span class="ident">Serialize</span>,
+              <span class="ident">V</span>: <span class="ident">Serialize</span>,
+              <span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> (<span class="ident">K</span>, <span class="ident">V</span>)<span class="op">&gt;</span>
     {
-        <span class='kw'>let</span> <span class='ident'>iter</span> <span class='op'>=</span> <span class='ident'>iter</span>.<span class='ident'>into_iter</span>();
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>serializer</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_map</span>(<span class='ident'>iter</span>.<span class='ident'>len_hint</span>()));
-        <span class='kw'>for</span> (<span class='ident'>key</span>, <span class='ident'>value</span>) <span class='kw'>in</span> <span class='ident'>iter</span> {
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>serializer</span>.<span class='ident'>serialize_entry</span>(<span class='kw-2'>&amp;</span><span class='ident'>key</span>, <span class='kw-2'>&amp;</span><span class='ident'>value</span>));
+        <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="ident">iter</span>.<span class="ident">into_iter</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">serializer</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">serialize_map</span>(<span class="ident">iter</span>.<span class="ident">len_hint</span>()));
+        <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="ident">iter</span> {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="ident">serializer</span>.<span class="ident">serialize_entry</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>));
         }
-        <span class='ident'>serializer</span>.<span class='ident'>end</span>()
+        <span class="ident">serializer</span>.<span class="ident">end</span>()
     }
 
-    <span class='doccomment'>/// Serialize a string produced by an implementation of `Display`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The default implementation builds a heap-allocated `String` and</span>
-    <span class='doccomment'>/// delegates to `serialize_str`. Serializers are encouraged to provide a</span>
-    <span class='doccomment'>/// more efficient implementation if possible.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// # use serde::{Serialize, Serializer};</span>
-    <span class='doccomment'>/// # struct DateTime;</span>
-    <span class='doccomment'>/// # impl DateTime {</span>
-    <span class='doccomment'>/// #     fn naive_local(&amp;self) -&gt; () { () }</span>
-    <span class='doccomment'>/// #     fn offset(&amp;self) -&gt; () { () }</span>
-    <span class='doccomment'>/// # }</span>
-    <span class='doccomment'>/// impl Serialize for DateTime {</span>
-    <span class='doccomment'>///     fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;</span>
-    <span class='doccomment'>///         where S: Serializer</span>
-    <span class='doccomment'>///     {</span>
-    <span class='doccomment'>///         serializer.collect_str(&amp;format_args!(&quot;{:?}{:?}&quot;,</span>
-    <span class='doccomment'>///                                              self.naive_local(),</span>
-    <span class='doccomment'>///                                              self.offset()))</span>
-    <span class='doccomment'>///     }</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>))]</span>
-    <span class='kw'>fn</span> <span class='ident'>collect_str</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Display</span>
+    <span class="doccomment">/// Serialize a string produced by an implementation of `Display`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default implementation builds a heap-allocated `String` and</span>
+    <span class="doccomment">/// delegates to `serialize_str`. Serializers are encouraged to provide a</span>
+    <span class="doccomment">/// more efficient implementation if possible.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # use serde::{Serialize, Serializer};</span>
+    <span class="doccomment">/// # struct DateTime;</span>
+    <span class="doccomment">/// # impl DateTime {</span>
+    <span class="doccomment">/// #     fn naive_local(&amp;self) -&gt; () { () }</span>
+    <span class="doccomment">/// #     fn offset(&amp;self) -&gt; () { () }</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// impl Serialize for DateTime {</span>
+    <span class="doccomment">///     fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;</span>
+    <span class="doccomment">///         where S: Serializer</span>
+    <span class="doccomment">///     {</span>
+    <span class="doccomment">///         serializer.collect_str(&amp;format_args!(&quot;{:?}{:?}&quot;,</span>
+    <span class="doccomment">///                                              self.naive_local(),</span>
+    <span class="doccomment">///                                              self.offset()))</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;collections&quot;</span>))]</span>
+    <span class="kw">fn</span> <span class="ident">collect_str</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Display</span>
     {
-        <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>string</span> <span class='op'>=</span> <span class='ident'>String</span>::<span class='ident'>new</span>();
-        <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>string</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>value</span>).<span class='ident'>unwrap</span>();
-        <span class='self'>self</span>.<span class='ident'>serialize_str</span>(<span class='kw-2'>&amp;</span><span class='ident'>string</span>)
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">string</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
+        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">string</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">value</span>).<span class="ident">unwrap</span>();
+        <span class="self">self</span>.<span class="ident">serialize_str</span>(<span class="kw-2">&amp;</span><span class="ident">string</span>)
     }
 
-    <span class='doccomment'>/// Serialize a string produced by an implementation of `Display`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The default implementation returns an error unconditionally when</span>
-    <span class='doccomment'>/// compiled with `no_std`.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```rust</span>
-    <span class='doccomment'>/// # use serde::{Serialize, Serializer};</span>
-    <span class='doccomment'>/// # struct DateTime;</span>
-    <span class='doccomment'>/// # impl DateTime {</span>
-    <span class='doccomment'>/// #     fn naive_local(&amp;self) -&gt; () { () }</span>
-    <span class='doccomment'>/// #     fn offset(&amp;self) -&gt; () { () }</span>
-    <span class='doccomment'>/// # }</span>
-    <span class='doccomment'>/// impl Serialize for DateTime {</span>
-    <span class='doccomment'>///     fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;</span>
-    <span class='doccomment'>///         where S: Serializer</span>
-    <span class='doccomment'>///     {</span>
-    <span class='doccomment'>///         serializer.collect_str(&amp;format_args!(&quot;{:?}{:?}&quot;,</span>
-    <span class='doccomment'>///                                              self.naive_local(),</span>
-    <span class='doccomment'>///                                              self.offset()))</span>
-    <span class='doccomment'>///     }</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;std&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;collections&quot;</span>)))]</span>
-    <span class='kw'>fn</span> <span class='ident'>collect_str</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>T</span>: <span class='ident'>Display</span>
+    <span class="doccomment">/// Serialize a string produced by an implementation of `Display`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default implementation returns an error unconditionally when</span>
+    <span class="doccomment">/// compiled with `no_std`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # use serde::{Serialize, Serializer};</span>
+    <span class="doccomment">/// # struct DateTime;</span>
+    <span class="doccomment">/// # impl DateTime {</span>
+    <span class="doccomment">/// #     fn naive_local(&amp;self) -&gt; () { () }</span>
+    <span class="doccomment">/// #     fn offset(&amp;self) -&gt; () { () }</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// impl Serialize for DateTime {</span>
+    <span class="doccomment">///     fn serialize&lt;S&gt;(&amp;self, serializer: S) -&gt; Result&lt;S::Ok, S::Error&gt;</span>
+    <span class="doccomment">///         where S: Serializer</span>
+    <span class="doccomment">///     {</span>
+    <span class="doccomment">///         serializer.collect_str(&amp;format_args!(&quot;{:?}{:?}&quot;,</span>
+    <span class="doccomment">///                                              self.naive_local(),</span>
+    <span class="doccomment">///                                              self.offset()))</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;std&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;collections&quot;</span>)))]</span>
+    <span class="kw">fn</span> <span class="ident">collect_str</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Display</span>
     {
-        <span class='comment'>// TODO https://github.com/serde-rs/serde/issues/805</span>
-        <span class='comment'>// Remove this impl and force no_std formats to implement collect_str.</span>
-        <span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>value</span>;
-        <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>custom</span>(<span class='string'>&quot;this no_std format does not support serializing strings with collect_str&quot;</span>))
+        <span class="comment">// TODO https://github.com/serde-rs/serde/issues/805</span>
+        <span class="comment">// Remove this impl and force no_std formats to implement collect_str.</span>
+        <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">value</span>;
+        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">custom</span>(<span class="string">&quot;this no_std format does not support serializing strings with collect_str&quot;</span>))
     }
 }
 
-<span class='doccomment'>/// Returned from `Serializer::serialize_seq` and</span>
-<span class='doccomment'>/// `Serializer::serialize_seq_fixed_size`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,ignore</span>
-<span class='doccomment'>/// let mut seq = serializer.serialize_seq(Some(self.len()))?;</span>
-<span class='doccomment'>/// for element in self {</span>
-<span class='doccomment'>///     seq.serialize_element(element)?;</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// seq.end()</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SerializeSeq</span> {
-    <span class='doccomment'>/// Must match the `Ok` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='prelude-val'>Ok</span>;
+<span class="doccomment">/// Returned from `Serializer::serialize_seq` and</span>
+<span class="doccomment">/// `Serializer::serialize_seq_fixed_size`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,ignore</span>
+<span class="doccomment">/// let mut seq = serializer.serialize_seq(Some(self.len()))?;</span>
+<span class="doccomment">/// for element in self {</span>
+<span class="doccomment">///     seq.serialize_element(element)?;</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// seq.end()</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerializeSeq</span> {
+    <span class="doccomment">/// Must match the `Ok` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="prelude-val">Ok</span>;
 
-    <span class='doccomment'>/// Must match the `Error` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
+    <span class="doccomment">/// Must match the `Error` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>;
 
-    <span class='doccomment'>/// Serialize a sequence element.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_element</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a sequence element.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_element</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Finish serializing a sequence.</span>
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Finish serializing a sequence.</span>
+    <span class="kw">fn</span> <span class="ident">end</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class='doccomment'>/// Returned from `Serializer::serialize_tuple`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,ignore</span>
-<span class='doccomment'>/// let mut tup = serializer.serialize_tuple(3)?;</span>
-<span class='doccomment'>/// tup.serialize_element(&amp;self.0)?;</span>
-<span class='doccomment'>/// tup.serialize_element(&amp;self.1)?;</span>
-<span class='doccomment'>/// tup.serialize_element(&amp;self.2)?;</span>
-<span class='doccomment'>/// tup.end()</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SerializeTuple</span> {
-    <span class='doccomment'>/// Must match the `Ok` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='prelude-val'>Ok</span>;
+<span class="doccomment">/// Returned from `Serializer::serialize_tuple`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,ignore</span>
+<span class="doccomment">/// let mut tup = serializer.serialize_tuple(3)?;</span>
+<span class="doccomment">/// tup.serialize_element(&amp;self.0)?;</span>
+<span class="doccomment">/// tup.serialize_element(&amp;self.1)?;</span>
+<span class="doccomment">/// tup.serialize_element(&amp;self.2)?;</span>
+<span class="doccomment">/// tup.end()</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerializeTuple</span> {
+    <span class="doccomment">/// Must match the `Ok` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="prelude-val">Ok</span>;
 
-    <span class='doccomment'>/// Must match the `Error` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
+    <span class="doccomment">/// Must match the `Error` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>;
 
-    <span class='doccomment'>/// Serialize a tuple element.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_element</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a tuple element.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_element</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Finish serializing a tuple.</span>
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Finish serializing a tuple.</span>
+    <span class="kw">fn</span> <span class="ident">end</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class='doccomment'>/// Returned from `Serializer::serialize_tuple_struct`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,ignore</span>
-<span class='doccomment'>/// let mut ts = serializer.serialize_tuple_struct(&quot;Rgb&quot;, 3)?;</span>
-<span class='doccomment'>/// ts.serialize_field(&amp;self.0)?;</span>
-<span class='doccomment'>/// ts.serialize_field(&amp;self.1)?;</span>
-<span class='doccomment'>/// ts.serialize_field(&amp;self.2)?;</span>
-<span class='doccomment'>/// ts.end()</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SerializeTupleStruct</span> {
-    <span class='doccomment'>/// Must match the `Ok` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='prelude-val'>Ok</span>;
+<span class="doccomment">/// Returned from `Serializer::serialize_tuple_struct`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,ignore</span>
+<span class="doccomment">/// let mut ts = serializer.serialize_tuple_struct(&quot;Rgb&quot;, 3)?;</span>
+<span class="doccomment">/// ts.serialize_field(&amp;self.0)?;</span>
+<span class="doccomment">/// ts.serialize_field(&amp;self.1)?;</span>
+<span class="doccomment">/// ts.serialize_field(&amp;self.2)?;</span>
+<span class="doccomment">/// ts.end()</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerializeTupleStruct</span> {
+    <span class="doccomment">/// Must match the `Ok` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="prelude-val">Ok</span>;
 
-    <span class='doccomment'>/// Must match the `Error` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
+    <span class="doccomment">/// Must match the `Error` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>;
 
-    <span class='doccomment'>/// Serialize a tuple struct field.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_field</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a tuple struct field.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_field</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Finish serializing a tuple struct.</span>
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Finish serializing a tuple struct.</span>
+    <span class="kw">fn</span> <span class="ident">end</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class='doccomment'>/// Returned from `Serializer::serialize_tuple_variant`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,ignore</span>
-<span class='doccomment'>/// match *self {</span>
-<span class='doccomment'>///     E::T(ref a, ref b) =&gt; {</span>
-<span class='doccomment'>///         let mut tv = serializer.serialize_tuple_variant(&quot;E&quot;, 0, &quot;T&quot;, 2)?;</span>
-<span class='doccomment'>///         tv.serialize_field(a)?;</span>
-<span class='doccomment'>///         tv.serialize_field(b)?;</span>
-<span class='doccomment'>///         tv.end()</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SerializeTupleVariant</span> {
-    <span class='doccomment'>/// Must match the `Ok` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='prelude-val'>Ok</span>;
+<span class="doccomment">/// Returned from `Serializer::serialize_tuple_variant`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,ignore</span>
+<span class="doccomment">/// match *self {</span>
+<span class="doccomment">///     E::T(ref a, ref b) =&gt; {</span>
+<span class="doccomment">///         let mut tv = serializer.serialize_tuple_variant(&quot;E&quot;, 0, &quot;T&quot;, 2)?;</span>
+<span class="doccomment">///         tv.serialize_field(a)?;</span>
+<span class="doccomment">///         tv.serialize_field(b)?;</span>
+<span class="doccomment">///         tv.end()</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerializeTupleVariant</span> {
+    <span class="doccomment">/// Must match the `Ok` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="prelude-val">Ok</span>;
 
-    <span class='doccomment'>/// Must match the `Error` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
+    <span class="doccomment">/// Must match the `Error` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>;
 
-    <span class='doccomment'>/// Serialize a tuple variant field.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_field</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a tuple variant field.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_field</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Finish serializing a tuple variant.</span>
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Finish serializing a tuple variant.</span>
+    <span class="kw">fn</span> <span class="ident">end</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class='doccomment'>/// Returned from `Serializer::serialize_map`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,ignore</span>
-<span class='doccomment'>/// let mut map = serializer.serialize_map(Some(self.len()))?;</span>
-<span class='doccomment'>/// for (k, v) in self {</span>
-<span class='doccomment'>///     map.serialize_entry(k, v)?;</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// map.end()</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SerializeMap</span> {
-    <span class='doccomment'>/// Must match the `Ok` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='prelude-val'>Ok</span>;
+<span class="doccomment">/// Returned from `Serializer::serialize_map`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,ignore</span>
+<span class="doccomment">/// let mut map = serializer.serialize_map(Some(self.len()))?;</span>
+<span class="doccomment">/// for (k, v) in self {</span>
+<span class="doccomment">///     map.serialize_entry(k, v)?;</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// map.end()</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerializeMap</span> {
+    <span class="doccomment">/// Must match the `Ok` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="prelude-val">Ok</span>;
 
-    <span class='doccomment'>/// Must match the `Error` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
+    <span class="doccomment">/// Must match the `Error` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>;
 
-    <span class='doccomment'>/// Serialize a map key.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_key</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a map key.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_key</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a map value.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_value</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a map value.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_value</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Serialize a map entry consisting of a key and a value.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// Some `Serialize` types are not able to hold a key and value in memory at</span>
-    <span class='doccomment'>/// the same time so `SerializeMap` implementations are required to support</span>
-    <span class='doccomment'>/// `serialize_key` and `serialize_value` individually. The</span>
-    <span class='doccomment'>/// `serialize_entry` method allows serializers to optimize for the case</span>
-    <span class='doccomment'>/// where key and value are both available. `Serialize` implementations are</span>
-    <span class='doccomment'>/// encouraged to use `serialize_entry` if possible.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// The default implementation delegates to `serialize_key` and</span>
-    <span class='doccomment'>/// `serialize_value`. This is appropriate for serializers that do not care</span>
-    <span class='doccomment'>/// about performance or are not able to optimize `serialize_entry` any</span>
-    <span class='doccomment'>/// better than this.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_entry</span><span class='op'>&lt;</span><span class='ident'>K</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span>, <span class='ident'>V</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-                                                                     <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='ident'>K</span>,
-                                                                     <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>V</span>)
-                                                                     <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>serialize_key</span>(<span class='ident'>key</span>));
-        <span class='self'>self</span>.<span class='ident'>serialize_value</span>(<span class='ident'>value</span>)
+    <span class="doccomment">/// Serialize a map entry consisting of a key and a value.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Some `Serialize` types are not able to hold a key and value in memory at</span>
+    <span class="doccomment">/// the same time so `SerializeMap` implementations are required to support</span>
+    <span class="doccomment">/// `serialize_key` and `serialize_value` individually. The</span>
+    <span class="doccomment">/// `serialize_entry` method allows serializers to optimize for the case</span>
+    <span class="doccomment">/// where key and value are both available. `Serialize` implementations are</span>
+    <span class="doccomment">/// encouraged to use `serialize_entry` if possible.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default implementation delegates to `serialize_key` and</span>
+    <span class="doccomment">/// `serialize_value`. This is appropriate for serializers that do not care</span>
+    <span class="doccomment">/// about performance or are not able to optimize `serialize_entry` any</span>
+    <span class="doccomment">/// better than this.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_entry</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span>, <span class="ident">V</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+                                                                     <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="ident">K</span>,
+                                                                     <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">V</span>)
+                                                                     <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">serialize_key</span>(<span class="ident">key</span>));
+        <span class="self">self</span>.<span class="ident">serialize_value</span>(<span class="ident">value</span>)
     }
 
-    <span class='doccomment'>/// Finish serializing a map.</span>
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Finish serializing a map.</span>
+    <span class="kw">fn</span> <span class="ident">end</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class='doccomment'>/// Returned from `Serializer::serialize_struct`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,ignore</span>
-<span class='doccomment'>/// let mut struc = serializer.serialize_struct(&quot;Rgb&quot;, 3)?;</span>
-<span class='doccomment'>/// struc.serialize_field(&quot;r&quot;, &amp;self.r)?;</span>
-<span class='doccomment'>/// struc.serialize_field(&quot;g&quot;, &amp;self.g)?;</span>
-<span class='doccomment'>/// struc.serialize_field(&quot;b&quot;, &amp;self.b)?;</span>
-<span class='doccomment'>/// struc.end()</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SerializeStruct</span> {
-    <span class='doccomment'>/// Must match the `Ok` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='prelude-val'>Ok</span>;
+<span class="doccomment">/// Returned from `Serializer::serialize_struct`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,ignore</span>
+<span class="doccomment">/// let mut struc = serializer.serialize_struct(&quot;Rgb&quot;, 3)?;</span>
+<span class="doccomment">/// struc.serialize_field(&quot;r&quot;, &amp;self.r)?;</span>
+<span class="doccomment">/// struc.serialize_field(&quot;g&quot;, &amp;self.g)?;</span>
+<span class="doccomment">/// struc.serialize_field(&quot;b&quot;, &amp;self.b)?;</span>
+<span class="doccomment">/// struc.end()</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerializeStruct</span> {
+    <span class="doccomment">/// Must match the `Ok` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="prelude-val">Ok</span>;
 
-    <span class='doccomment'>/// Must match the `Error` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
+    <span class="doccomment">/// Must match the `Error` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>;
 
-    <span class='doccomment'>/// Serialize a struct field.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_field</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-                                              <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                              <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>)
-                                              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a struct field.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_field</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+                                              <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                                              <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>)
+                                              <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Finish serializing a struct.</span>
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Finish serializing a struct.</span>
+    <span class="kw">fn</span> <span class="ident">end</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class='doccomment'>/// Returned from `Serializer::serialize_struct_variant`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```rust,ignore</span>
-<span class='doccomment'>/// match *self {</span>
-<span class='doccomment'>///     E::S { ref r, ref g, ref b } =&gt; {</span>
-<span class='doccomment'>///         let mut sv = serializer.serialize_struct_variant(&quot;E&quot;, 0, &quot;S&quot;, 3)?;</span>
-<span class='doccomment'>///         sv.serialize_field(&quot;r&quot;, r)?;</span>
-<span class='doccomment'>///         sv.serialize_field(&quot;g&quot;, g)?;</span>
-<span class='doccomment'>///         sv.serialize_field(&quot;b&quot;, b)?;</span>
-<span class='doccomment'>///         sv.end()</span>
-<span class='doccomment'>///     }</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>SerializeStructVariant</span> {
-    <span class='doccomment'>/// Must match the `Ok` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='prelude-val'>Ok</span>;
+<span class="doccomment">/// Returned from `Serializer::serialize_struct_variant`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust,ignore</span>
+<span class="doccomment">/// match *self {</span>
+<span class="doccomment">///     E::S { ref r, ref g, ref b } =&gt; {</span>
+<span class="doccomment">///         let mut sv = serializer.serialize_struct_variant(&quot;E&quot;, 0, &quot;S&quot;, 3)?;</span>
+<span class="doccomment">///         sv.serialize_field(&quot;r&quot;, r)?;</span>
+<span class="doccomment">///         sv.serialize_field(&quot;g&quot;, g)?;</span>
+<span class="doccomment">///         sv.serialize_field(&quot;b&quot;, b)?;</span>
+<span class="doccomment">///         sv.end()</span>
+<span class="doccomment">///     }</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerializeStructVariant</span> {
+    <span class="doccomment">/// Must match the `Ok` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="prelude-val">Ok</span>;
 
-    <span class='doccomment'>/// Must match the `Error` type of our `Serializer`.</span>
-    <span class='kw'>type</span> <span class='ident'>Error</span>: <span class='ident'>Error</span>;
+    <span class="doccomment">/// Must match the `Error` type of our `Serializer`.</span>
+    <span class="kw">type</span> <span class="ident">Error</span>: <span class="ident">Error</span>;
 
-    <span class='doccomment'>/// Serialize a struct variant field.</span>
-    <span class='kw'>fn</span> <span class='ident'>serialize_field</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='question-mark'>?</span><span class='ident'>Sized</span> <span class='op'>+</span> <span class='ident'>Serialize</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>,
-                                              <span class='ident'>key</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
-                                              <span class='ident'>value</span>: <span class='kw-2'>&amp;</span><span class='ident'>T</span>)
-                                              <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Serialize a struct variant field.</span>
+    <span class="kw">fn</span> <span class="ident">serialize_field</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+                                              <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
+                                              <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>)
+                                              <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Finish serializing a struct variant.</span>
-    <span class='kw'>fn</span> <span class='ident'>end</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='self'>Self</span>::<span class='prelude-val'>Ok</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// Finish serializing a struct variant.</span>
+    <span class="kw">fn</span> <span class="ident">end</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="prelude-val">Ok</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
-<span class='kw'>trait</span> <span class='ident'>LenHint</span>: <span class='ident'>Iterator</span> {
-    <span class='kw'>fn</span> <span class='ident'>len_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span>;
+<span class="kw">trait</span> <span class="ident">LenHint</span>: <span class="ident">Iterator</span> {
+    <span class="kw">fn</span> <span class="ident">len_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>;
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&gt;</span> <span class='ident'>LenHint</span> <span class='kw'>for</span> <span class='ident'>I</span> {
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;unstable&quot;</span>))]</span>
-    <span class='kw'>fn</span> <span class='ident'>len_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='ident'>iterator_len_hint</span>(<span class='self'>self</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&gt;</span> <span class="ident">LenHint</span> <span class="kw">for</span> <span class="ident">I</span> {
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable&quot;</span>))]</span>
+    <span class="kw">fn</span> <span class="ident">len_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="ident">iterator_len_hint</span>(<span class="self">self</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;unstable&quot;</span>)]</span>
-    <span class='ident'>default</span> <span class='kw'>fn</span> <span class='ident'>len_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='ident'>iterator_len_hint</span>(<span class='self'>self</span>)
-    }
-}
-
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;unstable&quot;</span>)]</span>
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>I</span>: <span class='ident'>ExactSizeIterator</span><span class='op'>&gt;</span> <span class='ident'>LenHint</span> <span class='kw'>for</span> <span class='ident'>I</span> {
-    <span class='kw'>fn</span> <span class='ident'>len_hint</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-        <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>len</span>())
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable&quot;</span>)]</span>
+    <span class="ident">default</span> <span class="kw">fn</span> <span class="ident">len_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="ident">iterator_len_hint</span>(<span class="self">self</span>)
     }
 }
 
-<span class='kw'>fn</span> <span class='ident'>iterator_len_hint</span><span class='op'>&lt;</span><span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&gt;</span>(<span class='ident'>iter</span>: <span class='kw-2'>&amp;</span><span class='ident'>I</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>usize</span><span class='op'>&gt;</span> {
-    <span class='kw'>match</span> <span class='ident'>iter</span>.<span class='ident'>size_hint</span>() {
-        (<span class='ident'>lo</span>, <span class='prelude-val'>Some</span>(<span class='ident'>hi</span>)) <span class='kw'>if</span> <span class='ident'>lo</span> <span class='op'>==</span> <span class='ident'>hi</span> <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>lo</span>),
-        _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable&quot;</span>)]</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">ExactSizeIterator</span><span class="op">&gt;</span> <span class="ident">LenHint</span> <span class="kw">for</span> <span class="ident">I</span> {
+    <span class="kw">fn</span> <span class="ident">len_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">len</span>())
+    }
+}
+
+<span class="kw">fn</span> <span class="ident">iterator_len_hint</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="kw-2">&amp;</span><span class="ident">I</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">match</span> <span class="ident">iter</span>.<span class="ident">size_hint</span>() {
+        (<span class="ident">lo</span>, <span class="prelude-val">Some</span>(<span class="ident">hi</span>)) <span class="kw">if</span> <span class="ident">lo</span> <span class="op">==</span> <span class="ident">hi</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">lo</span>),
+        _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
     }
 }
 </pre>
@@ -1932,7 +1940,6 @@
         window.rootPath = "../../../";
         window.currentCrate = "serde";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
     <script defer src="../../../search-index.js"></script>
 </body>

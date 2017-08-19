@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='index.html'>bzip2</a></p><script>window.sidebarCurrent = {name: 'Decompress', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Decompress</p><div class="block items"><ul><li><a href="#methods">Methods</a></li></ul></div><p class='location'><a href='index.html'>bzip2</a></p><script>window.sidebarCurrent = {name: 'Decompress', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,8 +43,8 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>bzip2</a>::<wbr><a class='struct' href=''>Decompress</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>bzip2</a>::<wbr><a class="struct" href=''>Decompress</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
@@ -53,25 +53,25 @@
 
 <p>An instance of <code>Decompress</code> can be used to inflate a straem of bz2-encoded
 data.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../bzip2/struct.Decompress.html' title='bzip2::Decompress'>Decompress</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/bzip2/mem.rs.html#194-263' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(small: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a class='struct' href='../bzip2/struct.Decompress.html' title='bzip2::Decompress'>Decompress</a></code></span></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../bzip2/struct.Decompress.html" title="struct bzip2::Decompress">Decompress</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/bzip2/mem.rs.html#194-263' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(small: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="struct" href="../bzip2/struct.Decompress.html" title="struct bzip2::Decompress">Decompress</a></code></span></h4>
 <div class='docblock'><p>Creates a new stream prepared for decompression.</p>
 
 <p>If <code>small</code> is true, then the library will use an alternative
 decompression algorithm which uses less memory but at the cost of
 decompressing more slowly (roughly speaking, half the speed, but the
 maximum memory requirement drops to around 2300k). See</p>
-</div><h4 id='method.decompress' class='method'><span id='decompress.v' class='invisible'><code>fn <a href='#method.decompress' class='fnname'>decompress</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; input: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; output: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;mut [</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='../bzip2/enum.Status.html' title='bzip2::Status'>Status</a>, <a class='enum' href='../bzip2/enum.Error.html' title='bzip2::Error'>Error</a>&gt;</code></span></h4>
+</div><h4 id='method.decompress' class="method"><span id='decompress.v' class='invisible'><code>fn <a href='#method.decompress' class='fnname'>decompress</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;input: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;output: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;mut [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="../bzip2/enum.Status.html" title="enum bzip2::Status">Status</a>, <a class="enum" href="../bzip2/enum.Error.html" title="enum bzip2::Error">Error</a>&gt;</code></span></h4>
 <div class='docblock'><p>Decompress a block of input into a block of output.</p>
-</div><h4 id='method.decompress_vec' class='method'><span id='decompress_vec.v' class='invisible'><code>fn <a href='#method.decompress_vec' class='fnname'>decompress_vec</a>(&amp;mut self,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; input: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; output: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='enum' href='../bzip2/enum.Status.html' title='bzip2::Status'>Status</a>, <a class='enum' href='../bzip2/enum.Error.html' title='bzip2::Error'>Error</a>&gt;</code></span></h4>
+</div><h4 id='method.decompress_vec' class="method"><span id='decompress_vec.v' class='invisible'><code>fn <a href='#method.decompress_vec' class='fnname'>decompress_vec</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;input: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;output: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="../bzip2/enum.Status.html" title="enum bzip2::Status">Status</a>, <a class="enum" href="../bzip2/enum.Error.html" title="enum bzip2::Error">Error</a>&gt;</code></span></h4>
 <div class='docblock'><p>Decompress a block of input into an output vector.</p>
 
 <p>This function will not grow <code>output</code>, but it will fill the space after
 its current length up to its capacity. The length of the vector will be
 adjusted appropriately.</p>
-</div><h4 id='method.total_in' class='method'><span id='total_in.v' class='invisible'><code>fn <a href='#method.total_in' class='fnname'>total_in</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></span></h4>
+</div><h4 id='method.total_in' class="method"><span id='total_in.v' class='invisible'><code>fn <a href='#method.total_in' class='fnname'>total_in</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span></h4>
 <div class='docblock'><p>Total number of bytes processed as input</p>
-</div><h4 id='method.total_out' class='method'><span id='total_out.v' class='invisible'><code>fn <a href='#method.total_out' class='fnname'>total_out</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></span></h4>
+</div><h4 id='method.total_out' class="method"><span id='total_out.v' class='invisible'><code>fn <a href='#method.total_out' class='fnname'>total_out</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span></h4>
 <div class='docblock'><p>Total number of bytes processed as output</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -130,7 +130,6 @@ adjusted appropriately.</p>
         window.rootPath = "../";
         window.currentCrate = "bzip2";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
     <script defer src="../search-index.js"></script>
 </body>

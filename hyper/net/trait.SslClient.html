@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -29,7 +29,7 @@
 
     <nav class="sidebar">
         
-        <p class='location'><a href='../index.html'>hyper</a>::<wbr><a href='index.html'>net</a></p><script>window.sidebarCurrent = {name: 'SslClient', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait SslClient</p><div class="block items"><ul><li><a href="#associated-types">Associated Types</a></li><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>hyper</a>::<wbr><a href='index.html'>net</a></p><script>window.sidebarCurrent = {name: 'SslClient', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
     <nav class="sub">
@@ -43,24 +43,24 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>hyper</a>::<wbr><a href='index.html'>net</a>::<wbr><a class='trait' href=''>SslClient</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../index.html'>hyper</a>::<wbr><a href='index.html'>net</a>::<wbr><a class="trait" href=''>SslClient</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/hyper/net.rs.html#453-458' title='goto source code'>[src]</a></span></h1>
-<pre class='rust trait'>pub trait SslClient&lt;T:&nbsp;<a class='trait' href='../../hyper/net/trait.NetworkStream.html' title='hyper::net::NetworkStream'>NetworkStream</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>&nbsp;=&nbsp;<a class='struct' href='../../hyper/net/struct.HttpStream.html' title='hyper::net::HttpStream'>HttpStream</a>&gt; {
-    type <a href='#associatedtype.Stream' class='type'>Stream</a>: <a class='trait' href='../../hyper/net/trait.NetworkStream.html' title='hyper::net::NetworkStream'>NetworkStream</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a>;
-    fn <a href='#tymethod.wrap_client' class='fnname'>wrap_client</a>(&amp;self, stream: T, host: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../../hyper/error/type.Result.html' title='hyper::error::Result'>Result</a>&lt;Self::<a class='trait' href='../../hyper/net/trait.SslClient.html' title='hyper::net::SslClient'>Stream</a>&gt;;
+               </span><a class='srclink' href='../../src/hyper/net.rs.html#443-448' title='goto source code'>[src]</a></span></h1>
+<pre class='rust trait'>pub trait SslClient&lt;T:&nbsp;<a class="trait" href="../../hyper/net/trait.NetworkStream.html" title="trait hyper::net::NetworkStream">NetworkStream</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>&nbsp;=&nbsp;<a class="struct" href="../../hyper/net/struct.HttpStream.html" title="struct hyper::net::HttpStream">HttpStream</a>&gt; {
+    type <a href='#associatedtype.Stream' class="type">Stream</a>: <a class="trait" href="../../hyper/net/trait.NetworkStream.html" title="trait hyper::net::NetworkStream">NetworkStream</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>;
+    fn <a href='#tymethod.wrap_client' class='fnname'>wrap_client</a>(&amp;self, stream: T, host: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../../hyper/error/type.Result.html" title="type hyper::error::Result">Result</a>&lt;Self::<a class="trait" href="../../hyper/net/trait.SslClient.html" title="trait hyper::net::SslClient">Stream</a>&gt;;
 }</pre><div class='docblock'><p>An abstraction to allow any SSL implementation to be used with client-side HttpsStreams.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Stream' class='method'><span id='Stream.t' class='invisible'><code>type <a href='#associatedtype.Stream' class='type'>Stream</a>: <a class='trait' href='../../hyper/net/trait.NetworkStream.html' title='hyper::net::NetworkStream'>NetworkStream</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a></code></span></h3><div class='docblock'><p>The protected stream.</p>
+        <h3 id='associatedtype.Stream' class='method'><span id='Stream.t' class='invisible'><code>type <a href='#associatedtype.Stream' class="type">Stream</a>: <a class="trait" href="../../hyper/net/trait.NetworkStream.html" title="trait hyper::net::NetworkStream">NetworkStream</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a></code></span></h3><div class='docblock'><p>The protected stream.</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.wrap_client' class='method'><span id='wrap_client.v' class='invisible'><code>fn <a href='#tymethod.wrap_client' class='fnname'>wrap_client</a>(&amp;self, stream: T, host: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../../hyper/error/type.Result.html' title='hyper::error::Result'>Result</a>&lt;Self::<a class='trait' href='../../hyper/net/trait.SslClient.html' title='hyper::net::SslClient'>Stream</a>&gt;</code></span></h3><div class='docblock'><p>Wrap a client stream with SSL.</p>
+        <h3 id='tymethod.wrap_client' class='method'><span id='wrap_client.v' class='invisible'><code>fn <a href='#tymethod.wrap_client' class='fnname'>wrap_client</a>(&amp;self, stream: T, host: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../../hyper/error/type.Result.html" title="type hyper::error::Result">Result</a>&lt;Self::<a class="trait" href="../../hyper/net/trait.SslClient.html" title="trait hyper::net::SslClient">Stream</a>&gt;</code></span></h3><div class='docblock'><p>Wrap a client stream with SSL.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>
@@ -123,7 +123,6 @@
         window.rootPath = "../../";
         window.currentCrate = "hyper";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

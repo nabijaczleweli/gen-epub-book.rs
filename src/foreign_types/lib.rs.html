@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -339,300 +339,300 @@
 <span id="294">294</span>
 <span id="295">295</span>
 <span id="296">296</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! A framework for Rust wrappers over C APIs.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Ownership is as important in C as it is in Rust, but the semantics are often implicit. In</span>
-<span class='doccomment'>//! particular, pointer-to-value is commonly used to pass C values both when transferring ownership</span>
-<span class='doccomment'>//! or a borrow.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This crate provides a framework to define a Rust wrapper over these kinds of raw C APIs in a way</span>
-<span class='doccomment'>//! that allows ownership semantics to be expressed in an ergonomic manner. The framework takes a</span>
-<span class='doccomment'>//! dual-type approach similar to APIs in the standard library such as `PathBuf`/`Path` or `String`/</span>
-<span class='doccomment'>//! `&amp;str`. One type represents an owned value and references to the other represent borrowed</span>
-<span class='doccomment'>//! values.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Examples</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! use foreign_types::{ForeignType, ForeignTypeRef, Opaque};</span>
-<span class='doccomment'>//! use std::ops::{Deref, DerefMut};</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! mod foo_sys {</span>
-<span class='doccomment'>//!     pub enum FOO {}</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     extern {</span>
-<span class='doccomment'>//!         pub fn FOO_free(foo: *mut FOO);</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // The borrowed type is a newtype wrapper around an `Opaque` value.</span>
-<span class='doccomment'>//! //</span>
-<span class='doccomment'>//! // `FooRef` values never exist; we instead create references to `FooRef`s from raw C pointers.</span>
-<span class='doccomment'>//! pub struct FooRef(Opaque);</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl ForeignTypeRef for FooRef {</span>
-<span class='doccomment'>//!     type CType = foo_sys::FOO;</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! // The owned type is simply a newtype wrapper around the raw C type.</span>
-<span class='doccomment'>//! //</span>
-<span class='doccomment'>//! // It dereferences to `FooRef`, so methods that do not require ownership should be defined</span>
-<span class='doccomment'>//! // there.</span>
-<span class='doccomment'>//! pub struct Foo(*mut foo_sys::FOO);</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl Drop for Foo {</span>
-<span class='doccomment'>//!     fn drop(&amp;mut self) {</span>
-<span class='doccomment'>//!         unsafe { foo_sys::FOO_free(self.0) }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl ForeignType for Foo {</span>
-<span class='doccomment'>//!     type CType = foo_sys::FOO;</span>
-<span class='doccomment'>//!     type Ref = FooRef;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     unsafe fn from_ptr(ptr: *mut foo_sys::FOO) -&gt; Foo {</span>
-<span class='doccomment'>//!         Foo(ptr)</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     fn as_ptr(&amp;self) -&gt; *mut foo_sys::FOO {</span>
-<span class='doccomment'>//!         self.0</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl Deref for Foo {</span>
-<span class='doccomment'>//!     type Target = FooRef;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     fn deref(&amp;self) -&gt; &amp;FooRef {</span>
-<span class='doccomment'>//!         unsafe { FooRef::from_ptr(self.0) }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl DerefMut for Foo {</span>
-<span class='doccomment'>//!     fn deref_mut(&amp;mut self) -&gt; &amp;mut FooRef {</span>
-<span class='doccomment'>//!         unsafe { FooRef::from_ptr_mut(self.0) }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The `foreign_type!` macro can generate this boilerplate for you:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! #[macro_use]</span>
-<span class='doccomment'>//! extern crate foreign_types;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! mod foo_sys {</span>
-<span class='doccomment'>//!     pub enum FOO {}</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     extern {</span>
-<span class='doccomment'>//!         pub fn FOO_free(foo: *mut FOO);</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! foreign_type! {</span>
-<span class='doccomment'>//!     type CType = foo_sys::FOO;</span>
-<span class='doccomment'>//!     fn drop = foo_sys::FOO_free;</span>
-<span class='doccomment'>//!     /// A Foo.</span>
-<span class='doccomment'>//!     pub struct Foo;</span>
-<span class='doccomment'>//!     /// A borrowed Foo.</span>
-<span class='doccomment'>//!     pub struct FooRef;</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # fn main() {}</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! Say we then have a separate type in our C API that contains a `FOO`:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! mod foo_sys {</span>
-<span class='doccomment'>//!     pub enum FOO {}</span>
-<span class='doccomment'>//!     pub enum BAR {}</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     extern {</span>
-<span class='doccomment'>//!         pub fn FOO_free(foo: *mut FOO);</span>
-<span class='doccomment'>//!         pub fn BAR_free(bar: *mut BAR);</span>
-<span class='doccomment'>//!         pub fn BAR_get_foo(bar: *mut BAR) -&gt; *mut FOO;</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! The documentation for the C library states that `BAR_get_foo` returns a reference into the `BAR`</span>
-<span class='doccomment'>//! passed to it, which translates into a reference in Rust. It also says that we&#39;re allowed to</span>
-<span class='doccomment'>//! modify the `FOO`, so we&#39;ll define a pair of accessor methods, one immutable and one mutable:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! #[macro_use]</span>
-<span class='doccomment'>//! extern crate foreign_types;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! use foreign_types::ForeignTypeRef;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! mod foo_sys {</span>
-<span class='doccomment'>//!     pub enum FOO {}</span>
-<span class='doccomment'>//!     pub enum BAR {}</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     extern {</span>
-<span class='doccomment'>//!         pub fn FOO_free(foo: *mut FOO);</span>
-<span class='doccomment'>//!         pub fn BAR_free(bar: *mut BAR);</span>
-<span class='doccomment'>//!         pub fn BAR_get_foo(bar: *mut BAR) -&gt; *mut FOO;</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! foreign_type! {</span>
-<span class='doccomment'>//!     type CType = foo_sys::FOO;</span>
-<span class='doccomment'>//!     fn drop = foo_sys::FOO_free;</span>
-<span class='doccomment'>//!     /// A Foo.</span>
-<span class='doccomment'>//!     pub struct Foo;</span>
-<span class='doccomment'>//!     /// A borrowed Foo.</span>
-<span class='doccomment'>//!     pub struct FooRef;</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! foreign_type! {</span>
-<span class='doccomment'>//!     type CType = foo_sys::BAR;</span>
-<span class='doccomment'>//!     fn drop = foo_sys::BAR_free;</span>
-<span class='doccomment'>//!     /// A Foo.</span>
-<span class='doccomment'>//!     pub struct Bar;</span>
-<span class='doccomment'>//!     /// A borrowed Bar.</span>
-<span class='doccomment'>//!     pub struct BarRef;</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! impl BarRef {</span>
-<span class='doccomment'>//!     fn foo(&amp;self) -&gt; &amp;FooRef {</span>
-<span class='doccomment'>//!         unsafe { FooRef::from_ptr(foo_sys::BAR_get_foo(self.as_ptr())) }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     fn foo_mut(&amp;mut self) -&gt; &amp;mut FooRef {</span>
-<span class='doccomment'>//!         unsafe { FooRef::from_ptr_mut(foo_sys::BAR_get_foo(self.as_ptr())) }</span>
-<span class='doccomment'>//!     }</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # fn main() {}</span>
-<span class='doccomment'>//! ```</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>no_std</span>]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>warn</span>(<span class='ident'>missing_docs</span>)]</span>
-<span class='attribute'>#<span class='op'>!</span>[<span class='ident'>doc</span>(<span class='ident'>html_root_url</span><span class='op'>=</span><span class='string'>&quot;https://docs.rs/foreign-types/0.2.0&quot;</span>)]</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! A framework for Rust wrappers over C APIs.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Ownership is as important in C as it is in Rust, but the semantics are often implicit. In</span>
+<span class="doccomment">//! particular, pointer-to-value is commonly used to pass C values both when transferring ownership</span>
+<span class="doccomment">//! or a borrow.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This crate provides a framework to define a Rust wrapper over these kinds of raw C APIs in a way</span>
+<span class="doccomment">//! that allows ownership semantics to be expressed in an ergonomic manner. The framework takes a</span>
+<span class="doccomment">//! dual-type approach similar to APIs in the standard library such as `PathBuf`/`Path` or `String`/</span>
+<span class="doccomment">//! `&amp;str`. One type represents an owned value and references to the other represent borrowed</span>
+<span class="doccomment">//! values.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Examples</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use foreign_types::{ForeignType, ForeignTypeRef, Opaque};</span>
+<span class="doccomment">//! use std::ops::{Deref, DerefMut};</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! mod foo_sys {</span>
+<span class="doccomment">//!     pub enum FOO {}</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     extern {</span>
+<span class="doccomment">//!         pub fn FOO_free(foo: *mut FOO);</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // The borrowed type is a newtype wrapper around an `Opaque` value.</span>
+<span class="doccomment">//! //</span>
+<span class="doccomment">//! // `FooRef` values never exist; we instead create references to `FooRef`s from raw C pointers.</span>
+<span class="doccomment">//! pub struct FooRef(Opaque);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl ForeignTypeRef for FooRef {</span>
+<span class="doccomment">//!     type CType = foo_sys::FOO;</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // The owned type is simply a newtype wrapper around the raw C type.</span>
+<span class="doccomment">//! //</span>
+<span class="doccomment">//! // It dereferences to `FooRef`, so methods that do not require ownership should be defined</span>
+<span class="doccomment">//! // there.</span>
+<span class="doccomment">//! pub struct Foo(*mut foo_sys::FOO);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl Drop for Foo {</span>
+<span class="doccomment">//!     fn drop(&amp;mut self) {</span>
+<span class="doccomment">//!         unsafe { foo_sys::FOO_free(self.0) }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl ForeignType for Foo {</span>
+<span class="doccomment">//!     type CType = foo_sys::FOO;</span>
+<span class="doccomment">//!     type Ref = FooRef;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     unsafe fn from_ptr(ptr: *mut foo_sys::FOO) -&gt; Foo {</span>
+<span class="doccomment">//!         Foo(ptr)</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     fn as_ptr(&amp;self) -&gt; *mut foo_sys::FOO {</span>
+<span class="doccomment">//!         self.0</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl Deref for Foo {</span>
+<span class="doccomment">//!     type Target = FooRef;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     fn deref(&amp;self) -&gt; &amp;FooRef {</span>
+<span class="doccomment">//!         unsafe { FooRef::from_ptr(self.0) }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl DerefMut for Foo {</span>
+<span class="doccomment">//!     fn deref_mut(&amp;mut self) -&gt; &amp;mut FooRef {</span>
+<span class="doccomment">//!         unsafe { FooRef::from_ptr_mut(self.0) }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The `foreign_type!` macro can generate this boilerplate for you:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! #[macro_use]</span>
+<span class="doccomment">//! extern crate foreign_types;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! mod foo_sys {</span>
+<span class="doccomment">//!     pub enum FOO {}</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     extern {</span>
+<span class="doccomment">//!         pub fn FOO_free(foo: *mut FOO);</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! foreign_type! {</span>
+<span class="doccomment">//!     type CType = foo_sys::FOO;</span>
+<span class="doccomment">//!     fn drop = foo_sys::FOO_free;</span>
+<span class="doccomment">//!     /// A Foo.</span>
+<span class="doccomment">//!     pub struct Foo;</span>
+<span class="doccomment">//!     /// A borrowed Foo.</span>
+<span class="doccomment">//!     pub struct FooRef;</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # fn main() {}</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Say we then have a separate type in our C API that contains a `FOO`:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! mod foo_sys {</span>
+<span class="doccomment">//!     pub enum FOO {}</span>
+<span class="doccomment">//!     pub enum BAR {}</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     extern {</span>
+<span class="doccomment">//!         pub fn FOO_free(foo: *mut FOO);</span>
+<span class="doccomment">//!         pub fn BAR_free(bar: *mut BAR);</span>
+<span class="doccomment">//!         pub fn BAR_get_foo(bar: *mut BAR) -&gt; *mut FOO;</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The documentation for the C library states that `BAR_get_foo` returns a reference into the `BAR`</span>
+<span class="doccomment">//! passed to it, which translates into a reference in Rust. It also says that we&#39;re allowed to</span>
+<span class="doccomment">//! modify the `FOO`, so we&#39;ll define a pair of accessor methods, one immutable and one mutable:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! #[macro_use]</span>
+<span class="doccomment">//! extern crate foreign_types;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! use foreign_types::ForeignTypeRef;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! mod foo_sys {</span>
+<span class="doccomment">//!     pub enum FOO {}</span>
+<span class="doccomment">//!     pub enum BAR {}</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     extern {</span>
+<span class="doccomment">//!         pub fn FOO_free(foo: *mut FOO);</span>
+<span class="doccomment">//!         pub fn BAR_free(bar: *mut BAR);</span>
+<span class="doccomment">//!         pub fn BAR_get_foo(bar: *mut BAR) -&gt; *mut FOO;</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! foreign_type! {</span>
+<span class="doccomment">//!     type CType = foo_sys::FOO;</span>
+<span class="doccomment">//!     fn drop = foo_sys::FOO_free;</span>
+<span class="doccomment">//!     /// A Foo.</span>
+<span class="doccomment">//!     pub struct Foo;</span>
+<span class="doccomment">//!     /// A borrowed Foo.</span>
+<span class="doccomment">//!     pub struct FooRef;</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! foreign_type! {</span>
+<span class="doccomment">//!     type CType = foo_sys::BAR;</span>
+<span class="doccomment">//!     fn drop = foo_sys::BAR_free;</span>
+<span class="doccomment">//!     /// A Foo.</span>
+<span class="doccomment">//!     pub struct Bar;</span>
+<span class="doccomment">//!     /// A borrowed Bar.</span>
+<span class="doccomment">//!     pub struct BarRef;</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! impl BarRef {</span>
+<span class="doccomment">//!     fn foo(&amp;self) -&gt; &amp;FooRef {</span>
+<span class="doccomment">//!         unsafe { FooRef::from_ptr(foo_sys::BAR_get_foo(self.as_ptr())) }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     fn foo_mut(&amp;mut self) -&gt; &amp;mut FooRef {</span>
+<span class="doccomment">//!         unsafe { FooRef::from_ptr_mut(foo_sys::BAR_get_foo(self.as_ptr())) }</span>
+<span class="doccomment">//!     }</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # fn main() {}</span>
+<span class="doccomment">//! ```</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">no_std</span>]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#<span class="op">!</span>[<span class="ident">doc</span>(<span class="ident">html_root_url</span><span class="op">=</span><span class="string">&quot;https://docs.rs/foreign-types/0.2.0&quot;</span>)]</span>
 
-<span class='kw'>use</span> <span class='ident'>core</span>::<span class='ident'>cell</span>::<span class='ident'>UnsafeCell</span>;
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">cell</span>::<span class="ident">UnsafeCell</span>;
 
-<span class='doccomment'>/// An opaque type used to define `ForeignTypeRef` types.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A type implementing `ForeignTypeRef` should simply be a newtype wrapper around this type.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Opaque</span>(<span class='ident'>UnsafeCell</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>);
+<span class="doccomment">/// An opaque type used to define `ForeignTypeRef` types.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A type implementing `ForeignTypeRef` should simply be a newtype wrapper around this type.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Opaque</span>(<span class="ident">UnsafeCell</span><span class="op">&lt;</span>()<span class="op">&gt;</span>);
 
-<span class='doccomment'>/// A type implemented by wrappers over foreign types.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ForeignType</span>: <span class='ident'>Sized</span> {
-    <span class='doccomment'>/// The raw C type.</span>
-    <span class='kw'>type</span> <span class='ident'>CType</span>;
+<span class="doccomment">/// A type implemented by wrappers over foreign types.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ForeignType</span>: <span class="ident">Sized</span> {
+    <span class="doccomment">/// The raw C type.</span>
+    <span class="kw">type</span> <span class="ident">CType</span>;
 
-    <span class='doccomment'>/// The type representing a reference to this type.</span>
-    <span class='kw'>type</span> <span class='ident'>Ref</span>: <span class='ident'>ForeignTypeRef</span><span class='op'>&lt;</span><span class='ident'>CType</span> <span class='op'>=</span> <span class='self'>Self</span>::<span class='ident'>CType</span><span class='op'>&gt;</span>;
+    <span class="doccomment">/// The type representing a reference to this type.</span>
+    <span class="kw">type</span> <span class="ident">Ref</span>: <span class="ident">ForeignTypeRef</span><span class="op">&lt;</span><span class="ident">CType</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">CType</span><span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// Constructs an instance of this type from its raw type.</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>;
+    <span class="doccomment">/// Constructs an instance of this type from its raw type.</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_ptr</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span>::<span class="ident">CType</span>) <span class="op">-&gt;</span> <span class="self">Self</span>;
 
-    <span class='doccomment'>/// Returns a raw pointer to the wrapped value.</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>;
+    <span class="doccomment">/// Returns a raw pointer to the wrapped value.</span>
+    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span>::<span class="ident">CType</span>;
 }
 
-<span class='doccomment'>/// A trait implemented by types which reference borrowed foreign types.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ForeignTypeRef</span>: <span class='ident'>Sized</span> {
-    <span class='doccomment'>/// The raw C type.</span>
-    <span class='kw'>type</span> <span class='ident'>CType</span>;
+<span class="doccomment">/// A trait implemented by types which reference borrowed foreign types.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ForeignTypeRef</span>: <span class="ident">Sized</span> {
+    <span class="doccomment">/// The raw C type.</span>
+    <span class="kw">type</span> <span class="ident">CType</span>;
 
-    <span class='doccomment'>/// Constructs a shared instance of this type from its raw type.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>Self</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>*</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)
+    <span class="doccomment">/// Constructs a shared instance of this type from its raw type.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_ptr</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span>::<span class="ident">CType</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">*</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _)
     }
 
-    <span class='doccomment'>/// Constructs a mutable reference of this type from its raw type.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr_mut</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>Self</span> {
-        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='kw-2'>*</span>(<span class='ident'>ptr</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _)
+    <span class="doccomment">/// Constructs a mutable reference of this type from its raw type.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_ptr_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span>::<span class="ident">CType</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _)
     }
 
-    <span class='doccomment'>/// Returns a raw pointer to the wrapped value.</span>
-    <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='self'>Self</span>::<span class='ident'>CType</span> {
-        <span class='self'>self</span> <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw'>const</span> _ <span class='kw'>as</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> _
+    <span class="doccomment">/// Returns a raw pointer to the wrapped value.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="self">Self</span>::<span class="ident">CType</span> {
+        <span class="self">self</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> _ <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> _
     }
 }
 
-<span class='doccomment'>/// A macro to easily define wrappers for foreign types.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// #[macro_use]</span>
-<span class='doccomment'>/// extern crate foreign_types;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # mod openssl_sys { pub type SSL = (); pub unsafe fn SSL_free(_: *mut SSL) {} }</span>
-<span class='doccomment'>/// foreign_type! {</span>
-<span class='doccomment'>///     type CType = openssl_sys::SSL;</span>
-<span class='doccomment'>///     fn drop = openssl_sys::SSL_free;</span>
-<span class='doccomment'>///     /// Documentation for the owned type.</span>
-<span class='doccomment'>///     pub struct Ssl;</span>
-<span class='doccomment'>///     /// Documentation for the borrowed type.</span>
-<span class='doccomment'>///     pub struct SslRef;</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # fn main() {}</span>
-<span class='doccomment'>/// ```</span>
-<span class='attribute'>#[<span class='ident'>macro_export</span>]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>foreign_type</span> {
+<span class="doccomment">/// A macro to easily define wrappers for foreign types.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// #[macro_use]</span>
+<span class="doccomment">/// extern crate foreign_types;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # mod openssl_sys { pub type SSL = (); pub unsafe fn SSL_free(_: *mut SSL) {} }</span>
+<span class="doccomment">/// foreign_type! {</span>
+<span class="doccomment">///     type CType = openssl_sys::SSL;</span>
+<span class="doccomment">///     fn drop = openssl_sys::SSL_free;</span>
+<span class="doccomment">///     /// Documentation for the owned type.</span>
+<span class="doccomment">///     pub struct Ssl;</span>
+<span class="doccomment">///     /// Documentation for the borrowed type.</span>
+<span class="doccomment">///     pub struct SslRef;</span>
+<span class="doccomment">/// }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # fn main() {}</span>
+<span class="doccomment">/// ```</span>
+<span class="attribute">#[<span class="ident">macro_export</span>]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">foreign_type</span> {
     (
-        <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>:<span class='ident'>ty</span>;
-        <span class='kw'>fn</span> <span class='ident'>drop</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>drop</span>:<span class='ident'>expr</span>;
-        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned_attr</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span>:<span class='ident'>ident</span>;
-        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed_attr</span>:<span class='ident'>meta</span>]</span>)<span class='op'>*</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span>:<span class='ident'>ident</span>;
-    ) <span class='op'>=&gt;</span> {
-        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned_attr</span>]</span>)<span class='op'>*</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span>(<span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>);
+        <span class="kw">type</span> <span class="ident">CType</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ctype</span>:<span class="ident">ty</span>;
+        <span class="kw">fn</span> <span class="ident">drop</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">drop</span>:<span class="ident">expr</span>;
+        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned_attr</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned</span>:<span class="ident">ident</span>;
+        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed_attr</span>:<span class="ident">meta</span>]</span>)<span class="op">*</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed</span>:<span class="ident">ident</span>;
+    ) <span class="op">=&gt;</span> {
+        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned_attr</span>]</span>)<span class="op">*</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ctype</span>);
 
-        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>ForeignType</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span> {
-            <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>;
-            <span class='kw'>type</span> <span class='ident'>Ref</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span>;
+        <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ForeignType</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned</span> {
+            <span class="kw">type</span> <span class="ident">CType</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ctype</span>;
+            <span class="kw">type</span> <span class="ident">Ref</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed</span>;
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>unsafe</span> <span class='kw'>fn</span> <span class='ident'>from_ptr</span>(<span class='ident'>ptr</span>: <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>) <span class='op'>-&gt;</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span> {
-                <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span>(<span class='ident'>ptr</span>)
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">from_ptr</span>(<span class="ident">ptr</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ctype</span>) <span class="op">-&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned</span> {
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned</span>(<span class="ident">ptr</span>)
             }
 
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>as_ptr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>*</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span> {
-                <span class='self'>self</span>.<span class='number'>0</span>
-            }
-        }
-
-        <span class='kw'>impl</span> <span class='ident'>Drop</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span> {
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>drop</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) {
-                <span class='kw'>unsafe</span> { <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>drop</span>(<span class='self'>self</span>.<span class='number'>0</span>) }
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">as_ptr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ctype</span> {
+                <span class="self">self</span>.<span class="number">0</span>
             }
         }
 
-        <span class='kw'>impl</span> ::<span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>Deref</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span> {
-            <span class='kw'>type</span> <span class='ident'>Target</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span>;
-
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>deref</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span> {
-                <span class='kw'>unsafe</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>ForeignTypeRef</span>::<span class='ident'>from_ptr</span>(<span class='self'>self</span>.<span class='number'>0</span>) }
+        <span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned</span> {
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+                <span class="kw">unsafe</span> { <span class="macro-nonterminal">$</span><span class="macro-nonterminal">drop</span>(<span class="self">self</span>.<span class="number">0</span>) }
             }
         }
 
-        <span class='kw'>impl</span> ::<span class='ident'>std</span>::<span class='ident'>ops</span>::<span class='ident'>DerefMut</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>owned</span> {
-            <span class='attribute'>#[<span class='ident'>inline</span>]</span>
-            <span class='kw'>fn</span> <span class='ident'>deref_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span> {
-                <span class='kw'>unsafe</span> { <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>ForeignTypeRef</span>::<span class='ident'>from_ptr_mut</span>(<span class='self'>self</span>.<span class='number'>0</span>) }
+        <span class="kw">impl</span> ::<span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">Deref</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned</span> {
+            <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed</span>;
+
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed</span> {
+                <span class="kw">unsafe</span> { <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ForeignTypeRef</span>::<span class="ident">from_ptr</span>(<span class="self">self</span>.<span class="number">0</span>) }
             }
         }
 
-        $(<span class='attribute'>#[<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed_attr</span>]</span>)<span class='op'>*</span>
-        <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span>(<span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>Opaque</span>);
+        <span class="kw">impl</span> ::<span class="ident">std</span>::<span class="ident">ops</span>::<span class="ident">DerefMut</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">owned</span> {
+            <span class="attribute">#[<span class="ident">inline</span>]</span>
+            <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed</span> {
+                <span class="kw">unsafe</span> { <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ForeignTypeRef</span>::<span class="ident">from_ptr_mut</span>(<span class="self">self</span>.<span class="number">0</span>) }
+            }
+        }
 
-        <span class='kw'>impl</span> <span class='macro-nonterminal'>$</span><span class='kw'>crate</span>::<span class='macro-nonterminal'>ForeignTypeRef</span> <span class='kw'>for</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>borrowed</span> {
-            <span class='kw'>type</span> <span class='ident'>CType</span> <span class='op'>=</span> <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>ctype</span>;
+        $(<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed_attr</span>]</span>)<span class="op">*</span>
+        <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">Opaque</span>);
+
+        <span class="kw">impl</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">ForeignTypeRef</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">borrowed</span> {
+            <span class="kw">type</span> <span class="ident">CType</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ctype</span>;
         }
     }
 }
@@ -694,7 +694,6 @@
         window.rootPath = "../../";
         window.currentCrate = "foreign_types";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

@@ -17,7 +17,7 @@
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -43,7 +43,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -227,189 +227,189 @@
 <span id="182">182</span>
 <span id="183">183</span>
 <span id="184">184</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Module containing various utility functions.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Module containing various utility functions.</span>
 
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>PathBuf</span>, <span class='ident'>Path</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='self'>self</span>, <span class='ident'>Write</span>};
-<span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::<span class='ident'>Error</span>;
-<span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>Url</span>;
-<span class='kw'>use</span> <span class='ident'>reqwest</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">PathBuf</span>, <span class="ident">Path</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Write</span>};
+<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
+<span class="kw">use</span> <span class="ident">reqwest</span>;
 
 
-<span class='doccomment'>/// Contents of the the container file</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Points at `/content.opf` for root file.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Container file resides in `META-INF/container.xml`.</span>
-<span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>CONTAINER</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='macro'>include_str</span><span class='macro'>!</span>(<span class='string'>&quot;../assets/container.xml&quot;</span>);
+<span class="doccomment">/// Contents of the the container file</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Points at `/content.opf` for root file.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Container file resides in `META-INF/container.xml`.</span>
+<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">CONTAINER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../assets/container.xml&quot;</span>);
 
-<span class='doccomment'>/// Contents of the the mimetype specifier.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Mimetype specifier resides in `/mimetype`.</span>
-<span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>MIME_TYPE</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;application/epub+zip&quot;</span>;
+<span class="doccomment">/// Contents of the the mimetype specifier.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Mimetype specifier resides in `/mimetype`.</span>
+<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">MIME_TYPE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;application/epub+zip&quot;</span>;
 
-<span class='doccomment'>/// Constant header for the root file/content table.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Mimetype specifier resides in `/content.opf`.</span>
-<span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>CONTENT_TABLE_HEADER</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='macro'>include_str</span><span class='macro'>!</span>(<span class='string'>&quot;../assets/content.opf.header&quot;</span>);
+<span class="doccomment">/// Constant header for the root file/content table.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Mimetype specifier resides in `/content.opf`.</span>
+<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">CONTENT_TABLE_HEADER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../assets/content.opf.header&quot;</span>);
 
 
-<span class='doccomment'>/// Uppercase the first character of the supplied string.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Based on http://stackoverflow.com/a/38406885/2851815</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # use gen_epub_book::util::uppercase_first;</span>
-<span class='doccomment'>/// assert_eq!(uppercase_first(&quot;abolish&quot;), &quot;Abolish&quot;.to_string());</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>uppercase_first</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>c</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>chars</span>();
-    <span class='kw'>match</span> <span class='ident'>c</span>.<span class='ident'>next</span>() {
-        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>String</span>::<span class='ident'>new</span>(),
-        <span class='prelude-val'>Some</span>(<span class='ident'>f</span>) <span class='op'>=&gt;</span> <span class='ident'>f</span>.<span class='ident'>to_uppercase</span>().<span class='ident'>collect</span>::<span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>() <span class='op'>+</span> <span class='ident'>c</span>.<span class='ident'>as_str</span>(),
+<span class="doccomment">/// Uppercase the first character of the supplied string.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Based on http://stackoverflow.com/a/38406885/2851815</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use gen_epub_book::util::uppercase_first;</span>
+<span class="doccomment">/// assert_eq!(uppercase_first(&quot;abolish&quot;), &quot;Abolish&quot;.to_string());</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">uppercase_first</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">chars</span>();
+    <span class="kw">match</span> <span class="ident">c</span>.<span class="ident">next</span>() {
+        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">String</span>::<span class="ident">new</span>(),
+        <span class="prelude-val">Some</span>(<span class="ident">f</span>) <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">to_uppercase</span>().<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>() <span class="op">+</span> <span class="ident">c</span>.<span class="ident">as_str</span>(),
     }
 }
 
-<span class='doccomment'>/// Get the (X)HTML ID from a path.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Replaces slashes with `-`s and removes all `../`s, `./`s and the extension.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # use gen_epub_book::util::xhtml_path_id;</span>
-<span class='doccomment'>/// assert_eq!(&amp;xhtml_path_id(&quot;./abolish/the/../burgeoisie.html&quot;), &quot;abolish-the-burgeoisie&quot;);</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>xhtml_path_id</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>p</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-    <span class='ident'>p</span>.<span class='ident'>as_ref</span>()
-        .<span class='ident'>with_extension</span>(<span class='string'>&quot;&quot;</span>)
-        .<span class='ident'>to_string_lossy</span>()
-        .<span class='ident'>replace</span>(<span class='string'>&#39;\u{FFFD}&#39;</span>, <span class='string'>&quot;&quot;</span>)
-        .<span class='ident'>replace</span>(<span class='string'>&#39;\\&#39;</span>, <span class='string'>&quot;/&quot;</span>)
-        .<span class='ident'>replace</span>(<span class='string'>&quot;../&quot;</span>, <span class='string'>&quot;&quot;</span>)
-        .<span class='ident'>replace</span>(<span class='string'>&quot;./&quot;</span>, <span class='string'>&quot;&quot;</span>)
-        .<span class='ident'>replace</span>(<span class='string'>&#39;/&#39;</span>, <span class='string'>&quot;-&quot;</span>)
-        .<span class='ident'>replace</span>(<span class='string'>&#39;.&#39;</span>, <span class='string'>&quot;_&quot;</span>)
+<span class="doccomment">/// Get the (X)HTML ID from a path.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Replaces slashes with `-`s and removes all `../`s, `./`s and the extension.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use gen_epub_book::util::xhtml_path_id;</span>
+<span class="doccomment">/// assert_eq!(&amp;xhtml_path_id(&quot;./abolish/the/../burgeoisie.html&quot;), &quot;abolish-the-burgeoisie&quot;);</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">xhtml_path_id</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">p</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="ident">p</span>.<span class="ident">as_ref</span>()
+        .<span class="ident">with_extension</span>(<span class="string">&quot;&quot;</span>)
+        .<span class="ident">to_string_lossy</span>()
+        .<span class="ident">replace</span>(<span class="string">&#39;\u{FFFD}&#39;</span>, <span class="string">&quot;&quot;</span>)
+        .<span class="ident">replace</span>(<span class="string">&#39;\\&#39;</span>, <span class="string">&quot;/&quot;</span>)
+        .<span class="ident">replace</span>(<span class="string">&quot;../&quot;</span>, <span class="string">&quot;&quot;</span>)
+        .<span class="ident">replace</span>(<span class="string">&quot;./&quot;</span>, <span class="string">&quot;&quot;</span>)
+        .<span class="ident">replace</span>(<span class="string">&#39;/&#39;</span>, <span class="string">&quot;-&quot;</span>)
+        .<span class="ident">replace</span>(<span class="string">&#39;.&#39;</span>, <span class="string">&quot;_&quot;</span>)
 }
 
-<span class='doccomment'>/// Get filename to use for file specified by path.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # use gen_epub_book::util::book_filename;</span>
-<span class='doccomment'>/// # use std::path::Path;</span>
-<span class='doccomment'>/// assert_eq!(&amp;book_filename(&quot;./abolish/the/../burgeoisie.html&quot;), Path::new(&quot;abolish-the-burgeoisie.html&quot;));</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>book_filename</span><span class='op'>&lt;</span><span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;&gt;</span>(<span class='ident'>p</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='ident'>PathBuf</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>f</span> <span class='op'>=</span> <span class='ident'>PathBuf</span>::<span class='ident'>from</span>(<span class='ident'>xhtml_path_id</span>(<span class='ident'>p</span>.<span class='ident'>as_ref</span>()));
-    <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>e</span>) <span class='op'>=</span> <span class='ident'>p</span>.<span class='ident'>as_ref</span>().<span class='ident'>extension</span>() {
-        <span class='ident'>f</span>.<span class='ident'>set_extension</span>(<span class='ident'>e</span>);
+<span class="doccomment">/// Get filename to use for file specified by path.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use gen_epub_book::util::book_filename;</span>
+<span class="doccomment">/// # use std::path::Path;</span>
+<span class="doccomment">/// assert_eq!(&amp;book_filename(&quot;./abolish/the/../burgeoisie.html&quot;), Path::new(&quot;abolish-the-burgeoisie.html&quot;));</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">book_filename</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">p</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">PathBuf</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">xhtml_path_id</span>(<span class="ident">p</span>.<span class="ident">as_ref</span>()));
+    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">p</span>.<span class="ident">as_ref</span>().<span class="ident">extension</span>() {
+        <span class="ident">f</span>.<span class="ident">set_extension</span>(<span class="ident">e</span>);
     }
-    <span class='ident'>f</span>
+    <span class="ident">f</span>
 }
 
-<span class='doccomment'>/// Get the (X)HTML ID from a URL.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # extern crate gen_epub_book;</span>
-<span class='doccomment'>/// # extern crate url;</span>
-<span class='doccomment'>/// # fn main() {</span>
-<span class='doccomment'>/// # use gen_epub_book::util::xhtml_url_id;</span>
-<span class='doccomment'>/// # use url::Url;</span>
-<span class='doccomment'>/// assert_eq!(xhtml_url_id(</span>
-<span class='doccomment'>///   &amp;Url::parse(&quot;https://upload.wikimedia.org/2000px-Recycle_symbol_Taiwan.svg.png&quot;).unwrap()),</span>
-<span class='doccomment'>///   &quot;2000px-Recycle_symbol_Taiwan&quot;);</span>
-<span class='doccomment'>/// # }</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>xhtml_url_id</span>(<span class='ident'>url</span>: <span class='kw-2'>&amp;</span><span class='ident'>Url</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-    <span class='kw'>let</span> <span class='ident'>fname</span> <span class='op'>=</span> <span class='ident'>url</span>.<span class='ident'>path_segments</span>().<span class='ident'>unwrap</span>().<span class='ident'>last</span>().<span class='ident'>unwrap</span>();
-    <span class='kw-2'>&amp;</span><span class='ident'>fname</span>[<span class='number'>0</span>..<span class='ident'>fname</span>.<span class='ident'>find</span>(<span class='string'>&#39;.&#39;</span>).<span class='ident'>unwrap_or</span>(<span class='ident'>fname</span>.<span class='ident'>len</span>() <span class='op'>-</span> <span class='number'>1</span>)]
+<span class="doccomment">/// Get the (X)HTML ID from a URL.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # extern crate gen_epub_book;</span>
+<span class="doccomment">/// # extern crate url;</span>
+<span class="doccomment">/// # fn main() {</span>
+<span class="doccomment">/// # use gen_epub_book::util::xhtml_url_id;</span>
+<span class="doccomment">/// # use url::Url;</span>
+<span class="doccomment">/// assert_eq!(xhtml_url_id(</span>
+<span class="doccomment">///   &amp;Url::parse(&quot;https://upload.wikimedia.org/2000px-Recycle_symbol_Taiwan.svg.png&quot;).unwrap()),</span>
+<span class="doccomment">///   &quot;2000px-Recycle_symbol_Taiwan&quot;);</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">xhtml_url_id</span>(<span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+    <span class="kw">let</span> <span class="ident">fname</span> <span class="op">=</span> <span class="ident">url</span>.<span class="ident">path_segments</span>().<span class="ident">unwrap</span>().<span class="ident">last</span>().<span class="ident">unwrap</span>();
+    <span class="kw-2">&amp;</span><span class="ident">fname</span>[<span class="number">0</span>..<span class="ident">fname</span>.<span class="ident">find</span>(<span class="string">&#39;.&#39;</span>).<span class="ident">unwrap_or</span>(<span class="ident">fname</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>)]
 }
 
-<span class='doccomment'>/// Write the string content in an acceptable form.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # use gen_epub_book::util::write_string_content;</span>
-<span class='doccomment'>/// let mut buf = vec![];</span>
-<span class='doccomment'>/// assert_eq!(write_string_content(&amp;mut buf, &quot;&lt;i&gt;String content&lt;/i&gt;&quot;), Ok(()));</span>
-<span class='doccomment'>/// assert_eq!(&amp;buf.iter().map(|&amp;i| i as char).collect::&lt;String&gt;(),</span>
-<span class='doccomment'>/// r#&quot;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</span>
-<span class='doccomment'>///   &lt;head&gt;&lt;/head&gt;</span>
-<span class='doccomment'>///   &lt;body&gt;</span>
-<span class='doccomment'>///     &lt;i&gt;String content&lt;/i&gt;</span>
-<span class='doccomment'>///   &lt;/body&gt;</span>
-<span class='doccomment'>/// &lt;/html&gt;</span>
-<span class='doccomment'>/// &quot;#);</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>write_string_content</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span>(<span class='ident'>to</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>, <span class='ident'>ctnt</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Error</span><span class='op'>&gt;</span> {
-    <span class='kw'>fn</span> <span class='ident'>e</span>(<span class='ident'>more</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Io</span> {
-            <span class='ident'>desc</span>: <span class='string'>&quot;string content&quot;</span>,
-            <span class='ident'>op</span>: <span class='string'>&quot;write&quot;</span>,
-            <span class='ident'>more</span>: <span class='prelude-val'>Some</span>(<span class='ident'>more</span>),
+<span class="doccomment">/// Write the string content in an acceptable form.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use gen_epub_book::util::write_string_content;</span>
+<span class="doccomment">/// let mut buf = vec![];</span>
+<span class="doccomment">/// assert_eq!(write_string_content(&amp;mut buf, &quot;&lt;i&gt;String content&lt;/i&gt;&quot;), Ok(()));</span>
+<span class="doccomment">/// assert_eq!(&amp;buf.iter().map(|&amp;i| i as char).collect::&lt;String&gt;(),</span>
+<span class="doccomment">/// r#&quot;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;</span>
+<span class="doccomment">///   &lt;head&gt;&lt;/head&gt;</span>
+<span class="doccomment">///   &lt;body&gt;</span>
+<span class="doccomment">///     &lt;i&gt;String content&lt;/i&gt;</span>
+<span class="doccomment">///   &lt;/body&gt;</span>
+<span class="doccomment">/// &lt;/html&gt;</span>
+<span class="doccomment">/// &quot;#);</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_string_content</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">to</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">ctnt</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">e</span>(<span class="ident">more</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Io</span> {
+            <span class="ident">desc</span>: <span class="string">&quot;string content&quot;</span>,
+            <span class="ident">op</span>: <span class="string">&quot;write&quot;</span>,
+            <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="ident">more</span>),
         }
     }
 
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>to</span>, <span class='string'>r#&quot;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&quot;#</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>e</span>(<span class='string'>&quot;string content html start&quot;</span>)));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>to</span>, <span class='string'>r#&quot;  &lt;head&gt;&lt;/head&gt;&quot;#</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>e</span>(<span class='string'>&quot;string content head start end&quot;</span>)));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>to</span>, <span class='string'>r#&quot;  &lt;body&gt;&quot;#</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>e</span>(<span class='string'>&quot;string content body start&quot;</span>)));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>to</span>, <span class='string'>r#&quot;    {}&quot;#</span>, <span class='ident'>ctnt</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>e</span>(<span class='string'>&quot;string content string&quot;</span>)));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>to</span>, <span class='string'>r#&quot;  &lt;/body&gt;&quot;#</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>e</span>(<span class='string'>&quot;string content body end&quot;</span>)));
-    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>to</span>, <span class='string'>r#&quot;&lt;/html&gt;&quot;#</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>e</span>(<span class='string'>&quot;string content html end&quot;</span>)));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">to</span>, <span class="string">r#&quot;&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">e</span>(<span class="string">&quot;string content html start&quot;</span>)));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">to</span>, <span class="string">r#&quot;  &lt;head&gt;&lt;/head&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">e</span>(<span class="string">&quot;string content head start end&quot;</span>)));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">to</span>, <span class="string">r#&quot;  &lt;body&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">e</span>(<span class="string">&quot;string content body start&quot;</span>)));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">to</span>, <span class="string">r#&quot;    {}&quot;#</span>, <span class="ident">ctnt</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">e</span>(<span class="string">&quot;string content string&quot;</span>)));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">to</span>, <span class="string">r#&quot;  &lt;/body&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">e</span>(<span class="string">&quot;string content body end&quot;</span>)));
+    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">to</span>, <span class="string">r#&quot;&lt;/html&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">e</span>(<span class="string">&quot;string content html end&quot;</span>)));
 
-    <span class='prelude-val'>Ok</span>(())
+    <span class="prelude-val">Ok</span>(())
 }
 
-<span class='doccomment'>/// Download the contents of the specified URL to the specified output stream.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// # Examples</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// # extern crate gen_epub_book;</span>
-<span class='doccomment'>/// # extern crate url;</span>
-<span class='doccomment'>/// # fn main() {</span>
-<span class='doccomment'>/// # use self::gen_epub_book::util::download_to;</span>
-<span class='doccomment'>/// # use self::url::Url;</span>
-<span class='doccomment'>/// let mut buf = vec![];</span>
-<span class='doccomment'>/// assert_eq!(download_to(&amp;mut buf,</span>
-<span class='doccomment'>///                        &amp;Url::parse(&quot;https://www.uuidgenerator.net/api/version4&quot;).unwrap()),</span>
-<span class='doccomment'>///            Ok(()));</span>
-<span class='doccomment'>/// assert_eq!(buf.len(), &quot;90772bc3-c7fd-4d3a-b88b-57d3122d3712\r\n&quot;.len());</span>
-<span class='doccomment'>/// # }</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>download_to</span><span class='op'>&lt;</span><span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span>(<span class='ident'>w</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>, <span class='ident'>what</span>: <span class='kw-2'>&amp;</span><span class='ident'>Url</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(), <span class='ident'>Error</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>resp</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>reqwest</span>::<span class='ident'>get</span>(<span class='ident'>what</span>.<span class='ident'>as_str</span>()).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Io</span> {
-            <span class='ident'>desc</span>: <span class='string'>&quot;network content&quot;</span>,
-            <span class='ident'>op</span>: <span class='string'>&quot;request&quot;</span>,
-            <span class='ident'>more</span>: <span class='prelude-val'>None</span>,
+<span class="doccomment">/// Download the contents of the specified URL to the specified output stream.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # extern crate gen_epub_book;</span>
+<span class="doccomment">/// # extern crate url;</span>
+<span class="doccomment">/// # fn main() {</span>
+<span class="doccomment">/// # use self::gen_epub_book::util::download_to;</span>
+<span class="doccomment">/// # use self::url::Url;</span>
+<span class="doccomment">/// let mut buf = vec![];</span>
+<span class="doccomment">/// assert_eq!(download_to(&amp;mut buf,</span>
+<span class="doccomment">///                        &amp;Url::parse(&quot;https://www.uuidgenerator.net/api/version4&quot;).unwrap()),</span>
+<span class="doccomment">///            Ok(()));</span>
+<span class="doccomment">/// assert_eq!(buf.len(), &quot;90772bc3-c7fd-4d3a-b88b-57d3122d3712\r\n&quot;.len());</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">download_to</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">what</span>: <span class="kw-2">&amp;</span><span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">resp</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">reqwest</span>::<span class="ident">get</span>(<span class="ident">what</span>.<span class="ident">as_str</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> {
+        <span class="ident">Error</span>::<span class="ident">Io</span> {
+            <span class="ident">desc</span>: <span class="string">&quot;network content&quot;</span>,
+            <span class="ident">op</span>: <span class="string">&quot;request&quot;</span>,
+            <span class="ident">more</span>: <span class="prelude-val">None</span>,
         }
     }));
 
-    <span class='kw'>if</span> <span class='op'>!</span><span class='ident'>resp</span>.<span class='ident'>status</span>().<span class='ident'>is_success</span>() {
-        <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Io</span> {
-            <span class='ident'>desc</span>: <span class='string'>&quot;network content&quot;</span>,
-            <span class='ident'>op</span>: <span class='string'>&quot;inspect&quot;</span>,
-            <span class='ident'>more</span>: <span class='ident'>resp</span>.<span class='ident'>status</span>().<span class='ident'>canonical_reason</span>(),
+    <span class="kw">if</span> <span class="op">!</span><span class="ident">resp</span>.<span class="ident">status</span>().<span class="ident">is_success</span>() {
+        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Io</span> {
+            <span class="ident">desc</span>: <span class="string">&quot;network content&quot;</span>,
+            <span class="ident">op</span>: <span class="string">&quot;inspect&quot;</span>,
+            <span class="ident">more</span>: <span class="ident">resp</span>.<span class="ident">status</span>().<span class="ident">canonical_reason</span>(),
         })
-    } <span class='kw'>else</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>io</span>::<span class='ident'>copy</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>resp</span>, <span class='ident'>w</span>).<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> {
-            <span class='ident'>Error</span>::<span class='ident'>Io</span> {
-                <span class='ident'>desc</span>: <span class='string'>&quot;network content&quot;</span>,
-                <span class='ident'>op</span>: <span class='string'>&quot;read&quot;</span>,
-                <span class='ident'>more</span>: <span class='prelude-val'>None</span>,
+    } <span class="kw">else</span> {
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">io</span>::<span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">resp</span>, <span class="ident">w</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> {
+            <span class="ident">Error</span>::<span class="ident">Io</span> {
+                <span class="ident">desc</span>: <span class="string">&quot;network content&quot;</span>,
+                <span class="ident">op</span>: <span class="string">&quot;read&quot;</span>,
+                <span class="ident">more</span>: <span class="prelude-val">None</span>,
             }
         }));
-        <span class='prelude-val'>Ok</span>(())
+        <span class="prelude-val">Ok</span>(())
     }
 }
 </pre>
@@ -470,7 +470,6 @@
         window.rootPath = "../../";
         window.currentCrate = "gen_epub_book";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
     <script defer src="../../search-index.js"></script>
 </body>

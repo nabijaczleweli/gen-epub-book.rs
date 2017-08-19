@@ -1,16 +1,19 @@
 (function() {var implementors = {};
 implementors["antidote"] = [];
 implementors["chrono"] = [];
+implementors["flate2"] = [];
 implementors["hyper"] = [];
+implementors["hyper_native_tls"] = ["impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html\" title=\"trait core::ops::Shl\">Shl</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.i32.html\">i32</a>&gt; for &amp;'a <a class=\"struct\" href=\"openssl/bn/struct.BigNumRef.html\" title=\"struct openssl::bn::BigNumRef\">BigNumRef</a>","impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html\" title=\"trait core::ops::Shl\">Shl</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.i32.html\">i32</a>&gt; for &amp;'a <a class=\"struct\" href=\"openssl/bn/struct.BigNum.html\" title=\"struct openssl::bn::BigNum\">BigNum</a>",];
 implementors["libc"] = [];
 implementors["mime_guess"] = [];
 implementors["num"] = [];
-implementors["openssl"] = ["impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html' title='core::ops::Shl'>Shl</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt; for &amp;'a <a class='struct' href='openssl/bn/struct.BigNumRef.html' title='openssl::bn::BigNumRef'>BigNumRef</a>","impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html' title='core::ops::Shl'>Shl</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt; for &amp;'a <a class='struct' href='openssl/bn/struct.BigNum.html' title='openssl::bn::BigNum'>BigNum</a>",];
+implementors["openssl"] = ["impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html\" title=\"trait core::ops::Shl\">Shl</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.i32.html\">i32</a>&gt; for &amp;'a <a class=\"struct\" href=\"openssl/bn/struct.BigNumRef.html\" title=\"struct openssl::bn::BigNumRef\">BigNumRef</a>","impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html\" title=\"trait core::ops::Shl\">Shl</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.i32.html\">i32</a>&gt; for &amp;'a <a class=\"struct\" href=\"openssl/bn/struct.BigNum.html\" title=\"struct openssl::bn::BigNum\">BigNum</a>",];
 implementors["phf"] = [];
 implementors["regex_syntax"] = [];
-implementors["reqwest"] = ["impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html' title='core::ops::Shl'>Shl</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt; for &amp;'a <a class='struct' href='openssl/bn/struct.BigNumRef.html' title='openssl::bn::BigNumRef'>BigNumRef</a>","impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html' title='core::ops::Shl'>Shl</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt; for &amp;'a <a class='struct' href='openssl/bn/struct.BigNum.html' title='openssl::bn::BigNum'>BigNum</a>",];
+implementors["reqwest"] = ["impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html\" title=\"trait core::ops::Shl\">Shl</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.i32.html\">i32</a>&gt; for &amp;'a <a class=\"struct\" href=\"openssl/bn/struct.BigNumRef.html\" title=\"struct openssl::bn::BigNumRef\">BigNumRef</a>","impl&lt;'a&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/trait.Shl.html\" title=\"trait core::ops::Shl\">Shl</a>&lt;<a class=\"primitive\" href=\"https://doc.rust-lang.org/nightly/std/primitive.i32.html\">i32</a>&gt; for &amp;'a <a class=\"struct\" href=\"openssl/bn/struct.BigNum.html\" title=\"struct openssl::bn::BigNum\">BigNum</a>",];
 implementors["serde"] = [];
 implementors["serde_urlencoded"] = [];
+implementors["thread_local"] = [];
 implementors["void"] = [];
 
             if (window.register_implementors) {
