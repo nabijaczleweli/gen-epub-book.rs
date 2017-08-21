@@ -1,11 +1,11 @@
 (function() {var implementors = {};
-implementors["antidote"] = [];
+implementors["bytes"] = [];
 implementors["chrono"] = [];
 implementors["flate2"] = [];
 implementors["hyper"] = [];
-implementors["hyper_native_tls"] = [];
 implementors["libc"] = [];
 implementors["mime_guess"] = [];
+implementors["mio"] = [];
 implementors["num"] = [];
 implementors["openssl"] = [];
 implementors["phf"] = [];
@@ -14,6 +14,7 @@ implementors["reqwest"] = [];
 implementors["serde"] = [];
 implementors["serde_urlencoded"] = [];
 implementors["thread_local"] = [];
+implementors["tokio_core"] = [];
 implementors["void"] = [];
 
             if (window.register_implementors) {

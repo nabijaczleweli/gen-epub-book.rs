@@ -490,12 +490,34 @@
 <span id="445">445</span>
 <span id="446">446</span>
 <span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">CONTENT_TABLE_HEADER</span>, <span class="ident">CONTAINER</span>, <span class="ident">MIME_TYPE</span>, <span class="ident">write_string_content</span>, <span class="ident">xhtml_path_id</span>, <span class="ident">book_filename</span>, <span class="ident">xhtml_url_id</span>, <span class="ident">download_to</span>};
+<span class="kw">use</span> <span class="ident">mime_guess</span>::{<span class="ident">Mime</span>, <span class="ident">guess_mime_type_opt</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">BookElement</span>, <span class="ident">find_title</span>};
 <span class="kw">use</span> <span class="ident">zip</span>::<span class="ident">write</span>::{<span class="ident">ZipWriter</span>, <span class="ident">FileOptions</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">FixedOffset</span>};
-<span class="kw">use</span> <span class="ident">mime_guess</span>::<span class="ident">guess_mime_type_opt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Write</span>, <span class="ident">Seek</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeSet</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
@@ -572,9 +594,10 @@
     <span class="doccomment">/// assert_eq!(book.author, &quot;nabijaczleweli&quot;.to_string());</span>
     <span class="doccomment">/// assert_eq!(book.date, DateTime::parse_from_rfc3339(&quot;2017-02-08T15:30:18+01:00&quot;).unwrap());</span>
     <span class="doccomment">/// assert_eq!(book.language, &quot;en-GB&quot;.to_string());</span>
-    <span class="doccomment">/// assert_eq!(book.cover, Some((&quot;examples-cover&quot;.to_string(),</span>
-    <span class="doccomment">///                              PathBuf::from(&quot;examples-cover.png&quot;),</span>
-    <span class="doccomment">///                              EPubContentType::File(PathBuf::from(&quot;examples/cover.png&quot;)))));</span>
+    <span class="doccomment">/// assert_eq!(book.cover, Some((&quot;cover-content-1&quot;.to_string(),</span>
+    <span class="doccomment">///                              PathBuf::from(&quot;cover-data-1.html&quot;),</span>
+    <span class="doccomment">///                              EPubContentType::Raw(&quot;&lt;center&gt;&lt;img src=\&quot;examples-cover.png\&quot; \</span>
+    <span class="doccomment">///                                                    alt=\&quot;examples-cover.png\&quot;&gt;&lt;/img&gt;&lt;/center&gt;&quot;.to_string()))));</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_elements</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">BookElement</span><span class="op">&gt;&gt;</span>(<span class="ident">elems</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">EPubBook</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
@@ -598,26 +621,36 @@
                     <span class="ident">non_content</span>.<span class="ident">push</span>((<span class="ident">xhtml_path_id</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="ident">fname</span>.<span class="ident">clone</span>(), <span class="ident">EPubContentType</span>::<span class="ident">File</span>(<span class="ident">c</span>)));
                     <span class="ident">content</span>.<span class="ident">push</span>((<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;image-content-{}&quot;</span>, <span class="ident">i</span>),
                                   <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;image-data-{}.html&quot;</span>, <span class="ident">i</span>)),
-                                  <span class="ident">EPubContentType</span>::<span class="ident">Raw</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">r#&quot;&lt;center&gt;&lt;img src=&quot;{}&quot;&gt;&lt;/img&gt;&lt;/center&gt;&quot;#</span>, <span class="ident">fname</span>.<span class="ident">display</span>()))));
+                                  <span class="ident">EPubContentType</span>::<span class="ident">Raw</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">r#&quot;&lt;center&gt;&lt;img src=&quot;{}&quot; alt=&quot;{0}&quot;&gt;&lt;/img&gt;&lt;/center&gt;&quot;#</span>, <span class="ident">fname</span>.<span class="ident">display</span>()))));
                 }
                 <span class="ident">BookElement</span>::<span class="ident">NetworkImageContent</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> {
                     <span class="kw">let</span> <span class="ident">fname</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">path_segments</span>().<span class="ident">unwrap</span>().<span class="ident">last</span>().<span class="ident">unwrap</span>().<span class="ident">to_string</span>();
                     <span class="ident">non_content</span>.<span class="ident">push</span>((<span class="ident">xhtml_url_id</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>).<span class="ident">to_string</span>(), <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="kw-2">&amp;</span><span class="ident">fname</span>), <span class="ident">EPubContentType</span>::<span class="ident">Network</span>(<span class="ident">c</span>)));
                     <span class="ident">content</span>.<span class="ident">push</span>((<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;network-image-content-{}&quot;</span>, <span class="ident">i</span>),
                                   <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;network-image-data-{}.html&quot;</span>, <span class="ident">i</span>)),
-                                  <span class="ident">EPubContentType</span>::<span class="ident">Raw</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">r#&quot;&lt;center&gt;&lt;img src=&quot;{}&quot;&gt;&lt;/img&gt;&lt;/center&gt;&quot;#</span>, <span class="ident">fname</span>))));
+                                  <span class="ident">EPubContentType</span>::<span class="ident">Raw</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">r#&quot;&lt;center&gt;&lt;img src=&quot;{}&quot; alt=&quot;{0}&quot;&gt;&lt;/img&gt;&lt;/center&gt;&quot;#</span>, <span class="ident">fname</span>))));
                 }
                 <span class="ident">BookElement</span>::<span class="ident">Cover</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">cover</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EPubBook</span>::<span class="ident">handle_essential_element</span>(<span class="ident">cover</span>,
-                                                                    (<span class="ident">xhtml_path_id</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="ident">book_filename</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="ident">EPubContentType</span>::<span class="ident">File</span>(<span class="ident">c</span>)),
-                                                                    <span class="string">&quot;Cover and Network-Cover&quot;</span>))
+                    <span class="kw">let</span> <span class="ident">fname</span> <span class="op">=</span> <span class="ident">book_filename</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>);
+                    <span class="ident">non_content</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">EPubBook</span>::<span class="ident">handle_essential_element</span>(<span class="ident">cover</span>,
+                                                                             (<span class="ident">xhtml_path_id</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="ident">fname</span>.<span class="ident">clone</span>(), <span class="ident">EPubContentType</span>::<span class="ident">File</span>(<span class="ident">c</span>)),
+                                                                             <span class="string">&quot;Cover and Network-Cover&quot;</span>))
+                        .<span class="ident">unwrap</span>());
+                    <span class="ident">cover</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;cover-content-{}&quot;</span>, <span class="ident">i</span>),
+                                  <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;cover-data-{}.html&quot;</span>, <span class="ident">i</span>)),
+                                  <span class="ident">EPubContentType</span>::<span class="ident">Raw</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">r#&quot;&lt;center&gt;&lt;img src=&quot;{}&quot; alt=&quot;{0}&quot;&gt;&lt;/img&gt;&lt;/center&gt;&quot;#</span>, <span class="ident">fname</span>.<span class="ident">display</span>()))));
                 }
                 <span class="ident">BookElement</span>::<span class="ident">NetworkCover</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">cover</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EPubBook</span>::<span class="ident">handle_essential_element</span>(<span class="ident">cover</span>,
-                                                                    (<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;network-cover-{}&quot;</span>, <span class="ident">xhtml_url_id</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>)),
-                                                                     <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">c</span>.<span class="ident">path_segments</span>().<span class="ident">unwrap</span>().<span class="ident">last</span>().<span class="ident">unwrap</span>()),
-                                                                     <span class="ident">EPubContentType</span>::<span class="ident">Network</span>(<span class="ident">c</span>)),
-                                                                    <span class="string">&quot;Cover and Network-Cover&quot;</span>))
+                    <span class="kw">let</span> <span class="ident">fname</span> <span class="op">=</span> <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">c</span>.<span class="ident">path_segments</span>().<span class="ident">unwrap</span>().<span class="ident">last</span>().<span class="ident">unwrap</span>());
+                    <span class="ident">non_content</span>.<span class="ident">push</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">EPubBook</span>::<span class="ident">handle_essential_element</span>(<span class="ident">cover</span>,
+                                                                             (<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;network-cover-{}&quot;</span>, <span class="ident">xhtml_url_id</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>)),
+                                                                              <span class="ident">fname</span>.<span class="ident">clone</span>(),
+                                                                              <span class="ident">EPubContentType</span>::<span class="ident">Network</span>(<span class="ident">c</span>)),
+                                                                             <span class="string">&quot;Cover and Network-Cover&quot;</span>))
+                        .<span class="ident">unwrap</span>());
+                    <span class="ident">cover</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;network-cover-content-{}&quot;</span>, <span class="ident">i</span>),
+                                  <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;network-cover-data-{}.html&quot;</span>, <span class="ident">i</span>)),
+                                  <span class="ident">EPubContentType</span>::<span class="ident">Raw</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">r#&quot;&lt;center&gt;&lt;img src=&quot;{}&quot; alt=&quot;{0}&quot;&gt;&lt;/img&gt;&lt;/center&gt;&quot;#</span>, <span class="ident">fname</span>.<span class="ident">display</span>()))));
                 }
                 <span class="ident">BookElement</span>::<span class="ident">Include</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="ident">non_content</span>.<span class="ident">push</span>((<span class="ident">xhtml_path_id</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="ident">book_filename</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>), <span class="ident">EPubContentType</span>::<span class="ident">File</span>(<span class="ident">c</span>))),
                 <span class="ident">BookElement</span>::<span class="ident">NetworkInclude</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> {
@@ -678,9 +711,10 @@
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// # book.normalise_paths(&amp;(&quot;$TEMP/ops-epub-book-normalise-paths-0/&quot;.to_string(), tf.clone()), false, &amp;mut</span>
     <span class="doccomment">/// vec![]).unwrap();</span>
-    <span class="doccomment">/// # assert_eq!(book.cover, Some((&quot;cover&quot;.to_string(),</span>
-    <span class="doccomment">/// #                              PathBuf::from(&quot;cover.png&quot;),</span>
-    <span class="doccomment">/// #                              EPubContentType::File(tf.join(&quot;cover.png&quot;).canonicalize().unwrap()))));</span>
+    <span class="doccomment">/// # assert_eq!(book.cover, Some((&quot;cover-content-1&quot;.to_string(),</span>
+    <span class="doccomment">/// #                              PathBuf::from(&quot;cover-data-1.html&quot;),</span>
+    <span class="doccomment">/// #                              EPubContentType::Raw(&quot;&lt;center&gt;&lt;img src=\&quot;cover.png\&quot; \</span>
+    <span class="doccomment">/// #                                                    alt=\&quot;cover.png\&quot;&gt;&lt;/img&gt;&lt;/center&gt;&quot;.to_string()))));</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalise_paths</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">relroot</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>), <span class="ident">verbose</span>: <span class="ident">bool</span>, <span class="ident">verb_out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
@@ -835,10 +869,7 @@
                               <span class="string">r#&quot;    &lt;item href=&quot;{}&quot; id=&quot;{}&quot; media-type=&quot;{}&quot; /&gt;&quot;#</span>,
                               <span class="ident">fname</span>.<span class="ident">display</span>(),
                               <span class="ident">id</span>,
-                              <span class="macro">try</span><span class="macro">!</span>(<span class="ident">guess_mime_type_opt</span>(<span class="kw-2">&amp;</span><span class="ident">fname</span>).<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="ident">WrongFileState</span> {
-                                  <span class="ident">what</span>: <span class="string">&quot;of recognised extension&quot;</span>,
-                                  <span class="ident">path</span>: <span class="ident">fname</span>.<span class="ident">clone</span>(),
-                              })))
+                              <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EPubBook</span>::<span class="ident">guess_type</span>(<span class="kw-2">&amp;</span><span class="ident">fname</span>)))
                     .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest content&quot;</span>)));
             }
         }
@@ -936,6 +967,19 @@
         }
 
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn</span> <span class="ident">guess_type</span>(<span class="ident">fname</span>: <span class="kw-2">&amp;</span><span class="ident">PathBuf</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Mime</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">guess_mime_type_opt</span>(<span class="kw-2">&amp;</span><span class="ident">fname</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">mime</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">mime</span> <span class="op">==</span> <span class="string">&quot;text/html&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>() {
+                <span class="string">&quot;application/xhtml+xml&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>()
+            } <span class="kw">else</span> {
+                <span class="ident">mime</span>
+            })
+            .<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="ident">WrongFileState</span> {
+                <span class="ident">what</span>: <span class="string">&quot;of recognised extension&quot;</span>,
+                <span class="ident">path</span>: <span class="ident">fname</span>.<span class="ident">clone</span>(),
+            })
     }
 }
 </pre>

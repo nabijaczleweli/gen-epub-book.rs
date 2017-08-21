@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.3.0/src/date.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.0/src/date.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>date.rs.html -- source</title>
@@ -416,8 +416,6 @@
 <span id="371">371</span>
 <span id="372">372</span>
 <span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
 </pre><pre class="rust ">
 <span class="comment">// This is a part of Chrono.</span>
 <span class="comment">// See README.md and LICENSE.txt for details.</span>
@@ -430,18 +428,16 @@
 <span class="kw">use</span> <span class="ident">oldtime</span>::<span class="ident">Duration</span> <span class="kw">as</span> <span class="ident">OldDuration</span>;
 
 <span class="kw">use</span> {<span class="ident">Weekday</span>, <span class="ident">Datelike</span>};
-<span class="kw">use</span> <span class="ident">offset</span>::<span class="ident">TimeZone</span>;
-<span class="kw">use</span> <span class="ident">offset</span>::<span class="ident">utc</span>::<span class="ident">UTC</span>;
-<span class="kw">use</span> <span class="ident">naive</span>;
-<span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">date</span>::<span class="ident">NaiveDate</span>;
-<span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">time</span>::<span class="ident">NaiveTime</span>;
-<span class="kw">use</span> <span class="ident">datetime</span>::<span class="ident">DateTime</span>;
+<span class="kw">use</span> <span class="ident">offset</span>::{<span class="ident">TimeZone</span>, <span class="ident">Utc</span>};
+<span class="kw">use</span> <span class="ident">naive</span>::{<span class="self">self</span>, <span class="ident">NaiveDate</span>, <span class="ident">NaiveTime</span>, <span class="ident">IsoWeek</span>};
+<span class="kw">use</span> <span class="ident">DateTime</span>;
 <span class="kw">use</span> <span class="ident">format</span>::{<span class="ident">Item</span>, <span class="ident">DelayedFormat</span>, <span class="ident">StrftimeItems</span>};
 
 <span class="doccomment">/// ISO 8601 calendar date with time zone.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This type should be considered ambiguous at best,</span>
 <span class="doccomment">/// due to the inherent lack of precision required for the time zone resolution.</span>
+<span class="doccomment">/// For serialization and deserialization uses, it is best to use `NaiveDate` instead.</span>
 <span class="doccomment">/// There are some guarantees on the usage of `Date&lt;Tz&gt;`:</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// - If properly constructed via `TimeZone::ymd` and others without an error,</span>
@@ -468,9 +464,9 @@
 }
 
 <span class="doccomment">/// The minimum possible `Date`.</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MIN</span>: <span class="ident">Date</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Date</span> { <span class="ident">date</span>: <span class="ident">naive</span>::<span class="ident">date</span>::<span class="ident">MIN</span>, <span class="ident">offset</span>: <span class="ident">UTC</span> };
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MIN_DATE</span>: <span class="ident">Date</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Date</span> { <span class="ident">date</span>: <span class="ident">naive</span>::<span class="ident">MIN_DATE</span>, <span class="ident">offset</span>: <span class="ident">Utc</span> };
 <span class="doccomment">/// The maximum possible `Date`.</span>
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MAX</span>: <span class="ident">Date</span><span class="op">&lt;</span><span class="ident">UTC</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Date</span> { <span class="ident">date</span>: <span class="ident">naive</span>::<span class="ident">date</span>::<span class="ident">MAX</span>, <span class="ident">offset</span>: <span class="ident">UTC</span> };
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MAX_DATE</span>: <span class="ident">Date</span><span class="op">&lt;</span><span class="ident">Utc</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Date</span> { <span class="ident">date</span>: <span class="ident">naive</span>::<span class="ident">MAX_DATE</span>, <span class="ident">offset</span>: <span class="ident">Utc</span> };
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Tz</span>: <span class="ident">TimeZone</span><span class="op">&gt;</span> <span class="ident">Date</span><span class="op">&lt;</span><span class="ident">Tz</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Makes a new `Date` with given *UTC* date and offset.</span>
@@ -684,7 +680,7 @@
     }
 
     <span class="doccomment">/// Formats the date with the specified format string.</span>
-    <span class="doccomment">/// See the [`format::strftime` module](../format/strftime/index.html)</span>
+    <span class="doccomment">/// See the [`format::strftime` module](./format/strftime/index.html)</span>
     <span class="doccomment">/// on the supported escape sequences.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">DelayedFormat</span><span class="op">&lt;</span><span class="ident">StrftimeItems</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
@@ -701,7 +697,7 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span> <span class="kw">fn</span> <span class="ident">ordinal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> { <span class="self">self</span>.<span class="ident">naive_local</span>().<span class="ident">ordinal</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span> <span class="kw">fn</span> <span class="ident">ordinal0</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> { <span class="self">self</span>.<span class="ident">naive_local</span>().<span class="ident">ordinal0</span>() }
     <span class="attribute">#[<span class="ident">inline</span>]</span> <span class="kw">fn</span> <span class="ident">weekday</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Weekday</span> { <span class="self">self</span>.<span class="ident">naive_local</span>().<span class="ident">weekday</span>() }
-    <span class="attribute">#[<span class="ident">inline</span>]</span> <span class="kw">fn</span> <span class="ident">isoweekdate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">i32</span>, <span class="ident">u32</span>, <span class="ident">Weekday</span>) { <span class="self">self</span>.<span class="ident">naive_local</span>().<span class="ident">isoweekdate</span>() }
+    <span class="attribute">#[<span class="ident">inline</span>]</span> <span class="kw">fn</span> <span class="ident">iso_week</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IsoWeek</span> { <span class="self">self</span>.<span class="ident">naive_local</span>().<span class="ident">iso_week</span>() }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">with_year</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">year</span>: <span class="ident">i32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Date</span><span class="op">&lt;</span><span class="ident">Tz</span><span class="op">&gt;&gt;</span> {

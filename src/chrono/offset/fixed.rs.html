@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.3.0/src/offset/fixed.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.0/src/offset/fixed.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>fixed.rs.html -- source</title>
@@ -267,8 +267,6 @@
 <span id="222">222</span>
 <span id="223">223</span>
 <span id="224">224</span>
-<span id="225">225</span>
-<span id="226">226</span>
 </pre><pre class="rust ">
 <span class="comment">// This is a part of Chrono.</span>
 <span class="comment">// See README.md and LICENSE.txt for details.</span>
@@ -281,15 +279,13 @@
 
 <span class="kw">use</span> <span class="ident">Timelike</span>;
 <span class="kw">use</span> <span class="ident">div</span>::<span class="ident">div_mod_floor</span>;
-<span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">time</span>::<span class="ident">NaiveTime</span>;
-<span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">date</span>::<span class="ident">NaiveDate</span>;
-<span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">datetime</span>::<span class="ident">NaiveDateTime</span>;
-<span class="kw">use</span> <span class="ident">datetime</span>::<span class="ident">DateTime</span>;
+<span class="kw">use</span> <span class="ident">naive</span>::{<span class="ident">NaiveTime</span>, <span class="ident">NaiveDate</span>, <span class="ident">NaiveDateTime</span>};
+<span class="kw">use</span> <span class="ident">DateTime</span>;
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">TimeZone</span>, <span class="ident">Offset</span>, <span class="ident">LocalResult</span>};
 
 <span class="doccomment">/// The time zone with fixed offset, from UTC-23:59:59 to UTC+23:59:59.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// Using the [`TimeZone`](../../../chrono/offset/trait.TimeZone.html) methods</span>
+<span class="doccomment">/// Using the [`TimeZone`](./trait.TimeZone.html) methods</span>
 <span class="doccomment">/// on a `FixedOffset` struct is the preferred way to construct</span>
 <span class="doccomment">/// `DateTime&lt;FixedOffset&gt;` instances. See the [`east`](#method.east) and</span>
 <span class="doccomment">/// [`west`](#method.west) methods for examples.</span>

@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["hyper_native_tls"] = [];
 implementors["reqwest"] = [];
 
             if (window.register_implementors) {

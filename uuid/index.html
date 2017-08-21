@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/uuid/lib.rs.html#11-1152' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/uuid/lib.rs.html#11-1383' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Generate and parse UUIDs</p>
 
 <p>Provides support for Universally Unique Identifiers (UUIDs). A UUID is a
@@ -73,6 +73,10 @@ of functionality.</p>
 <ul>
 <li><code>use_std</code> - adds in functionality available when linking to the standard
 library, currently this is only the <code>impl Error for ParseError</code>.</li>
+<li><code>v1</code> - adds the <code>Uuid::new_v1</code> function and the ability to create a V1
+using a <code>UUIDV1Context</code> and a timestamp from <code>time::timespec</code></li>
+<li><code>v3</code> - adds the <code>Uuid::new_v3</code> function and the ability to create a V3
+UUID based on the MD5 hash of some data.</li>
 <li><code>v4</code> - adds the <code>Uuid::new_v4</code> function and the ability to randomly
 generate a <code>Uuid</code>.</li>
 <li><code>v5</code> - adds the <code>Uuid::new_v5</code> function and the ability to create a V5
@@ -86,13 +90,13 @@ using the <code>rustc-serialize</code> crate.</li>
 <p>By default, <code>uuid</code> can be depended on with:</p>
 
 <pre><code class="language-toml">[dependencies]
-uuid = &quot;0.2&quot;
+uuid = &quot;0.4&quot;
 </code></pre>
 
 <p>To activate various features, use syntax like:</p>
 
 <pre><code class="language-toml">[dependencies]
-uuid = { version = &quot;0.2&quot;, features = [&quot;serde&quot;, &quot;v4&quot;] }
+uuid = { version = &quot;0.4&quot;, features = [&quot;serde&quot;, &quot;v4&quot;] }
 </code></pre>
 
 <h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>

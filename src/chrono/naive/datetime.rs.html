@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.3.0/src/naive/datetime.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.0/src/naive/datetime.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>datetime.rs.html -- source</title>
@@ -1728,6 +1728,241 @@
 <span id="1683">1683</span>
 <span id="1684">1684</span>
 <span id="1685">1685</span>
+<span id="1686">1686</span>
+<span id="1687">1687</span>
+<span id="1688">1688</span>
+<span id="1689">1689</span>
+<span id="1690">1690</span>
+<span id="1691">1691</span>
+<span id="1692">1692</span>
+<span id="1693">1693</span>
+<span id="1694">1694</span>
+<span id="1695">1695</span>
+<span id="1696">1696</span>
+<span id="1697">1697</span>
+<span id="1698">1698</span>
+<span id="1699">1699</span>
+<span id="1700">1700</span>
+<span id="1701">1701</span>
+<span id="1702">1702</span>
+<span id="1703">1703</span>
+<span id="1704">1704</span>
+<span id="1705">1705</span>
+<span id="1706">1706</span>
+<span id="1707">1707</span>
+<span id="1708">1708</span>
+<span id="1709">1709</span>
+<span id="1710">1710</span>
+<span id="1711">1711</span>
+<span id="1712">1712</span>
+<span id="1713">1713</span>
+<span id="1714">1714</span>
+<span id="1715">1715</span>
+<span id="1716">1716</span>
+<span id="1717">1717</span>
+<span id="1718">1718</span>
+<span id="1719">1719</span>
+<span id="1720">1720</span>
+<span id="1721">1721</span>
+<span id="1722">1722</span>
+<span id="1723">1723</span>
+<span id="1724">1724</span>
+<span id="1725">1725</span>
+<span id="1726">1726</span>
+<span id="1727">1727</span>
+<span id="1728">1728</span>
+<span id="1729">1729</span>
+<span id="1730">1730</span>
+<span id="1731">1731</span>
+<span id="1732">1732</span>
+<span id="1733">1733</span>
+<span id="1734">1734</span>
+<span id="1735">1735</span>
+<span id="1736">1736</span>
+<span id="1737">1737</span>
+<span id="1738">1738</span>
+<span id="1739">1739</span>
+<span id="1740">1740</span>
+<span id="1741">1741</span>
+<span id="1742">1742</span>
+<span id="1743">1743</span>
+<span id="1744">1744</span>
+<span id="1745">1745</span>
+<span id="1746">1746</span>
+<span id="1747">1747</span>
+<span id="1748">1748</span>
+<span id="1749">1749</span>
+<span id="1750">1750</span>
+<span id="1751">1751</span>
+<span id="1752">1752</span>
+<span id="1753">1753</span>
+<span id="1754">1754</span>
+<span id="1755">1755</span>
+<span id="1756">1756</span>
+<span id="1757">1757</span>
+<span id="1758">1758</span>
+<span id="1759">1759</span>
+<span id="1760">1760</span>
+<span id="1761">1761</span>
+<span id="1762">1762</span>
+<span id="1763">1763</span>
+<span id="1764">1764</span>
+<span id="1765">1765</span>
+<span id="1766">1766</span>
+<span id="1767">1767</span>
+<span id="1768">1768</span>
+<span id="1769">1769</span>
+<span id="1770">1770</span>
+<span id="1771">1771</span>
+<span id="1772">1772</span>
+<span id="1773">1773</span>
+<span id="1774">1774</span>
+<span id="1775">1775</span>
+<span id="1776">1776</span>
+<span id="1777">1777</span>
+<span id="1778">1778</span>
+<span id="1779">1779</span>
+<span id="1780">1780</span>
+<span id="1781">1781</span>
+<span id="1782">1782</span>
+<span id="1783">1783</span>
+<span id="1784">1784</span>
+<span id="1785">1785</span>
+<span id="1786">1786</span>
+<span id="1787">1787</span>
+<span id="1788">1788</span>
+<span id="1789">1789</span>
+<span id="1790">1790</span>
+<span id="1791">1791</span>
+<span id="1792">1792</span>
+<span id="1793">1793</span>
+<span id="1794">1794</span>
+<span id="1795">1795</span>
+<span id="1796">1796</span>
+<span id="1797">1797</span>
+<span id="1798">1798</span>
+<span id="1799">1799</span>
+<span id="1800">1800</span>
+<span id="1801">1801</span>
+<span id="1802">1802</span>
+<span id="1803">1803</span>
+<span id="1804">1804</span>
+<span id="1805">1805</span>
+<span id="1806">1806</span>
+<span id="1807">1807</span>
+<span id="1808">1808</span>
+<span id="1809">1809</span>
+<span id="1810">1810</span>
+<span id="1811">1811</span>
+<span id="1812">1812</span>
+<span id="1813">1813</span>
+<span id="1814">1814</span>
+<span id="1815">1815</span>
+<span id="1816">1816</span>
+<span id="1817">1817</span>
+<span id="1818">1818</span>
+<span id="1819">1819</span>
+<span id="1820">1820</span>
+<span id="1821">1821</span>
+<span id="1822">1822</span>
+<span id="1823">1823</span>
+<span id="1824">1824</span>
+<span id="1825">1825</span>
+<span id="1826">1826</span>
+<span id="1827">1827</span>
+<span id="1828">1828</span>
+<span id="1829">1829</span>
+<span id="1830">1830</span>
+<span id="1831">1831</span>
+<span id="1832">1832</span>
+<span id="1833">1833</span>
+<span id="1834">1834</span>
+<span id="1835">1835</span>
+<span id="1836">1836</span>
+<span id="1837">1837</span>
+<span id="1838">1838</span>
+<span id="1839">1839</span>
+<span id="1840">1840</span>
+<span id="1841">1841</span>
+<span id="1842">1842</span>
+<span id="1843">1843</span>
+<span id="1844">1844</span>
+<span id="1845">1845</span>
+<span id="1846">1846</span>
+<span id="1847">1847</span>
+<span id="1848">1848</span>
+<span id="1849">1849</span>
+<span id="1850">1850</span>
+<span id="1851">1851</span>
+<span id="1852">1852</span>
+<span id="1853">1853</span>
+<span id="1854">1854</span>
+<span id="1855">1855</span>
+<span id="1856">1856</span>
+<span id="1857">1857</span>
+<span id="1858">1858</span>
+<span id="1859">1859</span>
+<span id="1860">1860</span>
+<span id="1861">1861</span>
+<span id="1862">1862</span>
+<span id="1863">1863</span>
+<span id="1864">1864</span>
+<span id="1865">1865</span>
+<span id="1866">1866</span>
+<span id="1867">1867</span>
+<span id="1868">1868</span>
+<span id="1869">1869</span>
+<span id="1870">1870</span>
+<span id="1871">1871</span>
+<span id="1872">1872</span>
+<span id="1873">1873</span>
+<span id="1874">1874</span>
+<span id="1875">1875</span>
+<span id="1876">1876</span>
+<span id="1877">1877</span>
+<span id="1878">1878</span>
+<span id="1879">1879</span>
+<span id="1880">1880</span>
+<span id="1881">1881</span>
+<span id="1882">1882</span>
+<span id="1883">1883</span>
+<span id="1884">1884</span>
+<span id="1885">1885</span>
+<span id="1886">1886</span>
+<span id="1887">1887</span>
+<span id="1888">1888</span>
+<span id="1889">1889</span>
+<span id="1890">1890</span>
+<span id="1891">1891</span>
+<span id="1892">1892</span>
+<span id="1893">1893</span>
+<span id="1894">1894</span>
+<span id="1895">1895</span>
+<span id="1896">1896</span>
+<span id="1897">1897</span>
+<span id="1898">1898</span>
+<span id="1899">1899</span>
+<span id="1900">1900</span>
+<span id="1901">1901</span>
+<span id="1902">1902</span>
+<span id="1903">1903</span>
+<span id="1904">1904</span>
+<span id="1905">1905</span>
+<span id="1906">1906</span>
+<span id="1907">1907</span>
+<span id="1908">1908</span>
+<span id="1909">1909</span>
+<span id="1910">1910</span>
+<span id="1911">1911</span>
+<span id="1912">1912</span>
+<span id="1913">1913</span>
+<span id="1914">1914</span>
+<span id="1915">1915</span>
+<span id="1916">1916</span>
+<span id="1917">1917</span>
+<span id="1918">1918</span>
+<span id="1919">1919</span>
+<span id="1920">1920</span>
 </pre><pre class="rust ">
 <span class="comment">// This is a part of Chrono.</span>
 <span class="comment">// See README.md and LICENSE.txt for details.</span>
@@ -1735,14 +1970,13 @@
 <span class="doccomment">//! ISO 8601 date and time without timezone.</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">str</span>, <span class="ident">fmt</span>, <span class="ident">hash</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Add</span>, <span class="ident">Sub</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Add</span>, <span class="ident">Sub</span>, <span class="ident">Deref</span>, <span class="ident">AddAssign</span>, <span class="ident">SubAssign</span>};
 <span class="kw">use</span> <span class="ident">num</span>::<span class="ident">traits</span>::<span class="ident">ToPrimitive</span>;
 <span class="kw">use</span> <span class="ident">oldtime</span>::<span class="ident">Duration</span> <span class="kw">as</span> <span class="ident">OldDuration</span>;
 
 <span class="kw">use</span> {<span class="ident">Weekday</span>, <span class="ident">Timelike</span>, <span class="ident">Datelike</span>};
 <span class="kw">use</span> <span class="ident">div</span>::<span class="ident">div_mod_floor</span>;
-<span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">time</span>::<span class="ident">NaiveTime</span>;
-<span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">date</span>::<span class="ident">NaiveDate</span>;
+<span class="kw">use</span> <span class="ident">naive</span>::{<span class="ident">NaiveTime</span>, <span class="ident">NaiveDate</span>, <span class="ident">IsoWeek</span>};
 <span class="kw">use</span> <span class="ident">format</span>::{<span class="ident">Item</span>, <span class="ident">Numeric</span>, <span class="ident">Pad</span>, <span class="ident">Fixed</span>};
 <span class="kw">use</span> <span class="ident">format</span>::{<span class="ident">parse</span>, <span class="ident">Parsed</span>, <span class="ident">ParseError</span>, <span class="ident">ParseResult</span>, <span class="ident">DelayedFormat</span>, <span class="ident">StrftimeItems</span>};
 
@@ -1758,7 +1992,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Example</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// `NaiveDateTime` is commonly created from [`NaiveDate`](../date/struct.NaiveDate.html).</span>
+<span class="doccomment">/// `NaiveDateTime` is commonly created from [`NaiveDate`](./struct.NaiveDate.html).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ~~~~</span>
 <span class="doccomment">/// use chrono::{NaiveDate, NaiveDateTime};</span>
@@ -1767,8 +2001,8 @@
 <span class="doccomment">/// # let _ = dt;</span>
 <span class="doccomment">/// ~~~~</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// You can use typical [date-like](../../trait.Datelike.html) and</span>
-<span class="doccomment">/// [time-like](../../trait.Timelike.html) methods,</span>
+<span class="doccomment">/// You can use typical [date-like](../trait.Datelike.html) and</span>
+<span class="doccomment">/// [time-like](../trait.Timelike.html) methods,</span>
 <span class="doccomment">/// provided that relevant traits are in the scope.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// ~~~~</span>
@@ -1785,9 +2019,27 @@
     <span class="ident">time</span>: <span class="ident">NaiveTime</span>,
 }
 
+<span class="doccomment">/// A DateTime that can be deserialized from a seconds-based timestamp</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TsSeconds</span>(<span class="ident">NaiveDateTime</span>);
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">TsSeconds</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
+    <span class="doccomment">/// Pull the internal NaiveDateTime out</span>
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">obj</span>: <span class="ident">TsSeconds</span>) <span class="op">-&gt;</span> <span class="ident">NaiveDateTime</span> {
+        <span class="ident">obj</span>.<span class="number">0</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">TsSeconds</span> {
+    <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">NaiveDateTime</span>;
+
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Target</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
+    }
+}
+
 <span class="kw">impl</span> <span class="ident">NaiveDateTime</span> {
     <span class="doccomment">/// Makes a new `NaiveDateTime` from date and time components.</span>
-    <span class="doccomment">/// Equivalent to [`date.and_time(time)`](../date/struct.NaiveDate.html#method.and_time)</span>
+    <span class="doccomment">/// Equivalent to [`date.and_time(time)`](./struct.NaiveDate.html#method.and_time)</span>
     <span class="doccomment">/// and many other helper constructors on `NaiveDate`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
@@ -1813,10 +2065,10 @@
     <span class="doccomment">/// and the number of nanoseconds since the last whole non-leap second.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// For a non-naive version of this function see</span>
-    <span class="doccomment">/// [`TimeZone::timestamp`](../../offset/trait.TimeZone.html#method.timestamp).</span>
+    <span class="doccomment">/// [`TimeZone::timestamp`](../offset/trait.TimeZone.html#method.timestamp).</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The nanosecond part can exceed 1,000,000,000 in order to represent the</span>
-    <span class="doccomment">/// [leap second](../time/index.html#leap-second-handling). (The true &quot;UNIX</span>
+    <span class="doccomment">/// [leap second](./struct.NaiveTime.html#leap-second-handling). (The true &quot;UNIX</span>
     <span class="doccomment">/// timestamp&quot; cannot represent a leap second unambiguously.)</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Panics on the out-of-range number of seconds and/or invalid nanosecond.</span>
@@ -1844,7 +2096,7 @@
     <span class="doccomment">/// and the number of nanoseconds since the last whole non-leap second.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The nanosecond part can exceed 1,000,000,000</span>
-    <span class="doccomment">/// in order to represent the [leap second](../time/index.html#leap-second-handling).</span>
+    <span class="doccomment">/// in order to represent the [leap second](./struct.NaiveTime.html#leap-second-handling).</span>
     <span class="doccomment">/// (The true &quot;UNIX timestamp&quot; cannot represent a leap second unambiguously.)</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns `None` on the out-of-range number of seconds and/or invalid nanosecond.</span>
@@ -1876,7 +2128,7 @@
     }
 
     <span class="doccomment">/// Parses a string with the specified format string and returns a new `NaiveDateTime`.</span>
-    <span class="doccomment">/// See the [`format::strftime` module](../../format/strftime/index.html)</span>
+    <span class="doccomment">/// See the [`format::strftime` module](../format/strftime/index.html)</span>
     <span class="doccomment">/// on the supported escape sequences.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
@@ -1901,7 +2153,7 @@
     <span class="doccomment">///            Ok(NaiveDate::from_ymd(2014, 5, 17).and_hms(12, 34, 56)));</span>
     <span class="doccomment">/// ~~~~</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// [Leap seconds](./index.html#leap-second-handling) are correctly handled by</span>
+    <span class="doccomment">/// [Leap seconds](./struct.NaiveTime.html#leap-second-handling) are correctly handled by</span>
     <span class="doccomment">/// treating any time of the form `hh:mm:60` as a leap second.</span>
     <span class="doccomment">/// (This equally applies to the formatting, so the round trip is possible.)</span>
     <span class="doccomment">///</span>
@@ -1998,7 +2250,7 @@
     <span class="doccomment">/// Returns the number of milliseconds since the last whole non-leap second.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 0 to 999,</span>
-    <span class="doccomment">/// or for [leap seconds](../time/index.html#leap-second-handling), to 1,999.</span>
+    <span class="doccomment">/// or for [leap seconds](./struct.NaiveTime.html#leap-second-handling), to 1,999.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2019,7 +2271,7 @@
     <span class="doccomment">/// Returns the number of microseconds since the last whole non-leap second.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 0 to 999,999,</span>
-    <span class="doccomment">/// or for [leap seconds](../time/index.html#leap-second-handling), to 1,999,999.</span>
+    <span class="doccomment">/// or for [leap seconds](./struct.NaiveTime.html#leap-second-handling), to 1,999,999.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2040,7 +2292,7 @@
     <span class="doccomment">/// Returns the number of nanoseconds since the last whole non-leap second.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 0 to 999,999,999,</span>
-    <span class="doccomment">/// or for [leap seconds](../time/index.html#leap-second-handling), to 1,999,999,999.</span>
+    <span class="doccomment">/// or for [leap seconds](./struct.NaiveTime.html#leap-second-handling), to 1,999,999,999.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2060,7 +2312,7 @@
 
     <span class="doccomment">/// Adds given `Duration` to the current date and time.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](../time/index.html#leap-second-handling),</span>
+    <span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](./struct.NaiveTime.html#leap-second-handling),</span>
     <span class="doccomment">/// the addition assumes that **there is no leap second ever**,</span>
     <span class="doccomment">/// except when the `NaiveDateTime` itself represents a leap second</span>
     <span class="doccomment">/// in which case the assumption becomes that **there is exactly a single leap second ever**.</span>
@@ -2146,7 +2398,7 @@
 
     <span class="doccomment">/// Subtracts given `Duration` from the current date and time.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](../time/index.html#leap-second-handling),</span>
+    <span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](./struct.NaiveTime.html#leap-second-handling),</span>
     <span class="doccomment">/// the subtraction assumes that **there is no leap second ever**,</span>
     <span class="doccomment">/// except when the `NaiveDateTime` itself represents a leap second</span>
     <span class="doccomment">/// in which case the assumption becomes that **there is exactly a single leap second ever**.</span>
@@ -2229,7 +2481,7 @@
     <span class="doccomment">/// Subtracts another `NaiveDateTime` from the current date and time.</span>
     <span class="doccomment">/// This does not overflow or underflow at all.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](../time/index.html#leap-second-handling),</span>
+    <span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](./struct.NaiveTime.html#leap-second-handling),</span>
     <span class="doccomment">/// the subtraction assumes that **there is no leap second ever**,</span>
     <span class="doccomment">/// except when any of the `NaiveDateTime`s themselves represents a leap second</span>
     <span class="doccomment">/// in which case the assumption becomes that</span>
@@ -2308,7 +2560,7 @@
     }
 
     <span class="doccomment">/// Formats the combined date and time with the specified format string.</span>
-    <span class="doccomment">/// See the [`format::strftime` module](../../format/strftime/index.html)</span>
+    <span class="doccomment">/// See the [`format::strftime` module](../format/strftime/index.html)</span>
     <span class="doccomment">/// on the supported escape sequences.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This returns a `DelayedFormat`,</span>
@@ -2348,7 +2600,7 @@
 <span class="kw">impl</span> <span class="ident">Datelike</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
     <span class="doccomment">/// Returns the year number in the [calendar date](./index.html#calendar-date).</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveDate::year`](../date/struct.NaiveDate.html#method.year) method.</span>
+    <span class="doccomment">/// See also the [`NaiveDate::year`](./struct.NaiveDate.html#method.year) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2367,7 +2619,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 1 to 12.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveDate::month`](../date/struct.NaiveDate.html#method.month) method.</span>
+    <span class="doccomment">/// See also the [`NaiveDate::month`](./struct.NaiveDate.html#method.month) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2386,7 +2638,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 0 to 11.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveDate::month0`](../date/struct.NaiveDate.html#method.month0) method.</span>
+    <span class="doccomment">/// See also the [`NaiveDate::month0`](./struct.NaiveDate.html#method.month0) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2405,7 +2657,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 1 to 31. (The last day of month differs by months.)</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveDate::day`](../date/struct.NaiveDate.html#method.day) method.</span>
+    <span class="doccomment">/// See also the [`NaiveDate::day`](./struct.NaiveDate.html#method.day) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2424,7 +2676,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 0 to 30. (The last day of month differs by months.)</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveDate::day0`](../date/struct.NaiveDate.html#method.day0) method.</span>
+    <span class="doccomment">/// See also the [`NaiveDate::day0`](./struct.NaiveDate.html#method.day0) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2443,7 +2695,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 1 to 366. (The last day of year differs by years.)</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveDate::ordinal`](../date/struct.NaiveDate.html#method.ordinal) method.</span>
+    <span class="doccomment">/// See also the [`NaiveDate::ordinal`](./struct.NaiveDate.html#method.ordinal) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2462,7 +2714,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// The return value ranges from 0 to 365. (The last day of year differs by years.)</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveDate::ordinal0`](../date/struct.NaiveDate.html#method.ordinal0) method.</span>
+    <span class="doccomment">/// See also the [`NaiveDate::ordinal0`](./struct.NaiveDate.html#method.ordinal0) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2479,7 +2731,7 @@
 
     <span class="doccomment">/// Returns the day of week.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveDate::weekday`](../date/struct.NaiveDate.html#method.weekday) method.</span>
+    <span class="doccomment">/// See also the [`NaiveDate::weekday`](./struct.NaiveDate.html#method.weekday) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2495,8 +2747,8 @@
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">isoweekdate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">i32</span>, <span class="ident">u32</span>, <span class="ident">Weekday</span>) {
-        <span class="self">self</span>.<span class="ident">date</span>.<span class="ident">isoweekdate</span>()
+    <span class="kw">fn</span> <span class="ident">iso_week</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IsoWeek</span> {
+        <span class="self">self</span>.<span class="ident">date</span>.<span class="ident">iso_week</span>()
     }
 
     <span class="doccomment">/// Makes a new `NaiveDateTime` with the year number changed.</span>
@@ -2504,7 +2756,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveDate::with_year`](../date/struct.NaiveDate.html#method.with_year) method.</span>
+    <span class="doccomment">/// [`NaiveDate::with_year`](./struct.NaiveDate.html#method.with_year) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2525,7 +2777,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveDate::with_month`](../date/struct.NaiveDate.html#method.with_month) method.</span>
+    <span class="doccomment">/// [`NaiveDate::with_month`](./struct.NaiveDate.html#method.with_month) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2547,7 +2799,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveDate::with_month0`](../date/struct.NaiveDate.html#method.with_month0) method.</span>
+    <span class="doccomment">/// [`NaiveDate::with_month0`](./struct.NaiveDate.html#method.with_month0) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2569,7 +2821,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveDate::with_day`](../date/struct.NaiveDate.html#method.with_day) method.</span>
+    <span class="doccomment">/// [`NaiveDate::with_day`](./struct.NaiveDate.html#method.with_day) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2590,7 +2842,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveDate::with_day0`](../date/struct.NaiveDate.html#method.with_day0) method.</span>
+    <span class="doccomment">/// [`NaiveDate::with_day0`](./struct.NaiveDate.html#method.with_day0) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2611,7 +2863,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveDate::with_ordinal`](../date/struct.NaiveDate.html#method.with_ordinal) method.</span>
+    <span class="doccomment">/// [`NaiveDate::with_ordinal`](./struct.NaiveDate.html#method.with_ordinal) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2639,7 +2891,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveDate::with_ordinal0`](../date/struct.NaiveDate.html#method.with_ordinal0) method.</span>
+    <span class="doccomment">/// [`NaiveDate::with_ordinal0`](./struct.NaiveDate.html#method.with_ordinal0) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2666,7 +2918,7 @@
 <span class="kw">impl</span> <span class="ident">Timelike</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
     <span class="doccomment">/// Returns the hour number from 0 to 23.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveTime::hour`](../time/struct.NaiveTime.html#method.hour) method.</span>
+    <span class="doccomment">/// See also the [`NaiveTime::hour`](./struct.NaiveTime.html#method.hour) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2683,7 +2935,7 @@
 
     <span class="doccomment">/// Returns the minute number from 0 to 59.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveTime::minute`](../time/struct.NaiveTime.html#method.minute) method.</span>
+    <span class="doccomment">/// See also the [`NaiveTime::minute`](./struct.NaiveTime.html#method.minute) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2700,7 +2952,7 @@
 
     <span class="doccomment">/// Returns the second number from 0 to 59.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// See also the [`NaiveTime::second`](../time/struct.NaiveTime.html#method.second) method.</span>
+    <span class="doccomment">/// See also the [`NaiveTime::second`](./struct.NaiveTime.html#method.second) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2717,10 +2969,10 @@
 
     <span class="doccomment">/// Returns the number of nanoseconds since the whole non-leap second.</span>
     <span class="doccomment">/// The range from 1,000,000,000 to 1,999,999,999 represents</span>
-    <span class="doccomment">/// the [leap second](./naive/time/index.html#leap-second-handling).</span>
+    <span class="doccomment">/// the [leap second](./struct.NaiveTime.html#leap-second-handling).</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveTime::nanosecond`](../time/struct.NaiveTime.html#method.nanosecond) method.</span>
+    <span class="doccomment">/// [`NaiveTime::nanosecond`](./struct.NaiveTime.html#method.nanosecond) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2740,7 +2992,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveTime::with_hour`](../time/struct.NaiveTime.html#method.with_hour) method.</span>
+    <span class="doccomment">/// [`NaiveTime::with_hour`](./struct.NaiveTime.html#method.with_hour) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2762,7 +3014,7 @@
     <span class="doccomment">/// Returns `None` when the resulting `NaiveDateTime` would be invalid.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveTime::with_minute`](../time/struct.NaiveTime.html#method.with_minute) method.</span>
+    <span class="doccomment">/// [`NaiveTime::with_minute`](./struct.NaiveTime.html#method.with_minute) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2786,7 +3038,7 @@
     <span class="doccomment">/// the input range is restricted to 0 through 59.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveTime::with_second`](../time/struct.NaiveTime.html#method.with_second) method.</span>
+    <span class="doccomment">/// [`NaiveTime::with_second`](./struct.NaiveTime.html#method.with_second) method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
@@ -2810,7 +3062,7 @@
     <span class="doccomment">/// the input range can exceed 1,000,000,000 for leap seconds.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// See also the</span>
-    <span class="doccomment">/// [`NaiveTime::with_nanosecond`](../time/struct.NaiveTime.html#method.with_nanosecond)</span>
+    <span class="doccomment">/// [`NaiveTime::with_nanosecond`](./struct.NaiveTime.html#method.with_nanosecond)</span>
     <span class="doccomment">/// method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
@@ -2844,7 +3096,7 @@
 
 <span class="doccomment">/// An addition of `Duration` to `NaiveDateTime` yields another `NaiveDateTime`.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](../time/index.html#leap-second-handling),</span>
+<span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](./struct.NaiveTime.html#leap-second-handling),</span>
 <span class="doccomment">/// the addition assumes that **there is no leap second ever**,</span>
 <span class="doccomment">/// except when the `NaiveDateTime` itself represents a leap second</span>
 <span class="doccomment">/// in which case the assumption becomes that **there is exactly a single leap second ever**.</span>
@@ -2906,10 +3158,17 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">AddAssign</span><span class="op">&lt;</span><span class="ident">OldDuration</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">add_assign</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">rhs</span>: <span class="ident">OldDuration</span>) {
+        <span class="kw-2">*</span><span class="self">self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add</span>(<span class="ident">rhs</span>);
+    }
+}
+
 <span class="doccomment">/// A subtraction of `Duration` from `NaiveDateTime` yields another `NaiveDateTime`.</span>
 <span class="doccomment">/// It is same to the addition with a negated `Duration`.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](../time/index.html#leap-second-handling),</span>
+<span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](./struct.NaiveTime.html#leap-second-handling),</span>
 <span class="doccomment">/// the addition assumes that **there is no leap second ever**,</span>
 <span class="doccomment">/// except when the `NaiveDateTime` itself represents a leap second</span>
 <span class="doccomment">/// in which case the assumption becomes that **there is exactly a single leap second ever**.</span>
@@ -2969,8 +3228,15 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">SubAssign</span><span class="op">&lt;</span><span class="ident">OldDuration</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">sub_assign</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">rhs</span>: <span class="ident">OldDuration</span>) {
+        <span class="kw-2">*</span><span class="self">self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sub</span>(<span class="ident">rhs</span>);
+    }
+}
+
 <span class="doccomment">/// The `Debug` output of the naive date and time `dt` is same to</span>
-<span class="doccomment">/// [`dt.format(&quot;%Y-%m-%dT%H:%M:%S%.f&quot;)`](../../format/strftime/index.html).</span>
+<span class="doccomment">/// [`dt.format(&quot;%Y-%m-%dT%H:%M:%S%.f&quot;)`](../format/strftime/index.html).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The string printed can be readily parsed via the `parse` method on `str`.</span>
 <span class="doccomment">///</span>
@@ -3003,7 +3269,7 @@
 }
 
 <span class="doccomment">/// The `Debug` output of the naive date and time `dt` is same to</span>
-<span class="doccomment">/// [`dt.format(&quot;%Y-%m-%d %H:%M:%S%.f&quot;)`](../../format/strftime/index.html).</span>
+<span class="doccomment">/// [`dt.format(&quot;%Y-%m-%d %H:%M:%S%.f&quot;)`](../format/strftime/index.html).</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// It should be noted that, for leap seconds not on the minute boundary,</span>
 <span class="doccomment">/// it may print a representation not distinguishable from non-leap seconds.</span>
@@ -3034,7 +3300,7 @@
 }
 
 <span class="doccomment">/// Parsing a `str` into a `NaiveDateTime` uses the same format,</span>
-<span class="doccomment">/// [`%Y-%m-%dT%H:%M:%S%.f`](../../format/strftime/index.html), as in `Debug`.</span>
+<span class="doccomment">/// [`%Y-%m-%dT%H:%M:%S%.f`](../format/strftime/index.html), as in `Debug`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Example</span>
 <span class="doccomment">///</span>
@@ -3078,7 +3344,7 @@
 <span class="kw">fn</span> <span class="ident">test_encodable_json</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">to_string</span>: <span class="ident">F</span>)
     <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">NaiveDateTime</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">E</span>: ::<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
 {
-    <span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">date</span>;
+    <span class="kw">use</span> <span class="ident">naive</span>::{<span class="ident">MIN_DATE</span>, <span class="ident">MAX_DATE</span>};
 
     <span class="macro">assert_eq</span><span class="macro">!</span>(
         <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="number">2016</span>, <span class="number">7</span>, <span class="number">8</span>).<span class="ident">and_hms_milli</span>(<span class="number">9</span>, <span class="number">10</span>, <span class="number">48</span>, <span class="number">90</span>)).<span class="ident">ok</span>(),
@@ -3093,10 +3359,10 @@
         <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="op">-</span><span class="number">1</span>, <span class="number">12</span>, <span class="number">31</span>).<span class="ident">and_hms_nano</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>, <span class="number">7</span>)).<span class="ident">ok</span>(),
         <span class="prelude-val">Some</span>(<span class="string">r#&quot;&quot;-0001-12-31T23:59:59.000000007&quot;&quot;#</span>.<span class="ident">into</span>()));
     <span class="macro">assert_eq</span><span class="macro">!</span>(
-        <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">date</span>::<span class="ident">MIN</span>.<span class="ident">and_hms</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)).<span class="ident">ok</span>(),
+        <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">MIN_DATE</span>.<span class="ident">and_hms</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)).<span class="ident">ok</span>(),
         <span class="prelude-val">Some</span>(<span class="string">r#&quot;&quot;-262144-01-01T00:00:00&quot;&quot;#</span>.<span class="ident">into</span>()));
     <span class="macro">assert_eq</span><span class="macro">!</span>(
-        <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">date</span>::<span class="ident">MAX</span>.<span class="ident">and_hms_nano</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>, <span class="number">1_999_999_999</span>)).<span class="ident">ok</span>(),
+        <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="ident">MAX_DATE</span>.<span class="ident">and_hms_nano</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>, <span class="number">1_999_999_999</span>)).<span class="ident">ok</span>(),
         <span class="prelude-val">Some</span>(<span class="string">r#&quot;&quot;+262143-12-31T23:59:60.999999999&quot;&quot;#</span>.<span class="ident">into</span>()));
 }
 
@@ -3104,7 +3370,7 @@
 <span class="kw">fn</span> <span class="ident">test_decodable_json</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">from_str</span>: <span class="ident">F</span>)
     <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NaiveDateTime</span>, <span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">E</span>: ::<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
 {
-    <span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">date</span>;
+    <span class="kw">use</span> <span class="ident">naive</span>::{<span class="ident">MIN_DATE</span>, <span class="ident">MAX_DATE</span>};
 
     <span class="macro">assert_eq</span><span class="macro">!</span>(
         <span class="ident">from_str</span>(<span class="string">r#&quot;&quot;2016-07-08T09:10:48.090&quot;&quot;#</span>).<span class="ident">ok</span>(),
@@ -3126,13 +3392,13 @@
         <span class="prelude-val">Some</span>(<span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="op">-</span><span class="number">1</span>, <span class="number">12</span>, <span class="number">31</span>).<span class="ident">and_hms_nano</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>, <span class="number">7</span>)));
     <span class="macro">assert_eq</span><span class="macro">!</span>(
         <span class="ident">from_str</span>(<span class="string">r#&quot;&quot;-262144-01-01T00:00:00&quot;&quot;#</span>).<span class="ident">ok</span>(),
-        <span class="prelude-val">Some</span>(<span class="ident">date</span>::<span class="ident">MIN</span>.<span class="ident">and_hms</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)));
+        <span class="prelude-val">Some</span>(<span class="ident">MIN_DATE</span>.<span class="ident">and_hms</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)));
     <span class="macro">assert_eq</span><span class="macro">!</span>(
         <span class="ident">from_str</span>(<span class="string">r#&quot;&quot;+262143-12-31T23:59:60.999999999&quot;&quot;#</span>).<span class="ident">ok</span>(),
-        <span class="prelude-val">Some</span>(<span class="ident">date</span>::<span class="ident">MAX</span>.<span class="ident">and_hms_nano</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>, <span class="number">1_999_999_999</span>)));
+        <span class="prelude-val">Some</span>(<span class="ident">MAX_DATE</span>.<span class="ident">and_hms_nano</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>, <span class="number">1_999_999_999</span>)));
     <span class="macro">assert_eq</span><span class="macro">!</span>(
         <span class="ident">from_str</span>(<span class="string">r#&quot;&quot;+262143-12-31T23:59:60.9999999999997&quot;&quot;#</span>).<span class="ident">ok</span>(), <span class="comment">// excess digits are ignored</span>
-        <span class="prelude-val">Some</span>(<span class="ident">date</span>::<span class="ident">MAX</span>.<span class="ident">and_hms_nano</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>, <span class="number">1_999_999_999</span>)));
+        <span class="prelude-val">Some</span>(<span class="ident">MAX_DATE</span>.<span class="ident">and_hms_nano</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>, <span class="number">1_999_999_999</span>)));
 
     <span class="comment">// bad formats</span>
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_str</span>(<span class="string">r#&quot;&quot;&quot;&quot;#</span>).<span class="ident">is_err</span>());
@@ -3149,7 +3415,6 @@
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_str</span>(<span class="string">r#&quot;&quot;2016-07-08 09:10:48.090&quot;&quot;#</span>).<span class="ident">is_err</span>());
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_str</span>(<span class="string">r#&quot;&quot;2016-007-08T09:10:48.090&quot;&quot;#</span>).<span class="ident">is_err</span>());
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_str</span>(<span class="string">r#&quot;&quot;yyyy-mm-ddThh:mm:ss.fffffffff&quot;&quot;#</span>).<span class="ident">is_err</span>());
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_str</span>(<span class="string">r#&quot;0&quot;#</span>).<span class="ident">is_err</span>());
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_str</span>(<span class="string">r#&quot;20160708000000&quot;#</span>).<span class="ident">is_err</span>());
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_str</span>(<span class="string">r#&quot;{}&quot;#</span>).<span class="ident">is_err</span>());
     <span class="comment">// pre-0.3.0 rustc-serialize format is now invalid</span>
@@ -3157,9 +3422,26 @@
     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">from_str</span>(<span class="string">r#&quot;null&quot;#</span>).<span class="ident">is_err</span>());
 }
 
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">test</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc-serialize&quot;</span>))]</span>
+<span class="kw">fn</span> <span class="ident">test_decodable_json_timestamp</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">E</span><span class="op">&gt;</span>(<span class="ident">from_str</span>: <span class="ident">F</span>)
+    <span class="kw">where</span> <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TsSeconds</span>, <span class="ident">E</span><span class="op">&gt;</span>, <span class="ident">E</span>: ::<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>
+{
+    <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="kw-2">*</span><span class="ident">from_str</span>(<span class="string">&quot;0&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="number">1970</span>, <span class="number">1</span>, <span class="number">1</span>).<span class="ident">and_hms</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>),
+        <span class="string">&quot;should parse integers as timestamps&quot;</span>
+    );
+    <span class="macro">assert_eq</span><span class="macro">!</span>(
+        <span class="kw-2">*</span><span class="ident">from_str</span>(<span class="string">&quot;-1&quot;</span>).<span class="ident">unwrap</span>(),
+        <span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="number">1969</span>, <span class="number">12</span>, <span class="number">31</span>).<span class="ident">and_hms</span>(<span class="number">23</span>, <span class="number">59</span>, <span class="number">59</span>),
+        <span class="string">&quot;should parse integers as timestamps&quot;</span>
+    );
+}
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustc-serialize&quot;</span>)]</span>
 <span class="kw">mod</span> <span class="ident">rustc_serialize</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">NaiveDateTime</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">NaiveDateTime</span>, <span class="ident">TsSeconds</span>};
     <span class="kw">use</span> <span class="ident">rustc_serialize</span>::{<span class="ident">Encodable</span>, <span class="ident">Encoder</span>, <span class="ident">Decodable</span>, <span class="ident">Decoder</span>};
 
     <span class="kw">impl</span> <span class="ident">Encodable</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
@@ -3170,7 +3452,15 @@
 
     <span class="kw">impl</span> <span class="ident">Decodable</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
         <span class="kw">fn</span> <span class="ident">decode</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Decoder</span><span class="op">&gt;</span>(<span class="ident">d</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NaiveDateTime</span>, <span class="ident">D</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-            <span class="ident">d</span>.<span class="ident">read_str</span>()<span class="question-mark">?</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">d</span>.<span class="ident">error</span>(<span class="string">&quot;invalid date and time&quot;</span>))
+            <span class="ident">d</span>.<span class="ident">read_str</span>()<span class="question-mark">?</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">d</span>.<span class="ident">error</span>(<span class="string">&quot;invalid date time string&quot;</span>))
+        }
+    }
+
+    <span class="kw">impl</span> <span class="ident">Decodable</span> <span class="kw">for</span> <span class="ident">TsSeconds</span> {
+        <span class="kw">fn</span> <span class="ident">decode</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Decoder</span><span class="op">&gt;</span>(<span class="ident">d</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TsSeconds</span>, <span class="ident">D</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">TsSeconds</span>(
+                <span class="ident">NaiveDateTime</span>::<span class="ident">from_timestamp_opt</span>(<span class="ident">d</span>.<span class="ident">read_i64</span>()<span class="question-mark">?</span>, <span class="number">0</span>)
+                    .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">d</span>.<span class="ident">error</span>(<span class="string">&quot;invalid timestamp&quot;</span>))<span class="question-mark">?</span>))
         }
     }
 
@@ -3185,30 +3475,50 @@
     <span class="kw">fn</span> <span class="ident">test_decodable</span>() {
         <span class="kw">super</span>::<span class="ident">test_decodable_json</span>(<span class="ident">json</span>::<span class="ident">decode</span>);
     }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_decodable_timestamps</span>() {
+        <span class="kw">super</span>::<span class="ident">test_decodable_json_timestamp</span>(<span class="ident">json</span>::<span class="ident">decode</span>);
+
+    }
+
 }
 
+<span class="doccomment">/// Tools to help serializing/deserializing NaiveDateTimes</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;serde&quot;</span>)]</span>
-<span class="kw">mod</span> <span class="ident">serde</span> {
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">serde</span> {
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">NaiveDateTime</span>;
-    <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">ser</span>, <span class="ident">de</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">NaiveDateTime</span>};
+    <span class="kw">use</span> <span class="ident">serdelib</span>::{<span class="ident">ser</span>, <span class="ident">de</span>};
 
-    <span class="comment">// TODO not very optimized for space (binary formats would want something better)</span>
-
+    <span class="doccomment">/// Serialize a NaiveDateTime as a string</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// See the [`ts_seconds`](./serde/ts_seconds/index.html) module to serialize as</span>
+    <span class="doccomment">/// a timestamp.</span>
     <span class="kw">impl</span> <span class="ident">ser</span>::<span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
         <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="prelude-val">Ok</span>, <span class="ident">S</span>::<span class="ident">Error</span><span class="op">&gt;</span>
             <span class="kw">where</span> <span class="ident">S</span>: <span class="ident">ser</span>::<span class="ident">Serializer</span>
         {
-            <span class="ident">serializer</span>.<span class="ident">serialize_str</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="self">self</span>))
+            <span class="kw">struct</span> <span class="ident">FormatWrapped</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+                <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">D</span>
+            }
+
+            <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span>: <span class="ident">fmt</span>::<span class="ident">Debug</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">FormatWrapped</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span><span class="op">&gt;</span> {
+                <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+                    <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
+                }
+            }
+
+            <span class="ident">serializer</span>.<span class="ident">collect_str</span>(<span class="kw-2">&amp;</span><span class="ident">FormatWrapped</span> { <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="self">self</span> })
         }
     }
 
     <span class="kw">struct</span> <span class="ident">NaiveDateTimeVisitor</span>;
 
-    <span class="kw">impl</span> <span class="ident">de</span>::<span class="ident">Visitor</span> <span class="kw">for</span> <span class="ident">NaiveDateTimeVisitor</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de</span>::<span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NaiveDateTimeVisitor</span> {
         <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">NaiveDateTime</span>;
 
-        <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> 
+        <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span>
         {
             <span class="macro">write</span><span class="macro">!</span>(<span class="ident">formatter</span>, <span class="string">&quot;a formatted date and time string&quot;</span>)
         }
@@ -3220,12 +3530,156 @@
         }
     }
 
-    <span class="kw">impl</span> <span class="ident">de</span>::<span class="ident">Deserialize</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
+    <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de</span>::<span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
         <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D</span>::<span class="ident">Error</span><span class="op">&gt;</span>
-            <span class="kw">where</span> <span class="ident">D</span>: <span class="ident">de</span>::<span class="ident">Deserializer</span>
+            <span class="kw">where</span> <span class="ident">D</span>: <span class="ident">de</span>::<span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>
         {
             <span class="ident">deserializer</span>.<span class="ident">deserialize_str</span>(<span class="ident">NaiveDateTimeVisitor</span>)
         }
+    }
+
+    <span class="doccomment">/// Used to serialize/deserialize from second-precision timestamps</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # // We mark this ignored so that we can test on 1.13 (which does not</span>
+    <span class="doccomment">/// # // support custom derive), and run tests with --ignored on beta and</span>
+    <span class="doccomment">/// # // nightly to actually trigger these.</span>
+    <span class="doccomment">/// #</span>
+    <span class="doccomment">/// # #[macro_use] extern crate serde_derive;</span>
+    <span class="doccomment">/// # extern crate serde_json;</span>
+    <span class="doccomment">/// # extern crate serde;</span>
+    <span class="doccomment">/// # extern crate chrono;</span>
+    <span class="doccomment">/// # use chrono::{TimeZone, NaiveDate, NaiveDateTime, Utc};</span>
+    <span class="doccomment">/// use chrono::naive::serde::ts_seconds;</span>
+    <span class="doccomment">/// #[derive(Deserialize, Serialize)]</span>
+    <span class="doccomment">/// struct S {</span>
+    <span class="doccomment">///     #[serde(with = &quot;ts_seconds&quot;)]</span>
+    <span class="doccomment">///     time: NaiveDateTime</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # fn example() -&gt; Result&lt;S, serde_json::Error&gt; {</span>
+    <span class="doccomment">/// let time = NaiveDate::from_ymd(2015, 5, 15).and_hms(10, 0, 0);</span>
+    <span class="doccomment">/// let my_s = S {</span>
+    <span class="doccomment">///     time: time.clone(),</span>
+    <span class="doccomment">/// };</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let as_string = serde_json::to_string(&amp;my_s)?;</span>
+    <span class="doccomment">/// assert_eq!(as_string, r#&quot;{&quot;time&quot;:1431684000}&quot;#);</span>
+    <span class="doccomment">/// let my_s: S = serde_json::from_str(&amp;as_string)?;</span>
+    <span class="doccomment">/// assert_eq!(my_s.time, time);</span>
+    <span class="doccomment">/// # Ok(my_s)</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # fn main() { example().unwrap(); }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ts_seconds</span> {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+        <span class="kw">use</span> <span class="ident">serdelib</span>::{<span class="ident">ser</span>, <span class="ident">de</span>};
+
+        <span class="kw">use</span> <span class="ident">NaiveDateTime</span>;
+
+        <span class="doccomment">/// Deserialize a DateTime from a seconds timestamp</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// Intended for use with `serde`s `deserialize_with` attribute.</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// # Example:</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// ```rust</span>
+        <span class="doccomment">/// # // We mark this ignored so that we can test on 1.13 (which does not</span>
+        <span class="doccomment">/// # // support custom derive), and run tests with --ignored on beta and</span>
+        <span class="doccomment">/// # // nightly to actually trigger these.</span>
+        <span class="doccomment">/// #</span>
+        <span class="doccomment">/// # #[macro_use] extern crate serde_derive;</span>
+        <span class="doccomment">/// # #[macro_use] extern crate serde_json;</span>
+        <span class="doccomment">/// # extern crate serde;</span>
+        <span class="doccomment">/// # extern crate chrono;</span>
+        <span class="doccomment">/// # use chrono::{NaiveDateTime, Utc};</span>
+        <span class="doccomment">/// # use serde::Deserialize;</span>
+        <span class="doccomment">/// use chrono::naive::serde::ts_seconds::deserialize as from_ts;</span>
+        <span class="doccomment">/// #[derive(Deserialize)]</span>
+        <span class="doccomment">/// struct S {</span>
+        <span class="doccomment">///     #[serde(deserialize_with = &quot;from_ts&quot;)]</span>
+        <span class="doccomment">///     time: NaiveDateTime</span>
+        <span class="doccomment">/// }</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// # fn example() -&gt; Result&lt;S, serde_json::Error&gt; {</span>
+        <span class="doccomment">/// let my_s: S = serde_json::from_str(r#&quot;{ &quot;time&quot;: 1431684000 }&quot;#)?;</span>
+        <span class="doccomment">/// # Ok(my_s)</span>
+        <span class="doccomment">/// # }</span>
+        <span class="doccomment">/// # fn main() { example().unwrap(); }</span>
+        <span class="doccomment">/// ```</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="ident">d</span>: <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NaiveDateTime</span>, <span class="ident">D</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+            <span class="kw">where</span> <span class="ident">D</span>: <span class="ident">de</span>::<span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>
+        {
+            <span class="prelude-val">Ok</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">d</span>.<span class="ident">deserialize_i64</span>(<span class="ident">NaiveDateTimeFromSecondsVisitor</span>)))
+        }
+
+        <span class="doccomment">/// Serialize a UTC datetime into an integer number of seconds since the epoch</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// Intended for use with `serde`s `serialize_with` attribute.</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// # Example:</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// ```rust</span>
+        <span class="doccomment">/// # // We mark this ignored so that we can test on 1.13 (which does not</span>
+        <span class="doccomment">/// # // support custom derive), and run tests with --ignored on beta and</span>
+        <span class="doccomment">/// # // nightly to actually trigger these.</span>
+        <span class="doccomment">/// #</span>
+        <span class="doccomment">/// # #[macro_use] extern crate serde_derive;</span>
+        <span class="doccomment">/// # #[macro_use] extern crate serde_json;</span>
+        <span class="doccomment">/// # #[macro_use] extern crate serde;</span>
+        <span class="doccomment">/// # extern crate chrono;</span>
+        <span class="doccomment">/// # use chrono::{TimeZone, NaiveDate, NaiveDateTime, Utc};</span>
+        <span class="doccomment">/// # use serde::Serialize;</span>
+        <span class="doccomment">/// use chrono::naive::serde::ts_seconds::serialize as to_ts;</span>
+        <span class="doccomment">/// #[derive(Serialize)]</span>
+        <span class="doccomment">/// struct S {</span>
+        <span class="doccomment">///     #[serde(serialize_with = &quot;to_ts&quot;)]</span>
+        <span class="doccomment">///     time: NaiveDateTime</span>
+        <span class="doccomment">/// }</span>
+        <span class="doccomment">///</span>
+        <span class="doccomment">/// # fn example() -&gt; Result&lt;String, serde_json::Error&gt; {</span>
+        <span class="doccomment">/// let my_s = S {</span>
+        <span class="doccomment">///     time: NaiveDate::from_ymd(2015, 5, 15).and_hms(10, 0, 0),</span>
+        <span class="doccomment">/// };</span>
+        <span class="doccomment">/// let as_string = serde_json::to_string(&amp;my_s)?;</span>
+        <span class="doccomment">/// assert_eq!(as_string, r#&quot;{&quot;time&quot;:1431684000}&quot;#);</span>
+        <span class="doccomment">/// # Ok(as_string)</span>
+        <span class="doccomment">/// # }</span>
+        <span class="doccomment">/// # fn main() { example().unwrap(); }</span>
+        <span class="doccomment">/// ```</span>
+        <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">dt</span>: <span class="kw-2">&amp;</span><span class="ident">NaiveDateTime</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="prelude-val">Ok</span>, <span class="ident">S</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+            <span class="kw">where</span> <span class="ident">S</span>: <span class="ident">ser</span>::<span class="ident">Serializer</span>
+        {
+            <span class="ident">serializer</span>.<span class="ident">serialize_i64</span>(<span class="ident">dt</span>.<span class="ident">timestamp</span>())
+        }
+
+        <span class="kw">struct</span> <span class="ident">NaiveDateTimeFromSecondsVisitor</span>;
+
+        <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de</span>::<span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NaiveDateTimeFromSecondsVisitor</span> {
+            <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">NaiveDateTime</span>;
+
+            <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span>
+            {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">formatter</span>, <span class="string">&quot;a unix timestamp&quot;</span>)
+            }
+
+            <span class="kw">fn</span> <span class="ident">visit_i64</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">i64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NaiveDateTime</span>, <span class="ident">E</span><span class="op">&gt;</span>
+                <span class="kw">where</span> <span class="ident">E</span>: <span class="ident">de</span>::<span class="ident">Error</span>
+            {
+                <span class="ident">NaiveDateTime</span>::<span class="ident">from_timestamp_opt</span>(<span class="ident">value</span>, <span class="number">0</span>)
+                    .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">E</span>::<span class="ident">custom</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;value is not a legal timestamp: {}&quot;</span>, <span class="ident">value</span>)))
+            }
+
+            <span class="kw">fn</span> <span class="ident">visit_u64</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">value</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NaiveDateTime</span>, <span class="ident">E</span><span class="op">&gt;</span>
+                <span class="kw">where</span> <span class="ident">E</span>: <span class="ident">de</span>::<span class="ident">Error</span>
+            {
+                <span class="ident">NaiveDateTime</span>::<span class="ident">from_timestamp_opt</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">i64</span>, <span class="number">0</span>)
+                    .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">E</span>::<span class="ident">custom</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;value is not a legal timestamp: {}&quot;</span>, <span class="ident">value</span>)))
+            }
+        }
+
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_json</span>;
@@ -3238,19 +3692,18 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_serde_deserialize</span>() {
-        <span class="kw">super</span>::<span class="ident">test_decodable_json</span>(<span class="self">self</span>::<span class="ident">serde_json</span>::<span class="ident">from_str</span>);
+        <span class="kw">super</span>::<span class="ident">test_decodable_json</span>(<span class="op">|</span><span class="ident">input</span><span class="op">|</span> <span class="self">self</span>::<span class="ident">serde_json</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">input</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_serde_bincode</span>() {
         <span class="comment">// Bincode is relevant to test separately from JSON because</span>
         <span class="comment">// it is not self-describing.</span>
-        <span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">date</span>::<span class="ident">NaiveDate</span>;
-        <span class="kw">use</span> <span class="self">self</span>::<span class="ident">bincode</span>::<span class="ident">SizeLimit</span>;
-        <span class="kw">use</span> <span class="self">self</span>::<span class="ident">bincode</span>::<span class="ident">serde</span>::{<span class="ident">serialize</span>, <span class="ident">deserialize</span>};
+        <span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">NaiveDate</span>;
+        <span class="kw">use</span> <span class="self">self</span>::<span class="ident">bincode</span>::{<span class="ident">Infinite</span>, <span class="ident">serialize</span>, <span class="ident">deserialize</span>};
 
         <span class="kw">let</span> <span class="ident">dt</span> <span class="op">=</span> <span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="number">2016</span>, <span class="number">7</span>, <span class="number">8</span>).<span class="ident">and_hms_milli</span>(<span class="number">9</span>, <span class="number">10</span>, <span class="number">48</span>, <span class="number">90</span>);
-        <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="ident">dt</span>, <span class="ident">SizeLimit</span>::<span class="ident">Infinite</span>).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="ident">dt</span>, <span class="ident">Infinite</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">decoded</span>: <span class="ident">NaiveDateTime</span> <span class="op">=</span> <span class="ident">deserialize</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>).<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">dt</span>, <span class="ident">decoded</span>);
     }
@@ -3260,8 +3713,7 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">NaiveDateTime</span>;
     <span class="kw">use</span> <span class="ident">Datelike</span>;
-    <span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">date</span> <span class="kw">as</span> <span class="ident">naive_date</span>;
-    <span class="kw">use</span> <span class="ident">naive</span>::<span class="ident">date</span>::<span class="ident">NaiveDate</span>;
+    <span class="kw">use</span> <span class="ident">naive</span>::{<span class="ident">NaiveDate</span>, <span class="ident">MIN_DATE</span>, <span class="ident">MAX_DATE</span>};
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">i64</span>;
     <span class="kw">use</span> <span class="ident">oldtime</span>::<span class="ident">Duration</span>;
 
@@ -3298,17 +3750,15 @@
         <span class="comment">// overflow check</span>
         <span class="comment">// assumes that we have correct values for MAX/MIN_DAYS_FROM_YEAR_0 from `naive::date`.</span>
         <span class="comment">// (they are private constants, but the equivalence is tested in that module.)</span>
-        <span class="kw">let</span> <span class="ident">max_days_from_year_0</span> <span class="op">=</span>
-            <span class="ident">naive_date</span>::<span class="ident">MAX</span>.<span class="ident">signed_duration_since</span>(<span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>));
-        <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">max_days_from_year_0</span>, <span class="prelude-val">Some</span>((<span class="ident">naive_date</span>::<span class="ident">MAX</span>.<span class="ident">year</span>(),<span class="number">12</span>,<span class="number">31</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)));
+        <span class="kw">let</span> <span class="ident">max_days_from_year_0</span> <span class="op">=</span> <span class="ident">MAX_DATE</span>.<span class="ident">signed_duration_since</span>(<span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>));
+        <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">max_days_from_year_0</span>, <span class="prelude-val">Some</span>((<span class="ident">MAX_DATE</span>.<span class="ident">year</span>(),<span class="number">12</span>,<span class="number">31</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)));
         <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">max_days_from_year_0</span> <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">seconds</span>(<span class="number">86399</span>),
-              <span class="prelude-val">Some</span>((<span class="ident">naive_date</span>::<span class="ident">MAX</span>.<span class="ident">year</span>(),<span class="number">12</span>,<span class="number">31</span>, <span class="number">23</span>,<span class="number">59</span>,<span class="number">59</span>)));
+              <span class="prelude-val">Some</span>((<span class="ident">MAX_DATE</span>.<span class="ident">year</span>(),<span class="number">12</span>,<span class="number">31</span>, <span class="number">23</span>,<span class="number">59</span>,<span class="number">59</span>)));
         <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">max_days_from_year_0</span> <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">seconds</span>(<span class="number">86400</span>), <span class="prelude-val">None</span>);
         <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">Duration</span>::<span class="ident">max_value</span>(), <span class="prelude-val">None</span>);
 
-        <span class="kw">let</span> <span class="ident">min_days_from_year_0</span> <span class="op">=</span>
-            <span class="ident">naive_date</span>::<span class="ident">MIN</span>.<span class="ident">signed_duration_since</span>(<span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>));
-        <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">min_days_from_year_0</span>, <span class="prelude-val">Some</span>((<span class="ident">naive_date</span>::<span class="ident">MIN</span>.<span class="ident">year</span>(),<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)));
+        <span class="kw">let</span> <span class="ident">min_days_from_year_0</span> <span class="op">=</span> <span class="ident">MIN_DATE</span>.<span class="ident">signed_duration_since</span>(<span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>));
+        <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">min_days_from_year_0</span>, <span class="prelude-val">Some</span>((<span class="ident">MIN_DATE</span>.<span class="ident">year</span>(),<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)));
         <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">min_days_from_year_0</span> <span class="op">-</span> <span class="ident">Duration</span>::<span class="ident">seconds</span>(<span class="number">1</span>), <span class="prelude-val">None</span>);
         <span class="ident">check</span>((<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>, <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>), <span class="ident">Duration</span>::<span class="ident">min_value</span>(), <span class="prelude-val">None</span>);
     }
@@ -3327,6 +3777,26 @@
                    <span class="ident">Duration</span>::<span class="ident">seconds</span>(<span class="number">86399</span>));
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">since</span>(<span class="ident">ymdhms</span>(<span class="number">2001</span>, <span class="number">9</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">46</span>, <span class="number">39</span>), <span class="ident">ymdhms</span>(<span class="number">1970</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)),
                    <span class="ident">Duration</span>::<span class="ident">seconds</span>(<span class="number">999_999_999</span>));
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_datetime_addassignment</span>() {
+        <span class="kw">let</span> <span class="ident">ymdhms</span> <span class="op">=</span> <span class="op">|</span><span class="ident">y</span>,<span class="ident">m</span>,<span class="ident">d</span>,<span class="ident">h</span>,<span class="ident">n</span>,<span class="ident">s</span><span class="op">|</span> <span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="ident">y</span>,<span class="ident">m</span>,<span class="ident">d</span>).<span class="ident">and_hms</span>(<span class="ident">h</span>,<span class="ident">n</span>,<span class="ident">s</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">date</span> <span class="op">=</span> <span class="ident">ymdhms</span>(<span class="number">2016</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>);
+        <span class="ident">date</span> <span class="op">+=</span> <span class="ident">Duration</span>::<span class="ident">minutes</span>(<span class="number">10_000_000</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">date</span>,  <span class="ident">ymdhms</span>(<span class="number">2035</span>, <span class="number">10</span>, <span class="number">6</span>, <span class="number">20</span>, <span class="number">50</span>, <span class="number">10</span>));
+        <span class="ident">date</span> <span class="op">+=</span> <span class="ident">Duration</span>::<span class="ident">days</span>(<span class="number">10</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">date</span>,  <span class="ident">ymdhms</span>(<span class="number">2035</span>, <span class="number">10</span>, <span class="number">16</span>, <span class="number">20</span>, <span class="number">50</span>, <span class="number">10</span>));
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_datetime_subassignment</span>() {
+        <span class="kw">let</span> <span class="ident">ymdhms</span> <span class="op">=</span> <span class="op">|</span><span class="ident">y</span>,<span class="ident">m</span>,<span class="ident">d</span>,<span class="ident">h</span>,<span class="ident">n</span>,<span class="ident">s</span><span class="op">|</span> <span class="ident">NaiveDate</span>::<span class="ident">from_ymd</span>(<span class="ident">y</span>,<span class="ident">m</span>,<span class="ident">d</span>).<span class="ident">and_hms</span>(<span class="ident">h</span>,<span class="ident">n</span>,<span class="ident">s</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">date</span> <span class="op">=</span> <span class="ident">ymdhms</span>(<span class="number">2016</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>);
+        <span class="ident">date</span> <span class="op">-=</span> <span class="ident">Duration</span>::<span class="ident">minutes</span>(<span class="number">10_000_000</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">date</span>,  <span class="ident">ymdhms</span>(<span class="number">1997</span>, <span class="number">9</span>, <span class="number">26</span>, <span class="number">23</span>, <span class="number">30</span>, <span class="number">10</span>));
+        <span class="ident">date</span> <span class="op">-=</span> <span class="ident">Duration</span>::<span class="ident">days</span>(<span class="number">10</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">date</span>,  <span class="ident">ymdhms</span>(<span class="number">1997</span>, <span class="number">9</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">30</span>, <span class="number">10</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
