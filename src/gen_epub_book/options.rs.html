@@ -113,6 +113,14 @@
 <span id="68">68</span>
 <span id="69">69</span>
 <span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! This module contains the configuration of the application.</span>
 <span class="doccomment">//!</span>
@@ -141,8 +149,14 @@
     <span class="kw">pub</span> <span class="ident">relative_root</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
     <span class="doccomment">/// The file to insert the assembled ePub to, or `None` for stdout.</span>
     <span class="kw">pub</span> <span class="ident">output_file</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>)<span class="op">&gt;</span>,
-    <span class="doccomment">/// Whether to print more information. Default: false</span>
+    <span class="doccomment">/// Whether to print more information.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default: false</span>
     <span class="kw">pub</span> <span class="ident">verbose</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Chosen [separator](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default: `&quot;:&quot;`</span>
+    <span class="kw">pub</span> <span class="ident">separator</span>: <span class="ident">String</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Options</span> {
@@ -153,6 +167,7 @@
             .<span class="ident">arg</span>(<span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;&lt;SOURCE&gt; &#39;File to assemble ePub from&#39;&quot;</span>).<span class="ident">validator</span>(<span class="ident">Options</span>::<span class="ident">source_file_validator</span>))
             .<span class="ident">arg</span>(<span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;&lt;TARGET&gt; &#39;File to write&#39;&quot;</span>))
             .<span class="ident">arg</span>(<span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-v --verbose &#39;Print more information&#39;&quot;</span>))
+            .<span class="ident">arg</span>(<span class="ident">Arg</span>::<span class="ident">from_usage</span>(<span class="string">&quot;-S --separator SEPARATOR &#39;Custom separator&#39;&quot;</span>).<span class="ident">default_value</span>(<span class="string">&quot;:&quot;</span>))
             .<span class="ident">get_matches</span>();
 
         <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">Options</span>::<span class="ident">optional_fname_arg</span>(<span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;SOURCE&quot;</span>).<span class="ident">unwrap</span>());
@@ -165,6 +180,7 @@
             },
             <span class="ident">output_file</span>: <span class="ident">target</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">tgt</span><span class="op">|</span> (<span class="ident">tgt</span>.<span class="ident">to_string</span>(), <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">tgt</span>))),
             <span class="ident">verbose</span>: <span class="ident">matches</span>.<span class="ident">is_present</span>(<span class="string">&quot;verbose&quot;</span>),
+            <span class="ident">separator</span>: <span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;separator&quot;</span>).<span class="ident">unwrap_or</span>(<span class="string">&quot;:&quot;</span>).<span class="ident">to_string</span>(),
         }
     }
 

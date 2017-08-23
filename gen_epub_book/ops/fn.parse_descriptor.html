@@ -48,8 +48,10 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/gen_epub_book/ops/mod.rs.html#58-74' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn parse_descriptor&lt;R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;desc: &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;from: &amp;mut R<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="enum" href="../../gen_epub_book/ops/enum.BookElement.html" title="enum gen_epub_book::ops::BookElement">BookElement</a>&gt;, <a class="enum" href="../../gen_epub_book/enum.Error.html" title="enum gen_epub_book::Error">Error</a>&gt;</pre><div class='docblock'><p>Parse the whole descriptor, stopping at the first encountered error</p>
+               </span><a class='srclink' href='../../src/gen_epub_book/ops/mod.rs.html#60-76' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn parse_descriptor&lt;R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>&gt;(<br>&nbsp;&nbsp;&nbsp;&nbsp;desc: &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;from: &amp;mut R, <br>&nbsp;&nbsp;&nbsp;&nbsp;separator: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="enum" href="../../gen_epub_book/ops/enum.BookElement.html" title="enum gen_epub_book::ops::BookElement">BookElement</a>&gt;, <a class="enum" href="../../gen_epub_book/enum.Error.html" title="enum gen_epub_book::Error">Error</a>&gt;</pre><div class='docblock'><p>Parse the whole descriptor  with a specified
+<a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator">separator</a>,
+stopping at the first encountered error.</p>
 
 <p>Uses <code>BookElement::parse()</code>, so it inherits all errors from there,
 adding only the error from splitting lines.</p>
@@ -69,7 +71,7 @@ adding only the error from splitting lines.</p>
         \n\
         Author: nabijaczleweli\n\
         Date: 2017-02-08T15:30:18+01:00\n\
-        Language: en-GB\n&quot;</span>[..]),
+        Language: en-GB\n&quot;</span>[..], <span class="string">&quot;:&quot;</span>),
     <span class="prelude-val">Ok</span>(<span class="macro">vec</span><span class="macro">!</span>[
         <span class="ident">BookElement</span>::<span class="ident">Name</span>(<span class="string">&quot;Simple ePub demonstration&quot;</span>.<span class="ident">to_string</span>()),
         <span class="ident">BookElement</span>::<span class="ident">Cover</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;cover.png&quot;</span>)),
