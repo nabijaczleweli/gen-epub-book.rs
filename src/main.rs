@@ -22,7 +22,6 @@ fn actual_main() -> i32 {
 
 fn result_main() -> Result<(), Error> {
     let opts = Options::parse();
-    println!("{:#?}", opts);
 
     let descriptors = try!(if let Some(ref infile) = opts.source_file.as_ref() {
         ops::parse_descriptor("input file",
