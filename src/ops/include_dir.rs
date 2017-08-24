@@ -52,7 +52,7 @@ impl IncludeDirectory {
     /// ```
     pub fn directory_name(&self) -> &str {
         match *self {
-            IncludeDirectory::Named { name: _, ref dir } => &dir.0,
+            IncludeDirectory::Named { ref dir, .. } => &dir.0,
             IncludeDirectory::Unnamed { ref dir } => &dir.0,
         }
     }
@@ -85,8 +85,8 @@ impl IncludeDirectory {
     pub fn packed_name<P: AsRef<Path>>(&self, f: P) -> PathBuf {
         match *self {
             // Okay so here we can't just do Path::new(name).join(book_filename(f)) because that'll give us backslashes on Windows
-            IncludeDirectory::Named { ref name, dir: _ } => Path::new(name).join(book_filename(f)).to_str().unwrap().replace('\\', "/").into(),
-            IncludeDirectory::Unnamed { dir: _ } => book_filename(f),
+            IncludeDirectory::Named { ref name, .. } => Path::new(name).join(book_filename(f)).to_str().unwrap().replace('\\', "/").into(),
+            IncludeDirectory::Unnamed { .. } => book_filename(f),
         }
     }
 
@@ -115,8 +115,8 @@ impl IncludeDirectory {
     /// ```
     pub fn packed_id(&self, f: &Path) -> String {
         match *self {
-            IncludeDirectory::Named { ref name, dir: _ } => format!("{}--{}", name, xhtml_path_id(f)),
-            IncludeDirectory::Unnamed { dir: _ } => xhtml_path_id(f),
+            IncludeDirectory::Named { ref name, .. } => format!("{}--{}", name, xhtml_path_id(f)),
+            IncludeDirectory::Unnamed { .. } => xhtml_path_id(f),
         }
     }
 
