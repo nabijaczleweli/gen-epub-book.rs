@@ -79,7 +79,7 @@ impl Error {
     pub fn print_error<W: Write>(&self, err_out: &mut W) {
         match *self {
             Error::Io { desc, op, more } => {
-                // Strip the last 'e', if any, so we get correct inflection for continuous times
+                // Strip the last 'e', if any, so we get correct inflection for continuous tenses
                 let op = uppercase_first(if op.ends_with('e') {
                     &op[..op.len() - 1]
                 } else {

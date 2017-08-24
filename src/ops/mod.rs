@@ -7,13 +7,16 @@
 
 mod book;
 mod element;
+mod include_dir;
 
 use regex::Regex;
+use std::path::Path;
 use self::super::Error;
 use std::iter::FromIterator;
 use std::io::{BufReader, BufRead, Read};
 
 pub use self::element::BookElement;
+pub use self::include_dir::IncludeDirectory;
 pub use self::book::{EPubContentType, EPubData, EPubBook};
 
 
@@ -81,6 +84,9 @@ pub fn parse_descriptor<R: Read>(desc: &'static str, from: &mut R, separator: &s
 ///
 /// # Examples
 ///
+///
+///
+///
 /// ```
 /// # use gen_epub_book::ops::find_title;
 /// assert_eq!(find_title(&mut &br#"L1\nL <!-- ePub title: "TTL" -->2\nL3"#[..]),
@@ -99,4 +105,73 @@ pub fn find_title<R: Read>(i: &mut R) -> Option<String> {
             false
         })
         .map(|l| TITLE_RGX.captures(&l.unwrap()).unwrap().get(1).unwrap().as_str().to_string())
+}
+
+/// Find an appropriate `IncludeDirectory` for the specified file, or `None` otherwise
+///
+/// # Examples
+///
+/// Given:
+///
+/// ```text
+/// special_book
+/// ├── rendered
+/// │   └── output
+/// │       ├── intro.html
+/// │       ├── main.html
+/// │       └── ending.html
+/// ├── previews
+/// │   └── generated
+/// │       └── out
+/// │           ├── intro.html
+/// │           └── main.html
+/// └── gep
+///    └── special
+///        ├── intro.html
+///        └── book.epupp
+/// ```
+///
+/// The following holds:
+///
+/// ```
+/// # use gen_epub_book::ops::{IncludeDirectory, find_file};
+/// # use std::fs::{self, File};
+/// # use std::env::temp_dir;
+/// # use std::path::Path;
+/// # let special_book = temp_dir().join("gen-epub-book.rs-doctest").join("ops-find-file-0").join("special_book");
+/// # fs::create_dir_all(special_book.join("rendered").join("output")).unwrap();
+/// # fs::create_dir_all(special_book.join("previews").join("generated").join("out")).unwrap();
+/// # fs::create_dir_all(special_book.join("gep").join("special")).unwrap();
+/// # for f in &["intro.html", "main.html", "ending.html"] {
+/// #   File::create(special_book.join("rendered").join("output").join(f)).unwrap();
+/// # }
+/// # for f in &["intro.html", "main.html"] {
+/// #   File::create(special_book.join("previews").join("generated").join("out").join(f)).unwrap();
+/// # }
+/// # for f in &["intro.html", "book.epupp"] {
+/// #   File::create(special_book.join("gep").join("special").join(f)).unwrap();
+/// # }
+/// let default = IncludeDirectory::Unnamed {
+///     dir: ("".to_string(),
+///           special_book.join("gep").join("special")),
+/// };
+/// let previews = IncludeDirectory::Named {
+///     name: "previews".to_string(),
+///     dir: ("../../previews/generated/out".to_string(),
+///           special_book.join("previews").join("generated").join("out")),
+/// };
+/// let rendered = IncludeDirectory::Unnamed {
+///     dir: ("../../rendered/output".to_string(),
+///           special_book.join("rendered").join("output")),
+/// };
+///
+/// let include_order = [default.clone(), previews.clone(), rendered.clone()];
+/// assert_eq!(find_file(&Path::new("intro.html"), &include_order), Some(&default));
+/// assert_eq!(find_file(&Path::new("main.html"), &include_order), Some(&previews));
+/// assert_eq!(find_file(&Path::new("ending.html"), &include_order), Some(&rendered));
+/// assert_eq!(find_file(&Path::new("cover.png"), &include_order), None);
+/// ```
+pub fn find_file<'id, P: AsRef<Path>>(file: P, include_order: &'id [IncludeDirectory]) -> Option<&'id IncludeDirectory> {
+    let file = file.as_ref();
+    include_order.iter().find(|i| i.resolve(file).is_some())
 }

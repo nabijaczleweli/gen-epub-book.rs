@@ -11,8 +11,10 @@
 //! ```
 
 
+use self::super::ops::IncludeDirectory;
 use clap::{AppSettings, Arg};
 use std::path::PathBuf;
+use std::iter;
 use std::fs;
 
 
@@ -21,8 +23,14 @@ use std::fs;
 pub struct Options {
     /// The descriptor file, or `None` for stdin.
     pub source_file: Option<(String, PathBuf)>,
-    /// The root for relative source paths.
-    pub relative_root: (String, PathBuf),
+    /// The roots for relative source paths, or, so called
+    /// [`-I`nclude dirs](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-include-dirs).
+    ///
+    /// Default:
+    ///
+    ///   * `["."]` if `source_file == None`, or
+    ///   * `[`directory containing `source_file``]` otherwise.
+    pub include_directories: Vec<IncludeDirectory>,
     /// The file to insert the assembled ePub to, or `None` for stdout.
     pub output_file: Option<(String, PathBuf)>,
     /// Whether to print more information.
@@ -43,17 +51,23 @@ impl Options {
             .arg(Arg::from_usage("<SOURCE> 'File to assemble ePub from'").validator(Options::source_file_validator))
             .arg(Arg::from_usage("<TARGET> 'File to write'"))
             .arg(Arg::from_usage("-v --verbose 'Print more information'"))
-            .arg(Arg::from_usage("-S --separator SEPARATOR 'Custom separator'").default_value(":"))
+            .arg(Arg::from_usage("-S --separator [SEPARATOR] 'Custom separator'").default_value(":").validator(Options::separator_validator).required(false))
+            .arg(Arg::from_usage("-I --include [INC_DIR]... 'Additional include directory. Format: [name=]path'")
+                .validator(Options::include_dir_validator)
+                .required(false))
             .get_matches();
 
         let source = Options::optional_fname_arg(matches.value_of("SOURCE").unwrap());
         let target = Options::optional_fname_arg(matches.value_of("TARGET").unwrap());
+        let source_root = match source.and_then(|src| src.rfind('/').or_else(|| src.rfind('\\'))) {
+            Some(s) => IncludeDirectory::Unnamed { dir: (source.unwrap()[..s + 1].to_string(), PathBuf::from(&source.unwrap()[..s])) },
+            None => IncludeDirectory::Unnamed { dir: ("".to_string(), PathBuf::from(".")) },
+        };
         Options {
             source_file: source.map(|s| (s.to_string(), PathBuf::from(s))),
-            relative_root: match source.and_then(|src| src.rfind('/').or_else(|| src.rfind('\\'))) {
-                Some(s) => (source.unwrap()[..s + 1].to_string(), PathBuf::from(&source.unwrap()[..s])),
-                None => ("".to_string(), PathBuf::from(".")),
-            },
+            include_directories: iter::once(source_root)
+                .chain(matches.values_of("include").into_iter().flat_map(|v| v.map(str::parse).map(Result::unwrap)))
+                .collect(),
             output_file: target.map(|tgt| (tgt.to_string(), PathBuf::from(tgt))),
             verbose: matches.is_present("verbose"),
             separator: matches.value_of("separator").unwrap_or(":").to_string(),
@@ -70,6 +84,22 @@ impl Options {
                 Err(format!("Source file \"{}\" not actualy a file", s))
             })
         }
+    }
+
+    fn separator_validator(s: String) -> Result<(), String> {
+        if s.is_empty() {
+            Err("Separator empty".to_string())
+        } else {
+            Ok(())
+        }
+    }
+
+    fn include_dir_validator(s: String) -> Result<(), String> {
+        s.parse::<IncludeDirectory>().map(|_| ()).map_err(|e| {
+            let mut out = Vec::new();
+            e.print_error(&mut out);
+            String::from_utf8(out).unwrap()
+        })
     }
 
     fn optional_fname_arg(s: &str) -> Option<&str> {

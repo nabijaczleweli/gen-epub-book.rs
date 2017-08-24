@@ -69,6 +69,15 @@
 //! Default: ":".
 //! ```
 //!
+//! -I --include [NAME=]PATH
+//!
+//! ```text
+//! Add an additional directory in which to search for files. Order-dependent.
+//!
+//! `NAME` is an optional name under which the files will be segregated.
+//! `PATH` is an existing directory.
+//! ```
+//!
 //! ## DESCRIPTOR FORMAT
 //!
 //! The descriptor consists of multiple lines in the format *"Key: Value"*, unknown

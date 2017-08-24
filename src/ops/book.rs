@@ -1,6 +1,6 @@
 use self::super::super::util::{CONTENT_TABLE_HEADER, CONTAINER, MIME_TYPE, write_string_content, xhtml_path_id, book_filename, xhtml_url_id, download_to};
+use self::super::{IncludeDirectory, BookElement, find_title, find_file};
 use mime_guess::{Mime, guess_mime_type_opt};
-use self::super::{BookElement, find_title};
 use zip::write::{ZipWriter, FileOptions};
 use chrono::{DateTime, FixedOffset};
 use std::io::{self, Write, Seek};
@@ -81,8 +81,10 @@ impl EPubBook {
     /// assert_eq!(book.language, "en-GB".to_string());
     /// assert_eq!(book.cover, Some(("cover-content-1".to_string(),
     ///                              PathBuf::from("cover-data-1.html"),
-    ///                              EPubContentType::Raw("<center><img src=\"examples-cover.png\" \
-    ///                                                    alt=\"examples-cover.png\"></img></center>".to_string()))));
+    ///                              EPubContentType::Raw("<center>\
+    ///                                                      <img src=\"examples-cover.png\" \
+    ///                                                           alt=\"examples-cover.png\"></img>\
+    ///                                                    </center>".to_string()))));
     /// # }
     /// ```
     pub fn from_elements<E: IntoIterator<Item = BookElement>>(elems: E) -> Result<EPubBook, Error> {
@@ -170,11 +172,12 @@ impl EPubBook {
     /// # extern crate gen_epub_book;
     /// # extern crate chrono;
     /// # fn main() {
-    /// # use self::gen_epub_book::ops::{EPubContentType, BookElement, EPubBook};
+    /// # use self::gen_epub_book::ops::{IncludeDirectory, EPubContentType, BookElement, EPubBook};
     /// # use self::chrono::DateTime;
     /// # use std::fs::{self, File};
     /// # use std::path::PathBuf;
     /// # use std::env::temp_dir;
+    /// # use std::str::FromStr;
     /// # use std::io::stdout;
     /// # let tf = temp_dir().join("gen-epub-book.rs-doctest").join("ops-epub-book-normalise-paths-0");
     /// # fs::create_dir_all(tf.join("content")).unwrap();
@@ -189,27 +192,30 @@ impl EPubBook {
     ///     BookElement::Language("en-GB".to_string()),
     /// ]).unwrap();
     /// # if false {
-    /// book.normalise_paths(&("./".to_string(), PathBuf::new()), false, &mut stdout()).unwrap();
-    /// assert_eq!(book.cover, Some(("cover".to_string(),
-    ///                              PathBuf::from("cover.png"),
-    ///                              EPubContentType::File(PathBuf::from("cover.png").canonicalize().unwrap()))));
+    /// book.normalise_paths(&["./".parse().unwrap()], false, &mut stdout()).unwrap();
+    /// assert_eq!(book.cover,
+    ///            Some(("cover".to_string(),
+    ///                  PathBuf::from("cover.png"),
+    ///                  EPubContentType::File(
+    ///                     PathBuf::from("cover.png").canonicalize().unwrap()))));
     /// # }
-    /// # book.normalise_paths(&("$TEMP/ops-epub-book-normalise-paths-0/".to_string(), tf.clone()), false, &mut
-    /// vec![]).unwrap();
+    /// # book.normalise_paths(&[IncludeDirectory::Unnamed {
+    /// #    dir: ("$TEMP/ops-epub-book-normalise-paths-0/".to_string(), tf.clone()),
+    /// # }], false, &mut vec![]).unwrap();
     /// # assert_eq!(book.cover, Some(("cover-content-1".to_string(),
     /// #                              PathBuf::from("cover-data-1.html"),
     /// #                              EPubContentType::Raw("<center><img src=\"cover.png\" \
     /// #                                                    alt=\"cover.png\"></img></center>".to_string()))));
     /// # }
     /// ```
-    pub fn normalise_paths<W: Write>(&mut self, relroot: &(String, PathBuf), verbose: bool, verb_out: &mut W) -> Result<(), Error> {
-        if let Some(&mut (_, _, EPubContentType::File(ref mut c))) = self.cover.as_mut() {
-            try!(EPubBook::normalise_path(relroot, c, "Cover", verbose, verb_out));
+    pub fn normalise_paths<W: Write>(&mut self, relroot: &[IncludeDirectory], verbose: bool, verb_out: &mut W) -> Result<(), Error> {
+        if let Some(&mut (ref mut id, ref mut packed_name, EPubContentType::File(ref mut c))) = self.cover.as_mut() {
+            try!(EPubBook::normalise_path(relroot, c, id, packed_name, "Cover", verbose, verb_out));
         }
 
         for ctnt in self.content.iter_mut().chain(self.non_content.iter_mut()) {
-            if let EPubContentType::File(ref mut pb) = ctnt.2 {
-                try!(EPubBook::normalise_path(relroot, pb, "Content, Image or Include", verbose, verb_out));
+            if let &mut (ref mut id, ref mut packed_name, EPubContentType::File(ref mut pb)) = ctnt {
+                try!(EPubBook::normalise_path(relroot, pb, id, packed_name, "Content, Image or Include", verbose, verb_out));
             }
         }
 
@@ -224,11 +230,12 @@ impl EPubBook {
     /// # extern crate gen_epub_book;
     /// # extern crate chrono;
     /// # fn main() {
-    /// # use self::gen_epub_book::ops::{EPubContentType, BookElement, EPubBook};
+    /// # use self::gen_epub_book::ops::{IncludeDirectory, EPubContentType, BookElement, EPubBook};
     /// # use self::chrono::DateTime;
     /// # use std::fs::{self, File};
     /// # use std::path::PathBuf;
     /// # use std::env::temp_dir;
+    /// # use std::str::FromStr;
     /// # use std::io::stdout;
     /// # let tf = temp_dir().join("gen-epub-book.rs-doctest").join("ops-epub-book-write-zip-0");
     /// # fs::create_dir_all(tf.join("content")).unwrap();
@@ -243,9 +250,11 @@ impl EPubBook {
     ///     BookElement::Language("en-GB".to_string()),
     /// ]).unwrap();
     /// # if false {
-    /// book.normalise_paths(&("./".to_string(), PathBuf::new()), false, &mut stdout()).unwrap();
+    /// book.normalise_paths(&["./".parse().unwrap()], false, &mut stdout()).unwrap();
     /// # }
-    /// # book.normalise_paths(&("$TEMP/ops-epub-book-write-zip-0/".to_string(), tf.clone()), false, &mut vec![]).unwrap();
+    /// # book.normalise_paths(&[IncludeDirectory::Unnamed {
+    /// #     dir: ("$TEMP/ops-epub-book-write-zip-0/".to_string(), tf.clone()),
+    /// # }], false, &mut vec![]).unwrap();
     /// # if false {
     /// book.write_zip(&mut File::create("write_zip.epub").unwrap(), false, &mut stdout()).unwrap();
     /// # }
@@ -296,24 +305,22 @@ impl EPubBook {
         }
     }
 
-    fn normalise_path<W: Write>(relroot: &(String, PathBuf), what: &mut PathBuf, name: &'static str, verbose: bool, verb_out: &mut W) -> Result<(), Error> {
-        let new = relroot.1.join(&what);
-        if !new.exists() {
+    fn normalise_path<W: Write>(relroots: &[IncludeDirectory], file: &mut PathBuf, id: &mut String, packed_name: &mut PathBuf, name: &'static str,
+                                verbose: bool, verb_out: &mut W)
+                                -> Result<(), Error> {
+        if let Some(root) = find_file(&file, relroots) {
+            if verbose {
+                let _ = writeln!(verb_out, "Normalised {} to {}{0} for {}.", file.display(), root.directory_name(), name);
+            }
+            *id = root.packed_id(&file);
+            *packed_name = root.packed_name(&file);
+            *file = root.resolve(&file).unwrap();
+            Ok(())
+        } else {
             Err(Error::FileNotFound {
                 who: name,
-                path: new,
+                path: file.clone(),
             })
-        } else if !new.is_file() {
-            Err(Error::WrongFileState {
-                what: "a file",
-                path: new,
-            })
-        } else {
-            if verbose {
-                let _ = writeln!(verb_out, "Normalised {} to {}{0} for {}.", what.display(), relroot.0, name);
-            }
-            *what = new.canonicalize().unwrap();
-            Ok(())
         }
     }
 
