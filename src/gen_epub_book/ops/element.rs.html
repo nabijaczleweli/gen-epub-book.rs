@@ -310,6 +310,26 @@
 <span id="265">265</span>
 <span id="266">266</span>
 <span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
@@ -329,7 +349,7 @@
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// # use gen_epub_book::ops::BookElement;</span>
 <span class="doccomment">/// let input = &quot;Image-Content: images/ch01.png&quot;;</span>
-<span class="doccomment">/// assert_eq!(&amp;BookElement::parse(input, &quot;:&quot;).unwrap().unwrap().to_string(), input);</span>
+<span class="doccomment">/// assert_eq!(&amp;BookElement::parse(input, &quot;:&quot;, false).unwrap().unwrap().to_string(), input);</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BookElement</span> {
@@ -422,11 +442,16 @@
 
 <span class="kw">impl</span> <span class="ident">BookElement</span> {
     <span class="doccomment">/// (Hopefully) get a book element from a descriptor line with a specified</span>
-    <span class="doccomment">/// [separator](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator).</span>
+    <span class="doccomment">/// [separator](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator)</span>
+    <span class="doccomment">/// with the specified</span>
+    <span class="doccomment">/// [rigidness](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format).</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the line isn&#39;t a descripting line or the line uses an unknown key, `Ok(None)` is returned.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// `Err` will only be returned when parsing a `DateTime` or a `Url` fails.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If `free_date` is `true`, in addition to the default RFC3339,</span>
+    <span class="doccomment">/// RFC2822 and Unix-timestamp+tt:zz are accepted as correct `DateTime` formats.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Any whitespace from both parts of the description line are stripped.</span>
     <span class="doccomment">///</span>
@@ -436,20 +461,21 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use gen_epub_book::ops::BookElement;</span>
-    <span class="doccomment">/// assert!(BookElement::parse(&quot;Date: Mon, 26 Dec 2016 02:01:20 +0100&quot;, &quot;:&quot;).is_err());</span>
+    <span class="doccomment">/// assert!(BookElement::parse(&quot;Date: Mon, 26 Dec 2016 02:01:20 +0100&quot;, &quot;:&quot;, false).is_err());</span>
+    <span class="doccomment">/// assert!(BookElement::parse(&quot;Date: 1486564218&quot;, &quot;:&quot;, true).is_err());</span>
     <span class="doccomment">/// assert!(BookElement::parse(&quot;Network-Image-Content: http/i.imgur.com/ViQ2WED.jpg&quot;,</span>
-    <span class="doccomment">///                            &quot;:&quot;).is_err());</span>
+    <span class="doccomment">///                            &quot;:&quot;, false).is_err());</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Not a description/unrecognised key:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # use gen_epub_book::ops::BookElement;</span>
-    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;# comment&quot;, &quot;:&quot;), Ok(None));</span>
-    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;NetworkImage_Content: that was a typo&quot;, &quot;:&quot;), Ok(None));</span>
-    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Content: used colon instead of equal sign -&gt;&quot;, &quot;=&quot;),</span>
+    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;# comment&quot;, &quot;:&quot;, false), Ok(None));</span>
+    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;NetworkImage_Content: that was a typo&quot;, &quot;:&quot;, false), Ok(None));</span>
+    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Content: used colon instead of equal sign -&gt;&quot;, &quot;=&quot;, false),</span>
     <span class="doccomment">///            Ok(None));</span>
-    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Workers all over the world, unite!&quot;, &quot;:&quot;), Ok(None));</span>
+    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Workers all over the world, unite!&quot;, &quot;:&quot;, false), Ok(None));</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Correct:</span>
@@ -460,16 +486,19 @@
     <span class="doccomment">/// # fn main() {</span>
     <span class="doccomment">/// # use self::gen_epub_book::ops::BookElement;</span>
     <span class="doccomment">/// # use self::chrono::DateTime;</span>
-    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Name: nabijaczleweli&quot;, &quot;:&quot;),</span>
+    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Name: nabijaczleweli&quot;, &quot;:&quot;, false),</span>
     <span class="doccomment">///            Ok(Some(BookElement::Name(&quot;nabijaczleweli&quot;.to_string()))));</span>
-    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Date = 2017-02-08T15:30:18+01:00&quot;, &quot;=&quot;),</span>
+    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Date = 2017-02-08T15:30:18+01:00&quot;, &quot;=&quot;, false),</span>
     <span class="doccomment">///            Ok(Some(BookElement::Date(</span>
     <span class="doccomment">///              DateTime::parse_from_rfc3339(&quot;2017-02-08T15:30:18+01:00&quot;).unwrap()))));</span>
-    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Language INCREDIBLE COMMUNISM pl&quot;, &quot;INCREDIBLE COMMUNISM&quot;),</span>
+    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Date = Wed, 08 Feb 2017 15:30:18 +0100&quot;, &quot;=&quot;, true),</span>
+    <span class="doccomment">///            Ok(Some(BookElement::Date(</span>
+    <span class="doccomment">///              DateTime::parse_from_rfc2822(&quot;Wed, 08 Feb 2017 15:30:18 +0100&quot;).unwrap()))));</span>
+    <span class="doccomment">/// assert_eq!(BookElement::parse(&quot;Language INCREDIBLE COMMUNISM pl&quot;, &quot;INCREDIBLE COMMUNISM&quot;, false),</span>
     <span class="doccomment">///            Ok(Some(BookElement::Language(&quot;pl&quot;.to_string()))));</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">separator</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BookElement</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">separator</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">free_date</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BookElement</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">separator</span>.<span class="ident">is_empty</span>());
 
         <span class="kw">let</span> <span class="ident">line</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">trim</span>();
@@ -490,7 +519,7 @@
                         <span class="string">&quot;Include&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Include</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">ctnt</span>)))),
                         <span class="string">&quot;Network-Include&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">NetworkInclude</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse_url</span>(<span class="ident">ctnt</span>))))),
                         <span class="string">&quot;Author&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Author</span>(<span class="ident">ctnt</span>.<span class="ident">to_string</span>()))),
-                        <span class="string">&quot;Date&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Date</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse_datetime</span>(<span class="ident">ctnt</span>))))),
+                        <span class="string">&quot;Date&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Date</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse_datetime</span>(<span class="ident">ctnt</span>, <span class="ident">free_date</span>))))),
                         <span class="string">&quot;Language&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Language</span>(<span class="ident">ctnt</span>.<span class="ident">to_string</span>()))),
                         _ <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
                     }
@@ -536,7 +565,7 @@
     }
 }
 
-<span class="doccomment">/// Format the element in a way that would make it `parse()`able again with the default separator.</span>
+<span class="doccomment">/// Format the element in a way that would make it `parse()`able again with the default separator without Free Date Format.</span>
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">BookElement</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}: &quot;</span>, <span class="self">self</span>.<span class="ident">name</span>()));
@@ -568,14 +597,25 @@
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_datetime</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">FixedOffset</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">DateTime</span>::<span class="ident">parse_from_rfc3339</span>(<span class="ident">data</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> {
-            <span class="ident">Error</span>::<span class="ident">Parse</span> {
-                <span class="ident">tp</span>: <span class="string">&quot;datetime&quot;</span>,
-                <span class="ident">wher</span>: <span class="string">&quot;book element&quot;</span>,
-                <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;not RFC3339&quot;</span>),
+    <span class="kw">fn</span> <span class="ident">parse_datetime</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">free_date</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">FixedOffset</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">dt</span> <span class="op">=</span> <span class="ident">DateTime</span>::<span class="ident">parse_from_rfc3339</span>(<span class="ident">data</span>);
+        <span class="kw">if</span> <span class="ident">free_date</span> {
+                <span class="ident">dt</span>.<span class="ident">or_else</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">DateTime</span>::<span class="ident">parse_from_rfc2822</span>(<span class="ident">data</span>))
+                    .<span class="ident">or_else</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">DateTime</span>::<span class="ident">parse_from_str</span>(<span class="ident">data</span>, <span class="string">&quot;%s%:z&quot;</span>))
+            } <span class="kw">else</span> {
+                <span class="ident">dt</span>
             }
-        })
+            .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> {
+                <span class="ident">Error</span>::<span class="ident">Parse</span> {
+                    <span class="ident">tp</span>: <span class="string">&quot;datetime&quot;</span>,
+                    <span class="ident">wher</span>: <span class="string">&quot;book element&quot;</span>,
+                    <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="kw">if</span> <span class="ident">free_date</span> {
+                        <span class="string">&quot;not RFC3339, RFC2822, nor Unix timestamp w/timezone&quot;</span>
+                    } <span class="kw">else</span> {
+                        <span class="string">&quot;not RFC3339&quot;</span>
+                    }),
+                }
+            })
     }
 }
 </pre>

@@ -48,13 +48,14 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/gen_epub_book/options.rs.html#23-44' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/gen_epub_book/options.rs.html#23-50' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Options {
     pub source_file: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;,
     pub include_directories: <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="enum" href="../gen_epub_book/ops/enum.IncludeDirectory.html" title="enum gen_epub_book::ops::IncludeDirectory">IncludeDirectory</a>&gt;,
     pub output_file: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;,
     pub verbose: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     pub separator: <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>,
+    pub free_date: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
 }</pre><div class='docblock'><p>Representation of the application&#39;s all configurable values.</p>
 </div><h2 id='fields' class='fields'>Fields</h2><span id='structfield.source_file' class="structfield">
                            <span id='source_file.v' class='invisible'>
@@ -88,7 +89,15 @@
                            </span></span><div class='docblock'><p>Chosen <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator">separator</a>.</p>
 
 <p>Default: <code>&quot;:&quot;</code></p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gen_epub_book/struct.Options.html" title="struct gen_epub_book::Options">Options</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gen_epub_book/options.rs.html#46-108' title='goto source code'>[src]</a></span></h3>
+</div><span id='structfield.free_date' class="structfield">
+                           <span id='free_date.v' class='invisible'>
+                           <code>free_date: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><div class='docblock'><p>Whether to (attempt to) parse
+<a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format">more date formats</a>
+than just RFC3339.</p>
+
+<p>Default: false</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="struct" href="../gen_epub_book/struct.Options.html" title="struct gen_epub_book::Options">Options</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gen_epub_book/options.rs.html#52-116' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.parse' class="method"><span id='parse.v' class='invisible'><code>fn <a href='#method.parse' class='fnname'>parse</a>() -&gt; <a class="struct" href="../gen_epub_book/struct.Options.html" title="struct gen_epub_book::Options">Options</a></code></span></h4>
 <div class='docblock'><p>Parse <code>env</code>-wide command-line arguments into an <code>Options</code> instance</p>
 </div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../gen_epub_book/struct.Options.html" title="struct gen_epub_book::Options">Options</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/gen_epub_book/options.rs.html#22' title='goto source code'>[src]</a></span></h3>

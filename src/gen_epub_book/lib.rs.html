@@ -258,6 +258,18 @@
 <span id="213">213</span>
 <span id="214">214</span>
 <span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Generate an ePub book from a simple plaintext descriptor</span>
 <span class="doccomment">//!</span>
@@ -426,6 +438,7 @@
 <span class="doccomment">//! Type: RFC3339-compliant date</span>
 <span class="doccomment">//! Value: e-book&#39;s authoring/publishing date</span>
 <span class="doccomment">//! Amount: 1</span>
+<span class="doccomment">//! Remarks: see FREE DATE FORMAT FEATURE</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Language</span>
@@ -452,6 +465,17 @@
 <span class="doccomment">//! represented by the document containing this entry.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Optional.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## FREE DATE FORMAT FEATURE</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! With the -D/--free-date flag, you can enable the</span>
+<span class="doccomment">//! [free date format feature](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The supported formats therewith are therefore:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!   * RFC3339 (e.g. &quot;2017-02-08T15:30:18+01:00&quot;),</span>
+<span class="doccomment">//!   * RFC2822 (e.g. &quot;Wed, 08 Feb 2017 15:30:18 +0100&quot;),</span>
+<span class="doccomment">//!   * Unix timestamp w/timezone (e.g. &quot;1486564218+01:00&quot;).</span>
 
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>

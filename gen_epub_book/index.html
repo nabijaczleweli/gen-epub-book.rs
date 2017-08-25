@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../src/gen_epub_book/lib.rs.html#1-215' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/gen_epub_book/lib.rs.html#1-227' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Generate an ePub book from a simple plaintext descriptor</p>
 
 <h1 id='library-doc' class='section-header'><a href='#library-doc'>Library doc</a></h1>
@@ -193,6 +193,7 @@ Amount: 1
 Type: RFC3339-compliant date
 Value: e-book&#39;s authoring/publishing date
 Amount: 1
+Remarks: see FREE DATE FORMAT FEATURE
 </code></pre>
 
 <p>Language</p>
@@ -216,6 +217,18 @@ searched for a comment specifying the its name in the TOC in this format:</p>
 represented by the document containing this entry.</p>
 
 <p>Optional.</p>
+
+<h2 id='free-date-format-feature' class='section-header'><a href='#free-date-format-feature'>FREE DATE FORMAT FEATURE</a></h2>
+<p>With the -D/--free-date flag, you can enable the
+<a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format">free date format feature</a>.</p>
+
+<p>The supported formats therewith are therefore:</p>
+
+<ul>
+<li>RFC3339 (e.g. &quot;2017-02-08T15:30:18+01:00&quot;),</li>
+<li>RFC2822 (e.g. &quot;Wed, 08 Feb 2017 15:30:18 +0100&quot;),</li>
+<li>Unix timestamp w/timezone (e.g. &quot;1486564218+01:00&quot;).</li>
+</ul>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
