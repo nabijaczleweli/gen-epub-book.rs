@@ -317,7 +317,7 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">directory_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">IncludeDirectory</span>::<span class="ident">Named</span> { <span class="ident">name</span>: _, <span class="kw-2">ref</span> <span class="ident">dir</span> } <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">dir</span>.<span class="number">0</span>,
+            <span class="ident">IncludeDirectory</span>::<span class="ident">Named</span> { <span class="kw-2">ref</span> <span class="ident">dir</span>, .. } <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">dir</span>.<span class="number">0</span>,
             <span class="ident">IncludeDirectory</span>::<span class="ident">Unnamed</span> { <span class="kw-2">ref</span> <span class="ident">dir</span> } <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">dir</span>.<span class="number">0</span>,
         }
     }
@@ -350,8 +350,8 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">packed_name</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="ident">P</span>) <span class="op">-&gt;</span> <span class="ident">PathBuf</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="comment">// Okay so here we can&#39;t just do Path::new(name).join(book_filename(f)) because that&#39;ll give us backslashes on Windows</span>
-            <span class="ident">IncludeDirectory</span>::<span class="ident">Named</span> { <span class="kw-2">ref</span> <span class="ident">name</span>, <span class="ident">dir</span>: _ } <span class="op">=&gt;</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">name</span>).<span class="ident">join</span>(<span class="ident">book_filename</span>(<span class="ident">f</span>)).<span class="ident">to_str</span>().<span class="ident">unwrap</span>().<span class="ident">replace</span>(<span class="string">&#39;\\&#39;</span>, <span class="string">&quot;/&quot;</span>).<span class="ident">into</span>(),
-            <span class="ident">IncludeDirectory</span>::<span class="ident">Unnamed</span> { <span class="ident">dir</span>: _ } <span class="op">=&gt;</span> <span class="ident">book_filename</span>(<span class="ident">f</span>),
+            <span class="ident">IncludeDirectory</span>::<span class="ident">Named</span> { <span class="kw-2">ref</span> <span class="ident">name</span>, .. } <span class="op">=&gt;</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="ident">name</span>).<span class="ident">join</span>(<span class="ident">book_filename</span>(<span class="ident">f</span>)).<span class="ident">to_str</span>().<span class="ident">unwrap</span>().<span class="ident">replace</span>(<span class="string">&#39;\\&#39;</span>, <span class="string">&quot;/&quot;</span>).<span class="ident">into</span>(),
+            <span class="ident">IncludeDirectory</span>::<span class="ident">Unnamed</span> { .. } <span class="op">=&gt;</span> <span class="ident">book_filename</span>(<span class="ident">f</span>),
         }
     }
 
@@ -380,8 +380,8 @@
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">packed_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">IncludeDirectory</span>::<span class="ident">Named</span> { <span class="kw-2">ref</span> <span class="ident">name</span>, <span class="ident">dir</span>: _ } <span class="op">=&gt;</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}--{}&quot;</span>, <span class="ident">name</span>, <span class="ident">xhtml_path_id</span>(<span class="ident">f</span>)),
-            <span class="ident">IncludeDirectory</span>::<span class="ident">Unnamed</span> { <span class="ident">dir</span>: _ } <span class="op">=&gt;</span> <span class="ident">xhtml_path_id</span>(<span class="ident">f</span>),
+            <span class="ident">IncludeDirectory</span>::<span class="ident">Named</span> { <span class="kw-2">ref</span> <span class="ident">name</span>, .. } <span class="op">=&gt;</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}--{}&quot;</span>, <span class="ident">name</span>, <span class="ident">xhtml_path_id</span>(<span class="ident">f</span>)),
+            <span class="ident">IncludeDirectory</span>::<span class="ident">Unnamed</span> { .. } <span class="op">=&gt;</span> <span class="ident">xhtml_path_id</span>(<span class="ident">f</span>),
         }
     }
 
