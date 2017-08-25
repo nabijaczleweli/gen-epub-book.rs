@@ -48,7 +48,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/gen_epub_book/ops/mod.rs.html#1-102' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/gen_epub_book/ops/mod.rs.html#1-177' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Main functions doing actual work.</p>
 
 <p>First, use <code>parse_descriptor()</code> to get an element list from a descriptor file,
@@ -77,8 +77,23 @@ then construct an <code>EPubBook::from_elements()</code>, validate and absolutis
                            <td class='docblock-short'>
                                 <p>Enum representing what can go in an ePub</p>
                            </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="enum" href="enum.IncludeDirectory.html"
+                                  title='enum gen_epub_book::ops::IncludeDirectory'>IncludeDirectory</a></td>
+                           <td class='docblock-short'>
+                                <p>Representation of an
+<a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-include-dirs"><code>-I</code>nclude directory</a>.</p>
+                           </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
+                       <tr class=' module-item'>
+                           <td><a class="fn" href="fn.find_file.html"
+                                  title='fn gen_epub_book::ops::find_file'>find_file</a></td>
+                           <td class='docblock-short'>
+                                <p>Find an appropriate <code>IncludeDirectory</code> for the specified file, or <code>None</code> otherwise</p>
+                           </td>
+                       </tr>
                        <tr class=' module-item'>
                            <td><a class="fn" href="fn.find_title.html"
                                   title='fn gen_epub_book::ops::find_title'>find_title</a></td>
