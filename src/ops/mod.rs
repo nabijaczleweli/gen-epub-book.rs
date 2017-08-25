@@ -100,7 +100,7 @@ pub fn find_title<R: Read>(i: &mut R) -> Option<String> {
     BufReader::new(i)
         .lines()
         .find(|l| if l.is_ok() {
-            TITLE_RGX.is_match(&l.as_ref().unwrap())
+            TITLE_RGX.is_match(l.as_ref().unwrap())
         } else {
             false
         })

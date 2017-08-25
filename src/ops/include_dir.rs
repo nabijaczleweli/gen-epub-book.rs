@@ -159,7 +159,7 @@ impl IncludeDirectory {
     /// ```
     pub fn resolve<P: AsRef<Path>>(&self, relpath: P) -> Option<PathBuf> {
         let abspath = match *self {
-                IncludeDirectory::Named { name: _, ref dir } => dir,
+                IncludeDirectory::Named { ref dir, .. } => dir,
                 IncludeDirectory::Unnamed { ref dir } => dir,
             }
             .1

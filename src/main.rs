@@ -23,7 +23,7 @@ fn actual_main() -> i32 {
 fn result_main() -> Result<(), Error> {
     let opts = Options::parse();
 
-    let descriptors = try!(if let Some(ref infile) = opts.source_file.as_ref() {
+    let descriptors = try!(if let Some(infile) = opts.source_file.as_ref() {
         ops::parse_descriptor("input file",
                               &mut try!(File::open(&infile.1).map_err(|_| {
             Error::Io {
@@ -45,7 +45,7 @@ fn result_main() -> Result<(), Error> {
                          } else {
                              ""
                          },
-                         if let Some(ref infile) = opts.source_file.as_ref() {
+                         if let Some(infile) = opts.source_file.as_ref() {
                              &infile.0
                          } else {
                              ""
@@ -56,7 +56,7 @@ fn result_main() -> Result<(), Error> {
     let mut book = try!(ops::EPubBook::from_elements(descriptors));
     try!(book.normalise_paths(&opts.include_directories, opts.verbose, &mut stderr()));
 
-    if let Some(ref outfile) = opts.output_file.as_ref() {
+    if let Some(outfile) = opts.output_file.as_ref() {
         if let Some(p) = outfile.1.parent() {
             if !p.as_os_str().is_empty() && !p.exists() && fs::create_dir_all(p).is_ok() && opts.verbose {
                 let _ = writeln!(stderr(),
@@ -66,7 +66,7 @@ fn result_main() -> Result<(), Error> {
         }
     }
 
-    if let Some(ref outfile) = opts.output_file.as_ref() {
+    if let Some(outfile) = opts.output_file.as_ref() {
         let mut outf = try!(File::create(&outfile.1).map_err(|_| {
             Error::Io {
                 desc: "output file",

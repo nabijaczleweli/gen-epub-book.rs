@@ -214,7 +214,7 @@ impl EPubBook {
         }
 
         for ctnt in self.content.iter_mut().chain(self.non_content.iter_mut()) {
-            if let &mut (ref mut id, ref mut packed_name, EPubContentType::File(ref mut pb)) = ctnt {
+            if let (ref mut id, ref mut packed_name, EPubContentType::File(ref mut pb)) = *ctnt {
                 try!(EPubBook::normalise_path(relroot, pb, id, packed_name, "Content, Image or Include", verbose, verb_out));
             }
         }
@@ -312,7 +312,7 @@ impl EPubBook {
             if verbose {
                 let _ = writeln!(verb_out, "Normalised {} to {}{0} for {}.", file.display(), root.directory_name(), name);
             }
-            *id = root.packed_id(&file);
+            *id = root.packed_id(file);
             *packed_name = root.packed_name(&file);
             *file = root.resolve(&file).unwrap();
             Ok(())
@@ -361,7 +361,7 @@ impl EPubBook {
                               r#"    <item href="{}" id="{}" media-type="{}" />"#,
                               fname.display(),
                               id,
-                              try!(EPubBook::guess_type(&fname)))
+                              try!(EPubBook::guess_type(fname)))
                     .map_err(|_| EPubBook::zip_error("write", "content table manifest content")));
             }
         }
@@ -403,8 +403,8 @@ impl EPubBook {
         try!(writeln!(w, r#"  <navMap>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap start")));
 
         let mut titles = 0;
-        for &(_, ref fname, ref tp) in self.content.iter() {
-            if let &EPubContentType::File(ref pb) = tp {
+        for &(_, ref fname, ref tp) in &self.content {
+            if let EPubContentType::File(ref pb) = *tp {
                 if let Some(title) = find_title(&mut try!(File::open(pb).map_err(|_| {
                     Error::Io {
                         desc: "Content",
@@ -451,7 +451,7 @@ impl EPubBook {
                         if verbose {
                             let _ = writeln!(verb_out, "Downloading {} to {}.", u, fname.display());
                         }
-                        try!(download_to(w, &u));
+                        try!(download_to(w, u));
                     }
                     EPubContentType::Raw(ref s) => try!(write_string_content(w, s)),
                 }
