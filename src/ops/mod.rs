@@ -21,7 +21,9 @@ pub use self::book::{EPubContentType, EPubData, EPubBook};
 
 
 /// Parse the whole descriptor  with a specified
-/// [separator](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator),
+/// [separator](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator)
+/// with the specified
+/// [rigidness](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format),
 /// stopping at the first encountered error.
 ///
 /// Uses `BookElement::parse()`, so it inherits all errors from there,
@@ -49,7 +51,7 @@ pub use self::book::{EPubContentType, EPubData, EPubBook};
 ///         \n\
 ///         Author: nabijaczleweli\n\
 ///         Date: 2017-02-08T15:30:18+01:00\n\
-///         Language: en-GB\n"[..], ":"),
+///         Language: en-GB\n"[..], ":", false),
 ///     Ok(vec![
 ///         BookElement::Name("Simple ePub demonstration".to_string()),
 ///         BookElement::Cover(PathBuf::from("cover.png")),
@@ -60,7 +62,7 @@ pub use self::book::{EPubContentType, EPubData, EPubBook};
 ///         BookElement::Language("en-GB".to_string())]));
 /// # }
 /// ```
-pub fn parse_descriptor<R: Read>(desc: &'static str, from: &mut R, separator: &str) -> Result<Vec<BookElement>, Error> {
+pub fn parse_descriptor<R: Read>(desc: &'static str, from: &mut R, separator: &str, free_date: bool) -> Result<Vec<BookElement>, Error> {
     let elems: Vec<Option<BookElement>> = try!(Result::from_iter(BufReader::new(from)
         .lines()
         .map(|r| {
@@ -72,7 +74,7 @@ pub fn parse_descriptor<R: Read>(desc: &'static str, from: &mut R, separator: &s
                 }
             })
         })
-        .map(|r| r.and_then(|l| BookElement::parse(&l, separator)))
+        .map(|r| r.and_then(|l| BookElement::parse(&l, separator, free_date)))
         .collect::<Vec<_>>()));
 
     Ok(elems.into_iter().flat_map(|o| o).collect())

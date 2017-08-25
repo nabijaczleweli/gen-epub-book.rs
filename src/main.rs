@@ -32,9 +32,10 @@ fn result_main() -> Result<(), Error> {
                 more: None,
             }
         })),
-                              &opts.separator)
+                              &opts.separator,
+                              opts.free_date)
     } else {
-        ops::parse_descriptor("stdin", &mut stdin(), &opts.separator)
+        ops::parse_descriptor("stdin", &mut stdin(), &opts.separator, opts.free_date)
     });
 
     if opts.verbose {

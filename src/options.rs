@@ -41,6 +41,12 @@ pub struct Options {
     ///
     /// Default: `":"`
     pub separator: String,
+    /// Whether to (attempt to) parse
+    /// [more date formats](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format)
+    /// than just RFC3339.
+    ///
+    /// Default: false
+    pub free_date: bool,
 }
 
 impl Options {
@@ -51,6 +57,7 @@ impl Options {
             .arg(Arg::from_usage("<SOURCE> 'File to assemble ePub from'").validator(Options::source_file_validator))
             .arg(Arg::from_usage("<TARGET> 'File to write'"))
             .arg(Arg::from_usage("-v --verbose 'Print more information'"))
+            .arg(Arg::from_usage("-D --free-date 'Parse more datetime formats'"))
             .arg(Arg::from_usage("-S --separator [SEPARATOR] 'Custom separator'").default_value(":").validator(Options::separator_validator).required(false))
             .arg(Arg::from_usage("-I --include [INC_DIR]... 'Additional include directory. Format: [name=]path'")
                 .validator(Options::include_dir_validator)
@@ -71,6 +78,7 @@ impl Options {
             output_file: target.map(|tgt| (tgt.to_string(), PathBuf::from(tgt))),
             verbose: matches.is_present("verbose"),
             separator: matches.value_of("separator").unwrap_or(":").to_string(),
+            free_date: matches.is_present("free-date"),
         }
     }
 

@@ -6,13 +6,19 @@ use chrono::DateTime;
 
 #[test]
 fn bubbling() {
-    assert_eq!(parse_descriptor("test string", &mut &b"Date: Thu, 29 Dec 2016 15:37:19 +0100\n"[..], ":"),
+    assert_eq!(parse_descriptor("test string", &mut &b"Date: Thu, 29 Dec 2016 15:37:19 +0100\n"[..], ":", false),
                Err(Error::Parse {
                    tp: "datetime",
                    wher: "book element",
                    more: Some("not RFC3339"),
                }));
-    assert_eq!(parse_descriptor("test string", &mut &b"Network-Cover: http/i.imgur.com/ViQ2WED.jpg\n"[..], ":"),
+    assert_eq!(parse_descriptor("test string", &mut &b"Date: 994518299\n"[..], ":", true),
+               Err(Error::Parse {
+                   tp: "datetime",
+                   wher: "book element",
+                   more: Some("not RFC3339, RFC2822, nor Unix timestamp w/timezone"),
+               }));
+    assert_eq!(parse_descriptor("test string", &mut &b"Network-Cover: http/i.imgur.com/ViQ2WED.jpg\n"[..], ":", false),
                Err(Error::Parse {
                    tp: "URL",
                    wher: "book element",
@@ -40,7 +46,7 @@ Date: 2017-02-08T15:30:18+01:00
 Language: en-GB
 "
                                           [..],
-                                ":"),
+                                ":", false),
                Ok(parsed()));
 
     assert_eq!(parse_descriptor("test string",
@@ -57,11 +63,11 @@ Image-Content - - - > examples/simple/chapter_image.png
 Content - - - > simple/ctnt.html
 
 Author - - - > nabijaczleweli
-Date - - - > 2017-02-08T15:30:18+01:00
+Date - - - > Wed, 08 Feb 2017 15:30:18 +0100
 Language - - - > en-GB
 "
                                           [..],
-                                "- - - >"),
+                                "- - - >", true),
                Ok(parsed()));
 }
 

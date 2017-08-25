@@ -165,6 +165,7 @@
 //! Type: RFC3339-compliant date
 //! Value: e-book's authoring/publishing date
 //! Amount: 1
+//! Remarks: see FREE DATE FORMAT FEATURE
 //! ```
 //!
 //! Language
@@ -191,6 +192,17 @@
 //! represented by the document containing this entry.
 //!
 //! Optional.
+//!
+//! ## FREE DATE FORMAT FEATURE
+//!
+//! With the -D/--free-date flag, you can enable the
+//! [free date format feature](https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format).
+//!
+//! The supported formats therewith are therefore:
+//!
+//!   * RFC3339 (e.g. "2017-02-08T15:30:18+01:00"),
+//!   * RFC2822 (e.g. "Wed, 08 Feb 2017 15:30:18 +0100"),
+//!   * Unix timestamp w/timezone (e.g. "1486564218+01:00").
 
 
 #[macro_use]
