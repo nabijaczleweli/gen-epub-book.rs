@@ -519,6 +519,7 @@
 <span id="474">474</span>
 <span id="475">475</span>
 <span id="476">476</span>
+<span id="477">477</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">CONTENT_TABLE_HEADER</span>, <span class="ident">CONTAINER</span>, <span class="ident">MIME_TYPE</span>, <span class="ident">write_string_content</span>, <span class="ident">xhtml_path_id</span>, <span class="ident">book_filename</span>, <span class="ident">xhtml_url_id</span>, <span class="ident">download_to</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">IncludeDirectory</span>, <span class="ident">BookElement</span>, <span class="ident">find_title</span>, <span class="ident">find_file</span>};
@@ -883,7 +884,7 @@
                               <span class="string">r#&quot;    &lt;item href=&quot;{}&quot; id=&quot;{}&quot; media-type=&quot;{}&quot; /&gt;&quot;#</span>,
                               <span class="ident">fname</span>.<span class="ident">display</span>(),
                               <span class="ident">id</span>,
-                              <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EPubBook</span>::<span class="ident">guess_type</span>(<span class="ident">fname</span>)))
+                              <span class="ident">EPubBook</span>::<span class="ident">guess_type</span>(<span class="ident">fname</span>))
                     .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest content&quot;</span>)));
             }
         }
@@ -983,17 +984,18 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">guess_type</span>(<span class="ident">fname</span>: <span class="kw-2">&amp;</span><span class="ident">PathBuf</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Mime</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">guess_mime_type_opt</span>(<span class="kw-2">&amp;</span><span class="ident">fname</span>)
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">mime</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">mime</span> <span class="op">==</span> <span class="string">&quot;text/html&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>() {
-                <span class="string">&quot;application/xhtml+xml&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>()
-            } <span class="kw">else</span> {
-                <span class="ident">mime</span>
-            })
-            .<span class="ident">ok_or</span>(<span class="ident">Error</span>::<span class="ident">WrongFileState</span> {
-                <span class="ident">what</span>: <span class="string">&quot;of recognised extension&quot;</span>,
-                <span class="ident">path</span>: <span class="ident">fname</span>.<span class="ident">clone</span>(),
-            })
+    <span class="kw">fn</span> <span class="ident">guess_type</span>(<span class="ident">fname</span>: <span class="kw-2">&amp;</span><span class="ident">PathBuf</span>) <span class="op">-&gt;</span> <span class="ident">Mime</span> {
+        <span class="macro">lazy_static</span><span class="macro">!</span> {
+            <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">TEXT_PLAIN</span>: <span class="ident">Mime</span> <span class="op">=</span> <span class="string">&quot;text/plain&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+            <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">TEXT_HTML</span>: <span class="ident">Mime</span> <span class="op">=</span> <span class="string">&quot;text/html&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+            <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">APPLICATION_XHTML_XML</span>: <span class="ident">Mime</span> <span class="op">=</span> <span class="string">&quot;application/xhtml+xml&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+        }
+
+        <span class="ident">guess_mime_type_opt</span>(<span class="kw-2">&amp;</span><span class="ident">fname</span>).<span class="ident">map_or_else</span>(<span class="op">||</span> <span class="ident">TEXT_PLAIN</span>.<span class="ident">clone</span>(), <span class="op">|</span><span class="ident">mime</span><span class="op">|</span> <span class="kw">if</span> <span class="ident">mime</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">TEXT_HTML</span> {
+            <span class="ident">APPLICATION_XHTML_XML</span>.<span class="ident">clone</span>()
+        } <span class="kw">else</span> {
+            <span class="ident">mime</span>
+        })
     }
 }
 </pre>

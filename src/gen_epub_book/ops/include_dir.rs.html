@@ -264,9 +264,9 @@
 <span id="219">219</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">xhtml_path_id</span>, <span class="ident">book_filename</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">PathBuf</span>, <span class="ident">Path</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">MAIN_SEPARATOR</span>, <span class="ident">PathBuf</span>, <span class="ident">Path</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::{<span class="self">self</span>, <span class="ident">FromStr</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
 
@@ -428,7 +428,7 @@
                 <span class="ident">IncludeDirectory</span>::<span class="ident">Unnamed</span> { <span class="kw-2">ref</span> <span class="ident">dir</span> } <span class="op">=&gt;</span> <span class="ident">dir</span>,
             }
             .<span class="number">1</span>
-            .<span class="ident">join</span>(<span class="ident">relpath</span>);
+            .<span class="ident">join</span>(<span class="ident">relpath</span>.<span class="ident">as_ref</span>().<span class="ident">to_str</span>().<span class="ident">unwrap</span>().<span class="ident">replace</span>(<span class="string">&#39;/&#39;</span>, <span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span>[<span class="ident">MAIN_SEPARATOR</span> <span class="kw">as</span> <span class="ident">u8</span>]).<span class="ident">unwrap</span>()));
 
         <span class="kw">if</span> <span class="ident">abspath</span>.<span class="ident">exists</span>() <span class="op">&amp;&amp;</span> <span class="ident">abspath</span>.<span class="ident">is_file</span>() {
             <span class="prelude-val">Some</span>(<span class="ident">abspath</span>)
