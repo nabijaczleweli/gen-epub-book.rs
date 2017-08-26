@@ -361,7 +361,7 @@ impl EPubBook {
                               r#"    <item href="{}" id="{}" media-type="{}" />"#,
                               fname.display(),
                               id,
-                              try!(EPubBook::guess_type(fname)))
+                              EPubBook::guess_type(fname))
                     .map_err(|_| EPubBook::zip_error("write", "content table manifest content")));
             }
         }
@@ -461,16 +461,17 @@ impl EPubBook {
         Ok(())
     }
 
-    fn guess_type(fname: &PathBuf) -> Result<Mime, Error> {
-        guess_mime_type_opt(&fname)
-            .map(|mime| if mime == "text/html".parse().unwrap() {
-                "application/xhtml+xml".parse().unwrap()
-            } else {
-                mime
-            })
-            .ok_or(Error::WrongFileState {
-                what: "of recognised extension",
-                path: fname.clone(),
-            })
+    fn guess_type(fname: &PathBuf) -> Mime {
+        lazy_static! {
+            static ref TEXT_PLAIN: Mime = "text/plain".parse().unwrap();
+            static ref TEXT_HTML: Mime = "text/html".parse().unwrap();
+            static ref APPLICATION_XHTML_XML: Mime = "application/xhtml+xml".parse().unwrap();
+        }
+
+        guess_mime_type_opt(&fname).map_or_else(|| TEXT_PLAIN.clone(), |mime| if mime == *TEXT_HTML {
+            APPLICATION_XHTML_XML.clone()
+        } else {
+            mime
+        })
     }
 }

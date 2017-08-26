@@ -1,7 +1,7 @@
 use self::super::super::util::{xhtml_path_id, book_filename};
-use std::path::{PathBuf, Path};
+use std::path::{MAIN_SEPARATOR, PathBuf, Path};
 use self::super::super::Error;
-use std::str::FromStr;
+use std::str::{self, FromStr};
 use std::fmt;
 use std::fs;
 
@@ -163,7 +163,7 @@ impl IncludeDirectory {
                 IncludeDirectory::Unnamed { ref dir } => dir,
             }
             .1
-            .join(relpath);
+            .join(relpath.as_ref().to_str().unwrap().replace('/', str::from_utf8(&[MAIN_SEPARATOR as u8]).unwrap()));
 
         if abspath.exists() && abspath.is_file() {
             Some(abspath)
