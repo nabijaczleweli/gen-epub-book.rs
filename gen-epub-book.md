@@ -51,6 +51,12 @@ Exit values and possible errors:
     NAME is an optional name under which the files will be segregated.
     PATH is an existing directory.
 
+  -D --free-date
+
+    Parse more datetime formats.
+
+    See FREE DATE FORMAT FEATURE for details.
+
 ## DESCRIPTOR FORMAT
 
 The descriptor consists of multiple lines in the format *"Key: Value"*, unknown
