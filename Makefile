@@ -26,7 +26,6 @@ else
 	EXE :=
 endif
 
-AWK := awk
 CALIBRE_CONVERT := ebook-convert
 BUILD_TYPE := debug
 OUTDIR := out/

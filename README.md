@@ -32,12 +32,12 @@ Modify to your liking, then, assuming you put the file in "example/test.epupp" a
 gen-epub-book example/test.epupp out/test.epub
 ```
 
-For more detailed usage information and tag list, see the [manpage](https://cdn.rawgit.com/nabijaczleweli/gen-epub-book/man/gen-epub-book.rs.1.html).
+For more detailed usage information and tag list, see the [manpage](https://cdn.rawgit.com/nabijaczleweli/gen-epub-book/man/gen-epub-book.rs.1.html),
+and for a full guide see the [webpage](https://nabijaczleweli.xyz/content/gen-epub-book).
 
 ## Versions in other languages
 
-The original in [AWK](https://github.com/nabijaczleweli/gen-epub-book).
-
-A rewrite in [C++](https://github.com/nabijaczleweli/gen-epub-book.cpp).
-
-A rewrite in [Scala](https://github.com/nabijaczleweli/gen-epub-book.scala).
+The original in [AWK](https://github.com/nabijaczleweli/gen-epub-book).<br />
+A rewrite in [C++](https://github.com/nabijaczleweli/gen-epub-book.cpp).<br />
+A rewrite in [Scala](https://github.com/nabijaczleweli/gen-epub-book.scala).<br />
+A rewrite in [JavaScript](https://github.com/nabijaczleweli/gen-epub-book.js).
