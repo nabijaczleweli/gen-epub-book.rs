@@ -51,7 +51,7 @@
                </span><a class='srclink' href='../../src/hyper/header/common/pragma.rs.html#34-39' title='goto source code'>[src]</a></span></h1>
 <pre class='rust enum'>pub enum Pragma {
     NoCache,
-    Ext(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>),
+    Ext(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
 }</pre><div class='docblock'><p>The <code>Pragma</code> header defined by HTTP/1.0.</p>
 
 <blockquote>
@@ -81,7 +81,7 @@ specification deprecates such extensions to improve interoperability.</p>
 <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">Pragma</span>::<span class="ident">Ext</span>(<span class="string">&quot;foobar&quot;</span>.<span class="ident">to_owned</span>()));</pre>
 </div><h2 id='variants' class='variants'>Variants</h2>
 <span id='variant.NoCache' class='variant'><span id='NoCache.v' class='invisible'><code>NoCache</code></span></span><div class='docblock'><p>Corresponds to the <code>no-cache</code> value.</p>
-</div><span id='variant.Ext' class='variant'><span id='Ext.v' class='invisible'><code>Ext(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>)</code></span></span><div class='docblock'><p>Every value other than <code>no-cache</code>.</p>
+</div><span id='variant.Ext' class='variant'><span id='Ext.v' class='invisible'><code>Ext(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Every value other than <code>no-cache</code>.</p>
 </div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="enum" href="../../hyper/header/enum.Pragma.html" title="enum hyper::header::Pragma">Pragma</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper/header/common/pragma.rs.html#33' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="enum" href="../../hyper/header/enum.Pragma.html" title="enum hyper::header::Pragma">Pragma</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>

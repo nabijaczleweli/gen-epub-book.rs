@@ -52,12 +52,12 @@
 <pre class='rust enum'>pub enum EPubContentType {
     File(<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>),
     Network(<a class="struct" href="../../url/struct.Url.html" title="struct url::Url">Url</a>),
-    Raw(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>),
+    Raw(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
 }</pre><div class='docblock'><p>Enum representing what can go in an ePub</p>
 </div><h2 id='variants' class='variants'>Variants</h2>
 <span id='variant.File' class='variant'><span id='File.v' class='invisible'><code>File(<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>)</code></span></span><div class='docblock'><p>Sourced from a file</p>
 </div><span id='variant.Network' class='variant'><span id='Network.v' class='invisible'><code>Network(<a class="struct" href="../../url/struct.Url.html" title="struct url::Url">Url</a>)</code></span></span><div class='docblock'><p>Sourced from network</p>
-</div><span id='variant.Raw' class='variant'><span id='Raw.v' class='invisible'><code>Raw(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>)</code></span></span><div class='docblock'><p>Sourced from a string</p>
+</div><span id='variant.Raw' class='variant'><span id='Raw.v' class='invisible'><code>Raw(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Sourced from a string</p>
 
 <p>Wrapped in <code>util::write_string_content()</code>.</p>
 </div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="enum" href="../../gen_epub_book/ops/enum.EPubContentType.html" title="enum gen_epub_book::ops::EPubContentType">EPubContentType</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/gen_epub_book/ops/book.rs.html#41' title='goto source code'>[src]</a></span></h3>
@@ -93,6 +93,10 @@
 </div></div><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html" title="trait core::cmp::Ord">Ord</a> for <a class="enum" href="../../gen_epub_book/ops/enum.EPubContentType.html" title="enum gen_epub_book::ops::EPubContentType">EPubContentType</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/gen_epub_book/ops/book.rs.html#41' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.cmp' class="method"><span id='cmp.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#tymethod.cmp' class='fnname'>cmp</a>(&amp;self, __arg_0: &amp;<a class="enum" href="../../gen_epub_book/ops/enum.EPubContentType.html" title="enum gen_epub_book::ops::EPubContentType">EPubContentType</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html" title="enum core::cmp::Ordering">Ordering</a></code></span></h4>
 <div class='docblock'><p>This method returns an <code>Ordering</code> between <code>self</code> and <code>other</code>. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#tymethod.cmp">Read more</a></p>
+</div><h4 id='method.max' class="method"><span id='max.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#method.max' class='fnname'>max</a>(self, other: Self) -&gt; Self</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>ord_max_min</code>)</div></div><div class='docblock'><p>Compares and returns the maximum of two values. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#method.max">Read more</a></p>
+</div><h4 id='method.min' class="method"><span id='min.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#method.min' class='fnname'>min</a>(self, other: Self) -&gt; Self</code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>ord_max_min</code>)</div></div><div class='docblock'><p>Compares and returns the minimum of two values. <a href="https://doc.rust-lang.org/nightly/core/cmp/trait.Ord.html#method.min">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

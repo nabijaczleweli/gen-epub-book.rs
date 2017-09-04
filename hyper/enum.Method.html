@@ -59,7 +59,7 @@
     Trace,
     Connect,
     Patch,
-    Extension(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>),
+    Extension(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
 }</pre><div class='docblock'><p>The Request Method (VERB)</p>
 
 <p>Currently includes 8 variants representing the 8 methods defined in
@@ -78,7 +78,7 @@ registered with IANA, if they are at all common to use.</p>
 </div><span id='variant.Trace' class='variant'><span id='Trace.v' class='invisible'><code>Trace</code></span></span><div class='docblock'><p>TRACE</p>
 </div><span id='variant.Connect' class='variant'><span id='Connect.v' class='invisible'><code>Connect</code></span></span><div class='docblock'><p>CONNECT</p>
 </div><span id='variant.Patch' class='variant'><span id='Patch.v' class='invisible'><code>Patch</code></span></span><div class='docblock'><p>PATCH</p>
-</div><span id='variant.Extension' class='variant'><span id='Extension.v' class='invisible'><code>Extension(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>)</code></span></span><div class='docblock'><p>Method extensions. An example would be <code>let m = Extension(&quot;FOO&quot;.to_string())</code>.</p>
+</div><span id='variant.Extension' class='variant'><span id='Extension.v' class='invisible'><code>Extension(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Method extensions. An example would be <code>let m = Extension(&quot;FOO&quot;.to_string())</code>.</p>
 </div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class="enum" href="../hyper/enum.Method.html" title="enum hyper::Method">Method</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/hyper/method.rs.html#60-88' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.safe' class="method"><span id='safe.v' class='invisible'><code>fn <a href='#method.safe' class='fnname'>safe</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h4>
 <div class='docblock'><p>Whether a method is considered &quot;safe&quot;, meaning the request is

@@ -51,8 +51,8 @@
                </span><a class='srclink' href='../../src/hyper/header/common/warning.rs.html#75-84' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Warning {
     pub code: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>,
-    pub agent: <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>,
-    pub text: <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>,
+    pub agent: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>,
+    pub text: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>,
     pub date: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../../hyper/header/struct.HttpDate.html" title="struct hyper::header::HttpDate">HttpDate</a>&gt;,
 }</pre><div class='docblock'><p><code>Warning</code> header, defined in <a href="https://tools.ietf.org/html/rfc7234#section-5.5">RFC7234</a></p>
 
@@ -128,11 +128,11 @@ warn-date  = DQUOTE HTTP-date DQUOTE
                            </span></span><div class='docblock'><p>The 3 digit warn code.</p>
 </div><span id='structfield.agent' class="structfield">
                            <span id='agent.v' class='invisible'>
-                           <code>agent: <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a></code>
+                           <code>agent: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code>
                            </span></span><div class='docblock'><p>The name or pseudonym of the server adding this header.</p>
 </div><span id='structfield.text' class="structfield">
                            <span id='text.v' class='invisible'>
-                           <code>text: <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a></code>
+                           <code>text: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code>
                            </span></span><div class='docblock'><p>The warning message describing the error.</p>
 </div><span id='structfield.date' class="structfield">
                            <span id='date.v' class='invisible'>

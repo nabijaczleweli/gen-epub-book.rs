@@ -54,7 +54,7 @@
     Tls,
     WebSocket,
     H2c,
-    Unregistered(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>),
+    Unregistered(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
 }</pre><div class='docblock'><p>A protocol name used to identify a specific protocol. Names are case-sensitive
 except for the <code>WebSocket</code> value.</p>
 </div><h2 id='variants' class='variants'>Variants</h2>
@@ -63,7 +63,7 @@ except for the <code>WebSocket</code> value.</p>
 </div><span id='variant.WebSocket' class='variant'><span id='WebSocket.v' class='invisible'><code>WebSocket</code></span></span><div class='docblock'><p><code>WebSocket</code> value, matched case insensitively,Web Socket Protocol
 <a href="http://tools.ietf.org/html/rfc6455">RFC6455</a></p>
 </div><span id='variant.H2c' class='variant'><span id='H2c.v' class='invisible'><code>H2c</code></span></span><div class='docblock'><p><code>h2c</code> value, HTTP/2 over cleartext TCP</p>
-</div><span id='variant.Unregistered' class='variant'><span id='Unregistered.v' class='invisible'><code>Unregistered(<a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a>)</code></span></span><div class='docblock'><p>Any other protocol name not known to hyper</p>
+</div><span id='variant.Unregistered' class='variant'><span id='Unregistered.v' class='invisible'><code>Unregistered(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Any other protocol name not known to hyper</p>
 </div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="enum" href="../../hyper/header/enum.ProtocolName.html" title="enum hyper::header::ProtocolName">ProtocolName</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/hyper/header/common/upgrade.rs.html#79' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="enum" href="../../hyper/header/enum.ProtocolName.html" title="enum hyper::header::ProtocolName">ProtocolName</a></code></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>

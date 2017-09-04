@@ -50,9 +50,9 @@
                    </a>
                </span><a class='srclink' href='../../src/futures/future/mod.rs.html#1056-1065' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait FutureFrom&lt;T&gt;: <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a> {
-    type <a href='#associatedtype.Future' class="type">Future</a>: <a class="trait" href="../../futures/future/trait.Future.html" title="trait futures::future::Future">Future</a>&lt;Item = Self, Error = Self::<a class="trait" href="../../futures/future/trait.FutureFrom.html" title="trait futures::future::FutureFrom">Error</a>&gt;;
+    type <a href='#associatedtype.Future' class="type">Future</a>: <a class="trait" href="../../futures/future/trait.Future.html" title="trait futures::future::Future">Future</a>&lt;Item = Self, Error = Self::<a class="type" href="../../futures/future/trait.FutureFrom.html#associatedtype.Error" title="type futures::future::FutureFrom::Error">Error</a>&gt;;
     type <a href='#associatedtype.Error' class="type">Error</a>;
-    fn <a href='#tymethod.future_from' class='fnname'>future_from</a>(_: T) -&gt; Self::<a class="trait" href="../../futures/future/trait.FutureFrom.html" title="trait futures::future::FutureFrom">Future</a>;
+    fn <a href='#tymethod.future_from' class='fnname'>future_from</a>(_: T) -&gt; Self::<a class="type" href="../../futures/future/trait.FutureFrom.html#associatedtype.Future" title="type futures::future::FutureFrom::Future">Future</a>;
 }</pre><div class='docblock'><p>Asynchronous conversion from a type <code>T</code>.</p>
 
 <p>This trait is analogous to <code>std::convert::From</code>, adapted to asynchronous
@@ -60,12 +60,12 @@ computation.</p>
 </div>
             <h2 id='associated-types'>Associated Types</h2>
             <div class='methods'>
-        <h3 id='associatedtype.Future' class='method'><span id='Future.t' class='invisible'><code>type <a href='#associatedtype.Future' class="type">Future</a>: <a class="trait" href="../../futures/future/trait.Future.html" title="trait futures::future::Future">Future</a>&lt;Item = Self, Error = Self::<a class="trait" href="../../futures/future/trait.FutureFrom.html" title="trait futures::future::FutureFrom">Error</a>&gt;</code></span></h3><div class='docblock'><p>The future for the conversion.</p>
+        <h3 id='associatedtype.Future' class='method'><span id='Future.t' class='invisible'><code>type <a href='#associatedtype.Future' class="type">Future</a>: <a class="trait" href="../../futures/future/trait.Future.html" title="trait futures::future::Future">Future</a>&lt;Item = Self, Error = Self::<a class="type" href="../../futures/future/trait.FutureFrom.html#associatedtype.Error" title="type futures::future::FutureFrom::Error">Error</a>&gt;</code></span></h3><div class='docblock'><p>The future for the conversion.</p>
 </div><h3 id='associatedtype.Error' class='method'><span id='Error.t' class='invisible'><code>type <a href='#associatedtype.Error' class="type">Error</a></code></span></h3><div class='docblock'><p>Possible errors during conversion.</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.future_from' class='method'><span id='future_from.v' class='invisible'><code>fn <a href='#tymethod.future_from' class='fnname'>future_from</a>(_: T) -&gt; Self::<a class="trait" href="../../futures/future/trait.FutureFrom.html" title="trait futures::future::FutureFrom">Future</a></code></span></h3><div class='docblock'><p>Consume the given value, beginning the conversion.</p>
+        <h3 id='tymethod.future_from' class='method'><span id='future_from.v' class='invisible'><code>fn <a href='#tymethod.future_from' class='fnname'>future_from</a>(_: T) -&gt; Self::<a class="type" href="../../futures/future/trait.FutureFrom.html#associatedtype.Future" title="type futures::future::FutureFrom::Future">Future</a></code></span></h3><div class='docblock'><p>Consume the given value, beginning the conversion.</p>
 </div></div>
         <h2 id='implementors'>Implementors</h2>
         <ul class='item-list' id='implementors-list'>

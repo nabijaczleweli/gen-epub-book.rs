@@ -121,7 +121,7 @@ you can decide if such words should be hyphenated or left
 alone. Hyphenation can be done using existing hyphens (see
 [<code>HyphenSplitter</code>]) or it can be based on TeX hyphenation
 patterns, if the <code>hyphenation</code> feature is enabled.</p>
-</div><h4 id='method.fill' class="method"><span id='fill.v' class='invisible'><code>fn <a href='#method.fill' class='fnname'>fill</a>(&amp;self, s: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a></code></span></h4>
+</div><h4 id='method.fill' class="method"><span id='fill.v' class='invisible'><code>fn <a href='#method.fill' class='fnname'>fill</a>(&amp;self, s: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></span></h4>
 <div class='docblock'><p>Fill a line of text at <code>self.width</code> characters. Strings are
 wrapped based on their displayed width, not their size in
 bytes.</p>
@@ -139,7 +139,7 @@ the <code>wrap</code> method if you need access to the individual lines.</p>
 <p>This method simply joins the lines produced by <code>wrap</code>. As
 such, it inherits the O(<em>n</em>) time and memory complexity where
 <em>n</em> is the input string length.</p>
-</div><h4 id='method.wrap' class="method"><span id='wrap.v' class='invisible'><code>fn <a href='#method.wrap' class='fnname'>wrap</a>(&amp;self, s: &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html" title="enum collections::borrow::Cow">Cow</a>&lt;'a, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;</code></span></h4>
+</div><h4 id='method.wrap' class="method"><span id='wrap.v' class='invisible'><code>fn <a href='#method.wrap' class='fnname'>wrap</a>(&amp;self, s: &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/alloc/borrow/enum.Cow.html" title="enum alloc::borrow::Cow">Cow</a>&lt;'a, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;&gt;</code></span></h4>
 <div class='docblock'><p>Wrap a line of text at <code>self.width</code> characters. Strings are
 wrapped based on their displayed width, not their size in
 bytes.</p>

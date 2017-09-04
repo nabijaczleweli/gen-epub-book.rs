@@ -51,7 +51,7 @@
                </span><a class='srclink' href='../src/bytes/buf/into_buf.rs.html#26-48' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait IntoBuf {
     type <a href='#associatedtype.Buf' class="type">Buf</a>: <a class="trait" href="../bytes/buf/trait.Buf.html" title="trait bytes::buf::Buf">Buf</a>;
-    fn <a href='#tymethod.into_buf' class='fnname'>into_buf</a>(self) -&gt; Self::<a class="trait" href="../bytes/buf/trait.IntoBuf.html" title="trait bytes::buf::IntoBuf">Buf</a>;
+    fn <a href='#tymethod.into_buf' class='fnname'>into_buf</a>(self) -&gt; Self::<a class="type" href="../bytes/buf/trait.IntoBuf.html#associatedtype.Buf" title="type bytes::buf::IntoBuf::Buf">Buf</a>;
 }</pre><div class='docblock'><p>Conversion into a <code>Buf</code></p>
 
 <p>An <code>IntoBuf</code> implementation defines how to convert a value into a <code>Buf</code>.
@@ -78,7 +78,7 @@ may be implemented directly for types or on references for those types.</p>
 </div></div>
             <h2 id='required-methods'>Required Methods</h2>
             <div class='methods'>
-        <h3 id='tymethod.into_buf' class='method'><span id='into_buf.v' class='invisible'><code>fn <a href='#tymethod.into_buf' class='fnname'>into_buf</a>(self) -&gt; Self::<a class="trait" href="../bytes/buf/trait.IntoBuf.html" title="trait bytes::buf::IntoBuf">Buf</a></code></span></h3><div class='docblock'><p>Creates a <code>Buf</code> from a value.</p>
+        <h3 id='tymethod.into_buf' class='method'><span id='into_buf.v' class='invisible'><code>fn <a href='#tymethod.into_buf' class='fnname'>into_buf</a>(self) -&gt; Self::<a class="type" href="../bytes/buf/trait.IntoBuf.html#associatedtype.Buf" title="type bytes::buf::IntoBuf::Buf">Buf</a></code></span></h3><div class='docblock'><p>Creates a <code>Buf</code> from a value.</p>
 
 <h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
 <pre class="rust rust-example-rendered">
@@ -99,12 +99,12 @@ may be implemented directly for types or on references for those types.</p>
     <li><code>impl&lt;T:&nbsp;<a class="trait" href="../bytes/buf/trait.Buf.html" title="trait bytes::buf::Buf">Buf</a>&gt; IntoBuf for T</code></li>
 <li><code>impl&lt;'a&gt; IntoBuf for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'a [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></li>
 <li><code>impl&lt;'a&gt; IntoBuf for &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></li>
-<li><code>impl IntoBuf for <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code></li>
-<li><code>impl&lt;'a&gt; IntoBuf for &amp;'a <a class="struct" href="https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html" title="struct collections::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code></li>
+<li><code>impl IntoBuf for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code></li>
+<li><code>impl&lt;'a&gt; IntoBuf for &amp;'a <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;</code></li>
 <li><code>impl&lt;'a&gt; IntoBuf for &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;'static [</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></li>
 <li><code>impl&lt;'a&gt; IntoBuf for &amp;'a &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></li>
-<li><code>impl IntoBuf for <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a></code></li>
-<li><code>impl&lt;'a&gt; IntoBuf for &amp;'a <a class="struct" href="https://doc.rust-lang.org/nightly/collections/string/struct.String.html" title="struct collections::string::String">String</a></code></li>
+<li><code>impl IntoBuf for <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></li>
+<li><code>impl&lt;'a&gt; IntoBuf for &amp;'a <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code></li>
 <li><code>impl IntoBuf for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></li>
 <li><code>impl IntoBuf for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i8.html">i8</a></code></li>
 <li><code>impl IntoBuf for <a class="struct" href="../bytes/struct.Bytes.html" title="struct bytes::Bytes">Bytes</a></code></li>
