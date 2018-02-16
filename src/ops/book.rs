@@ -8,6 +8,7 @@ use std::collections::BTreeSet;
 use self::super::super::Error;
 use std::iter::IntoIterator;
 use std::path::PathBuf;
+use std::fmt::Display;
 use std::fs::File;
 use uuid::Uuid;
 use url::Url;
@@ -29,6 +30,8 @@ pub struct EPubBook {
     pub language: String,
     /// Image to use as e-book cover, if any
     pub cover: Option<EPubData>,
+    /// Description of the book, if any.
+    pub description: Option<EPubContentType>,
     /// Content to put in the e-book
     content: Vec<EPubData>,
     /// Things that aren't *content* but go in the e-book
@@ -93,6 +96,7 @@ impl EPubBook {
         let mut date = None;
         let mut language = None;
         let mut cover = None;
+        let mut description = None;
         let mut content = vec![];
         let mut non_content = vec![];
 
@@ -143,6 +147,21 @@ impl EPubBook {
                 BookElement::NetworkInclude(c) => {
                     non_content.push((xhtml_url_id(&c).to_string(), PathBuf::from(c.path_segments().unwrap().last().unwrap()), EPubContentType::Network(c)));
                 }
+                BookElement::Description(c) => {
+                    description = try!(EPubBook::handle_essential_element(description,
+                                                                          EPubContentType::File(c),
+                                                                          "Description, String-Description, and Network-Description"))
+                }
+                BookElement::StringDescription(c) => {
+                    description = try!(EPubBook::handle_essential_element(description,
+                                                                          EPubContentType::Raw(c),
+                                                                          "Description, String-Description, and Network-Description"))
+                }
+                BookElement::NetworkDescription(c) => {
+                    description = try!(EPubBook::handle_essential_element(description,
+                                                                          EPubContentType::Network(c),
+                                                                          "Description, String-Description, and Network-Description"))
+                }
                 BookElement::Author(a) => author = try!(EPubBook::handle_essential_element(author, a, "Author")),
                 BookElement::Date(d) => date = try!(EPubBook::handle_essential_element(date, d, "Date")),
                 BookElement::Language(l) => language = try!(EPubBook::handle_essential_element(language, l, "Language")),
@@ -155,6 +174,7 @@ impl EPubBook {
             date: try!(EPubBook::require_essential_element(date, "Date")),
             language: try!(EPubBook::require_essential_element(language, "Language")),
             cover: cover,
+            description: description,
             content: content,
             non_content: non_content,
             uuid: Uuid::new_v4(),
@@ -211,6 +231,10 @@ impl EPubBook {
     pub fn normalise_paths<W: Write>(&mut self, relroot: &[IncludeDirectory], verbose: bool, verb_out: &mut W) -> Result<(), Error> {
         if let Some(&mut (ref mut id, ref mut packed_name, EPubContentType::File(ref mut c))) = self.cover.as_mut() {
             try!(EPubBook::normalise_path(relroot, c, id, packed_name, "Cover", verbose, verb_out));
+        }
+
+        if let Some(&mut EPubContentType::File(ref mut pb)) = self.description.as_mut() {
+            try!(EPubBook::normalise_path(relroot, pb, &mut String::new(), &mut PathBuf::new(), "Description", verbose, verb_out));
         }
 
         for ctnt in self.content.iter_mut().chain(self.non_content.iter_mut()) {
@@ -272,7 +296,7 @@ impl EPubBook {
         try!(w.write_all(MIME_TYPE.as_bytes()).map_err(|_| EPubBook::zip_error("write", "container file")));
 
         try!(w.start_file("content.opf", FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "content table")));
-        try!(self.content_table(&mut w));
+        try!(self.content_table(&mut w, verbose, verb_out));
 
         try!(w.start_file("toc.ncx", FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "table of contents")));
         try!(self.table_of_contents(&mut w, verbose, verb_out));
@@ -332,7 +356,7 @@ impl EPubBook {
         }
     }
 
-    fn content_table<W: Write>(&self, w: &mut W) -> Result<(), Error> {
+    fn content_table<W: Write, V: Write>(&self, w: &mut W, verbose: bool, verb_out: &mut V) -> Result<(), Error> {
         try!(w.write_all(CONTENT_TABLE_HEADER.as_bytes()).map_err(|_| EPubBook::zip_error("write", "content table header")));
         try!(writeln!(w, "    <dc:title>{}</dc:title>", self.name).map_err(|_| EPubBook::zip_error("write", "content table title line")));
         try!(writeln!(w, r#"    <dc:creator opf:role="aut">{}</dc:creator>"#, self.author)
@@ -347,6 +371,13 @@ impl EPubBook {
         if let Some(&(ref id, _, _)) = self.cover.as_ref() {
             try!(writeln!(w, r#"    <meta name="cover" content="{}" />"#, id).map_err(|_| EPubBook::zip_error("write", "content table cover line")));
         }
+
+        if let Some(desc) = self.description.as_ref() {
+            try!(writeln!(w, r#"    <dc:description>"#).map_err(|_| EPubBook::zip_error("write", "content table description open line")));
+            try!(EPubBook::write_content_type(desc, &"description", false, w, verbose, verb_out));
+            try!(writeln!(w, r#"    </dc:description>"#).map_err(|_| EPubBook::zip_error("write", "content table description close line")));
+        }
+        try!(writeln!(w, r#"    <dc:language>{}</dc:language>"#, self.language).map_err(|_| EPubBook::zip_error("write", "content table language line")));
 
         try!(writeln!(w, r#"  </metadata>"#).map_err(|_| EPubBook::zip_error("write", "content table metadata end")));
         try!(writeln!(w, r#"  <manifest>"#).map_err(|_| EPubBook::zip_error("write", "content table manifest start")));
@@ -442,18 +473,31 @@ impl EPubBook {
             if !added_filenames.contains(fname.to_str().unwrap()) {
                 added_filenames.insert(fname.to_str().unwrap());
                 try!(w.start_file(fname.to_str().unwrap(), FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "table of contents")));
-                match *tp {
-                    EPubContentType::File(ref pb) => {
-                        try!(io::copy(&mut try!(File::open(pb).map_err(|_| EPubBook::zip_error("open", "Content file"))), w)
-                            .map_err(|_| EPubBook::zip_error("write", "Content data")));
-                    }
-                    EPubContentType::Network(ref u) => {
-                        if verbose {
-                            let _ = writeln!(verb_out, "Downloading {} to {}.", u, fname.display());
-                        }
-                        try!(download_to(w, u));
-                    }
-                    EPubContentType::Raw(ref s) => try!(write_string_content(w, s)),
+                try!(EPubBook::write_content_type(tp, &fname.display(), true, w, verbose, verb_out));
+            }
+        }
+
+        Ok(())
+    }
+
+    fn write_content_type<F: Display, W: Write, V: Write>(whom: &EPubContentType, fname: &F, wrap_string: bool, w: &mut W, verbose: bool, verb_out: &mut V)
+                                                          -> Result<(), Error> {
+        match *whom {
+            EPubContentType::File(ref pb) => {
+                try!(io::copy(&mut try!(File::open(pb).map_err(|_| EPubBook::zip_error("open", "Content file"))), w)
+                    .map_err(|_| EPubBook::zip_error("write", "Content data")));
+            }
+            EPubContentType::Network(ref u) => {
+                if verbose {
+                    let _ = writeln!(verb_out, "Downloading {} to {}.", u, fname);
+                }
+                try!(download_to(w, u));
+            }
+            EPubContentType::Raw(ref s) => {
+                if wrap_string {
+                    try!(write_string_content(w, s));
+                } else {
+                    try!(writeln!(w, "{}", s).map_err(|_| EPubBook::zip_error("write", "string content")));
                 }
             }
         }

@@ -87,6 +87,27 @@ pub enum BookElement {
     /// Type: file URL<br />
     /// Amount: any
     NetworkInclude(Url),
+    /// Relative path to file containing the book's description
+    ///
+    /// Required: no<br />
+    /// Value: relative path to (X)HTML chunk<br />
+    /// Amount: 0-1<br />
+    /// Remarks: exclusive with String-Description and Network-Description
+    Description(PathBuf),
+    /// Book's description
+    ///
+    /// Required: no<br />
+    /// Type: (X-)HTML<br />
+    /// Amount: 0-1<br />
+    /// Remarks: exclusive with Description and Network-Description
+    StringDescription(String),
+    /// URL of auxilliary file containing the book's description
+    ///
+    /// Required: no<br />
+    /// Type: file URL<br />
+    /// Amount: 0-1<br />
+    /// Remarks: exclusive with Description and String-Description
+    NetworkDescription(Url),
     /// E-book's author
     ///
     /// Required: yes<br />
@@ -185,6 +206,9 @@ impl BookElement {
                         "Network-Cover" => Ok(Some(BookElement::NetworkCover(try!(BookElement::parse_url(ctnt))))),
                         "Include" => Ok(Some(BookElement::Include(PathBuf::from(ctnt)))),
                         "Network-Include" => Ok(Some(BookElement::NetworkInclude(try!(BookElement::parse_url(ctnt))))),
+                        "Description" => Ok(Some(BookElement::Description(PathBuf::from(ctnt)))),
+                        "String-Description" => Ok(Some(BookElement::StringDescription(ctnt.to_string()))),
+                        "Network-Description" => Ok(Some(BookElement::NetworkDescription(try!(BookElement::parse_url(ctnt))))),
                         "Author" => Ok(Some(BookElement::Author(ctnt.to_string()))),
                         "Date" => Ok(Some(BookElement::Date(try!(BookElement::parse_datetime(ctnt, free_date))))),
                         "Language" => Ok(Some(BookElement::Language(ctnt.to_string()))),
@@ -225,6 +249,9 @@ impl BookElement {
             BookElement::NetworkCover(_) => "Network-Cover",
             BookElement::Include(_) => "Include",
             BookElement::NetworkInclude(_) => "Network-Include",
+            BookElement::Description(_) => "Description",
+            BookElement::StringDescription(_) => "String-Description",
+            BookElement::NetworkDescription(_) => "Network-Description",
             BookElement::Author(_) => "Author",
             BookElement::Date(_) => "Date",
             BookElement::Language(_) => "Language",
@@ -239,15 +266,18 @@ impl fmt::Display for BookElement {
         match *self {
             BookElement::Name(ref s) |
             BookElement::StringContent(ref s) |
+            BookElement::StringDescription(ref s) |
             BookElement::Author(ref s) |
             BookElement::Language(ref s) => write!(f, "{}", s),
             BookElement::Content(ref pb) |
             BookElement::ImageContent(ref pb) |
             BookElement::Cover(ref pb) |
-            BookElement::Include(ref pb) => write!(f, "{}", pb.display()),
+            BookElement::Include(ref pb) |
+            BookElement::Description(ref pb) => write!(f, "{}", pb.display()),
             BookElement::NetworkImageContent(ref u) |
             BookElement::NetworkCover(ref u) |
-            BookElement::NetworkInclude(ref u) => write!(f, "{}", u.as_str()),
+            BookElement::NetworkInclude(ref u) |
+            BookElement::NetworkDescription(ref u) => write!(f, "{}", u.as_str()),
             BookElement::Date(ref d) => write!(f, "{}", d.to_rfc3339()),
         }
     }

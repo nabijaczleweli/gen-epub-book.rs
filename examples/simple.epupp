@@ -1,5 +1,6 @@
 Name: Simple ePub demonstration
 Cover: cover.png
+Description: simple/desc.htm
 
 Image-Content: simple/chapter_image.png
 Content: simple/ctnt.html

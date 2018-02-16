@@ -128,6 +128,30 @@ keys are ignored, lines that don't match the format are ignored.
     Value: URL of auxilliary file to include in e-book
     Amount: any
 
+  Description
+
+    Required: no
+    Type: file URL
+    Value: relative path to book description
+    Amount: 0-1
+    Remarks: exclusive with String-Description and Network-Description
+
+  String-Description
+
+    Required: no
+    Type: (X)HTML
+    Value: book description
+    Amount: 0-1
+    Remarks: exclusive with Description and Network-Description
+
+  Network-Description
+
+    Required: no
+    Type: file URL
+    Value: URL of book description
+    Amount: 0-1
+    Remarks: exclusive with Description and String-Description
+
   Author
 
     Required: yes

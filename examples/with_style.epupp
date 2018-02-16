@@ -1,4 +1,5 @@
 Name: With style
+String-Description: This styled example demostrates how <em>INCREDIBLE</em> the sweet taste of pickles is.
 
 Content: with_style/req.html
 Include: with_style/style.css
