@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-0.1.15/src/sink/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-0.1.18/src/sink/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -518,11 +519,25 @@
 <span id="473">473</span>
 <span id="474">474</span>
 <span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Asynchronous sinks</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This module contains the `Sink` trait, along with a number of adapter types</span>
-<span class="doccomment">//! for it. An overview is available in the documentaiton for the trait itself.</span>
+<span class="doccomment">//! for it. An overview is available in the documentation for the trait itself.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! You can find more information/tutorials about streams [online at</span>
 <span class="doccomment">//! https://tokio.rs][online]</span>
@@ -542,6 +557,7 @@
 <span class="kw">mod</span> <span class="ident">send</span>;
 <span class="kw">mod</span> <span class="ident">send_all</span>;
 <span class="kw">mod</span> <span class="ident">map_err</span>;
+<span class="kw">mod</span> <span class="ident">fanout</span>;
 
 <span class="macro">if_std</span><span class="macro">!</span> {
     <span class="kw">mod</span> <span class="ident">buffer</span>;
@@ -571,7 +587,7 @@
         }
     }
 
-    <span class="doccomment">/// A type alias for `Box&lt;Stream + Send&gt;`</span>
+    <span class="doccomment">/// A type alias for `Box&lt;Sink + Send&gt;`</span>
     <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">BoxSink</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">boxed</span>::<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Sink</span><span class="op">&lt;</span><span class="ident">SinkItem</span> <span class="op">=</span> <span class="ident">T</span>, <span class="ident">SinkError</span> <span class="op">=</span> <span class="ident">E</span><span class="op">&gt;</span> <span class="op">+</span>
                                                ::<span class="ident">core</span>::<span class="ident">marker</span>::<span class="ident">Send</span><span class="op">&gt;</span>;
 
@@ -601,6 +617,7 @@
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">send_all</span>::<span class="ident">SendAll</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">map_err</span>::<span class="ident">SinkMapErr</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">from_err</span>::<span class="ident">SinkFromErr</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">fanout</span>::<span class="ident">Fanout</span>;
 
 <span class="doccomment">/// A `Sink` is a value into which other values can be sent, asynchronously.</span>
 <span class="doccomment">///</span>
@@ -760,7 +777,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If the value returned is `NotReady` then the sink is not yet closed and</span>
     <span class="doccomment">/// work needs to be done to close it. The work has been scheduled and the</span>
-    <span class="doccomment">/// current task will recieve a notification when it&#39;s next ready to call</span>
+    <span class="doccomment">/// current task will receive a notification when it&#39;s next ready to call</span>
     <span class="doccomment">/// this method again.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Finally, this function may also return an error.</span>
@@ -852,18 +869,18 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">/// ---</span>
-    <span class="doccomment">/// Using this function with an iterator through use of the `stream::iter()`</span>
+    <span class="doccomment">/// Using this function with an iterator through use of the `stream::iter_ok()`</span>
     <span class="doccomment">/// function</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// use futures::{Sink,Future,Stream};</span>
+    <span class="doccomment">/// use futures::prelude::*;</span>
     <span class="doccomment">/// use futures::stream;</span>
     <span class="doccomment">/// use futures::sync::mpsc;</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// let (tx, rx) = mpsc::channel::&lt;i32&gt;(5);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let tx = tx.with_flat_map(|x| {</span>
-    <span class="doccomment">///     stream::iter(vec![42; x].into_iter().map(|y|Ok(y)))</span>
+    <span class="doccomment">///     stream::iter_ok(vec![42; x].into_iter().map(|y| y))</span>
     <span class="doccomment">/// });</span>
     <span class="doccomment">/// tx.send(5).wait().unwrap();</span>
     <span class="doccomment">/// assert_eq!(rx.collect().wait(), Ok(vec![42, 42, 42, 42, 42]))</span>
@@ -928,6 +945,18 @@
         <span class="ident">buffer</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">amt</span>)
     }
 
+    <span class="doccomment">/// Fanout items to multiple sinks.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This adapter clones each incoming item and forwards it to both this as well as</span>
+    <span class="doccomment">/// the other sink at the same time.</span>
+    <span class="kw">fn</span> <span class="ident">fanout</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">other</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="ident">Fanout</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">S</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="self">Self</span>: <span class="ident">Sized</span>,
+              <span class="self">Self</span>::<span class="ident">SinkItem</span>: <span class="ident">Clone</span>,
+              <span class="ident">S</span>: <span class="ident">Sink</span><span class="op">&lt;</span><span class="ident">SinkItem</span><span class="op">=</span><span class="self">Self</span>::<span class="ident">SinkItem</span>, <span class="ident">SinkError</span><span class="op">=</span><span class="self">Self</span>::<span class="ident">SinkError</span><span class="op">&gt;</span>
+    {
+        <span class="ident">fanout</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">other</span>)
+    }
+
     <span class="doccomment">/// A future that completes when the sink has finished processing all</span>
     <span class="doccomment">/// pending requests.</span>
     <span class="doccomment">///</span>
@@ -964,7 +993,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Doing `sink.send_all(stream)` is roughly equivalent to</span>
     <span class="doccomment">/// `stream.forward(sink)`. The returned future will exhaust all items from</span>
-    <span class="doccomment">/// `stream` and send them to `self`, closing `self` when all items have ben</span>
+    <span class="doccomment">/// `stream` and send them to `self`, closing `self` when all items have been</span>
     <span class="doccomment">/// received.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// On completion, the pair `(sink, source)` is returned.</span>
@@ -1012,13 +1041,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

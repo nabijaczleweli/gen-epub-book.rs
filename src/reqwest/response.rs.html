@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.7.3/src/response.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.8.5/src/response.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>response.rs.html -- source</title>
@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -356,100 +357,26 @@
 <span id="311">311</span>
 <span id="312">312</span>
 <span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
-<span id="343">343</span>
-<span id="344">344</span>
-<span id="345">345</span>
-<span id="346">346</span>
-<span id="347">347</span>
-<span id="348">348</span>
-<span id="349">349</span>
-<span id="350">350</span>
-<span id="351">351</span>
-<span id="352">352</span>
-<span id="353">353</span>
-<span id="354">354</span>
-<span id="355">355</span>
-<span id="356">356</span>
-<span id="357">357</span>
-<span id="358">358</span>
-<span id="359">359</span>
-<span id="360">360</span>
-<span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
-<span id="364">364</span>
-<span id="365">365</span>
-<span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
 </pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Read</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
-<span class="kw">use</span> <span class="ident">libflate</span>::<span class="ident">gzip</span>;
+<span class="kw">use</span> <span class="ident">encoding_rs</span>::{<span class="ident">Encoding</span>, <span class="ident">UTF_8</span>};
+<span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Poll</span>, <span class="ident">Stream</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>;
 <span class="kw">use</span> <span class="ident">serde_json</span>;
 
 <span class="kw">use</span> <span class="ident">client</span>::<span class="ident">KeepCoreThreadAlive</span>;
-<span class="kw">use</span> <span class="ident">header</span>::{<span class="ident">Headers</span>, <span class="ident">ContentEncoding</span>, <span class="ident">ContentLength</span>, <span class="ident">Encoding</span>, <span class="ident">TransferEncoding</span>};
+<span class="kw">use</span> <span class="ident">header</span>::<span class="ident">Headers</span>;
 <span class="kw">use</span> {<span class="ident">async_impl</span>, <span class="ident">StatusCode</span>, <span class="ident">Url</span>, <span class="ident">wait</span>};
-
 
 <span class="doccomment">/// A Response to a submitted `Request`.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Response</span> {
-    <span class="ident">body</span>: <span class="ident">Decoder</span>,
     <span class="ident">inner</span>: <span class="ident">async_impl</span>::<span class="ident">Response</span>,
+    <span class="ident">body</span>: <span class="ident">async_impl</span>::<span class="ident">ReadableChunks</span><span class="op">&lt;</span><span class="ident">WaitBody</span><span class="op">&gt;</span>,
     <span class="ident">_thread_handle</span>: <span class="ident">KeepCoreThreadAlive</span>,
 }
 
@@ -498,8 +425,8 @@
     <span class="doccomment">/// use reqwest::Client;</span>
     <span class="doccomment">/// use reqwest::StatusCode;</span>
     <span class="doccomment">/// # fn run() -&gt; Result&lt;(), Box&lt;::std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// let client = Client::new()?;</span>
-    <span class="doccomment">/// let resp = client.post(&quot;http://httpbin.org/post&quot;)?</span>
+    <span class="doccomment">/// let client = Client::new();</span>
+    <span class="doccomment">/// let resp = client.post(&quot;http://httpbin.org/post&quot;)</span>
     <span class="doccomment">///             .body(&quot;possibly too large&quot;)</span>
     <span class="doccomment">///             .send()?;</span>
     <span class="doccomment">/// match resp.status() {</span>
@@ -529,8 +456,8 @@
     <span class="doccomment">/// # use reqwest::header::ContentLength;</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// # fn run() -&gt; Result&lt;(), Box&lt;::std::error::Error&gt;&gt; {</span>
-    <span class="doccomment">/// let client = Client::new()?;</span>
-    <span class="doccomment">/// let mut resp = client.head(&quot;http://httpbin.org/bytes/3000&quot;)?.send()?;</span>
+    <span class="doccomment">/// let client = Client::new();</span>
+    <span class="doccomment">/// let mut resp = client.head(&quot;http://httpbin.org/bytes/3000&quot;).send()?;</span>
     <span class="doccomment">/// if resp.status().is_success() {</span>
     <span class="doccomment">///     let len = resp.headers().get::&lt;ContentLength&gt;()</span>
     <span class="doccomment">///                 .map(|ct_len| **ct_len)</span>
@@ -600,6 +527,76 @@
         <span class="ident">serde_json</span>::<span class="ident">from_reader</span>(<span class="self">self</span>).<span class="ident">map_err</span>(::<span class="ident">error</span>::<span class="ident">from</span>)
     }
 
+    <span class="doccomment">/// Get the response text.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method decodes the response body with BOM sniffing</span>
+    <span class="doccomment">/// and with malformed sequences replaced with the REPLACEMENT CHARACTER.</span>
+    <span class="doccomment">/// Encoding is determinated from the `charset` parameter of `Content-Type` header,</span>
+    <span class="doccomment">/// and defaults to `utf-8` if not presented.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # extern crate reqwest;</span>
+    <span class="doccomment">/// # fn run() -&gt; Result&lt;(), Box&lt;::std::error::Error&gt;&gt; {</span>
+    <span class="doccomment">/// let content = reqwest::get(&quot;http://httpbin.org/range/26&quot;)?.text()?;</span>
+    <span class="doccomment">/// # Ok(())</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers</span>().<span class="ident">get</span>::<span class="op">&lt;</span>::<span class="ident">header</span>::<span class="ident">ContentLength</span><span class="op">&gt;</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">ct_len</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">ct_len</span>)
+            .<span class="ident">unwrap_or</span>(<span class="number">0</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>);
+        <span class="self">self</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">content</span>).<span class="ident">map_err</span>(::<span class="ident">error</span>::<span class="ident">from</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">encoding_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers</span>().<span class="ident">get</span>::<span class="op">&lt;</span>::<span class="ident">header</span>::<span class="ident">ContentType</span><span class="op">&gt;</span>()
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">content_type</span><span class="op">|</span> {
+                <span class="ident">content_type</span>.<span class="ident">get_param</span>(<span class="string">&quot;charset&quot;</span>)
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">charset</span><span class="op">|</span> <span class="ident">charset</span>.<span class="ident">as_str</span>())
+            })
+            .<span class="ident">unwrap_or</span>(<span class="string">&quot;utf-8&quot;</span>);
+        <span class="kw">let</span> <span class="ident">encoding</span> <span class="op">=</span> <span class="ident">Encoding</span>::<span class="ident">for_label</span>(<span class="ident">encoding_name</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap_or</span>(<span class="ident">UTF_8</span>);
+        <span class="comment">// a block because of borrow checker</span>
+        {
+            <span class="kw">let</span> (<span class="ident">text</span>, _, _) <span class="op">=</span> <span class="ident">encoding</span>.<span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="ident">content</span>);
+            <span class="kw">match</span> <span class="ident">text</span> {
+                <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">s</span>),
+                _ <span class="op">=&gt;</span> (),
+            }
+        }
+        <span class="kw">unsafe</span> {
+            <span class="comment">// decoding returned Cow::Borrowed, meaning these bytes</span>
+            <span class="comment">// are already valid utf8</span>
+            <span class="prelude-val">Ok</span>(<span class="ident">String</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">content</span>))
+        }
+    }
+
+    <span class="doccomment">/// Copy the response body into a writer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function internally uses [`std::io::copy`] and hence will continuously read data from</span>
+    <span class="doccomment">/// the body and then write it into writer in a streaming fashion until EOF is met.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// On success, the total number of bytes that were copied to `writer` is returned.</span>
+    <span class="doccomment">/// [`std::io::copy`]: https://doc.rust-lang.org/std/io/fn.copy.html</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```rust</span>
+    <span class="doccomment">/// # fn run() -&gt; Result&lt;(), Box&lt;::std::error::Error&gt;&gt; {</span>
+    <span class="doccomment">/// let mut resp = reqwest::get(&quot;http://httpbin.org/range/5&quot;)?;</span>
+    <span class="doccomment">/// let mut buf: Vec&lt;u8&gt; = vec![];</span>
+    <span class="doccomment">/// resp.copy_to(&amp;mut buf)?;</span>
+    <span class="doccomment">/// assert_eq!(b&quot;abcde&quot;, buf.as_slice());</span>
+    <span class="doccomment">/// # Ok(())</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_to</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span>
+    {
+        <span class="ident">io</span>::<span class="ident">copy</span>(<span class="self">self</span>, <span class="ident">w</span>).<span class="ident">map_err</span>(::<span class="ident">error</span>::<span class="ident">from</span>)
+    }
+
     <span class="doccomment">/// Turn a response into an error if the server returned an error.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
@@ -621,8 +618,8 @@
         <span class="kw">let</span> <span class="ident">Response</span> { <span class="ident">body</span>, <span class="ident">inner</span>, <span class="ident">_thread_handle</span> } <span class="op">=</span> <span class="self">self</span>;
         <span class="ident">inner</span>.<span class="ident">error_for_status</span>().<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> {
             <span class="ident">Response</span> {
-                <span class="ident">body</span>: <span class="ident">body</span>,
                 <span class="ident">inner</span>: <span class="ident">inner</span>,
+                <span class="ident">body</span>: <span class="ident">body</span>,
                 <span class="ident">_thread_handle</span>: <span class="ident">_thread_handle</span>,
             }
         })
@@ -636,189 +633,41 @@
     }
 }
 
-<span class="kw">struct</span> <span class="ident">ReadableBody</span> {
-    <span class="ident">state</span>: <span class="ident">ReadState</span>,
-    <span class="ident">stream</span>:  <span class="ident">wait</span>::<span class="ident">WaitStream</span><span class="op">&lt;</span><span class="ident">async_impl</span>::<span class="ident">Body</span><span class="op">&gt;</span>,
+<span class="kw">struct</span> <span class="ident">WaitBody</span> {
+    <span class="ident">inner</span>: <span class="ident">wait</span>::<span class="ident">WaitStream</span><span class="op">&lt;</span><span class="ident">async_impl</span>::<span class="ident">Decoder</span><span class="op">&gt;</span>
 }
 
-<span class="kw">enum</span> <span class="ident">ReadState</span> {
-    <span class="ident">Ready</span>(<span class="ident">async_impl</span>::<span class="ident">Chunk</span>, <span class="ident">usize</span>),
-    <span class="ident">NotReady</span>,
-    <span class="ident">Eof</span>,
-}
+<span class="kw">impl</span> <span class="ident">Stream</span> <span class="kw">for</span> <span class="ident">WaitBody</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">async_impl</span>::<span class="ident">Decoder</span> <span class="kw">as</span> <span class="ident">Stream</span><span class="op">&gt;</span>::<span class="ident">Item</span>;
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">async_impl</span>::<span class="ident">Decoder</span> <span class="kw">as</span> <span class="ident">Stream</span><span class="op">&gt;</span>::<span class="ident">Error</span>;
 
+    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">next</span>() {
+            <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">chunk</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="prelude-val">Some</span>(<span class="ident">chunk</span>))),
+            <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>)) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">req_err</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span> {
+                    <span class="ident">wait</span>::<span class="ident">Waited</span>::<span class="ident">TimedOut</span> <span class="op">=&gt;</span> ::<span class="ident">error</span>::<span class="ident">timedout</span>(<span class="prelude-val">None</span>),
+                    <span class="ident">wait</span>::<span class="ident">Waited</span>::<span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>,
+                };
 
-<span class="kw">impl</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">ReadableBody</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>;
-
-        <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">ret</span>;
-            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">state</span> {
-                <span class="ident">ReadState</span>::<span class="ident">Ready</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">chunk</span>, <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">pos</span>) <span class="op">=&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">chunk_start</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">pos</span>;
-                    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">min</span>(<span class="ident">buf</span>.<span class="ident">len</span>(), <span class="ident">chunk</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">chunk_start</span>);
-                    <span class="kw">let</span> <span class="ident">chunk_end</span> <span class="op">=</span> <span class="ident">chunk_start</span> <span class="op">+</span> <span class="ident">len</span>;
-                    <span class="ident">buf</span>[..<span class="ident">len</span>].<span class="ident">copy_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">chunk</span>[<span class="ident">chunk_start</span>..<span class="ident">chunk_end</span>]);
-                    <span class="kw-2">*</span><span class="ident">pos</span> <span class="op">+=</span> <span class="ident">len</span>;
-                    <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">pos</span> <span class="op">==</span> <span class="ident">chunk</span>.<span class="ident">len</span>() {
-                        <span class="ident">ret</span> <span class="op">=</span> <span class="ident">len</span>;
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">len</span>);
-                    }
-                },
-                <span class="ident">ReadState</span>::<span class="ident">NotReady</span> <span class="op">=&gt;</span> {
-                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">stream</span>.<span class="ident">next</span>() {
-                        <span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="ident">chunk</span>)) <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">ReadState</span>::<span class="ident">Ready</span>(<span class="ident">chunk</span>, <span class="number">0</span>);
-                            <span class="kw">continue</span>;
-                        },
-                        <span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>)) <span class="op">=&gt;</span> {
-                            <span class="kw">let</span> <span class="ident">req_err</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">e</span> {
-                                <span class="ident">wait</span>::<span class="ident">Waited</span>::<span class="ident">TimedOut</span> <span class="op">=&gt;</span> ::<span class="ident">error</span>::<span class="ident">timedout</span>(<span class="prelude-val">None</span>),
-                                <span class="ident">wait</span>::<span class="ident">Waited</span>::<span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>,
-                            };
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">error</span>::<span class="ident">into_io</span>(<span class="ident">req_err</span>));
-                        },
-                        <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">ReadState</span>::<span class="ident">Eof</span>;
-                            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="number">0</span>);
-                        },
-                    }
-                },
-                <span class="ident">ReadState</span>::<span class="ident">Eof</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="number">0</span>),
-            }
-            <span class="self">self</span>.<span class="ident">state</span> <span class="op">=</span> <span class="ident">ReadState</span>::<span class="ident">NotReady</span>;
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">ret</span>);
+                <span class="prelude-val">Err</span>(<span class="ident">req_err</span>)
+            },
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="prelude-val">None</span>)),
         }
     }
 }
-
-
-<span class="kw">enum</span> <span class="ident">Decoder</span> {
-    <span class="doccomment">/// A `PlainText` decoder just returns the response content as is.</span>
-    <span class="ident">PlainText</span>(<span class="ident">ReadableBody</span>),
-    <span class="doccomment">/// A `Gzip` decoder will uncompress the gziped response content before returning it.</span>
-    <span class="ident">Gzip</span>(<span class="ident">gzip</span>::<span class="ident">Decoder</span><span class="op">&lt;</span><span class="ident">Peeked</span><span class="op">&gt;</span>),
-    <span class="doccomment">/// An error occured reading the Gzip header, so return that error</span>
-    <span class="doccomment">/// when the user tries to read on the `Response`.</span>
-    <span class="ident">Errored</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span>),
-}
-
-<span class="kw">impl</span> <span class="ident">Decoder</span> {
-    <span class="doccomment">/// Constructs a Decoder from a hyper request.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// A decoder is just a wrapper around the hyper request that knows</span>
-    <span class="doccomment">/// how to decode the content body of the request.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Uses the correct variant by inspecting the Content-Encoding header.</span>
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">res</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">async_impl</span>::<span class="ident">Response</span>, <span class="ident">check_gzip</span>: <span class="ident">bool</span>, <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">async_impl</span>::<span class="ident">body</span>::<span class="ident">take</span>(<span class="ident">res</span>.<span class="ident">body_mut</span>());
-        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">ReadableBody</span> {
-            <span class="ident">state</span>: <span class="ident">ReadState</span>::<span class="ident">NotReady</span>,
-            <span class="ident">stream</span>: <span class="ident">wait</span>::<span class="ident">stream</span>(<span class="ident">body</span>, <span class="ident">timeout</span>),
-        };
-
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">check_gzip</span> {
-            <span class="kw">return</span> <span class="ident">Decoder</span>::<span class="ident">PlainText</span>(<span class="ident">body</span>);
-        }
-        <span class="kw">let</span> <span class="ident">content_encoding_gzip</span>: <span class="ident">bool</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">is_gzip</span> <span class="op">=</span> {
-            <span class="ident">content_encoding_gzip</span> <span class="op">=</span> <span class="ident">res</span>.<span class="ident">headers</span>()
-                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentEncoding</span><span class="op">&gt;</span>()
-                .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">encs</span><span class="op">|</span> <span class="ident">encs</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">Encoding</span>::<span class="ident">Gzip</span>));
-            <span class="ident">content_encoding_gzip</span> <span class="op">||</span>
-            <span class="ident">res</span>.<span class="ident">headers</span>()
-                .<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">TransferEncoding</span><span class="op">&gt;</span>()
-                .<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="ident">encs</span><span class="op">|</span> <span class="ident">encs</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">Encoding</span>::<span class="ident">Gzip</span>))
-        };
-        <span class="kw">if</span> <span class="ident">is_gzip</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">content_length</span>) <span class="op">=</span> <span class="ident">res</span>.<span class="ident">headers</span>().<span class="ident">get</span>::<span class="op">&lt;</span><span class="ident">ContentLength</span><span class="op">&gt;</span>() {
-                <span class="kw">if</span> <span class="ident">content_length</span>.<span class="number">0</span> <span class="op">==</span> <span class="number">0</span> {
-                    <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;GZipped response with content-length of 0&quot;</span>);
-                    <span class="ident">is_gzip</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                }
-            }
-        }
-        <span class="kw">if</span> <span class="ident">content_encoding_gzip</span> {
-            <span class="ident">res</span>.<span class="ident">headers_mut</span>().<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">ContentEncoding</span><span class="op">&gt;</span>();
-            <span class="ident">res</span>.<span class="ident">headers_mut</span>().<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">ContentLength</span><span class="op">&gt;</span>();
-        }
-        <span class="kw">if</span> <span class="ident">is_gzip</span> {
-            <span class="ident">new_gzip</span>(<span class="ident">body</span>)
-        } <span class="kw">else</span> {
-            <span class="ident">Decoder</span>::<span class="ident">PlainText</span>(<span class="ident">body</span>)
-        }
-    }
-}
-
-<span class="kw">fn</span> <span class="ident">new_gzip</span>(<span class="kw-2">mut</span> <span class="ident">body</span>: <span class="ident">ReadableBody</span>) <span class="op">-&gt;</span> <span class="ident">Decoder</span> {
-    <span class="comment">// libflate does a read_exact([0; 2]), so its impossible to tell</span>
-    <span class="comment">// if the stream was empty, or truly had an UnexpectedEof.</span>
-    <span class="comment">// Therefore, we need to peek a byte to make check for EOF first.</span>
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">peek</span> <span class="op">=</span> [<span class="number">0</span>];
-    <span class="kw">match</span> <span class="ident">body</span>.<span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">peek</span>) {
-        <span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">Decoder</span>::<span class="ident">PlainText</span>(<span class="ident">body</span>),
-        <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=&gt;</span> <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="ident">n</span>, <span class="number">1</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">Decoder</span>::<span class="ident">Errored</span>(<span class="prelude-val">Some</span>(<span class="ident">e</span>)),
-    }
-
-    <span class="kw">let</span> <span class="ident">reader</span> <span class="op">=</span> <span class="ident">Peeked</span> {
-        <span class="ident">peeked</span>: <span class="prelude-val">Some</span>(<span class="ident">peek</span>[<span class="number">0</span>]),
-        <span class="ident">inner</span>: <span class="ident">body</span>,
-    };
-    <span class="kw">match</span> <span class="ident">gzip</span>::<span class="ident">Decoder</span>::<span class="ident">new</span>(<span class="ident">reader</span>) {
-        <span class="prelude-val">Ok</span>(<span class="ident">gzip</span>) <span class="op">=&gt;</span> <span class="ident">Decoder</span>::<span class="ident">Gzip</span>(<span class="ident">gzip</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">Decoder</span>::<span class="ident">Errored</span>(<span class="prelude-val">Some</span>(<span class="ident">e</span>)),
-    }
-}
-
-<span class="kw">struct</span> <span class="ident">Peeked</span> {
-    <span class="ident">peeked</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="ident">inner</span>: <span class="ident">ReadableBody</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">Peeked</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="number">0</span>);
-        }
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">byte</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">peeked</span>.<span class="ident">take</span>() {
-            <span class="ident">buf</span>[<span class="number">0</span>] <span class="op">=</span> <span class="ident">byte</span>;
-            <span class="prelude-val">Ok</span>(<span class="number">1</span>)
-        } <span class="kw">else</span> {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">read</span>(<span class="ident">buf</span>)
-        }
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">Decoder</span> {
-    <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Decoder</span>::<span class="ident">PlainText</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">body</span>) <span class="op">=&gt;</span> <span class="ident">body</span>.<span class="ident">read</span>(<span class="ident">buf</span>),
-            <span class="ident">Decoder</span>::<span class="ident">Gzip</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">decoder</span>) <span class="op">=&gt;</span> <span class="ident">decoder</span>.<span class="ident">read</span>(<span class="ident">buf</span>),
-            <span class="ident">Decoder</span>::<span class="ident">Errored</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">err</span>) <span class="op">=&gt;</span> {
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>.<span class="ident">take</span>().<span class="ident">unwrap_or_else</span>(<span class="ident">previously_errored</span>))
-            }
-        }
-    }
-}
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">fn</span> <span class="ident">previously_errored</span>() <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="ident">Error</span> {
-    <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="string">&quot;permanently errored&quot;</span>)
-}
-
 
 <span class="comment">// pub(crate)</span>
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">res</span>: <span class="ident">async_impl</span>::<span class="ident">Response</span>, <span class="ident">gzip</span>: <span class="ident">bool</span>, <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>, <span class="ident">thread</span>: <span class="ident">KeepCoreThreadAlive</span>) <span class="op">-&gt;</span> <span class="ident">Response</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">res</span>: <span class="ident">async_impl</span>::<span class="ident">Response</span>, <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>, <span class="ident">thread</span>: <span class="ident">KeepCoreThreadAlive</span>) <span class="op">-&gt;</span> <span class="ident">Response</span> {
+    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="ident">res</span>.<span class="ident">body_mut</span>(), <span class="ident">async_impl</span>::<span class="ident">Decoder</span>::<span class="ident">empty</span>());
+    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">async_impl</span>::<span class="ident">ReadableChunks</span>::<span class="ident">new</span>(<span class="ident">WaitBody</span> {
+        <span class="ident">inner</span>: <span class="ident">wait</span>::<span class="ident">stream</span>(<span class="ident">body</span>, <span class="ident">timeout</span>)
+    });
 
-    <span class="kw">let</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">Decoder</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">res</span>, <span class="ident">gzip</span>, <span class="ident">timeout</span>);
     <span class="ident">Response</span> {
-        <span class="ident">body</span>: <span class="ident">decoder</span>,
         <span class="ident">inner</span>: <span class="ident">res</span>,
+        <span class="ident">body</span>: <span class="ident">body</span>,
         <span class="ident">_thread_handle</span>: <span class="ident">thread</span>,
     }
 }
@@ -840,13 +689,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

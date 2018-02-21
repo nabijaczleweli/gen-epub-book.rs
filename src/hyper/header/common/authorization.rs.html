@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.2/src/header/common/authorization.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.18/src/header/common/authorization.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>authorization.rs.html -- source</title>
@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -337,6 +338,10 @@
 <span id="292">292</span>
 <span id="293">293</span>
 <span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">any</span>::<span class="ident">Any</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Display</span>};
@@ -354,7 +359,8 @@
 <span class="doccomment">/// agent for the realm of the resource being requested.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # ABNF</span>
-<span class="doccomment">/// ```plain</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```text</span>
 <span class="doccomment">/// Authorization = credentials</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
@@ -363,6 +369,7 @@
 <span class="doccomment">/// * `Bearer fpKL54jvWmEGVoRdCNjG`</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// use hyper::header::{Headers, Authorization};</span>
 <span class="doccomment">///</span>
@@ -382,6 +389,7 @@
 <span class="doccomment">///    )</span>
 <span class="doccomment">/// );</span>
 <span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// use hyper::header::{Headers, Authorization, Bearer};</span>
 <span class="doccomment">///</span>
@@ -480,7 +488,8 @@
     <span class="doccomment">/// The username as a possibly empty string</span>
     <span class="kw">pub</span> <span class="ident">username</span>: <span class="ident">String</span>,
     <span class="doccomment">/// The password. `None` if the `:` delimiter character was not</span>
-    <span class="doccomment">/// part of the parsed input.</span>
+    <span class="doccomment">/// part of the parsed input. Note: A compliant client MUST</span>
+    <span class="doccomment">/// always send a password (which may be the empty string).</span>
     <span class="kw">pub</span> <span class="ident">password</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>
 }
 
@@ -509,7 +518,7 @@
         <span class="kw">match</span> <span class="ident">decode</span>(<span class="ident">s</span>) {
             <span class="prelude-val">Ok</span>(<span class="ident">decoded</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">decoded</span>) {
                 <span class="prelude-val">Ok</span>(<span class="ident">text</span>) <span class="op">=&gt;</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parts</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">text</span>.<span class="ident">split</span>(<span class="string">&#39;:&#39;</span>);
+                    <span class="kw">let</span> <span class="ident">parts</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">text</span>.<span class="ident">split</span>(<span class="string">&#39;:&#39;</span>);
                     <span class="kw">let</span> <span class="ident">user</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">parts</span>.<span class="ident">next</span>() {
                         <span class="prelude-val">Some</span>(<span class="ident">part</span>) <span class="op">=&gt;</span> <span class="ident">part</span>.<span class="ident">to_owned</span>(),
                         <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Header</span>)
@@ -523,13 +532,13 @@
                         <span class="ident">password</span>: <span class="ident">password</span>
                     })
                 },
-                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
-                    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Basic::from_utf8 error={:?}&quot;</span>, <span class="ident">e</span>);
+                <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> {
+                    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Basic::from_str utf8 error&quot;</span>);
                     <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Header</span>)
                 }
             },
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Basic::from_base64 error={:?}&quot;</span>, <span class="ident">e</span>);
+            <span class="prelude-val">Err</span>(_) <span class="op">=&gt;</span> {
+                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Basic::from_str base64 error&quot;</span>);
                 <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Header</span>)
             }
         }
@@ -650,13 +659,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

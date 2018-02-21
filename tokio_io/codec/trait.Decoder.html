@@ -28,8 +28,9 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Trait Decoder</p><div class="block items"><ul><li><a href="#associated-types">Associated Types</a></li><li><a href="#required-methods">Required Methods</a></li><li><a href="#provided-methods">Provided Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='../index.html'>tokio_io</a>::<wbr><a href='index.html'>codec</a></p><script>window.sidebarCurrent = {name: 'Decoder', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait Decoder</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#associated-types">Associated Types</a><div class="sidebar-links"><a href="#associatedtype.Item">Item</a><a href="#associatedtype.Error">Error</a></div><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.decode">decode</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.decode_eof">decode_eof</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='../index.html'>tokio_io</a>::<wbr><a href='index.html'>codec</a></p><script>window.sidebarCurrent = {name: 'Decoder', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
     <nav class="sub">
@@ -66,7 +67,9 @@ already been buffered in <code>src</code> and decodes the data into a stream of
 implementing stateful streaming parsers. In many cases, though, this type
 will simply be a unit struct (e.g. <code>struct HttpDecoder</code>).</p>
 </div>
-            <h2 id='associated-types'>Associated Types</h2>
+            <h2 id='associated-types' class='small-section-header'>
+              Associated Types<a href='#associated-types' class='anchor'></a>
+            </h2>
             <div class='methods'>
         <h3 id='associatedtype.Item' class='method'><span id='Item.t' class='invisible'><code>type <a href='#associatedtype.Item' class="type">Item</a></code></span></h3><div class='docblock'><p>The type of decoded frames.</p>
 </div><h3 id='associatedtype.Error' class='method'><span id='Error.t' class='invisible'><code>type <a href='#associatedtype.Error' class="type">Error</a>: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>&gt;</code></span></h3><div class='docblock'><p>The type of unrecoverable frame decoding errors.</p>
@@ -82,7 +85,9 @@ fails to consume all available data.</p>
 
 <p>Note that implementors of this trait can simply indicate <code>type Error = io::Error</code> to use I/O errors as this type.</p>
 </div></div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
         <h3 id='tymethod.decode' class='method'><span id='decode.v' class='invisible'><code>fn <a href='#tymethod.decode' class='fnname'>decode</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;src: &amp;mut <a class="struct" href="../../bytes/bytes/struct.BytesMut.html" title="struct bytes::bytes::BytesMut">BytesMut</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Self::<a class="type" href="../../tokio_io/codec/trait.Decoder.html#associatedtype.Item" title="type tokio_io::codec::Decoder::Item">Item</a>&gt;, Self::<a class="type" href="../../tokio_io/codec/trait.Decoder.html#associatedtype.Error" title="type tokio_io::codec::Decoder::Error">Error</a>&gt;</code></span></h3><div class='docblock'><p>Attempts to decode a frame from the provided buffer of bytes.</p>
 
@@ -110,7 +115,9 @@ be read.</p>
 returned indicating why. This informs <code>Framed</code> that the stream is now
 corrupt and should be terminated.</p>
 </div></div>
-            <h2 id='provided-methods'>Provided Methods</h2>
+            <h2 id='provided-methods' class='small-section-header'>
+              Provided Methods<a href='#provided-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
         <h3 id='method.decode_eof' class='method'><span id='decode_eof.v' class='invisible'><code>fn <a href='#method.decode_eof' class='fnname'>decode_eof</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;buf: &amp;mut <a class="struct" href="../../bytes/bytes/struct.BytesMut.html" title="struct bytes::bytes::BytesMut">BytesMut</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Self::<a class="type" href="../../tokio_io/codec/trait.Decoder.html#associatedtype.Item" title="type tokio_io::codec::Decoder::Item">Item</a>&gt;, Self::<a class="type" href="../../tokio_io/codec/trait.Decoder.html#associatedtype.Error" title="type tokio_io::codec::Decoder::Error">Error</a>&gt;</code></span></h3><div class='docblock'><p>A default method available to be called when there are no more bytes
 available to be read from the underlying I/O.</p>
@@ -121,14 +128,18 @@ Typically this doesn&#39;t need to be implemented unless the framing
 protocol differs near the end of the stream.</p>
 
 <p>Note that the <code>buf</code> argument may be empty. If a previous call to
-<code>decode_eof</code> consumed all the bytes in the bufer, <code>decode_eof</code> will be
+<code>decode_eof</code> consumed all the bytes in the buffer, <code>decode_eof</code> will be
 called again until it returns <code>None</code>, indicating that there are no more
 frames to yield. This behavior enables returning finalization frames
 that may not be based on inbound data.</p>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
-    </ul><script type="text/javascript" async
+    <li><div class='out-of-band'><a class='srclink' href='../../src/tokio_io/codecs.rs.html#14-26' title='goto source code'>[src]</a></div><code>impl Decoder for <a class="struct" href="../../tokio_io/codec/struct.BytesCodec.html" title="struct tokio_io::codec::BytesCodec">BytesCodec</a><span class="where fmt-newline">  type <a href='#associatedtype.Item' class="type">Item</a> = <a class="struct" href="../../bytes/bytes/struct.BytesMut.html" title="struct bytes::bytes::BytesMut">BytesMut</a>;</span><span class="where fmt-newline">  type <a href='#associatedtype.Error' class="type">Error</a> = <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>;</span></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../src/tokio_io/codecs.rs.html#73-111' title='goto source code'>[src]</a></div><code>impl Decoder for <a class="struct" href="../../tokio_io/codec/struct.LinesCodec.html" title="struct tokio_io::codec::LinesCodec">LinesCodec</a><span class="where fmt-newline">  type <a href='#associatedtype.Item' class="type">Item</a> = <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>;</span><span class="where fmt-newline">  type <a href='#associatedtype.Error' class="type">Error</a> = <a class="struct" href="https://doc.rust-lang.org/nightly/std/io/error/struct.Error.html" title="struct std::io::error::Error">Error</a>;</span></code></li>
+</ul><script type="text/javascript" async
                          src="../../implementors/tokio_io/codec/trait.Decoder.js">
                  </script></section>
     <section id='search' class="content hidden"></section>
@@ -147,13 +158,15 @@ that may not be based on inbound data.</p>
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

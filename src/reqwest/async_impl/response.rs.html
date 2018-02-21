@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.7.3/src/async_impl/response.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.8.5/src/async_impl/response.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>response.rs.html -- source</title>
@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -189,19 +190,45 @@
 <span id="144">144</span>
 <span id="145">145</span>
 <span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Read</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
 
+<span class="kw">use</span> <span class="ident">libflate</span>::<span class="ident">non_blocking</span>::<span class="ident">gzip</span>;
+<span class="kw">use</span> <span class="ident">tokio_io</span>::<span class="ident">AsyncRead</span>;
+<span class="kw">use</span> <span class="ident">tokio_io</span>::<span class="ident">io</span> <span class="kw">as</span> <span class="ident">async_io</span>;
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Future</span>, <span class="ident">Poll</span>, <span class="ident">Stream</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">stream</span>::<span class="ident">Concat2</span>;
-<span class="kw">use</span> <span class="ident">header</span>::<span class="ident">Headers</span>;
 <span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">StatusCode</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>;
 <span class="kw">use</span> <span class="ident">serde_json</span>;
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">body</span>, <span class="ident">Body</span>};
+<span class="kw">use</span> <span class="ident">header</span>::{<span class="ident">Headers</span>, <span class="ident">ContentEncoding</span>, <span class="ident">ContentLength</span>, <span class="ident">Encoding</span>, <span class="ident">TransferEncoding</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">decoder</span>, <span class="ident">body</span>, <span class="ident">Body</span>, <span class="ident">Chunk</span>, <span class="ident">Decoder</span>};
+<span class="kw">use</span> <span class="ident">error</span>;
 
 
 <span class="doccomment">/// A Response to a submitted `Request`.</span>
@@ -209,7 +236,7 @@
     <span class="ident">status</span>: <span class="ident">StatusCode</span>,
     <span class="ident">headers</span>: <span class="ident">Headers</span>,
     <span class="ident">url</span>: <span class="ident">Url</span>,
-    <span class="ident">body</span>: <span class="ident">Body</span>,
+    <span class="ident">body</span>: <span class="ident">Decoder</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Response</span> {
@@ -237,44 +264,61 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">headers</span>
     }
 
-    <span class="doccomment">/// Get a mutable reference to the `Body` of this `Response`.</span>
+    <span class="doccomment">/// Consumes the response, returning the body</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_body</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Decoder</span> {
+        <span class="self">self</span>.<span class="ident">body</span>
+    }
+
+    <span class="doccomment">/// Get a reference to the response body.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">body_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Body</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">body</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Decoder</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">body</span>
+    }
+
+    <span class="doccomment">/// Get a mutable reference to the response body.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The chunks from the body may be decoded, depending on the `gzip`</span>
+    <span class="doccomment">/// option on the `ClientBuilder`.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">body_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Decoder</span> {
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">body</span>
     }
+
 
     <span class="doccomment">/// Try to deserialize the response body as JSON using `serde`.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">json</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">DeserializeOwned</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">body</span>, <span class="ident">Decoder</span>::<span class="ident">empty</span>());
+
         <span class="ident">Json</span> {
-            <span class="ident">concat</span>: <span class="ident">body</span>::<span class="ident">take</span>(<span class="self">self</span>.<span class="ident">body_mut</span>()).<span class="ident">concat2</span>(),
+            <span class="ident">concat</span>: <span class="ident">body</span>.<span class="ident">concat2</span>(),
             <span class="ident">_marker</span>: <span class="ident">PhantomData</span>,
         }
     }
 
     <span class="doccomment">/// Turn a response into an error if the server returned an error.</span>
-    <span class="comment">// XXX: example disabled since rustdoc still tries to run it</span>
-    <span class="comment">// when the &#39;unstable&#39; feature isn&#39;t active, making the import</span>
-    <span class="comment">// fail.</span>
-    <span class="comment">//</span>
-    <span class="comment">// # Example</span>
-    <span class="comment">//</span>
-    <span class="comment">// ```</span>
-    <span class="comment">// # use reqwest::unstable::async::Response;</span>
-    <span class="comment">// fn on_response(res: Response) {</span>
-    <span class="comment">//     match res.error_for_status() {</span>
-    <span class="comment">//         Ok(_res) =&gt; (),</span>
-    <span class="comment">//         Err(err) =&gt; {</span>
-    <span class="comment">//             // asserting a 400 as an example</span>
-    <span class="comment">//             // it could be any status between 400...599</span>
-    <span class="comment">//             assert_eq!(</span>
-    <span class="comment">//                 err.status(),</span>
-    <span class="comment">//                 Some(reqwest::StatusCode::BadRequest)</span>
-    <span class="comment">//             );</span>
-    <span class="comment">//         }</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
-    <span class="comment">// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # #[cfg(feature=&quot;unstable&quot;)]</span>
+    <span class="doccomment">/// # use reqwest::unstable::async::Response;</span>
+    <span class="doccomment">/// # #[cfg(feature=&quot;unstable&quot;)]</span>
+    <span class="doccomment">/// fn on_response(res: Response) {</span>
+    <span class="doccomment">///     match res.error_for_status() {</span>
+    <span class="doccomment">///         Ok(_res) =&gt; (),</span>
+    <span class="doccomment">///         Err(err) =&gt; {</span>
+    <span class="doccomment">///             // asserting a 400 as an example</span>
+    <span class="doccomment">///             // it could be any status between 400...599</span>
+    <span class="doccomment">///             assert_eq!(</span>
+    <span class="doccomment">///                 err.status(),</span>
+    <span class="doccomment">///                 Some(reqwest::StatusCode::BadRequest)</span>
+    <span class="doccomment">///             );</span>
+    <span class="doccomment">///         }</span>
+    <span class="doccomment">///     }</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// # fn main() {}</span>
+    <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_for_status</span>(<span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">status</span>.<span class="ident">is_client_error</span>() {
@@ -287,7 +331,6 @@
     }
 }
 
-
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Response</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Response&quot;</span>)
@@ -299,7 +342,7 @@
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Json</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">concat</span>: <span class="ident">Concat2</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>,
+    <span class="ident">concat</span>: <span class="ident">Concat2</span><span class="op">&lt;</span><span class="ident">Decoder</span><span class="op">&gt;</span>,
     <span class="ident">_marker</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 }
 
@@ -322,18 +365,16 @@
 
 <span class="comment">// pub(crate)</span>
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">res</span>: ::<span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">Response</span>, <span class="ident">url</span>: <span class="ident">Url</span>, <span class="ident">_gzip</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Response</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
-
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">res</span>: ::<span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">Response</span>, <span class="ident">url</span>: <span class="ident">Url</span>, <span class="ident">gzip</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Response</span> {
     <span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">res</span>.<span class="ident">status</span>();
-    <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="ident">res</span>.<span class="ident">headers_mut</span>(), <span class="ident">Headers</span>::<span class="ident">new</span>());
-    <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">res</span>.<span class="ident">body</span>();
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="ident">res</span>.<span class="ident">headers_mut</span>(), <span class="ident">Headers</span>::<span class="ident">new</span>());
+    <span class="kw">let</span> <span class="ident">decoder</span> <span class="op">=</span> <span class="ident">decoder</span>::<span class="ident">detect</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">headers</span>, <span class="ident">body</span>::<span class="ident">wrap</span>(<span class="ident">res</span>.<span class="ident">body</span>()), <span class="ident">gzip</span>);
     <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Response: &#39;{}&#39; for {}&quot;</span>, <span class="ident">status</span>, <span class="ident">url</span>);
     <span class="ident">Response</span> {
         <span class="ident">status</span>: <span class="ident">status</span>,
         <span class="ident">headers</span>: <span class="ident">headers</span>,
         <span class="ident">url</span>: <span class="ident">url</span>,
-        <span class="ident">body</span>: <span class="kw">super</span>::<span class="ident">body</span>::<span class="ident">wrap</span>(<span class="ident">body</span>),
+        <span class="ident">body</span>: <span class="ident">decoder</span>,
     }
 }
 </pre>
@@ -354,13 +395,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

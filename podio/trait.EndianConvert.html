@@ -28,8 +28,9 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Trait EndianConvert</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='index.html'>podio</a></p><script>window.sidebarCurrent = {name: 'EndianConvert', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait EndianConvert</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.to_be">to_be</a><a href="#tymethod.to_le">to_le</a><a href="#tymethod.from_be">from_be</a><a href="#tymethod.from_le">from_le</a></div><a class="sidebar-title" href="#foreign-impls">Implementations on Foreign Types</a><div class="sidebar-links"><a href="#impl-EndianConvert">u8</a><a href="#impl-EndianConvert">u16</a><a href="#impl-EndianConvert">u32</a><a href="#impl-EndianConvert">u64</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>podio</a></p><script>window.sidebarCurrent = {name: 'EndianConvert', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
     <nav class="sub">
@@ -56,20 +57,44 @@
 <div class='item-spacer'></div>    fn <a href='#tymethod.from_le' class='fnname'>from_le</a>(x: Self) -&gt; Self;
 }</pre><div class='docblock'><p>Generic trait for endian conversions on integers</p>
 </div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
         <h3 id='tymethod.to_be' class='method'><span id='to_be.v' class='invisible'><code>fn <a href='#tymethod.to_be' class='fnname'>to_be</a>(self) -&gt; Self</code></span></h3><div class='docblock'><p>Convert self to a big-endian value</p>
 </div><h3 id='tymethod.to_le' class='method'><span id='to_le.v' class='invisible'><code>fn <a href='#tymethod.to_le' class='fnname'>to_le</a>(self) -&gt; Self</code></span></h3><div class='docblock'><p>Convert self to a little-endian value</p>
 </div><h3 id='tymethod.from_be' class='method'><span id='from_be.v' class='invisible'><code>fn <a href='#tymethod.from_be' class='fnname'>from_be</a>(x: Self) -&gt; Self</code></span></h3><div class='docblock'><p>Convert a big-endian value to the target endianness</p>
 </div><h3 id='tymethod.from_le' class='method'><span id='from_le.v' class='invisible'><code>fn <a href='#tymethod.from_le' class='fnname'>from_le</a>(x: Self) -&gt; Self</code></span></h3><div class='docblock'><p>Convert a little-endian value to the target endiannes</p>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+                <h2 id='foreign-impls' class='small-section-header'>
+                  Implementations on Foreign Types<a href='#foreign-impls' class='anchor'></a>
+                </h2>
+            <h3 id='impl-EndianConvert' class='impl'><span class='in-band'><code>impl <a class="trait" href="../podio/trait.EndianConvert.html" title="trait podio::EndianConvert">EndianConvert</a> for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code><a href='#impl-EndianConvert' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#162-182' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.to_be' class="method"><span id='to_be.v-1' class='invisible'><code>fn <a href='#method.to_be' class='fnname'>to_be</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#164-166' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.to_le' class="method"><span id='to_le.v-1' class='invisible'><code>fn <a href='#method.to_le' class='fnname'>to_le</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#169-171' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from_be' class="method"><span id='from_be.v-1' class='invisible'><code>fn <a href='#method.from_be' class='fnname'>from_be</a>(x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#174-176' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from_le' class="method"><span id='from_le.v-1' class='invisible'><code>fn <a href='#method.from_le' class='fnname'>from_le</a>(x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#179-181' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-EndianConvert-1' class='impl'><span class='in-band'><code>impl <a class="trait" href="../podio/trait.EndianConvert.html" title="trait podio::EndianConvert">EndianConvert</a> for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code><a href='#impl-EndianConvert-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#162-182' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.to_be-1' class="method"><span id='to_be.v-2' class='invisible'><code>fn <a href='#method.to_be' class='fnname'>to_be</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#164-166' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.to_le-1' class="method"><span id='to_le.v-2' class='invisible'><code>fn <a href='#method.to_le' class='fnname'>to_le</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#169-171' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from_be-1' class="method"><span id='from_be.v-2' class='invisible'><code>fn <a href='#method.from_be' class='fnname'>from_be</a>(x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#174-176' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from_le-1' class="method"><span id='from_le.v-2' class='invisible'><code>fn <a href='#method.from_le' class='fnname'>from_le</a>(x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#179-181' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-EndianConvert-2' class='impl'><span class='in-band'><code>impl <a class="trait" href="../podio/trait.EndianConvert.html" title="trait podio::EndianConvert">EndianConvert</a> for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code><a href='#impl-EndianConvert-2' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#162-182' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.to_be-2' class="method"><span id='to_be.v-3' class='invisible'><code>fn <a href='#method.to_be' class='fnname'>to_be</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#164-166' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.to_le-2' class="method"><span id='to_le.v-3' class='invisible'><code>fn <a href='#method.to_le' class='fnname'>to_le</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#169-171' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from_be-2' class="method"><span id='from_be.v-3' class='invisible'><code>fn <a href='#method.from_be' class='fnname'>from_be</a>(x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#174-176' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from_le-2' class="method"><span id='from_le.v-3' class='invisible'><code>fn <a href='#method.from_le' class='fnname'>from_le</a>(x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#179-181' title='goto source code'>[src]</a></span></h4>
+</div></span><h3 id='impl-EndianConvert-3' class='impl'><span class='in-band'><code>impl <a class="trait" href="../podio/trait.EndianConvert.html" title="trait podio::EndianConvert">EndianConvert</a> for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code><a href='#impl-EndianConvert-3' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#162-182' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.to_be-3' class="method"><span id='to_be.v-4' class='invisible'><code>fn <a href='#method.to_be' class='fnname'>to_be</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#164-166' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.to_le-3' class="method"><span id='to_le.v-4' class='invisible'><code>fn <a href='#method.to_le' class='fnname'>to_le</a>(self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#169-171' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from_be-3' class="method"><span id='from_be.v-4' class='invisible'><code>fn <a href='#method.from_be' class='fnname'>from_be</a>(x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#174-176' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.from_le-3' class="method"><span id='from_le.v-4' class='invisible'><code>fn <a href='#method.from_le' class='fnname'>from_le</a>(x: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a>) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/podio/lib.rs.html#179-181' title='goto source code'>[src]</a></span></h4>
+</div></span>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl EndianConvert for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></li>
-<li><code>impl EndianConvert for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a></code></li>
-<li><code>impl EndianConvert for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></li>
-<li><code>impl EndianConvert for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></li>
-</ul><script type="text/javascript" async
+    </ul><script type="text/javascript" async
                          src="../implementors/podio/trait.EndianConvert.js">
                  </script></section>
     <section id='search' class="content hidden"></section>
@@ -88,13 +113,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

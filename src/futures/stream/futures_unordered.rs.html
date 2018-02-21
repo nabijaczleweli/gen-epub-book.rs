@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-0.1.15/src/stream/futures_unordered.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-0.1.18/src/stream/futures_unordered.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>futures_unordered.rs.html -- source</title>
@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -683,9 +684,44 @@
 <span id="638">638</span>
 <span id="639">639</span>
 <span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
 </pre><pre class="rust ">
+<span class="doccomment">//! An unbounded set of futures.</span>
+
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">UnsafeCell</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Debug</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">FromIterator</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
@@ -694,7 +730,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Weak</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">usize</span>;
 
-<span class="kw">use</span> {<span class="ident">task</span>, <span class="ident">Stream</span>, <span class="ident">Future</span>, <span class="ident">Poll</span>, <span class="ident">Async</span>, <span class="ident">IntoFuture</span>};
+<span class="kw">use</span> {<span class="ident">task</span>, <span class="ident">Stream</span>, <span class="ident">Future</span>, <span class="ident">Poll</span>, <span class="ident">Async</span>};
 <span class="kw">use</span> <span class="ident">executor</span>::{<span class="ident">Notify</span>, <span class="ident">UnsafeNotify</span>, <span class="ident">NotifyHandle</span>};
 <span class="kw">use</span> <span class="ident">task_impl</span>::{<span class="self">self</span>, <span class="ident">AtomicTask</span>};
 
@@ -714,7 +750,7 @@
 <span class="doccomment">/// Calling `poll` in this state will result in `Ok(Async::Ready(None))` to be</span>
 <span class="doccomment">/// returned. Futures are submitted to the set using `push`; however, the</span>
 <span class="doccomment">/// future will **not** be polled at this point. `FuturesUnordered` will only</span>
-<span class="doccomment">/// poll managged futures when `FuturesUnordered::poll` is called. As such, it</span>
+<span class="doccomment">/// poll managed futures when `FuturesUnordered::poll` is called. As such, it</span>
 <span class="doccomment">/// is important to call `poll` after pushing new futures.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// If `FuturesUnordered::poll` returns `Ok(Async::Ready(None))` this means that</span>
@@ -736,29 +772,6 @@
 <span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">FuturesUnordered</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
 <span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Sync</span><span class="op">&gt;</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">FuturesUnordered</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
 
-<span class="doccomment">/// Converts a list of futures into a `Stream` of results from the futures.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// This function will take an list of futures (e.g. a vector, an iterator,</span>
-<span class="doccomment">/// etc), and return a stream. The stream will yield items as they become</span>
-<span class="doccomment">/// available on the futures internally, in the order that they become</span>
-<span class="doccomment">/// available. This function is similar to `buffer_unordered` in that it may</span>
-<span class="doccomment">/// return items in a different order than in the list specified.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Note that the returned set can also be used to dynamically push more</span>
-<span class="doccomment">/// futures into the set as they become available.</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">futures_unordered</span><span class="op">&lt;</span><span class="ident">I</span><span class="op">&gt;</span>(<span class="ident">futures</span>: <span class="ident">I</span>) <span class="op">-&gt;</span> <span class="ident">FuturesUnordered</span><span class="op">&lt;&lt;</span><span class="ident">I</span>::<span class="ident">Item</span> <span class="kw">as</span> <span class="ident">IntoFuture</span><span class="op">&gt;</span>::<span class="ident">Future</span><span class="op">&gt;</span>
-    <span class="kw">where</span> <span class="ident">I</span>: <span class="ident">IntoIterator</span>,
-          <span class="ident">I</span>::<span class="ident">Item</span>: <span class="ident">IntoFuture</span>
-{
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">set</span> <span class="op">=</span> <span class="ident">FuturesUnordered</span>::<span class="ident">new</span>();
-
-    <span class="kw">for</span> <span class="ident">future</span> <span class="kw">in</span> <span class="ident">futures</span> {
-        <span class="ident">set</span>.<span class="ident">push</span>(<span class="ident">future</span>.<span class="ident">into_future</span>());
-    }
-
-    <span class="kw">return</span> <span class="ident">set</span>
-}
-
 <span class="comment">// FuturesUnordered is implemented using two linked lists. One which links all</span>
 <span class="comment">// futures managed by a `FuturesUnordered` and one that tracks futures that have</span>
 <span class="comment">// been scheduled for polling. The first linked list is not thread safe and is</span>
@@ -776,7 +789,7 @@
 <span class="comment">// `FuturesUnordered`. When a notification is received, the node is scheduled</span>
 <span class="comment">// for polling by being inserted into the concurrent linked list.</span>
 <span class="comment">//</span>
-<span class="comment">// Each node uses an `AtomicUisze` to track it&#39;s state. The node state is the</span>
+<span class="comment">// Each node uses an `AtomicUsize` to track it&#39;s state. The node state is the</span>
 <span class="comment">// reference count (the number of outstanding handles to the node) as well as a</span>
 <span class="comment">// flag tracking if the node is currently inserted in the atomic queue. When the</span>
 <span class="comment">// future is notified, it will only insert itself into the linked list if it</span>
@@ -890,6 +903,15 @@
         <span class="comment">// futures are ready. To do that we unconditionally enqueue it for</span>
         <span class="comment">// polling here.</span>
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">enqueue</span>(<span class="ident">ptr</span>);
+    }
+
+    <span class="doccomment">/// Returns an iterator that allows modifying each future in the set.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">iter_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IterMut</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="ident">IterMut</span> {
+            <span class="ident">node</span>: <span class="self">self</span>.<span class="ident">head_all</span>,
+            <span class="ident">len</span>: <span class="self">self</span>.<span class="ident">len</span>,
+            <span class="ident">_marker</span>: <span class="ident">PhantomData</span>
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">release_node</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Node</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>) {
@@ -1101,9 +1123,9 @@
         <span class="comment">// Note that at this point we could still have a bunch of nodes in the</span>
         <span class="comment">// mpsc queue. None of those nodes, however, have futures associated</span>
         <span class="comment">// with them so they&#39;re safe to destroy on any thread. At this point</span>
-        <span class="comment">// the `FuturesUnordered` struct, the onwer of the one strong reference</span>
+        <span class="comment">// the `FuturesUnordered` struct, the owner of the one strong reference</span>
         <span class="comment">// to `Inner&lt;T&gt;` will drop the strong reference. At that point</span>
-        <span class="comment">// whichever thread releases the strong refcuont last (be it this</span>
+        <span class="comment">// whichever thread releases the strong refcount last (be it this</span>
         <span class="comment">// thread or some other thread as part of an `upgrade`) will clear out</span>
         <span class="comment">// the mpsc queue and free all remaining nodes.</span>
         <span class="comment">//</span>
@@ -1112,6 +1134,49 @@
         <span class="comment">// happen while there&#39;s a strong refcount held.</span>
     }
 }
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">Future</span><span class="op">&gt;</span> <span class="ident">FromIterator</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">FuturesUnordered</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from_iter</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">iter</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> 
+        <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">F</span><span class="op">&gt;</span>
+    {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new</span> <span class="op">=</span> <span class="ident">FuturesUnordered</span>::<span class="ident">new</span>();
+        <span class="kw">for</span> <span class="ident">future</span> <span class="kw">in</span> <span class="ident">iter</span>.<span class="ident">into_iter</span>() {
+            <span class="ident">new</span>.<span class="ident">push</span>(<span class="ident">future</span>);
+        }
+        <span class="ident">new</span>
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="doccomment">/// Mutable iterator over all futures in the unordered set.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IterMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">F</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">node</span>: <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">Node</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>,
+    <span class="ident">len</span>: <span class="ident">usize</span>,
+    <span class="ident">_marker</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">FuturesUnordered</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span>
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">IterMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">F</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">F</span>;
+
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">F</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">node</span>.<span class="ident">is_null</span>() {
+            <span class="kw">return</span> <span class="prelude-val">None</span>;
+        }
+        <span class="kw">unsafe</span> {
+            <span class="kw">let</span> <span class="ident">future</span> <span class="op">=</span> (<span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">node</span>).<span class="ident">future</span>.<span class="ident">get</span>()).<span class="ident">as_mut</span>().<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">next</span> <span class="op">=</span> <span class="kw-2">*</span>(<span class="kw-2">*</span><span class="self">self</span>.<span class="ident">node</span>).<span class="ident">next_all</span>.<span class="ident">get</span>();
+            <span class="self">self</span>.<span class="ident">node</span> <span class="op">=</span> <span class="ident">next</span>;
+            <span class="self">self</span>.<span class="ident">len</span> <span class="op">-=</span> <span class="number">1</span>;
+            <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">future</span>);
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">size_hint</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">usize</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) {
+        (<span class="self">self</span>.<span class="ident">len</span>, <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">len</span>))
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">F</span><span class="op">&gt;</span> <span class="ident">ExactSizeIterator</span> <span class="kw">for</span> <span class="ident">IterMut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">F</span><span class="op">&gt;</span> {}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The enqueue function from the 1024cores intrusive MPSC queue algorithm.</span>
@@ -1342,13 +1407,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

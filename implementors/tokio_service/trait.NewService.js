@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["reqwest"] = [];
 implementors["tokio_service"] = [];
 
             if (window.register_implementors) {

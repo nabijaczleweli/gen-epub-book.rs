@@ -1,6 +1,4 @@
 (function() {var implementors = {};
-implementors["reqwest"] = [];
-implementors["serde_urlencoded"] = [];
 implementors["url"] = [];
 
             if (window.register_implementors) {

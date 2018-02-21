@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.2/src/header/common/origin.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.18/src/header/common/origin.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>origin.rs.html -- source</title>
@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -220,6 +221,10 @@
 <span id="175">175</span>
 <span id="176">176</span>
 <span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">header</span>::{<span class="ident">Header</span>, <span class="ident">Raw</span>, <span class="ident">Host</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
@@ -232,11 +237,13 @@
 <span class="doccomment">/// The `Origin` header is a version of the `Referer` header that is used for all HTTP fetches and `POST`s whose CORS flag is set.</span>
 <span class="doccomment">/// This header is often used to inform recipients of the security context of where the request was initiated.</span>
 <span class="doccomment">///</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// Following the spec, https://fetch.spec.whatwg.org/#origin-header, the value of this header is composed of</span>
+<span class="doccomment">/// Following the spec, [https://fetch.spec.whatwg.org/#origin-header][url], the value of this header is composed of</span>
 <span class="doccomment">/// a String (scheme), header::Host (host/port)</span>
 <span class="doccomment">///</span>
+<span class="doccomment">/// [url]: https://fetch.spec.whatwg.org/#origin-header</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// use hyper::header::{Headers, Origin};</span>
 <span class="doccomment">///</span>
@@ -245,6 +252,7 @@
 <span class="doccomment">///     Origin::new(&quot;http&quot;, &quot;hyper.rs&quot;, None)</span>
 <span class="doccomment">/// );</span>
 <span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// use hyper::header::{Headers, Origin};</span>
 <span class="doccomment">///</span>
@@ -253,7 +261,6 @@
 <span class="doccomment">///     Origin::new(&quot;https&quot;, &quot;wikipedia.org&quot;, Some(443))</span>
 <span class="doccomment">/// );</span>
 <span class="doccomment">/// ```</span>
-
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Origin</span>(<span class="ident">OriginOrNull</span>);
 
@@ -290,7 +297,8 @@
         }
     }
 
-    <span class="doccomment">/// The scheme, such as http or https</span>
+    <span class="doccomment">/// The scheme, such as http or https.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// use hyper::header::Origin;</span>
     <span class="doccomment">/// let origin = Origin::new(&quot;https&quot;, &quot;foo.com&quot;, Some(443));</span>
@@ -303,7 +311,8 @@
         }
     }
 
-    <span class="doccomment">/// The host, such as Host{hostname: &quot;hyper.rs&quot;.to_owned(), port: None}</span>
+    <span class="doccomment">/// The host, such as `Host { hostname: &quot;hyper.rs&quot;.to_owned(), port: None}`.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">/// use hyper::header::{Origin,Host};</span>
     <span class="doccomment">/// let origin = Origin::new(&quot;https&quot;, &quot;foo.com&quot;, Some(443));</span>
@@ -361,11 +370,11 @@
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Origin</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="kw-2">&amp;</span><span class="ident">Origin</span>(<span class="ident">OriginOrNull</span>::<span class="ident">Origin</span> { <span class="kw-2">ref</span> <span class="ident">scheme</span>, <span class="kw-2">ref</span> <span class="ident">host</span> }) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}://{}&quot;</span>, <span class="ident">scheme</span>, <span class="ident">host</span>),
-            <span class="doccomment">/// Serialized as &quot;null&quot; per ASCII serialization of an origin</span>
-            <span class="doccomment">/// https://html.spec.whatwg.org/multipage/browsers.html#ascii-serialisation-of-an-origin</span>
-            _ <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;null&quot;</span>)
+        <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
+            <span class="ident">OriginOrNull</span>::<span class="ident">Origin</span> { <span class="kw-2">ref</span> <span class="ident">scheme</span>, <span class="kw-2">ref</span> <span class="ident">host</span> } <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}://{}&quot;</span>, <span class="ident">scheme</span>, <span class="ident">host</span>),
+            <span class="comment">// Serialized as &quot;null&quot; per ASCII serialization of an origin</span>
+            <span class="comment">// https://html.spec.whatwg.org/multipage/browsers.html#ascii-serialisation-of-an-origin</span>
+            <span class="ident">OriginOrNull</span>::<span class="ident">Null</span> <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;null&quot;</span>)
         }
     }
 }
@@ -416,13 +425,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

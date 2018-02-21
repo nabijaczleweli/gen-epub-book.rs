@@ -28,8 +28,9 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Trait Timelike</p><div class="block items"><ul><li><a href="#required-methods">Required Methods</a></li><li><a href="#provided-methods">Provided Methods</a></li><li><a href="#implementors">Implementors</a></li></ul></div><p class='location'><a href='index.html'>chrono</a></p><script>window.sidebarCurrent = {name: 'Timelike', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait Timelike</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.hour">hour</a><a href="#tymethod.minute">minute</a><a href="#tymethod.second">second</a><a href="#tymethod.nanosecond">nanosecond</a><a href="#tymethod.with_hour">with_hour</a><a href="#tymethod.with_minute">with_minute</a><a href="#tymethod.with_second">with_second</a><a href="#tymethod.with_nanosecond">with_nanosecond</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.hour12">hour12</a><a href="#method.num_seconds_from_midnight">num_seconds_from_midnight</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='index.html'>chrono</a></p><script>window.sidebarCurrent = {name: 'Timelike', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
     <nav class="sub">
@@ -63,7 +64,9 @@
 <div class='item-spacer'></div>    fn <a href='#method.num_seconds_from_midnight' class='fnname'>num_seconds_from_midnight</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a> { ... }
 }</pre><div class='docblock'><p>The common set of methods for time component.</p>
 </div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
         <h3 id='tymethod.hour' class='method'><span id='hour.v' class='invisible'><code>fn <a href='#tymethod.hour' class='fnname'>hour</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></h3><div class='docblock'><p>Returns the hour number from 0 to 23.</p>
 </div><h3 id='tymethod.minute' class='method'><span id='minute.v' class='invisible'><code>fn <a href='#tymethod.minute' class='fnname'>minute</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></h3><div class='docblock'><p>Returns the minute number from 0 to 59.</p>
@@ -88,17 +91,21 @@ the input range is restricted to 0 through 59.</p>
 As with the <a href="#tymethod.nanosecond"><code>nanosecond</code></a> method,
 the input range can exceed 1,000,000,000 for leap seconds.</p>
 </div></div>
-            <h2 id='provided-methods'>Provided Methods</h2>
+            <h2 id='provided-methods' class='small-section-header'>
+              Provided Methods<a href='#provided-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
         <h3 id='method.hour12' class='method'><span id='hour12.v' class='invisible'><code>fn <a href='#method.hour12' class='fnname'>hour12</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code></span></h3><div class='docblock'><p>Returns the hour number from 1 to 12 with a boolean flag,
 which is false for AM and true for PM.</p>
 </div><h3 id='method.num_seconds_from_midnight' class='method'><span id='num_seconds_from_midnight.v' class='invisible'><code>fn <a href='#method.num_seconds_from_midnight' class='fnname'>num_seconds_from_midnight</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a></code></span></h3><div class='docblock'><p>Returns the number of non-leap seconds past the last midnight.</p>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl Timelike for <a class="struct" href="../chrono/naive/struct.NaiveTime.html" title="struct chrono::naive::NaiveTime">NaiveTime</a></code></li>
-<li><code>impl Timelike for <a class="struct" href="../chrono/naive/struct.NaiveDateTime.html" title="struct chrono::naive::NaiveDateTime">NaiveDateTime</a></code></li>
-<li><code>impl&lt;Tz:&nbsp;<a class="trait" href="../chrono/offset/trait.TimeZone.html" title="trait chrono::offset::TimeZone">TimeZone</a>&gt; Timelike for <a class="struct" href="../chrono/struct.DateTime.html" title="struct chrono::DateTime">DateTime</a>&lt;Tz&gt;</code></li>
+    <li><div class='out-of-band'><a class='srclink' href='../src/chrono/naive/time.rs.html#778-977' title='goto source code'>[src]</a></div><code>impl Timelike for <a class="struct" href="../chrono/naive/struct.NaiveTime.html" title="struct chrono::naive::NaiveTime">NaiveTime</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../src/chrono/naive/datetime.rs.html#952-1118' title='goto source code'>[src]</a></div><code>impl Timelike for <a class="struct" href="../chrono/naive/struct.NaiveDateTime.html" title="struct chrono::naive::NaiveDateTime">NaiveDateTime</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../src/chrono/datetime.rs.html#300-325' title='goto source code'>[src]</a></div><code>impl&lt;Tz:&nbsp;<a class="trait" href="../chrono/offset/trait.TimeZone.html" title="trait chrono::offset::TimeZone">TimeZone</a>&gt; Timelike for <a class="struct" href="../chrono/struct.DateTime.html" title="struct chrono::DateTime">DateTime</a>&lt;Tz&gt;</code></li>
 </ul><script type="text/javascript" async
                          src="../implementors/chrono/trait.Timelike.js">
                  </script></section>
@@ -118,13 +125,15 @@ which is false for AM and true for PM.</p>
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

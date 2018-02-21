@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.7.3/src/async_impl/client.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.8.5/src/async_impl/client.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>client.rs.html -- source</title>
@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -553,6 +554,124 @@
 <span id="508">508</span>
 <span id="509">509</span>
 <span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
@@ -573,12 +692,39 @@
 <span class="kw">use</span> <span class="ident">connect</span>::<span class="ident">Connector</span>;
 <span class="kw">use</span> <span class="ident">into_url</span>::<span class="ident">to_uri</span>;
 <span class="kw">use</span> <span class="ident">redirect</span>::{<span class="self">self</span>, <span class="ident">RedirectPolicy</span>, <span class="ident">check_redirect</span>, <span class="ident">remove_sensitive_headers</span>};
-<span class="kw">use</span> {<span class="ident">Certificate</span>, <span class="ident">IntoUrl</span>, <span class="ident">Method</span>, <span class="ident">proxy</span>, <span class="ident">Proxy</span>, <span class="ident">StatusCode</span>, <span class="ident">Url</span>};
+<span class="kw">use</span> {<span class="ident">Certificate</span>, <span class="ident">Identity</span>, <span class="ident">IntoUrl</span>, <span class="ident">Method</span>, <span class="ident">proxy</span>, <span class="ident">Proxy</span>, <span class="ident">StatusCode</span>, <span class="ident">Url</span>};
 
 <span class="kw">static</span> <span class="ident">DEFAULT_USER_AGENT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span>
     <span class="macro">concat</span><span class="macro">!</span>(<span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;CARGO_PKG_NAME&quot;</span>), <span class="string">&quot;/&quot;</span>, <span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;CARGO_PKG_VERSION&quot;</span>));
 
-<span class="doccomment">/// An asynchornous `Client` to make Requests with.</span>
+<span class="doccomment">/// An asynchronous `Client` to make Requests with.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The Client has various configuration values to tweak, but the defaults</span>
+<span class="doccomment">/// are set to what is usually the most commonly desired value.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `Client` holds a connection pool internally, so it is advised that</span>
+<span class="doccomment">/// you create one and **reuse** it.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```rust</span>
+<span class="doccomment">/// # #[cfg(features = &quot;unstable&quot;)]</span>
+<span class="doccomment">/// # fn run() -&gt; Result&lt;(), Box&lt;::std::error::Error&gt;&gt; {</span>
+<span class="doccomment">/// # extern crate tokio_core;</span>
+<span class="doccomment">/// # extern crate futures;</span>
+<span class="doccomment">/// use futures::Future;</span>
+<span class="doccomment">/// use tokio_core::reactor::Core;</span>
+<span class="doccomment">/// use reqwest::unstable::async::Client;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let mut core = Core::new()?;</span>
+<span class="doccomment">/// let client = Client::new(&amp;core.handle());</span>
+<span class="doccomment">/// let fut = client.get(&quot;http://httpbin.org/&quot;).send();</span>
+<span class="doccomment">/// core.run(fut)?;</span>
+<span class="doccomment">/// #   Ok(())</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// # fn main() {}</span>
+<span class="doccomment">/// ```</span>
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span> {
     <span class="ident">inner</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">ClientRef</span><span class="op">&gt;</span>,
@@ -587,37 +733,50 @@
 <span class="doccomment">/// A `ClientBuilder` can be used to create a `Client` with  custom configuration:</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ClientBuilder</span> {
     <span class="ident">config</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Config</span><span class="op">&gt;</span>,
+    <span class="ident">err</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">Error</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">struct</span> <span class="ident">Config</span> {
     <span class="ident">gzip</span>: <span class="ident">bool</span>,
+    <span class="ident">headers</span>: <span class="ident">Headers</span>,
     <span class="ident">hostname_verification</span>: <span class="ident">bool</span>,
     <span class="ident">proxies</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Proxy</span><span class="op">&gt;</span>,
     <span class="ident">redirect_policy</span>: <span class="ident">RedirectPolicy</span>,
     <span class="ident">referer</span>: <span class="ident">bool</span>,
     <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>,
     <span class="ident">tls</span>: <span class="ident">TlsConnectorBuilder</span>,
+    <span class="ident">dns_threads</span>: <span class="ident">usize</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">ClientBuilder</span> {
     <span class="doccomment">/// Constructs a new `ClientBuilder`</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This method fails if native TLS backend cannot be created.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ClientBuilder</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">tls_connector_builder</span> <span class="op">=</span> <span class="macro">try_</span><span class="macro">!</span>(<span class="ident">TlsConnector</span>::<span class="ident">builder</span>());
-        <span class="prelude-val">Ok</span>(<span class="ident">ClientBuilder</span> {
-            <span class="ident">config</span>: <span class="prelude-val">Some</span>(<span class="ident">Config</span> {
-                <span class="ident">gzip</span>: <span class="bool-val">true</span>,
-                <span class="ident">hostname_verification</span>: <span class="bool-val">true</span>,
-                <span class="ident">proxies</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-                <span class="ident">redirect_policy</span>: <span class="ident">RedirectPolicy</span>::<span class="ident">default</span>(),
-                <span class="ident">referer</span>: <span class="bool-val">true</span>,
-                <span class="ident">timeout</span>: <span class="prelude-val">None</span>,
-                <span class="ident">tls</span>: <span class="ident">tls_connector_builder</span>,
-            })
-        })
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
+        <span class="kw">match</span> <span class="ident">TlsConnector</span>::<span class="ident">builder</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">tls_connector_builder</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">with_capacity</span>(<span class="number">2</span>);
+                <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">UserAgent</span>::<span class="ident">new</span>(<span class="ident">DEFAULT_USER_AGENT</span>));
+                <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">Accept</span>::<span class="ident">star</span>());
+
+                <span class="ident">ClientBuilder</span> {
+                    <span class="ident">config</span>: <span class="prelude-val">Some</span>(<span class="ident">Config</span> {
+                        <span class="ident">gzip</span>: <span class="bool-val">true</span>,
+                        <span class="ident">headers</span>: <span class="ident">headers</span>,
+                        <span class="ident">hostname_verification</span>: <span class="bool-val">true</span>,
+                        <span class="ident">proxies</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+                        <span class="ident">redirect_policy</span>: <span class="ident">RedirectPolicy</span>::<span class="ident">default</span>(),
+                        <span class="ident">referer</span>: <span class="bool-val">true</span>,
+                        <span class="ident">timeout</span>: <span class="prelude-val">None</span>,
+                        <span class="ident">tls</span>: <span class="ident">tls_connector_builder</span>,
+                        <span class="ident">dns_threads</span>: <span class="number">4</span>,
+                    }),
+                    <span class="ident">err</span>: <span class="prelude-val">None</span>,
+                }
+            },
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">ClientBuilder</span> {
+                <span class="ident">config</span>: <span class="prelude-val">None</span>,
+                <span class="ident">err</span>: <span class="prelude-val">Some</span>(::<span class="ident">error</span>::<span class="ident">from</span>(<span class="ident">e</span>)),
+            }
+        }
     }
 
     <span class="doccomment">/// Returns a `Client` that uses this `ClientBuilder` configuration.</span>
@@ -631,13 +790,18 @@
     <span class="doccomment">/// This method consumes the internal state of the builder.</span>
     <span class="doccomment">/// Trying to use this builder again after calling `build` will panic.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">take_config</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">err</span>.<span class="ident">take</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>);
+        }
+        <span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">config</span>
+            .<span class="ident">take</span>()
+            .<span class="ident">expect</span>(<span class="string">&quot;ClientBuilder cannot be reused after building a Client&quot;</span>);
 
         <span class="kw">let</span> <span class="ident">tls</span> <span class="op">=</span> <span class="macro">try_</span><span class="macro">!</span>(<span class="ident">config</span>.<span class="ident">tls</span>.<span class="ident">build</span>());
 
         <span class="kw">let</span> <span class="ident">proxies</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">config</span>.<span class="ident">proxies</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">Connector</span>::<span class="ident">new</span>(<span class="ident">tls</span>, <span class="ident">proxies</span>.<span class="ident">clone</span>(), <span class="ident">handle</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">Connector</span>::<span class="ident">new</span>(<span class="ident">config</span>.<span class="ident">dns_threads</span>, <span class="ident">tls</span>, <span class="ident">proxies</span>.<span class="ident">clone</span>(), <span class="ident">handle</span>);
         <span class="kw">if</span> <span class="op">!</span><span class="ident">config</span>.<span class="ident">hostname_verification</span> {
             <span class="ident">connector</span>.<span class="ident">danger_disable_hostname_verification</span>();
         }
@@ -650,6 +814,7 @@
             <span class="ident">inner</span>: <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">ClientRef</span> {
                 <span class="ident">gzip</span>: <span class="ident">config</span>.<span class="ident">gzip</span>,
                 <span class="ident">hyper</span>: <span class="ident">hyper_client</span>,
+                <span class="ident">headers</span>: <span class="ident">config</span>.<span class="ident">headers</span>,
                 <span class="ident">proxies</span>: <span class="ident">proxies</span>,
                 <span class="ident">redirect_policy</span>: <span class="ident">config</span>.<span class="ident">redirect_policy</span>,
                 <span class="ident">referer</span>: <span class="ident">config</span>.<span class="ident">referer</span>,
@@ -661,14 +826,25 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This can be used to connect to a server that has a self-signed</span>
     <span class="doccomment">/// certificate for example.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This method fails if adding root certificate was unsuccessful.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_root_certificate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cert</span>: <span class="ident">Certificate</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">cert</span> <span class="op">=</span> ::<span class="ident">tls</span>::<span class="ident">cert</span>(<span class="ident">cert</span>);
-        <span class="macro">try_</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">config_mut</span>().<span class="ident">tls</span>.<span class="ident">add_root_certificate</span>(<span class="ident">cert</span>));
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_root_certificate</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cert</span>: <span class="ident">Certificate</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="kw">let</span> <span class="ident">cert</span> <span class="op">=</span> ::<span class="ident">tls</span>::<span class="ident">cert</span>(<span class="ident">cert</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">config</span>.<span class="ident">tls</span>.<span class="ident">add_root_certificate</span>(<span class="ident">cert</span>) {
+                <span class="self">self</span>.<span class="ident">err</span> <span class="op">=</span> <span class="prelude-val">Some</span>(::<span class="ident">error</span>::<span class="ident">from</span>(<span class="ident">e</span>));
+            }
+        }
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the identity to be used for client certificate authentication.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">identity</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">identity</span>: <span class="ident">Identity</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="kw">let</span> <span class="ident">pkcs12</span> <span class="op">=</span> ::<span class="ident">tls</span>::<span class="ident">pkcs12</span>(<span class="ident">identity</span>);
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">config</span>.<span class="ident">tls</span>.<span class="ident">identity</span>(<span class="ident">pkcs12</span>) {
+                <span class="self">self</span>.<span class="ident">err</span> <span class="op">=</span> <span class="prelude-val">Some</span>(::<span class="ident">error</span>::<span class="ident">from</span>(<span class="ident">e</span>));
+            }
+        }
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Disable hostname verification.</span>
@@ -681,14 +857,28 @@
     <span class="doccomment">/// significant vulnerability to man-in-the-middle attacks.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">danger_disable_hostname_verification</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
-        <span class="self">self</span>.<span class="ident">config_mut</span>().<span class="ident">hostname_verification</span> <span class="op">=</span> <span class="bool-val">false</span>;
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">hostname_verification</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        }
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Enable hostname verification.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">enable_hostname_verification</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
-        <span class="self">self</span>.<span class="ident">config_mut</span>().<span class="ident">hostname_verification</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">hostname_verification</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        }
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the default headers for every request.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default_headers</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">headers</span>: <span class="ident">Headers</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">headers</span>.<span class="ident">extend</span>(<span class="ident">headers</span>.<span class="ident">iter</span>());
+        }
         <span class="self">self</span>
     }
 
@@ -697,14 +887,18 @@
     <span class="doccomment">/// Default is enabled.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gzip</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">enable</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
-        <span class="self">self</span>.<span class="ident">config_mut</span>().<span class="ident">gzip</span> <span class="op">=</span> <span class="ident">enable</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">gzip</span> <span class="op">=</span> <span class="ident">enable</span>;
+        }
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Add a `Proxy` to the list of proxies the `Client` will use.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">proxy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">proxy</span>: <span class="ident">Proxy</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
-        <span class="self">self</span>.<span class="ident">config_mut</span>().<span class="ident">proxies</span>.<span class="ident">push</span>(<span class="ident">proxy</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">proxies</span>.<span class="ident">push</span>(<span class="ident">proxy</span>);
+        }
         <span class="self">self</span>
     }
 
@@ -713,7 +907,9 @@
     <span class="doccomment">/// Default will follow redirects up to a maximum of 10.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">redirect</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">policy</span>: <span class="ident">RedirectPolicy</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
-        <span class="self">self</span>.<span class="ident">config_mut</span>().<span class="ident">redirect_policy</span> <span class="op">=</span> <span class="ident">policy</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">redirect_policy</span> <span class="op">=</span> <span class="ident">policy</span>;
+        }
         <span class="self">self</span>
     }
 
@@ -722,57 +918,59 @@
     <span class="doccomment">/// Default is `true`.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">referer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">enable</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
-        <span class="self">self</span>.<span class="ident">config_mut</span>().<span class="ident">referer</span> <span class="op">=</span> <span class="ident">enable</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">referer</span> <span class="op">=</span> <span class="ident">enable</span>;
+        }
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set a timeout for both the read and write operations of a client.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timeout</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">Duration</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
-        <span class="self">self</span>.<span class="ident">config_mut</span>().<span class="ident">timeout</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">timeout</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">timeout</span>);
+        }
         <span class="self">self</span>
     }
 
-    <span class="comment">// private</span>
-    <span class="kw">fn</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Config</span> {
-        <span class="self">self</span>.<span class="ident">config</span>
-            .<span class="ident">as_mut</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;ClientBuilder cannot be reused after building a Client&quot;</span>)
+    <span class="doccomment">/// Set number of DNS threads.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dns_threads</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">threads</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">config</span>) <span class="op">=</span> <span class="ident">config_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">config</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">err</span>) {
+            <span class="ident">config</span>.<span class="ident">dns_threads</span> <span class="op">=</span> <span class="ident">threads</span>;
+        }
+        <span class="self">self</span>
     }
+}
 
-    <span class="kw">fn</span> <span class="ident">take_config</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Config</span> {
-        <span class="self">self</span>.<span class="ident">config</span>
-            .<span class="ident">take</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;ClientBuilder cannot be reused after building a Client&quot;</span>)
+<span class="kw">fn</span> <span class="ident">config_mut</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">config</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Config</span><span class="op">&gt;</span>, <span class="ident">err</span>: <span class="kw-2">&amp;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Config</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_some</span>() {
+        <span class="prelude-val">None</span>
+    } <span class="kw">else</span> {
+        <span class="ident">config</span>.<span class="ident">as_mut</span>()
     }
 }
 
 <span class="kw">type</span> <span class="ident">HyperClient</span> <span class="op">=</span> ::<span class="ident">hyper</span>::<span class="ident">Client</span><span class="op">&lt;</span><span class="ident">Connector</span><span class="op">&gt;</span>;
 
-<span class="kw">fn</span> <span class="ident">create_hyper_client</span>(<span class="ident">tls</span>: <span class="ident">TlsConnector</span>, <span class="ident">proxies</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Proxy</span><span class="op">&gt;&gt;</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>) <span class="op">-&gt;</span> <span class="ident">HyperClient</span> {
-    ::<span class="ident">hyper</span>::<span class="ident">Client</span>::<span class="ident">configure</span>()
-        .<span class="ident">connector</span>(<span class="ident">Connector</span>::<span class="ident">new</span>(<span class="ident">tls</span>, <span class="ident">proxies</span>, <span class="ident">handle</span>))
-        .<span class="ident">build</span>(<span class="ident">handle</span>)
-}
-
 <span class="kw">impl</span> <span class="ident">Client</span> {
     <span class="doccomment">/// Constructs a new `Client`.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
+    <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method fails if native TLS backend cannot be created or initialized.</span>
+    <span class="doccomment">/// This method panics if native TLS backend cannot be created or</span>
+    <span class="doccomment">/// initialized. Use `Client::builder()` if you wish to handle the failure</span>
+    <span class="doccomment">/// as an `Error` instead of panicking.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span> {
-        <span class="ident">ClientBuilder</span>::<span class="ident">new</span>()<span class="question-mark">?</span>.<span class="ident">build</span>(<span class="ident">handle</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>) <span class="op">-&gt;</span> <span class="ident">Client</span> {
+        <span class="ident">ClientBuilder</span>::<span class="ident">new</span>()
+            .<span class="ident">build</span>(<span class="ident">handle</span>)
+            .<span class="ident">expect</span>(<span class="string">&quot;TLS failed to initialize&quot;</span>)
     }
 
     <span class="doccomment">/// Creates a `ClientBuilder` to configure a `Client`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// This method fails if native TLS backend cannot be created.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>() <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ClientBuilder</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>() <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
         <span class="ident">ClientBuilder</span>::<span class="ident">new</span>()
     }
 
@@ -781,7 +979,7 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method fails whenever supplied `Url` cannot be parsed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RequestBuilder</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> <span class="ident">RequestBuilder</span> {
         <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">Method</span>::<span class="ident">Get</span>, <span class="ident">url</span>)
     }
 
@@ -790,7 +988,7 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method fails whenever supplied `Url` cannot be parsed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">post</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RequestBuilder</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">post</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> <span class="ident">RequestBuilder</span> {
         <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">Method</span>::<span class="ident">Post</span>, <span class="ident">url</span>)
     }
 
@@ -799,7 +997,7 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method fails whenever supplied `Url` cannot be parsed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">put</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RequestBuilder</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">put</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> <span class="ident">RequestBuilder</span> {
         <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">Method</span>::<span class="ident">Put</span>, <span class="ident">url</span>)
     }
 
@@ -808,7 +1006,7 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method fails whenever supplied `Url` cannot be parsed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">patch</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RequestBuilder</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">patch</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> <span class="ident">RequestBuilder</span> {
         <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">Method</span>::<span class="ident">Patch</span>, <span class="ident">url</span>)
     }
 
@@ -817,7 +1015,7 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method fails whenever supplied `Url` cannot be parsed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RequestBuilder</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">delete</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> <span class="ident">RequestBuilder</span> {
         <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">Method</span>::<span class="ident">Delete</span>, <span class="ident">url</span>)
     }
 
@@ -826,7 +1024,7 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method fails whenever supplied `Url` cannot be parsed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">head</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RequestBuilder</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">head</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> <span class="ident">RequestBuilder</span> {
         <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">Method</span>::<span class="ident">Head</span>, <span class="ident">url</span>)
     }
 
@@ -838,9 +1036,12 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method fails whenever supplied `Url` cannot be parsed.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">method</span>: <span class="ident">Method</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RequestBuilder</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">try_</span><span class="macro">!</span>(<span class="ident">url</span>.<span class="ident">into_url</span>());
-        <span class="prelude-val">Ok</span>(<span class="ident">request</span>::<span class="ident">builder</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">Request</span>::<span class="ident">new</span>(<span class="ident">method</span>, <span class="ident">url</span>)))
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request</span><span class="op">&lt;</span><span class="ident">U</span>: <span class="ident">IntoUrl</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">method</span>: <span class="ident">Method</span>, <span class="ident">url</span>: <span class="ident">U</span>) <span class="op">-&gt;</span> <span class="ident">RequestBuilder</span> {
+        <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">url</span>.<span class="ident">into_url</span>() {
+            <span class="prelude-val">Ok</span>(<span class="ident">url</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Request</span>::<span class="ident">new</span>(<span class="ident">method</span>, <span class="ident">url</span>)),
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(::<span class="ident">error</span>::<span class="ident">from</span>(<span class="ident">err</span>)),
+        };
+        <span class="ident">request</span>::<span class="ident">builder</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">req</span>)
     }
 
     <span class="doccomment">/// Executes a `Request`.</span>
@@ -864,17 +1065,13 @@
         <span class="kw">let</span> (
             <span class="ident">method</span>,
             <span class="ident">url</span>,
-            <span class="kw-2">mut</span> <span class="ident">headers</span>,
+            <span class="ident">user_headers</span>,
             <span class="ident">body</span>
         ) <span class="op">=</span> <span class="ident">request</span>::<span class="ident">pieces</span>(<span class="ident">req</span>);
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">headers</span>.<span class="ident">has</span>::<span class="op">&lt;</span><span class="ident">UserAgent</span><span class="op">&gt;</span>() {
-            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">UserAgent</span>::<span class="ident">new</span>(<span class="ident">DEFAULT_USER_AGENT</span>));
-        }
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">headers</span>.<span class="ident">clone</span>(); <span class="comment">// default headers</span>
+        <span class="ident">headers</span>.<span class="ident">extend</span>(<span class="ident">user_headers</span>.<span class="ident">iter</span>());
 
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">headers</span>.<span class="ident">has</span>::<span class="op">&lt;</span><span class="ident">Accept</span><span class="op">&gt;</span>() {
-            <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">Accept</span>::<span class="ident">star</span>());
-        }
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">gzip</span> <span class="op">&amp;&amp;</span>
             <span class="op">!</span><span class="ident">headers</span>.<span class="ident">has</span>::<span class="op">&lt;</span><span class="ident">AcceptEncoding</span><span class="op">&gt;</span>() <span class="op">&amp;&amp;</span>
             <span class="op">!</span><span class="ident">headers</span>.<span class="ident">has</span>::<span class="op">&lt;</span><span class="ident">Range</span><span class="op">&gt;</span>() {
@@ -899,16 +1096,18 @@
         <span class="kw">let</span> <span class="ident">in_flight</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">hyper</span>.<span class="ident">request</span>(<span class="ident">req</span>);
 
         <span class="ident">Pending</span> {
-            <span class="ident">method</span>: <span class="ident">method</span>,
-            <span class="ident">url</span>: <span class="ident">url</span>,
-            <span class="ident">headers</span>: <span class="ident">headers</span>,
-            <span class="ident">body</span>: <span class="ident">body</span>,
+            <span class="ident">inner</span>: <span class="ident">PendingInner</span>::<span class="ident">Request</span>(<span class="ident">PendingRequest</span> {
+                <span class="ident">method</span>: <span class="ident">method</span>,
+                <span class="ident">url</span>: <span class="ident">url</span>,
+                <span class="ident">headers</span>: <span class="ident">headers</span>,
+                <span class="ident">body</span>: <span class="ident">body</span>,
 
-            <span class="ident">urls</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
+                <span class="ident">urls</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
 
-            <span class="ident">client</span>: <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>(),
+                <span class="ident">client</span>: <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>(),
 
-            <span class="ident">in_flight</span>: <span class="ident">in_flight</span>,
+                <span class="ident">in_flight</span>: <span class="ident">in_flight</span>,
+            }),
         }
     }
 }
@@ -932,6 +1131,7 @@
 
 <span class="kw">struct</span> <span class="ident">ClientRef</span> {
     <span class="ident">gzip</span>: <span class="ident">bool</span>,
+    <span class="ident">headers</span>: <span class="ident">Headers</span>,
     <span class="ident">hyper</span>: <span class="ident">HyperClient</span>,
     <span class="ident">proxies</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Proxy</span><span class="op">&gt;&gt;</span>,
     <span class="ident">redirect_policy</span>: <span class="ident">RedirectPolicy</span>,
@@ -939,6 +1139,15 @@
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Pending</span> {
+    <span class="ident">inner</span>: <span class="ident">PendingInner</span>,
+}
+
+<span class="kw">enum</span> <span class="ident">PendingInner</span> {
+    <span class="ident">Request</span>(<span class="ident">PendingRequest</span>),
+    <span class="ident">Error</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">Error</span><span class="op">&gt;</span>),
+}
+
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PendingRequest</span> {
     <span class="ident">method</span>: <span class="ident">Method</span>,
     <span class="ident">url</span>: <span class="ident">Url</span>,
     <span class="ident">headers</span>: <span class="ident">Headers</span>,
@@ -951,7 +1160,20 @@
     <span class="ident">in_flight</span>: <span class="ident">FutureResponse</span>,
 }
 
+
 <span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">Pending</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Response</span>;
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> ::<span class="ident">Error</span>;
+
+    <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">PendingInner</span>::<span class="ident">Request</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">req</span>) <span class="op">=&gt;</span> <span class="ident">req</span>.<span class="ident">poll</span>(),
+            <span class="ident">PendingInner</span>::<span class="ident">Error</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">err</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;Pending error polled more than once&quot;</span>)),
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">PendingRequest</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Response</span>;
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> ::<span class="ident">Error</span>;
 
@@ -1039,10 +1261,19 @@
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Pending</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Pending&quot;</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;method&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">method</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;url&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">url</span>)
-            .<span class="ident">finish</span>()
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">PendingInner</span>::<span class="ident">Request</span>(<span class="kw-2">ref</span> <span class="ident">req</span>) <span class="op">=&gt;</span> {
+                <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Pending&quot;</span>)
+                    .<span class="ident">field</span>(<span class="string">&quot;method&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">req</span>.<span class="ident">method</span>)
+                    .<span class="ident">field</span>(<span class="string">&quot;url&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">req</span>.<span class="ident">url</span>)
+                    .<span class="ident">finish</span>()
+            },
+            <span class="ident">PendingInner</span>::<span class="ident">Error</span>(<span class="kw-2">ref</span> <span class="ident">err</span>) <span class="op">=&gt;</span> {
+                <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Pending&quot;</span>)
+                    .<span class="ident">field</span>(<span class="string">&quot;error&quot;</span>, <span class="ident">err</span>)
+                    .<span class="ident">finish</span>()
+            }
+        }
     }
 }
 
@@ -1062,7 +1293,13 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">take_builder</span>(<span class="ident">builder</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ClientBuilder</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
-    <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="ident">builder</span>, <span class="ident">ClientBuilder</span> { <span class="ident">config</span>: <span class="prelude-val">None</span> })
+    <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="ident">builder</span>, <span class="ident">ClientBuilder</span> { <span class="ident">config</span>: <span class="prelude-val">None</span>, <span class="ident">err</span>: <span class="prelude-val">None</span> })
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pending_err</span>(<span class="ident">err</span>: ::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Pending</span> {
+    <span class="ident">Pending</span> {
+        <span class="ident">inner</span>: <span class="ident">PendingInner</span>::<span class="ident">Error</span>(<span class="prelude-val">Some</span>(<span class="ident">err</span>)),
+    }
 }
 </pre>
 </section>
@@ -1082,13 +1319,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

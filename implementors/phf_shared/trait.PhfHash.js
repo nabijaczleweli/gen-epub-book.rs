@@ -1,5 +1,4 @@
 (function() {var implementors = {};
-implementors["mime_guess"] = [];
 implementors["phf_shared"] = [];
 
             if (window.register_implementors) {

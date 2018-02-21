@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -330,6 +331,36 @@
 <span id="285">285</span>
 <span id="286">286</span>
 <span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
@@ -420,6 +451,27 @@
     <span class="doccomment">/// Type: file URL&lt;br /&gt;</span>
     <span class="doccomment">/// Amount: any</span>
     <span class="ident">NetworkInclude</span>(<span class="ident">Url</span>),
+    <span class="doccomment">/// Relative path to file containing the book&#39;s description</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Required: no&lt;br /&gt;</span>
+    <span class="doccomment">/// Value: relative path to (X)HTML chunk&lt;br /&gt;</span>
+    <span class="doccomment">/// Amount: 0-1&lt;br /&gt;</span>
+    <span class="doccomment">/// Remarks: exclusive with String-Description and Network-Description</span>
+    <span class="ident">Description</span>(<span class="ident">PathBuf</span>),
+    <span class="doccomment">/// Book&#39;s description</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Required: no&lt;br /&gt;</span>
+    <span class="doccomment">/// Type: (X-)HTML&lt;br /&gt;</span>
+    <span class="doccomment">/// Amount: 0-1&lt;br /&gt;</span>
+    <span class="doccomment">/// Remarks: exclusive with Description and Network-Description</span>
+    <span class="ident">StringDescription</span>(<span class="ident">String</span>),
+    <span class="doccomment">/// URL of auxilliary file containing the book&#39;s description</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Required: no&lt;br /&gt;</span>
+    <span class="doccomment">/// Type: file URL&lt;br /&gt;</span>
+    <span class="doccomment">/// Amount: 0-1&lt;br /&gt;</span>
+    <span class="doccomment">/// Remarks: exclusive with Description and String-Description</span>
+    <span class="ident">NetworkDescription</span>(<span class="ident">Url</span>),
     <span class="doccomment">/// E-book&#39;s author</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Required: yes&lt;br /&gt;</span>
@@ -518,6 +570,9 @@
                         <span class="string">&quot;Network-Cover&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">NetworkCover</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse_url</span>(<span class="ident">ctnt</span>))))),
                         <span class="string">&quot;Include&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Include</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">ctnt</span>)))),
                         <span class="string">&quot;Network-Include&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">NetworkInclude</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse_url</span>(<span class="ident">ctnt</span>))))),
+                        <span class="string">&quot;Description&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Description</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">ctnt</span>)))),
+                        <span class="string">&quot;String-Description&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">StringDescription</span>(<span class="ident">ctnt</span>.<span class="ident">to_string</span>()))),
+                        <span class="string">&quot;Network-Description&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">NetworkDescription</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse_url</span>(<span class="ident">ctnt</span>))))),
                         <span class="string">&quot;Author&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Author</span>(<span class="ident">ctnt</span>.<span class="ident">to_string</span>()))),
                         <span class="string">&quot;Date&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Date</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse_datetime</span>(<span class="ident">ctnt</span>, <span class="ident">free_date</span>))))),
                         <span class="string">&quot;Language&quot;</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Language</span>(<span class="ident">ctnt</span>.<span class="ident">to_string</span>()))),
@@ -558,6 +613,9 @@
             <span class="ident">BookElement</span>::<span class="ident">NetworkCover</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Network-Cover&quot;</span>,
             <span class="ident">BookElement</span>::<span class="ident">Include</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Include&quot;</span>,
             <span class="ident">BookElement</span>::<span class="ident">NetworkInclude</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Network-Include&quot;</span>,
+            <span class="ident">BookElement</span>::<span class="ident">Description</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Description&quot;</span>,
+            <span class="ident">BookElement</span>::<span class="ident">StringDescription</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;String-Description&quot;</span>,
+            <span class="ident">BookElement</span>::<span class="ident">NetworkDescription</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Network-Description&quot;</span>,
             <span class="ident">BookElement</span>::<span class="ident">Author</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Author&quot;</span>,
             <span class="ident">BookElement</span>::<span class="ident">Date</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Date&quot;</span>,
             <span class="ident">BookElement</span>::<span class="ident">Language</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Language&quot;</span>,
@@ -572,15 +630,18 @@
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">BookElement</span>::<span class="ident">Name</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">|</span>
             <span class="ident">BookElement</span>::<span class="ident">StringContent</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">|</span>
+            <span class="ident">BookElement</span>::<span class="ident">StringDescription</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">|</span>
             <span class="ident">BookElement</span>::<span class="ident">Author</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">|</span>
             <span class="ident">BookElement</span>::<span class="ident">Language</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">s</span>),
             <span class="ident">BookElement</span>::<span class="ident">Content</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">|</span>
             <span class="ident">BookElement</span>::<span class="ident">ImageContent</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">|</span>
             <span class="ident">BookElement</span>::<span class="ident">Cover</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">|</span>
-            <span class="ident">BookElement</span>::<span class="ident">Include</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">pb</span>.<span class="ident">display</span>()),
+            <span class="ident">BookElement</span>::<span class="ident">Include</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">|</span>
+            <span class="ident">BookElement</span>::<span class="ident">Description</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">pb</span>.<span class="ident">display</span>()),
             <span class="ident">BookElement</span>::<span class="ident">NetworkImageContent</span>(<span class="kw-2">ref</span> <span class="ident">u</span>) <span class="op">|</span>
             <span class="ident">BookElement</span>::<span class="ident">NetworkCover</span>(<span class="kw-2">ref</span> <span class="ident">u</span>) <span class="op">|</span>
-            <span class="ident">BookElement</span>::<span class="ident">NetworkInclude</span>(<span class="kw-2">ref</span> <span class="ident">u</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">u</span>.<span class="ident">as_str</span>()),
+            <span class="ident">BookElement</span>::<span class="ident">NetworkInclude</span>(<span class="kw-2">ref</span> <span class="ident">u</span>) <span class="op">|</span>
+            <span class="ident">BookElement</span>::<span class="ident">NetworkDescription</span>(<span class="kw-2">ref</span> <span class="ident">u</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">u</span>.<span class="ident">as_str</span>()),
             <span class="ident">BookElement</span>::<span class="ident">Date</span>(<span class="kw-2">ref</span> <span class="ident">d</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">d</span>.<span class="ident">to_rfc3339</span>()),
         }
     }
@@ -636,13 +697,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>

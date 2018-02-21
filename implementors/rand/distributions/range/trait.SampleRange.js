@@ -1,7 +1,5 @@
 (function() {var implementors = {};
-implementors["hyper"] = [];
 implementors["rand"] = [];
-implementors["reqwest"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

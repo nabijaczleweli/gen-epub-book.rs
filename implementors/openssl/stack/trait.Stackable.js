@@ -1,6 +1,5 @@
 (function() {var implementors = {};
 implementors["openssl"] = [];
-implementors["reqwest"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

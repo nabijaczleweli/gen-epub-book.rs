@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-0.1.15/src/sync/oneshot.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/futures-0.1.18/src/sync/oneshot.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>oneshot.rs.html -- source</title>
@@ -28,6 +28,7 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
@@ -596,6 +597,29 @@
 <span id="551">551</span>
 <span id="552">552</span>
 <span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! A one-shot, futures-aware channel</span>
 
@@ -634,7 +658,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Inner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Indicates whether this oneshot is complete yet. This is filled in both</span>
-    <span class="doccomment">/// by `Sender::drop` and by `Receiver::drop`, and both sides iterpret it</span>
+    <span class="doccomment">/// by `Sender::drop` and by `Receiver::drop`, and both sides interpret it</span>
     <span class="doccomment">/// appropriately.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// For `Receiver`, if this is `true`, then it&#39;s guaranteed that `data` is</span>
@@ -683,15 +707,15 @@
 <span class="doccomment">/// use futures::sync::oneshot;</span>
 <span class="doccomment">/// use futures::*;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let (c, p) = oneshot::channel::&lt;i32&gt;();</span>
+<span class="doccomment">/// let (p, c) = oneshot::channel::&lt;i32&gt;();</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// thread::spawn(|| {</span>
-<span class="doccomment">///     p.map(|i| {</span>
+<span class="doccomment">///     c.map(|i| {</span>
 <span class="doccomment">///         println!(&quot;got: {}&quot;, i);</span>
 <span class="doccomment">///     }).wait();</span>
 <span class="doccomment">/// });</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// c.send(3).unwrap();</span>
+<span class="doccomment">/// p.send(3).unwrap();</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>() <span class="op">-&gt;</span> (<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
     <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Inner</span>::<span class="ident">new</span>());
@@ -719,14 +743,32 @@
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">t</span>)
         }
 
-        <span class="comment">// Note that this lock acquisition should always succeed as it can only</span>
-        <span class="comment">// interfere with `poll` in `Receiver` which is only called when the</span>
-        <span class="comment">// `complete` flag is true, which we&#39;re setting here.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">slot</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">try_lock</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">slot</span>.<span class="ident">is_none</span>());
-        <span class="kw-2">*</span><span class="ident">slot</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>);
-        <span class="ident">drop</span>(<span class="ident">slot</span>);
-        <span class="prelude-val">Ok</span>(())
+        <span class="comment">// Note that this lock acquisition may fail if the receiver</span>
+        <span class="comment">// is closed and sets the `complete` flag to true, whereupon</span>
+        <span class="comment">// the receiver may call `poll()`.</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">slot</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">try_lock</span>() {
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">slot</span>.<span class="ident">is_none</span>());
+            <span class="kw-2">*</span><span class="ident">slot</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>);
+            <span class="ident">drop</span>(<span class="ident">slot</span>);
+
+            <span class="comment">// If the receiver called `close()` between the check at the</span>
+            <span class="comment">// start of the function, and the lock being released, then</span>
+            <span class="comment">// the receiver may not be around to receive it, so try to</span>
+            <span class="comment">// pull it back out.</span>
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">complete</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>) {
+                <span class="comment">// If lock acquisition fails, then receiver is actually</span>
+                <span class="comment">// receiving it, so we&#39;re good.</span>
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">slot</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">try_lock</span>() {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">take</span>() {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">t</span>);
+                    }
+                }
+            }
+            <span class="prelude-val">Ok</span>(())
+        } <span class="kw">else</span> {
+            <span class="comment">// Must have been closed</span>
+            <span class="prelude-val">Err</span>(<span class="ident">t</span>)
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">poll_cancel</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
@@ -838,10 +880,15 @@
         <span class="comment">// If we&#39;re not done, and we&#39;re not complete, though, then we&#39;ve</span>
         <span class="comment">// successfully blocked our task and we return `NotReady`.</span>
         <span class="kw">if</span> <span class="ident">done</span> <span class="op">||</span> <span class="self">self</span>.<span class="ident">complete</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>) {
-            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">try_lock</span>().<span class="ident">unwrap</span>().<span class="ident">take</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">data</span>.<span class="ident">into</span>()),
-                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Canceled</span>),
+            <span class="comment">// If taking the lock fails, the sender will realise that the we&#39;re</span>
+            <span class="comment">// `done` when it checks the `complete` flag on the way out, and will</span>
+            <span class="comment">// treat the send as a failure.</span>
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">slot</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">try_lock</span>() {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=</span> <span class="ident">slot</span>.<span class="ident">take</span>() {
+                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">data</span>.<span class="ident">into</span>());
+                }
             }
+            <span class="prelude-val">Err</span>(<span class="ident">Canceled</span>)
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">NotReady</span>)
         }
@@ -952,7 +999,7 @@
     }
 }
 
-<span class="doccomment">/// Error returned from a `Receiver&lt;T&gt;` whenever the correponding `Sender&lt;T&gt;`</span>
+<span class="doccomment">/// Error returned from a `Receiver&lt;T&gt;` whenever the corresponding `Sender&lt;T&gt;`</span>
 <span class="doccomment">/// is dropped.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Canceled</span>;
@@ -1053,7 +1100,7 @@
 {
     <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">ExecuteInner</span> {
         <span class="ident">inner</span>: <span class="ident">Inner</span>::<span class="ident">new</span>(),
-        <span class="ident">keep_running</span>: <span class="ident">AtomicBool</span>::<span class="ident">new</span>(<span class="bool-val">true</span>),
+        <span class="ident">keep_running</span>: <span class="ident">AtomicBool</span>::<span class="ident">new</span>(<span class="bool-val">false</span>),
     });
     <span class="ident">executor</span>.<span class="ident">execute</span>(<span class="ident">Execute</span> {
         <span class="ident">future</span>: <span class="ident">future</span>,
@@ -1082,7 +1129,7 @@
     <span class="doccomment">/// well if the future hasn&#39;t already resolved. This function can be used</span>
     <span class="doccomment">/// when to drop this future but keep executing the underlying future.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">forget</span>(<span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">keep_running</span>.<span class="ident">store</span>(<span class="bool-val">false</span>, <span class="ident">SeqCst</span>);
+        <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">keep_running</span>.<span class="ident">store</span>(<span class="bool-val">true</span>, <span class="ident">SeqCst</span>);
     }
 }
 
@@ -1168,13 +1215,15 @@
                     <dd>Show this help dialog</dd>
                     <dt>S</dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt>↑</dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt>↓</dt>
                     <dd>Move down in search results</dd>
+                    <dt>↹</dt>
+                    <dd>Switch tab</dd>
                     <dt>&#9166;</dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
+                    <dt style="width:31px;">+ / -</dt>
                     <dd>Collapse/expand all sections</dd>
                 </dl>
             </div>
