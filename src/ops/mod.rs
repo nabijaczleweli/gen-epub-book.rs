@@ -173,7 +173,7 @@ pub fn find_title<R: Read>(i: &mut R) -> Option<String> {
 /// assert_eq!(find_file(&Path::new("ending.html"), &include_order), Some(&rendered));
 /// assert_eq!(find_file(&Path::new("cover.png"), &include_order), None);
 /// ```
-pub fn find_file<'id, P: AsRef<Path>>(file: P, include_order: &'id [IncludeDirectory]) -> Option<&'id IncludeDirectory> {
+pub fn find_file<P: AsRef<Path>>(file: P, include_order: &[IncludeDirectory]) -> Option<&IncludeDirectory> {
     let file = file.as_ref();
     include_order.iter().find(|i| i.resolve(file).is_some())
 }

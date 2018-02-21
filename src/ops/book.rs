@@ -400,7 +400,7 @@ impl EPubBook {
         try!(writeln!(w, r#"  </manifest>"#).map_err(|_| EPubBook::zip_error("write", "content table manifest end")));
         try!(writeln!(w, r#"  <spine toc="toc">"#).map_err(|_| EPubBook::zip_error("write", "content table spine start")));
 
-        for &(ref id, _, _) in self.content.iter() {
+        for &(ref id, _, _) in &self.content {
             try!(writeln!(w, r#"    <itemref idref="{}" />"#, id).map_err(|_| EPubBook::zip_error("write", "content table spine content")));
         }
 

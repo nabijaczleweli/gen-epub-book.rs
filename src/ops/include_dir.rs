@@ -52,7 +52,7 @@ impl IncludeDirectory {
     /// ```
     pub fn directory_name(&self) -> &str {
         match *self {
-            IncludeDirectory::Named { ref dir, .. } => &dir.0,
+            IncludeDirectory::Named { ref dir, .. } |
             IncludeDirectory::Unnamed { ref dir } => &dir.0,
         }
     }
@@ -159,7 +159,7 @@ impl IncludeDirectory {
     /// ```
     pub fn resolve<P: AsRef<Path>>(&self, relpath: P) -> Option<PathBuf> {
         let abspath = match *self {
-                IncludeDirectory::Named { ref dir, .. } => dir,
+                IncludeDirectory::Named { ref dir, .. } |
                 IncludeDirectory::Unnamed { ref dir } => dir,
             }
             .1
