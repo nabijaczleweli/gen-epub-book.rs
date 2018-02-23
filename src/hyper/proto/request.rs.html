@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.18/src/proto/request.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.19/src/proto/request.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>request.rs.html -- source</title>
@@ -353,6 +353,15 @@
 <span id="307">307</span>
 <span id="308">308</span>
 <span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;compat&quot;</span>)]</span>
@@ -461,6 +470,8 @@
     <span class="doccomment">/// protected by TLS.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_proxy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">is_proxy</span>: <span class="ident">bool</span>) { <span class="self">self</span>.<span class="ident">is_proxy</span> <span class="op">=</span> <span class="ident">is_proxy</span>; }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">is_proxy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">is_proxy</span> }
 }
 
 <span class="kw">impl</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span> {
@@ -521,16 +532,9 @@
 
 <span class="doccomment">/// Constructs a request using a received ResponseHead and optional body</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_wire</span>(<span class="ident">addr</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span>, <span class="ident">incoming</span>: <span class="ident">RequestHead</span>, <span class="ident">body</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">MessageHead</span> { <span class="ident">version</span>, <span class="ident">subject</span>: <span class="ident">RequestLine</span>(<span class="ident">method</span>, <span class="ident">uri</span>), <span class="ident">headers</span> } <span class="op">=</span> <span class="ident">incoming</span>;
-
     <span class="ident">Request</span> {
-        <span class="ident">method</span>: <span class="ident">method</span>,
-        <span class="ident">uri</span>: <span class="ident">uri</span>,
-        <span class="ident">headers</span>: <span class="ident">headers</span>,
-        <span class="ident">version</span>: <span class="ident">version</span>,
         <span class="ident">remote_addr</span>: <span class="ident">addr</span>,
-        <span class="ident">body</span>: <span class="ident">body</span>,
-        <span class="ident">is_proxy</span>: <span class="bool-val">false</span>,
+        ..<span class="ident">join</span>((<span class="ident">incoming</span>, <span class="ident">body</span>))
     }
 }
 
@@ -546,6 +550,20 @@
         <span class="ident">version</span>: <span class="ident">req</span>.<span class="ident">version</span>,
     };
     (<span class="ident">head</span>, <span class="ident">req</span>.<span class="ident">body</span>)
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">join</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>((<span class="ident">head</span>, <span class="ident">body</span>): (<span class="ident">RequestHead</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>)) <span class="op">-&gt;</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">MessageHead</span> { <span class="ident">version</span>, <span class="ident">subject</span>: <span class="ident">RequestLine</span>(<span class="ident">method</span>, <span class="ident">uri</span>), <span class="ident">headers</span> } <span class="op">=</span> <span class="ident">head</span>;
+
+    <span class="ident">Request</span> {
+        <span class="ident">method</span>: <span class="ident">method</span>,
+        <span class="ident">uri</span>: <span class="ident">uri</span>,
+        <span class="ident">headers</span>: <span class="ident">headers</span>,
+        <span class="ident">version</span>: <span class="ident">version</span>,
+        <span class="ident">remote_addr</span>: <span class="prelude-val">None</span>,
+        <span class="ident">body</span>: <span class="ident">body</span>,
+        <span class="ident">is_proxy</span>: <span class="bool-val">false</span>,
+    }
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">addr</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="ident">req</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">addr</span>: <span class="ident">SocketAddr</span>) {

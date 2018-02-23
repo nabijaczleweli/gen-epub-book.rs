@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.18/src/error.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.19/src/error.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>error.rs.html -- source</title>
@@ -285,13 +285,6 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Error and Result module.</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">StdError</span>;
@@ -355,9 +348,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_canceled</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_canceled</span>(<span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
         <span class="ident">Error</span>::<span class="ident">Cancel</span>(<span class="ident">Canceled</span> {
-            <span class="ident">_inner</span>: (),
+            <span class="ident">cause</span>: <span class="ident">cause</span>.<span class="ident">map</span>(<span class="ident">Box</span>::<span class="ident">new</span>),
         })
     }
 }
@@ -368,22 +361,14 @@
 <span class="doccomment">/// as the related connection gets closed by the remote. In that case,</span>
 <span class="doccomment">/// when the connection drops, the pending response future will be</span>
 <span class="doccomment">/// fulfilled with this error, signaling the `Request` was never started.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Canceled</span> {
-    <span class="comment">// maybe in the future this contains an optional value of</span>
-    <span class="comment">// what was canceled?</span>
-    <span class="ident">_inner</span>: (),
+    <span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Canceled</span> {
     <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="string">&quot;an operation was canceled internally before starting&quot;</span>
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Canceled</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Canceled&quot;</span>)
-            .<span class="ident">finish</span>()
     }
 }
 
@@ -437,6 +422,7 @@
             <span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">error</span>),
             <span class="ident">Uri</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">error</span>),
             <span class="ident">Utf8</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">error</span>),
+            <span class="ident">Cancel</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">e</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">StdError</span>),
             <span class="ident">Error</span>::<span class="ident">__Nonexhaustive</span>(..) <span class="op">=&gt;</span>  <span class="macro">unreachable</span><span class="macro">!</span>(),
             _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }

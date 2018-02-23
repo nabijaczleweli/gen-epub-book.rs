@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.18/src/proto/h1/dispatch.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.19/src/proto/h1/dispatch.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>dispatch.rs.html -- source</title>
@@ -507,6 +507,15 @@
 <span id="461">461</span>
 <span id="462">462</span>
 <span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 
@@ -542,7 +551,7 @@
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">oneshot</span>::<span class="ident">Sender</span><span class="op">&lt;</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>::<span class="ident">Response</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">oneshot</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>::<span class="ident">Response</span>, (::<span class="ident">Error</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ClientMsg</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span>)<span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
     <span class="ident">rx</span>: <span class="ident">ClientRx</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 }
 
@@ -908,10 +917,13 @@
             },
             <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">cb</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">callback</span>.<span class="ident">take</span>() {
-                    <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">cb</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>));
+                    <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">cb</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>((<span class="ident">err</span>, <span class="prelude-val">None</span>)));
                     <span class="prelude-val">Ok</span>(())
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="prelude-val">Some</span>((_, <span class="ident">cb</span>)))) <span class="op">=</span> <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll</span>() {
-                    <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">cb</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>));
+                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="prelude-val">Some</span>((<span class="ident">req</span>, <span class="ident">cb</span>)))) <span class="op">=</span> <span class="self">self</span>.<span class="ident">rx</span>.<span class="ident">poll</span>() {
+                    <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;canceling queued request with connection error: {}&quot;</span>, <span class="ident">err</span>);
+                    <span class="comment">// in this case, the message was never even started, so it&#39;s safe to tell</span>
+                    <span class="comment">// the user that the request was completely canceled</span>
+                    <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">cb</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>((::<span class="ident">Error</span>::<span class="ident">new_canceled</span>(<span class="prelude-val">Some</span>(<span class="ident">err</span>)), <span class="prelude-val">Some</span>(<span class="ident">req</span>))));
                     <span class="prelude-val">Ok</span>(())
                 } <span class="kw">else</span> {
                     <span class="prelude-val">Err</span>(<span class="ident">err</span>)
@@ -941,13 +953,14 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pretty_env_logger</span>;
+
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident">mock</span>::<span class="ident">AsyncIo</span>;
     <span class="kw">use</span> <span class="ident">proto</span>::<span class="ident">ClientTransaction</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">client_read_response_before_writing_request</span>() {
-        <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pretty_env_logger</span>;
+    <span class="kw">fn</span> <span class="ident">client_read_bytes_before_writing_request</span>() {
         <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">pretty_env_logger</span>::<span class="ident">try_init</span>();
         ::<span class="ident">futures</span>::<span class="ident">lazy</span>(<span class="op">||</span> {
             <span class="kw">let</span> <span class="ident">io</span> <span class="op">=</span> <span class="ident">AsyncIo</span>::<span class="ident">new_buf</span>(<span class="string">b&quot;HTTP/1.1 200 OK\r\n\r\n&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">100</span>);
@@ -962,11 +975,16 @@
             };
             <span class="kw">let</span> <span class="ident">res_rx</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send</span>((<span class="ident">req</span>, <span class="prelude-val">None</span>::<span class="op">&lt;</span>::<span class="ident">Body</span><span class="op">&gt;</span>)).<span class="ident">unwrap</span>();
 
-            <span class="ident">dispatcher</span>.<span class="ident">poll</span>().<span class="ident">expect</span>(<span class="string">&quot;dispatcher poll 1&quot;</span>);
-            <span class="ident">dispatcher</span>.<span class="ident">poll</span>().<span class="ident">expect</span>(<span class="string">&quot;dispatcher poll 2&quot;</span>);
-            <span class="kw">let</span> <span class="ident">_res</span> <span class="op">=</span> <span class="ident">res_rx</span>.<span class="ident">wait</span>()
+            <span class="kw">let</span> <span class="ident">a1</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">poll</span>().<span class="ident">expect</span>(<span class="string">&quot;error should be sent on channel&quot;</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">a1</span>.<span class="ident">is_ready</span>(), <span class="string">&quot;dispatcher should be closed&quot;</span>);
+            <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">res_rx</span>.<span class="ident">wait</span>()
                 .<span class="ident">expect</span>(<span class="string">&quot;callback poll&quot;</span>)
-                .<span class="ident">expect</span>(<span class="string">&quot;callback response&quot;</span>);
+                .<span class="ident">expect_err</span>(<span class="string">&quot;callback response&quot;</span>);
+
+            <span class="kw">match</span> <span class="ident">err</span> {
+                (::<span class="ident">Error</span>::<span class="ident">Cancel</span>(_), <span class="prelude-val">Some</span>(_)) <span class="op">=&gt;</span> (),
+                <span class="ident">other</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;expected Canceled, got {:?}&quot;</span>, <span class="ident">other</span>),
+            }
             <span class="prelude-val">Ok</span>::<span class="op">&lt;</span>(), ()<span class="op">&gt;</span>(())
         }).<span class="ident">wait</span>().<span class="ident">unwrap</span>();
     }
