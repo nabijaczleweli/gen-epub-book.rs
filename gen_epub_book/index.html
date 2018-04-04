@@ -10,8 +10,11 @@
     <title>gen_epub_book - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Crate gen_epub_book</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'gen_epub_book', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,21 +61,17 @@
                    </a>
                </span><a class='srclink' href='../src/gen_epub_book/lib.rs.html#1-227' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Generate an ePub book from a simple plaintext descriptor</p>
-
-<h1 id='library-doc' class='section-header'><a href='#library-doc'>Library doc</a></h1>
+<h1 id="library-doc" class="section-header"><a href="#library-doc">Library doc</a></h1>
 <p>This library is used by <code>gen-epub-book</code> itself for all its function and is therefore contains all necessary functions.</p>
-
-<h2 id='data-flow' class='section-header'><a href='#data-flow'>Data flow</a></h2>
+<h2 id="data-flow" class="section-header"><a href="#data-flow">Data flow</a></h2>
 <pre><code class="language-text">Options
 |&gt; parse_descriptor()
 |&gt; EPubBook::from_elements()
 |&gt; EPubBook::normalise_paths()
 |&gt; EPubBook::write_zip()
 </code></pre>
-
-<h1 id='executable-manpage' class='section-header'><a href='#executable-manpage'>Executable manpage</a></h1>
+<h1 id="executable-manpage" class="section-header"><a href="#executable-manpage">Executable manpage</a></h1>
 <p>Exit values and possible errors:</p>
-
 <pre><code class="language-text">1 - I/O error
 2 - parsing error
 3 - file not found
@@ -73,158 +79,117 @@
 5 - incorrect amount of elements
 6 - required element missing
 </code></pre>
-
-<h2 id='synopsis' class='section-header'><a href='#synopsis'>SYNOPSIS</a></h2>
+<h2 id="synopsis" class="section-header"><a href="#synopsis">SYNOPSIS</a></h2>
 <p><a href="https://github.com/nabijaczleweli/gen-epub-book.rs"><code>gen-epub-book</code></a> [OPTIONS] IN_FILE OUT_FILE</p>
-
-<h2 id='description' class='section-header'><a href='#description'>DESCRIPTION</a></h2>
+<h2 id="description" class="section-header"><a href="#description">DESCRIPTION</a></h2>
 <p>Generate an ePub book from a simple plaintext descriptor.</p>
-
-<h2 id='options' class='section-header'><a href='#options'>OPTIONS</a></h2>
+<h2 id="options" class="section-header"><a href="#options">OPTIONS</a></h2>
 <p>-v --verbose</p>
-
 <pre><code class="language-text">Print out more data.
 
 Default: false.
 </code></pre>
-
 <p>IN_FILE</p>
-
 <pre><code class="language-text">File to parse, must exist, must comply with the DESCRIPTOR FORMAT.
 
-Special case: &#39;-&#39; to read from stdin.
+Special case: '-' to read from stdin.
 </code></pre>
-
 <p>OUT_FILE</p>
+<pre><code class="language-text">File to write the book to, parent directory needn't exist.
 
-<pre><code class="language-text">File to write the book to, parent directory needn&#39;t exist.
-
-Special case: &#39;-&#39; to write to stdout.
+Special case: '-' to write to stdout.
 </code></pre>
-
 <p>-S --separator &lt;SEPARATOR&gt;</p>
-
 <pre><code class="language-text">Enable custom separator feature and set the separator.
 
 Default: &quot;:&quot;.
 </code></pre>
-
 <p>-I --include [NAME=]PATH</p>
-
 <pre><code class="language-text">Add an additional directory in which to search for files. Order-dependent.
 
 `NAME` is an optional name under which the files will be segregated.
 `PATH` is an existing directory.
 </code></pre>
-
-<h2 id='descriptor-format' class='section-header'><a href='#descriptor-format'>DESCRIPTOR FORMAT</a></h2>
+<h2 id="descriptor-format" class="section-header"><a href="#descriptor-format">DESCRIPTOR FORMAT</a></h2>
 <p>The descriptor consists of multiple lines in the format <em>&quot;Key: Value&quot;</em>, unknown
-keys are ignored, lines that don&#39;t match the format are ignored.</p>
-
+keys are ignored, lines that don't match the format are ignored.</p>
 <p>Name</p>
-
 <pre><code class="language-text">Required: yes
 Type: plaintext
-Value: e-book&#39;s title
+Value: e-book's title
 Amount: 1
 </code></pre>
-
 <p>Content</p>
-
 <pre><code class="language-text">Required: no
 Type: file path
 Value: relative path to (X)HTML chunk
 Amount: any
 Remarks: see ADDITIONAL CONTENT PROCESSING
 </code></pre>
-
 <p>String-Content</p>
-
 <pre><code class="language-text">Required: no
 Type: (X)HTML
 Value: (X)HTML string
 Amount: any
 </code></pre>
-
 <p>Image-Content</p>
-
 <pre><code class="language-text">Required: no
 Type: file path
 Value: relative path to image to include in e-book
 Amount: any
 </code></pre>
-
 <p>Network-Image-Content</p>
-
 <pre><code class="language-text">Required: no
 Type: file URL
 Value: URL of image to include in e-book
 Amount: any
 </code></pre>
-
 <p>Cover</p>
-
 <pre><code class="language-text">Required: no
 Type: file path
 Value: relative path to image to use as e-book cover
 Amount: 0-1
 Remarks: exclusive with Network-Cover
 </code></pre>
-
 <p>Network-Cover</p>
-
 <pre><code class="language-text">Required: no
 Type: file URL
 Value: URL to image to use as e-book cover
 Amount: 0-1
 Remarks: exclusive with Cover
 </code></pre>
-
 <p>Author</p>
-
 <pre><code class="language-text">Required: yes
 Type: plaintext string
-Value: e-book&#39;s author
+Value: e-book's author
 Amount: 1
 </code></pre>
-
 <p>Date</p>
-
 <pre><code class="language-text">Required: yes
 Type: RFC3339-compliant date
-Value: e-book&#39;s authoring/publishing date
+Value: e-book's authoring/publishing date
 Amount: 1
 Remarks: see FREE DATE FORMAT FEATURE
 </code></pre>
-
 <p>Language</p>
-
 <pre><code class="language-text">Required: yes
 Type: BCP47-compliant language code
 Value: language used in e-book
 Amount: 1
 </code></pre>
-
-<h2 id='additional-content-processing' class='section-header'><a href='#additional-content-processing'>ADDITIONAL CONTENT PROCESSING</a></h2>
+<h2 id="additional-content-processing" class="section-header"><a href="#additional-content-processing">ADDITIONAL CONTENT PROCESSING</a></h2>
 <p>When adding content using the <code>Content</code> entry, the file will additinally be
 searched for a comment specifying the its name in the TOC in this format:</p>
-
 <pre><code class="language-text">&lt;!-- ePub title: &quot;TOC_NAME&quot; --&gt;
 </code></pre>
-
 <p>Where <code>TOC_NAME</code> is a string not containing the <em>&quot;</em> character.</p>
-
 <p>This will, on e-book readers, allow users to jump directly to the content
 represented by the document containing this entry.</p>
-
 <p>Optional.</p>
-
-<h2 id='free-date-format-feature' class='section-header'><a href='#free-date-format-feature'>FREE DATE FORMAT FEATURE</a></h2>
+<h2 id="free-date-format-feature" class="section-header"><a href="#free-date-format-feature">FREE DATE FORMAT FEATURE</a></h2>
 <p>With the -D/--free-date flag, you can enable the
 <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format">free date format feature</a>.</p>
-
 <p>The supported formats therewith are therefore:</p>
-
 <ul>
 <li>RFC3339 (e.g. &quot;2017-02-08T15:30:18+01:00&quot;),</li>
 <li>RFC2822 (e.g. &quot;Wed, 08 Feb 2017 15:30:18 +0100&quot;),</li>
@@ -237,6 +202,7 @@ represented by the document containing this entry.</p>
                                   title='mod gen_epub_book::ops'>ops</a></td>
                            <td class='docblock-short'>
                                 <p>Main functions doing actual work.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -244,6 +210,7 @@ represented by the document containing this entry.</p>
                                   title='mod gen_epub_book::util'>util</a></td>
                            <td class='docblock-short'>
                                 <p>Module containing various utility functions.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -251,7 +218,8 @@ represented by the document containing this entry.</p>
                            <td><a class="struct" href="struct.Options.html"
                                   title='struct gen_epub_book::Options'>Options</a></td>
                            <td class='docblock-short'>
-                                <p>Representation of the application&#39;s all configurable values.</p>
+                                <p>Representation of the application's all configurable values.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -260,6 +228,7 @@ represented by the document containing this entry.</p>
                                   title='enum gen_epub_book::Error'>Error</a></td>
                            <td class='docblock-short'>
                                 <p>Enum representing all possible ways the application can fail.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -274,20 +243,22 @@ represented by the document containing this entry.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

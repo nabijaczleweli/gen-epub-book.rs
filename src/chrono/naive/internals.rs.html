@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.0/src/naive/internals.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.1/src/naive/internals.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>internals.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -822,6 +832,7 @@
 <span id="776">776</span>
 <span id="777">777</span>
 <span id="778">778</span>
+<span id="779">779</span>
 </pre><pre class="rust ">
 <span class="comment">// This is a part of Chrono.</span>
 <span class="comment">// See README.md and LICENSE.txt for details.</span>
@@ -841,7 +852,7 @@
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span> <span class="comment">// some internal methods have been left for consistency</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">i32</span>, <span class="ident">fmt</span>};
-<span class="kw">use</span> <span class="ident">num</span>::<span class="ident">traits</span>::<span class="ident">FromPrimitive</span>;
+<span class="kw">use</span> <span class="ident">num_traits</span>::<span class="ident">FromPrimitive</span>;
 <span class="kw">use</span> <span class="ident">Weekday</span>;
 <span class="kw">use</span> <span class="ident">div</span>::{<span class="ident">div_rem</span>, <span class="ident">mod_floor</span>};
 
@@ -918,10 +929,10 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cycle_to_yo</span>(<span class="ident">cycle</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> (<span class="ident">u32</span>, <span class="ident">u32</span>) {
     <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">year_mod_400</span>, <span class="kw-2">mut</span> <span class="ident">ordinal0</span>) <span class="op">=</span> <span class="ident">div_rem</span>(<span class="ident">cycle</span>, <span class="number">365</span>);
-    <span class="kw">let</span> <span class="ident">delta</span> <span class="op">=</span> <span class="ident">YEAR_DELTAS</span>[<span class="ident">year_mod_400</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="kw">as</span> <span class="ident">u32</span>;
+    <span class="kw">let</span> <span class="ident">delta</span> <span class="op">=</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">YEAR_DELTAS</span>[<span class="ident">year_mod_400</span> <span class="kw">as</span> <span class="ident">usize</span>]);
     <span class="kw">if</span> <span class="ident">ordinal0</span> <span class="op">&lt;</span> <span class="ident">delta</span> {
         <span class="ident">year_mod_400</span> <span class="op">-=</span> <span class="number">1</span>;
-        <span class="ident">ordinal0</span> <span class="op">+=</span> <span class="number">365</span> <span class="op">-</span> <span class="ident">YEAR_DELTAS</span>[<span class="ident">year_mod_400</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="kw">as</span> <span class="ident">u32</span>;
+        <span class="ident">ordinal0</span> <span class="op">+=</span> <span class="number">365</span> <span class="op">-</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">YEAR_DELTAS</span>[<span class="ident">year_mod_400</span> <span class="kw">as</span> <span class="ident">usize</span>]);
     } <span class="kw">else</span> {
         <span class="ident">ordinal0</span> <span class="op">-=</span> <span class="ident">delta</span>;
     }
@@ -929,7 +940,7 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">yo_to_cycle</span>(<span class="ident">year_mod_400</span>: <span class="ident">u32</span>, <span class="ident">ordinal</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
-    <span class="ident">year_mod_400</span> <span class="op">*</span> <span class="number">365</span> <span class="op">+</span> <span class="ident">YEAR_DELTAS</span>[<span class="ident">year_mod_400</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="kw">as</span> <span class="ident">u32</span> <span class="op">+</span> <span class="ident">ordinal</span> <span class="op">-</span> <span class="number">1</span>
+    <span class="ident">year_mod_400</span> <span class="op">*</span> <span class="number">365</span> <span class="op">+</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">YEAR_DELTAS</span>[<span class="ident">year_mod_400</span> <span class="kw">as</span> <span class="ident">usize</span>]) <span class="op">+</span> <span class="ident">ordinal</span> <span class="op">-</span> <span class="number">1</span>
 }
 
 <span class="kw">impl</span> <span class="ident">YearFlags</span> {
@@ -947,13 +958,13 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">ndays</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
         <span class="kw">let</span> <span class="ident">YearFlags</span>(<span class="ident">flags</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
-        <span class="number">366</span> <span class="op">-</span> (<span class="ident">flags</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>) <span class="kw">as</span> <span class="ident">u32</span>
+        <span class="number">366</span> <span class="op">-</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">flags</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>)
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">isoweek_delta</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
         <span class="kw">let</span> <span class="ident">YearFlags</span>(<span class="ident">flags</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">delta</span> <span class="op">=</span> <span class="ident">flags</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0b111</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">delta</span> <span class="op">=</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">flags</span>) <span class="op">&amp;</span> <span class="number">0b0111</span>;
         <span class="kw">if</span> <span class="ident">delta</span> <span class="op">&lt;</span> <span class="number">3</span> { <span class="ident">delta</span> <span class="op">+=</span> <span class="number">7</span>; }
         <span class="ident">delta</span>
     }
@@ -961,7 +972,7 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">nisoweeks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
         <span class="kw">let</span> <span class="ident">YearFlags</span>(<span class="ident">flags</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
-        <span class="number">52</span> <span class="op">+</span> ((<span class="number">0b00000100_00000110</span> <span class="op">&gt;&gt;</span> <span class="ident">flags</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">&amp;</span> <span class="number">1</span>)
+        <span class="number">52</span> <span class="op">+</span> ((<span class="number">0b0000_0100_0000_0110</span> <span class="op">&gt;&gt;</span> <span class="ident">flags</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">&amp;</span> <span class="number">1</span>)
     }
 }
 
@@ -1111,14 +1122,14 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">ordinal</span>: <span class="ident">u32</span>, <span class="ident">YearFlags</span>(<span class="ident">flags</span>): <span class="ident">YearFlags</span>) <span class="op">-&gt;</span> <span class="ident">Of</span> {
         <span class="kw">let</span> <span class="ident">ordinal</span> <span class="op">=</span> <span class="ident">Of</span>::<span class="ident">clamp_ordinal</span>(<span class="ident">ordinal</span>);
-        <span class="ident">Of</span>((<span class="ident">ordinal</span> <span class="op">&lt;&lt;</span> <span class="number">4</span>) <span class="op">|</span> (<span class="ident">flags</span> <span class="kw">as</span> <span class="ident">u32</span>))
+        <span class="ident">Of</span>((<span class="ident">ordinal</span> <span class="op">&lt;&lt;</span> <span class="number">4</span>) <span class="op">|</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">flags</span>))
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_mdf</span>(<span class="ident">Mdf</span>(<span class="ident">mdf</span>): <span class="ident">Mdf</span>) <span class="op">-&gt;</span> <span class="ident">Of</span> {
         <span class="kw">let</span> <span class="ident">mdl</span> <span class="op">=</span> <span class="ident">mdf</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>;
         <span class="kw">match</span> <span class="ident">MDL_TO_OL</span>.<span class="ident">get</span>(<span class="ident">mdl</span> <span class="kw">as</span> <span class="ident">usize</span>) {
-            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">Of</span>(<span class="ident">mdf</span>.<span class="ident">wrapping_sub</span>((<span class="ident">v</span> <span class="kw">as</span> <span class="ident">i32</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3ff</span>) <span class="op">&lt;&lt;</span> <span class="number">3</span>)),
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">Of</span>(<span class="ident">mdf</span>.<span class="ident">wrapping_sub</span>((<span class="ident">i32</span>::<span class="ident">from</span>(<span class="ident">v</span>) <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3ff</span>) <span class="op">&lt;&lt;</span> <span class="number">3</span>)),
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">Of</span>(<span class="number">0</span>)
         }
     }
@@ -1152,7 +1163,7 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">YearFlags</span>(<span class="ident">flags</span>): <span class="ident">YearFlags</span>) <span class="op">-&gt;</span> <span class="ident">Of</span> {
         <span class="kw">let</span> <span class="ident">Of</span>(<span class="ident">of</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
-        <span class="ident">Of</span>((<span class="ident">of</span> <span class="op">&amp;</span> <span class="op">!</span><span class="number">0b1111</span>) <span class="op">|</span> (<span class="ident">flags</span> <span class="kw">as</span> <span class="ident">u32</span>))
+        <span class="ident">Of</span>((<span class="ident">of</span> <span class="op">&amp;</span> <span class="op">!</span><span class="number">0b1111</span>) <span class="op">|</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">flags</span>))
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -1218,14 +1229,14 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">month</span>: <span class="ident">u32</span>, <span class="ident">day</span>: <span class="ident">u32</span>, <span class="ident">YearFlags</span>(<span class="ident">flags</span>): <span class="ident">YearFlags</span>) <span class="op">-&gt;</span> <span class="ident">Mdf</span> {
         <span class="kw">let</span> <span class="ident">month</span> <span class="op">=</span> <span class="ident">Mdf</span>::<span class="ident">clamp_month</span>(<span class="ident">month</span>);
         <span class="kw">let</span> <span class="ident">day</span> <span class="op">=</span> <span class="ident">Mdf</span>::<span class="ident">clamp_day</span>(<span class="ident">day</span>);
-        <span class="ident">Mdf</span>((<span class="ident">month</span> <span class="op">&lt;&lt;</span> <span class="number">9</span>) <span class="op">|</span> (<span class="ident">day</span> <span class="op">&lt;&lt;</span> <span class="number">4</span>) <span class="op">|</span> (<span class="ident">flags</span> <span class="kw">as</span> <span class="ident">u32</span>))
+        <span class="ident">Mdf</span>((<span class="ident">month</span> <span class="op">&lt;&lt;</span> <span class="number">9</span>) <span class="op">|</span> (<span class="ident">day</span> <span class="op">&lt;&lt;</span> <span class="number">4</span>) <span class="op">|</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">flags</span>))
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_of</span>(<span class="ident">Of</span>(<span class="ident">of</span>): <span class="ident">Of</span>) <span class="op">-&gt;</span> <span class="ident">Mdf</span> {
         <span class="kw">let</span> <span class="ident">ol</span> <span class="op">=</span> <span class="ident">of</span> <span class="op">&gt;&gt;</span> <span class="number">3</span>;
         <span class="kw">match</span> <span class="ident">OL_TO_MDL</span>.<span class="ident">get</span>(<span class="ident">ol</span> <span class="kw">as</span> <span class="ident">usize</span>) {
-            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">Mdf</span>(<span class="ident">of</span> <span class="op">+</span> ((<span class="ident">v</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">3</span>)),
+            <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">Mdf</span>(<span class="ident">of</span> <span class="op">+</span> (<span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">v</span>) <span class="op">&lt;&lt;</span> <span class="number">3</span>)),
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">Mdf</span>(<span class="number">0</span>)
         }
     }
@@ -1250,20 +1261,20 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_month</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">month</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">Mdf</span> {
         <span class="kw">let</span> <span class="ident">month</span> <span class="op">=</span> <span class="ident">Mdf</span>::<span class="ident">clamp_month</span>(<span class="ident">month</span>);
         <span class="kw">let</span> <span class="ident">Mdf</span>(<span class="ident">mdf</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
-        <span class="ident">Mdf</span>((<span class="ident">mdf</span> <span class="op">&amp;</span> <span class="number">0b11111_1111</span>) <span class="op">|</span> (<span class="ident">month</span> <span class="op">&lt;&lt;</span> <span class="number">9</span>))
+        <span class="ident">Mdf</span>((<span class="ident">mdf</span> <span class="op">&amp;</span> <span class="number">0b1_1111_1111</span>) <span class="op">|</span> (<span class="ident">month</span> <span class="op">&lt;&lt;</span> <span class="number">9</span>))
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">day</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
         <span class="kw">let</span> <span class="ident">Mdf</span>(<span class="ident">mdf</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
-        (<span class="ident">mdf</span> <span class="op">&gt;&gt;</span> <span class="number">4</span>) <span class="op">&amp;</span> <span class="number">0b11111</span>
+        (<span class="ident">mdf</span> <span class="op">&gt;&gt;</span> <span class="number">4</span>) <span class="op">&amp;</span> <span class="number">0b1_1111</span>
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_day</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">day</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">Mdf</span> {
         <span class="kw">let</span> <span class="ident">day</span> <span class="op">=</span> <span class="ident">Mdf</span>::<span class="ident">clamp_day</span>(<span class="ident">day</span>);
         <span class="kw">let</span> <span class="ident">Mdf</span>(<span class="ident">mdf</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
-        <span class="ident">Mdf</span>((<span class="ident">mdf</span> <span class="op">&amp;</span> <span class="op">!</span><span class="number">0b11111_0000</span>) <span class="op">|</span> (<span class="ident">day</span> <span class="op">&lt;&lt;</span> <span class="number">4</span>))
+        <span class="ident">Mdf</span>((<span class="ident">mdf</span> <span class="op">&amp;</span> <span class="op">!</span><span class="number">0b1_1111_0000</span>) <span class="op">|</span> (<span class="ident">day</span> <span class="op">&lt;&lt;</span> <span class="number">4</span>))
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -1275,7 +1286,7 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_flags</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">YearFlags</span>(<span class="ident">flags</span>): <span class="ident">YearFlags</span>) <span class="op">-&gt;</span> <span class="ident">Mdf</span> {
         <span class="kw">let</span> <span class="ident">Mdf</span>(<span class="ident">mdf</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
-        <span class="ident">Mdf</span>((<span class="ident">mdf</span> <span class="op">&amp;</span> <span class="op">!</span><span class="number">0b1111</span>) <span class="op">|</span> (<span class="ident">flags</span> <span class="kw">as</span> <span class="ident">u32</span>))
+        <span class="ident">Mdf</span>((<span class="ident">mdf</span> <span class="op">&amp;</span> <span class="op">!</span><span class="number">0b1111</span>) <span class="op">|</span> <span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">flags</span>))
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
@@ -1288,18 +1299,19 @@
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="kw">let</span> <span class="ident">Mdf</span>(<span class="ident">mdf</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
         <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Mdf(({} &lt;&lt; 9) | ({} &lt;&lt; 4) | {:#04o} /*{:?}*/)&quot;</span>,
-               <span class="ident">mdf</span> <span class="op">&gt;&gt;</span> <span class="number">9</span>, (<span class="ident">mdf</span> <span class="op">&gt;&gt;</span> <span class="number">4</span>) <span class="op">&amp;</span> <span class="number">0b11111</span>, <span class="ident">mdf</span> <span class="op">&amp;</span> <span class="number">0b1111</span>, <span class="ident">YearFlags</span>((<span class="ident">mdf</span> <span class="op">&amp;</span> <span class="number">0b1111</span>) <span class="kw">as</span> <span class="ident">u8</span>))
+               <span class="ident">mdf</span> <span class="op">&gt;&gt;</span> <span class="number">9</span>, (<span class="ident">mdf</span> <span class="op">&gt;&gt;</span> <span class="number">4</span>) <span class="op">&amp;</span> <span class="number">0b1_1111</span>, <span class="ident">mdf</span> <span class="op">&amp;</span> <span class="number">0b1111</span>, <span class="ident">YearFlags</span>((<span class="ident">mdf</span> <span class="op">&amp;</span> <span class="number">0b1111</span>) <span class="kw">as</span> <span class="ident">u8</span>))
     }
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">num_iter</span>;
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">bench</span>)]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">test</span>;
 
     <span class="kw">use</span> <span class="ident">Weekday</span>;
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Of</span>, <span class="ident">Mdf</span>};
     <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">YearFlags</span>, <span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>, <span class="ident">G</span>, <span class="ident">AG</span>, <span class="ident">BA</span>, <span class="ident">CB</span>, <span class="ident">DC</span>, <span class="ident">ED</span>, <span class="ident">FE</span>, <span class="ident">GF</span>};
-    <span class="kw">use</span> <span class="ident">num</span>::<span class="ident">iter</span>::<span class="ident">range_inclusive</span>;
+    <span class="kw">use</span> <span class="ident">num_iter</span>::<span class="ident">range_inclusive</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">u32</span>;
 
     <span class="kw">const</span> <span class="ident">NONLEAP_FLAGS</span>: [<span class="ident">YearFlags</span>; <span class="number">7</span>] <span class="op">=</span> [<span class="ident">A</span>, <span class="ident">B</span>, <span class="ident">C</span>, <span class="ident">D</span>, <span class="ident">E</span>, <span class="ident">F</span>, <span class="ident">G</span>];
@@ -1615,20 +1627,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

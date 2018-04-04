@@ -10,8 +10,11 @@
     <title>gen_epub_book::util::CONTAINER - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'><a href='../index.html'>gen_epub_book</a>::<wbr><a href='index.html'>util</a></p><script>window.sidebarCurrent = {name: 'CONTAINER', ty: 'static', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,9 +61,7 @@
                    </a>
                </span><a class='srclink' href='../../src/gen_epub_book/util.rs.html#16' title='goto source code'>[src]</a></span></h1>
 <pre class='rust static'>pub static CONTAINER: &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a><code> = </code><code>&quot;&lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;UTF-8\&quot;?&gt;\n&lt;container version=\&quot;1.0\&quot; xmlns=\&quot;urn:oasis:names:tc:opendocument:xmlns:container\&quot;&gt;\n   &lt;rootfiles&gt;\n      &lt;rootfile full-path=\&quot;content.opf\&quot; media-type=\&quot;application/oebps-package+xml\&quot; /&gt;\n   &lt;/rootfiles&gt;\n&lt;/container&gt;\n&quot;</code></pre><div class='docblock'><p>Contents of the the container file</p>
-
 <p>Points at <code>/content.opf</code> for root file.</p>
-
 <p>Container file resides in <code>META-INF/container.xml</code>.</p>
 </div></section>
     <section id='search' class="content hidden"></section>
@@ -68,20 +76,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

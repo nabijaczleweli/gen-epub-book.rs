@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.19/src/proto/h1/dispatch.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.25/src/proto/h1/dispatch.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>dispatch.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css" id="themeStyle">
+    <script src="../../../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -516,19 +526,40 @@
 <span id="470">470</span>
 <span id="471">471</span>
 <span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 
+<span class="kw">use</span> <span class="ident">bytes</span>::<span class="ident">Bytes</span>;
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">AsyncSink</span>, <span class="ident">Future</span>, <span class="ident">Poll</span>, <span class="ident">Stream</span>};
-<span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">sync</span>::<span class="ident">oneshot</span>;
 <span class="kw">use</span> <span class="ident">tokio_io</span>::{<span class="ident">AsyncRead</span>, <span class="ident">AsyncWrite</span>};
 <span class="kw">use</span> <span class="ident">tokio_service</span>::<span class="ident">Service</span>;
 
-<span class="kw">use</span> <span class="ident">proto</span>::{<span class="ident">Body</span>, <span class="ident">Conn</span>, <span class="ident">KeepAlive</span>, <span class="ident">Http1Transaction</span>, <span class="ident">MessageHead</span>, <span class="ident">RequestHead</span>, <span class="ident">ResponseHead</span>};
+<span class="kw">use</span> <span class="ident">proto</span>::{<span class="ident">Body</span>, <span class="ident">Conn</span>, <span class="ident">Http1Transaction</span>, <span class="ident">MessageHead</span>, <span class="ident">RequestHead</span>, <span class="ident">ResponseHead</span>};
 <span class="kw">use</span> ::<span class="ident">StatusCode</span>;
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span>, <span class="ident">K</span><span class="op">&gt;</span> {
-    <span class="ident">conn</span>: <span class="ident">Conn</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span>, <span class="ident">K</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="ident">conn</span>: <span class="ident">Conn</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span><span class="op">&gt;</span>,
     <span class="ident">dispatch</span>: <span class="ident">D</span>,
     <span class="ident">body_tx</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">proto</span>::<span class="ident">body</span>::<span class="ident">ChunkSender</span><span class="op">&gt;</span>,
     <span class="ident">body_rx</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Bs</span><span class="op">&gt;</span>,
@@ -547,11 +578,11 @@
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Service</span><span class="op">&gt;</span> {
     <span class="ident">in_flight</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="ident">Future</span><span class="op">&gt;</span>,
-    <span class="ident">service</span>: <span class="ident">S</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">service</span>: <span class="ident">S</span>,
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">oneshot</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>::<span class="ident">Response</span>, (::<span class="ident">Error</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ClientMsg</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span>)<span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>::<span class="ident">client</span>::<span class="ident">dispatch</span>::<span class="ident">Callback</span><span class="op">&lt;</span><span class="ident">ClientMsg</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, ::<span class="ident">Response</span><span class="op">&gt;&gt;</span>,
     <span class="ident">rx</span>: <span class="ident">ClientRx</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 }
 
@@ -559,16 +590,15 @@
 
 <span class="kw">type</span> <span class="ident">ClientRx</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="op">=</span> ::<span class="ident">client</span>::<span class="ident">dispatch</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">ClientMsg</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, ::<span class="ident">Response</span><span class="op">&gt;</span>;
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span>, <span class="ident">K</span><span class="op">&gt;</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span>, <span class="ident">K</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">D</span>: <span class="ident">Dispatch</span><span class="op">&lt;</span><span class="ident">PollItem</span><span class="op">=</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Outgoing</span><span class="op">&gt;</span>, <span class="ident">PollBody</span><span class="op">=</span><span class="ident">Bs</span>, <span class="ident">RecvItem</span><span class="op">=</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Incoming</span><span class="op">&gt;&gt;</span>,
     <span class="ident">I</span>: <span class="ident">AsyncRead</span> <span class="op">+</span> <span class="ident">AsyncWrite</span>,
     <span class="ident">B</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
     <span class="ident">T</span>: <span class="ident">Http1Transaction</span>,
-    <span class="ident">K</span>: <span class="ident">KeepAlive</span>,
     <span class="ident">Bs</span>: <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">B</span>, <span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span>,
 {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">dispatch</span>: <span class="ident">D</span>, <span class="ident">conn</span>: <span class="ident">Conn</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span>, <span class="ident">K</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">dispatch</span>: <span class="ident">D</span>, <span class="ident">conn</span>: <span class="ident">Conn</span><span class="op">&lt;</span><span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="ident">Dispatcher</span> {
             <span class="ident">conn</span>: <span class="ident">conn</span>,
             <span class="ident">dispatch</span>: <span class="ident">dispatch</span>,
@@ -582,15 +612,45 @@
         <span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">disable_keep_alive</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">poll2</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_inner</span>(<span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">I</span>, <span class="ident">Bytes</span>, <span class="ident">D</span>) {
+        <span class="kw">let</span> (<span class="ident">io</span>, <span class="ident">buf</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">into_inner</span>();
+        (<span class="ident">io</span>, <span class="ident">buf</span>, <span class="self">self</span>.<span class="ident">dispatch</span>)
+    }
+
+    <span class="doccomment">/// The &quot;Future&quot; poll function. Runs this dispatcher until the</span>
+    <span class="doccomment">/// connection is shutdown, or an error occurs.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll_until_shutdown</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">poll_catch</span>(<span class="bool-val">true</span>)
+    }
+
+    <span class="doccomment">/// Run this dispatcher until HTTP says this connection is done,</span>
+    <span class="doccomment">/// but don&#39;t call `AsyncWrite::shutdown` on the underlying IO.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is useful for HTTP upgrades.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll_without_shutdown</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">poll_catch</span>(<span class="bool-val">false</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">poll_catch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">should_shutdown</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">poll_inner</span>(<span class="ident">should_shutdown</span>).<span class="ident">or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+            <span class="comment">// An error means we&#39;re shutting down either way.</span>
+            <span class="comment">// We just try to give the error to the user,</span>
+            <span class="comment">// and close the connection with an Ok. If we</span>
+            <span class="comment">// cannot give it to the user, then return the Err.</span>
+            <span class="self">self</span>.<span class="ident">dispatch</span>.<span class="ident">recv_msg</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>)).<span class="ident">map</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>)
+        })
+    }
+
+    <span class="kw">fn</span> <span class="ident">poll_inner</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">should_shutdown</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">poll_read</span>()<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">poll_write</span>()<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">poll_flush</span>()<span class="question-mark">?</span>;
 
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_done</span>() {
-            <span class="macro">try_ready</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">shutdown</span>());
+            <span class="kw">if</span> <span class="ident">should_shutdown</span> {
+                <span class="macro">try_ready</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">shutdown</span>());
+            }
             <span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">take_error</span>()<span class="question-mark">?</span>;
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Dispatch::poll done&quot;</span>);
             <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(()))
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">NotReady</span>)
@@ -702,7 +762,7 @@
         <span class="kw">loop</span> {
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_closing</span> {
                 <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(()));
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">body_rx</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">dispatch</span>.<span class="ident">should_poll</span>() {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">body_rx</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">can_write_head</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">dispatch</span>.<span class="ident">should_poll</span>() {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">head</span>, <span class="ident">body</span>)) <span class="op">=</span> <span class="macro">try_ready</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">dispatch</span>.<span class="ident">poll_msg</span>()) {
                     <span class="self">self</span>.<span class="ident">conn</span>.<span class="ident">write_head</span>(<span class="ident">head</span>, <span class="ident">body</span>.<span class="ident">is_some</span>());
                     <span class="self">self</span>.<span class="ident">body_rx</span> <span class="op">=</span> <span class="ident">body</span>;
@@ -776,13 +836,12 @@
 }
 
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span>, <span class="ident">K</span><span class="op">&gt;</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span>, <span class="ident">K</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">Dispatcher</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">Bs</span>, <span class="ident">I</span>, <span class="ident">B</span>, <span class="ident">T</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">D</span>: <span class="ident">Dispatch</span><span class="op">&lt;</span><span class="ident">PollItem</span><span class="op">=</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Outgoing</span><span class="op">&gt;</span>, <span class="ident">PollBody</span><span class="op">=</span><span class="ident">Bs</span>, <span class="ident">RecvItem</span><span class="op">=</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Incoming</span><span class="op">&gt;&gt;</span>,
     <span class="ident">I</span>: <span class="ident">AsyncRead</span> <span class="op">+</span> <span class="ident">AsyncWrite</span>,
     <span class="ident">B</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
     <span class="ident">T</span>: <span class="ident">Http1Transaction</span>,
-    <span class="ident">K</span>: <span class="ident">KeepAlive</span>,
     <span class="ident">Bs</span>: <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">B</span>, <span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span>,
 {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> ();
@@ -790,14 +849,7 @@
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Dispatcher::poll&quot;</span>);
-        <span class="self">self</span>.<span class="ident">poll2</span>().<span class="ident">or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
-            <span class="comment">// An error means we&#39;re shutting down either way.</span>
-            <span class="comment">// We just try to give the error to the user,</span>
-            <span class="comment">// and close the connection with an Ok. If we</span>
-            <span class="comment">// cannot give it to the user, then return the Err.</span>
-            <span class="self">self</span>.<span class="ident">dispatch</span>.<span class="ident">recv_msg</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>)).<span class="ident">map</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>)
-        })
+        <span class="self">self</span>.<span class="ident">poll_until_shutdown</span>()
     }
 }
 
@@ -964,8 +1016,8 @@
         <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">pretty_env_logger</span>::<span class="ident">try_init</span>();
         ::<span class="ident">futures</span>::<span class="ident">lazy</span>(<span class="op">||</span> {
             <span class="kw">let</span> <span class="ident">io</span> <span class="op">=</span> <span class="ident">AsyncIo</span>::<span class="ident">new_buf</span>(<span class="string">b&quot;HTTP/1.1 200 OK\r\n\r\n&quot;</span>.<span class="ident">to_vec</span>(), <span class="number">100</span>);
-            <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> ::<span class="ident">client</span>::<span class="ident">dispatch</span>::<span class="ident">channel</span>();
-            <span class="kw">let</span> <span class="ident">conn</span> <span class="op">=</span> <span class="ident">Conn</span>::<span class="op">&lt;</span>_, ::<span class="ident">Chunk</span>, <span class="ident">ClientTransaction</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">io</span>, <span class="ident">Default</span>::<span class="ident">default</span>());
+            <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> ::<span class="ident">client</span>::<span class="ident">dispatch</span>::<span class="ident">channel</span>();
+            <span class="kw">let</span> <span class="ident">conn</span> <span class="op">=</span> <span class="ident">Conn</span>::<span class="op">&lt;</span>_, ::<span class="ident">Chunk</span>, <span class="ident">ClientTransaction</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">io</span>);
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dispatcher</span> <span class="op">=</span> <span class="ident">Dispatcher</span>::<span class="ident">new</span>(<span class="ident">Client</span>::<span class="ident">new</span>(<span class="ident">rx</span>), <span class="ident">conn</span>);
 
             <span class="kw">let</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">RequestHead</span> {
@@ -973,7 +1025,7 @@
                 <span class="ident">subject</span>: ::<span class="ident">proto</span>::<span class="ident">RequestLine</span>::<span class="ident">default</span>(),
                 <span class="ident">headers</span>: <span class="ident">Default</span>::<span class="ident">default</span>(),
             };
-            <span class="kw">let</span> <span class="ident">res_rx</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send</span>((<span class="ident">req</span>, <span class="prelude-val">None</span>::<span class="op">&lt;</span>::<span class="ident">Body</span><span class="op">&gt;</span>)).<span class="ident">unwrap</span>();
+            <span class="kw">let</span> <span class="ident">res_rx</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">try_send</span>((<span class="ident">req</span>, <span class="prelude-val">None</span>::<span class="op">&lt;</span>::<span class="ident">Body</span><span class="op">&gt;</span>)).<span class="ident">unwrap</span>();
 
             <span class="kw">let</span> <span class="ident">a1</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">poll</span>().<span class="ident">expect</span>(<span class="string">&quot;error should be sent on channel&quot;</span>);
             <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">a1</span>.<span class="ident">is_ready</span>(), <span class="string">&quot;dispatcher should be closed&quot;</span>);
@@ -1003,20 +1055,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

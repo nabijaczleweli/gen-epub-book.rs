@@ -10,8 +10,11 @@
     <title>encoding_rs::mem - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Module mem</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>encoding_rs</a></p><script>window.sidebarCurrent = {name: 'mem', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -53,12 +63,10 @@
 <div class='docblock'><p>Functions for converting between different in-RAM representations of text
 and for quickly checking if the Unicode Bidirectional Algorithm can be
 avoided.</p>
-
 <p>By using slices for output, the functions here seek to enable by-register
 (ALU register or SIMD register as available) operations in order to
 outperform iterator-based conversions available in the Rust standard
 library.</p>
-
 <p><em>Note:</em> &quot;Latin1&quot; in this module refers to the Unicode range from U+0000 to
 U+00FF, inclusive, and does not refer to the windows-1252 range. This
 in-memory encoding is sometimes used as a storage optimization of text
@@ -72,6 +80,7 @@ when UTF-16 indexing and length semantics are exposed.</p>
                                 <p>Classification of text as Latin1 (all code points are below U+0100),
 left-to-right with some non-Latin1 characters or as containing at least
 some right-to-left characters.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -81,6 +90,7 @@ some right-to-left characters.</p>
                            <td class='docblock-short'>
                                 <p>Checks whether a valid UTF-8 buffer contains code points
 that trigger right-to-left processing or is all-Latin1.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -89,6 +99,7 @@ that trigger right-to-left processing or is all-Latin1.</p>
                            <td class='docblock-short'>
                                 <p>Checks whether a potentially invalid UTF-16 buffer contains code points
 that trigger right-to-left processing or is all-Latin1.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -97,6 +108,7 @@ that trigger right-to-left processing or is all-Latin1.</p>
                            <td class='docblock-short'>
                                 <p>Checks whether a potentially invalid UTF-8 buffer contains code points
 that trigger right-to-left processing or is all-Latin1.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -106,6 +118,7 @@ that trigger right-to-left processing or is all-Latin1.</p>
                                 <p>Converts bytes whose unsigned value is interpreted as Unicode code point
 (i.e. U+0000 to U+00FF, inclusive) to UTF-8 such that the validity of the
 output is signaled using the Rust type system.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -114,6 +127,7 @@ output is signaled using the Rust type system.</p>
                            <td class='docblock-short'>
                                 <p>Converts bytes whose unsigned value is interpreted as Unicode code point
 (i.e. U+0000 to U+00FF, inclusive) to UTF-8.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -122,6 +136,7 @@ output is signaled using the Rust type system.</p>
                            <td class='docblock-short'>
                                 <p>Converts bytes whose unsigned value is interpreted as Unicode code point
 (i.e. U+0000 to U+00FF, inclusive) to UTF-16.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -129,6 +144,7 @@ output is signaled using the Rust type system.</p>
                                   title='fn encoding_rs::mem::convert_str_to_utf16'>convert_str_to_utf16</a></td>
                            <td class='docblock-short'>
                                 <p>Converts valid UTF-8 to valid UTF-16.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -139,6 +155,7 @@ output is signaled using the Rust type system.</p>
 U+0000 to U+00FF, inclusive, converts the input into output that
 represents the value of each code point as the unsigned byte value of
 each output byte.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -148,6 +165,7 @@ each output byte.</p>
                                 <p>Converts potentially-invalid UTF-16 to valid UTF-8 with errors replaced
 with the REPLACEMENT CHARACTER such that the validity of the output is
 signaled using the Rust type system.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -156,6 +174,7 @@ signaled using the Rust type system.</p>
                            <td class='docblock-short'>
                                 <p>Converts potentially-invalid UTF-16 to valid UTF-8 with errors replaced
 with the REPLACEMENT CHARACTER.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -166,6 +185,7 @@ with the REPLACEMENT CHARACTER.</p>
 U+0000 to U+00FF, inclusive, converts the input into output that
 represents the value of each code point as the unsigned byte value of
 each output byte.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -174,6 +194,7 @@ each output byte.</p>
                            <td class='docblock-short'>
                                 <p>Converts potentially-invalid UTF-8 to valid UTF-16 with errors replaced
 with the REPLACEMENT CHARACTER.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -182,6 +203,7 @@ with the REPLACEMENT CHARACTER.</p>
                            <td class='docblock-short'>
                                 <p>Copies ASCII from source to destination up to the first non-ASCII byte
 (or the end of the input if it is ASCII in its entirety).</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -191,6 +213,7 @@ with the REPLACEMENT CHARACTER.</p>
                                 <p>Copies ASCII from source to destination zero-extending it to UTF-16 up to
 the first non-ASCII byte (or the end of the input if it is ASCII in its
 entirety).</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -200,6 +223,7 @@ entirety).</p>
                                 <p>Copies Basic Latin from source to destination narrowing it to ASCII up to
 the first non-Basic Latin code unit (or the end of the input if it is
 Basic Latin in its entirety).</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -207,6 +231,7 @@ Basic Latin in its entirety).</p>
                                   title='fn encoding_rs::mem::ensure_utf16_validity'>ensure_utf16_validity</a></td>
                            <td class='docblock-short'>
                                 <p>Replaces unpaired surrogates in the input with the REPLACEMENT CHARACTER.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -214,6 +239,7 @@ Basic Latin in its entirety).</p>
                                   title='fn encoding_rs::mem::is_ascii'>is_ascii</a></td>
                            <td class='docblock-short'>
                                 <p>Checks whether the buffer is all-ASCII.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -222,6 +248,7 @@ Basic Latin in its entirety).</p>
                            <td class='docblock-short'>
                                 <p>Checks whether the buffer is all-Basic Latin (i.e. UTF-16 representing
 only ASCII characters).</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -229,6 +256,7 @@ only ASCII characters).</p>
                                   title='fn encoding_rs::mem::is_char_bidi'>is_char_bidi</a></td>
                            <td class='docblock-short'>
                                 <p>Checks whether a code point triggers right-to-left processing.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -237,6 +265,7 @@ only ASCII characters).</p>
                            <td class='docblock-short'>
                                 <p>Checks whether a valid UTF-8 buffer contains code points that trigger
 right-to-left processing.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -245,6 +274,7 @@ right-to-left processing.</p>
                            <td class='docblock-short'>
                                 <p>Checks whether the buffer represents only code point less than or equal
 to U+00FF.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -253,6 +283,7 @@ to U+00FF.</p>
                            <td class='docblock-short'>
                                 <p>Checks whether a UTF-16 buffer contains code points that trigger
 right-to-left processing.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -260,6 +291,7 @@ right-to-left processing.</p>
                                   title='fn encoding_rs::mem::is_utf16_code_unit_bidi'>is_utf16_code_unit_bidi</a></td>
                            <td class='docblock-short'>
                                 <p>Checks whether a UTF-16 code unit triggers right-to-left processing.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -268,6 +300,7 @@ right-to-left processing.</p>
                            <td class='docblock-short'>
                                 <p>Checks whether the buffer represents only code point less than or equal
 to U+00FF.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -276,6 +309,7 @@ to U+00FF.</p>
                            <td class='docblock-short'>
                                 <p>Checks whether a potentially-invalid UTF-8 buffer contains code points
 that trigger right-to-left processing.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -284,6 +318,7 @@ that trigger right-to-left processing.</p>
                            <td class='docblock-short'>
                                 <p>Checks whether the buffer is valid UTF-8 representing only code points
 less than or equal to U+00FF.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -292,6 +327,7 @@ less than or equal to U+00FF.</p>
                            <td class='docblock-short'>
                                 <p>Returns the index of the first unpaired surrogate or, if the input is
 valid UTF-16 in its entirety, the length of the input.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -306,20 +342,22 @@ valid UTF-16 in its entirety, the length of the input.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

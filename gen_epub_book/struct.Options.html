@@ -10,8 +10,11 @@
     <title>gen_epub_book::Options - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Struct Options</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.source_file">source_file</a><a href="#structfield.include_directories">include_directories</a><a href="#structfield.output_file">output_file</a><a href="#structfield.verbose">verbose</a><a href="#structfield.separator">separator</a><a href="#structfield.free_date">free_date</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.parse">parse</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-Clone">Clone</a><a href="#impl-Hash">Hash</a><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Eq">Eq</a></div></div><p class='location'><a href='index.html'>gen_epub_book</a></p><script>window.sidebarCurrent = {name: 'Options', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -57,7 +67,7 @@
     pub verbose: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
     pub separator: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>,
     pub free_date: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
-}</pre><div class='docblock'><p>Representation of the application&#39;s all configurable values.</p>
+}</pre><div class='docblock'><p>Representation of the application's all configurable values.</p>
 </div><h2 id='fields' class='fields small-section-header'>
                        Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.source_file" class="structfield small-section-header">
                            <a href="#structfield.source_file" class="anchor field"></a>
@@ -70,12 +80,10 @@
                            <code>include_directories: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="enum" href="../gen_epub_book/ops/enum.IncludeDirectory.html" title="enum gen_epub_book::ops::IncludeDirectory">IncludeDirectory</a>&gt;</code>
                            </span></span><div class='docblock'><p>The roots for relative source paths, or, so called
 <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-include-dirs"><code>-I</code>nclude dirs</a>.</p>
-
 <p>Default:</p>
-
 <ul>
 <li><code>[&quot;.&quot;]</code> if <code>source_file == None</code>, or</li>
-<li><code>[</code>directory containing <code>source_file</code><code>]</code> otherwise.</li>
+<li><code>[</code>directory containing <code>source_file``]</code> otherwise.</li>
 </ul>
 </div><span id="structfield.output_file" class="structfield small-section-header">
                            <a href="#structfield.output_file" class="anchor field"></a>
@@ -87,14 +95,12 @@
                            <span id="verbose.v" class='invisible'>
                            <code>verbose: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
                            </span></span><div class='docblock'><p>Whether to print more information.</p>
-
 <p>Default: false</p>
 </div><span id="structfield.separator" class="structfield small-section-header">
                            <a href="#structfield.separator" class="anchor field"></a>
                            <span id="separator.v" class='invisible'>
                            <code>separator: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code>
                            </span></span><div class='docblock'><p>Chosen <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator">separator</a>.</p>
-
 <p>Default: <code>&quot;:&quot;</code></p>
 </div><span id="structfield.free_date" class="structfield small-section-header">
                            <a href="#structfield.free_date" class="anchor field"></a>
@@ -103,7 +109,6 @@
                            </span></span><div class='docblock'><p>Whether to (attempt to) parse
 <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format">more date formats</a>
 than just RFC3339.</p>
-
 <p>Default: false</p>
 </div>
                     <h2 id='methods' class='small-section-header'>
@@ -148,20 +153,22 @@ than just RFC3339.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

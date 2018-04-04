@@ -10,8 +10,11 @@
     <title>gen_epub_book::ops::BookElement - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Enum BookElement</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.Name">Name</a><a href="#variant.Content">Content</a><a href="#variant.StringContent">StringContent</a><a href="#variant.ImageContent">ImageContent</a><a href="#variant.NetworkImageContent">NetworkImageContent</a><a href="#variant.Cover">Cover</a><a href="#variant.NetworkCover">NetworkCover</a><a href="#variant.Include">Include</a><a href="#variant.NetworkInclude">NetworkInclude</a><a href="#variant.Description">Description</a><a href="#variant.StringDescription">StringDescription</a><a href="#variant.NetworkDescription">NetworkDescription</a><a href="#variant.Author">Author</a><a href="#variant.Date">Date</a><a href="#variant.Language">Language</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.parse">parse</a><a href="#method.name">name</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Clone">Clone</a><a href="#impl-Debug">Debug</a><a href="#impl-Hash">Hash</a><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Eq">Eq</a><a href="#impl-PartialOrd">PartialOrd</a><a href="#impl-Ord">Ord</a><a href="#impl-Display">Display</a></div></div><p class='location'><a href='../index.html'>gen_epub_book</a>::<wbr><a href='index.html'>ops</a></p><script>window.sidebarCurrent = {name: 'BookElement', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -67,105 +77,83 @@
     Date(<a class="struct" href="../../chrono/datetime/struct.DateTime.html" title="struct chrono::datetime::DateTime">DateTime</a>&lt;<a class="struct" href="../../chrono/offset/fixed/struct.FixedOffset.html" title="struct chrono::offset::fixed::FixedOffset">FixedOffset</a>&gt;),
     Language(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>),
 }</pre><div class='docblock'><p>A single element of the e-book</p>
-
 <p>Parse a single line with <code>BookElement::parse()</code> or the whole descriptor with <code>ops::parse_descriptor()</code>.</p>
-
 <p>Use <code>Display</code> to desugar back to description form.</p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
 <pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;Image-Content: images/ch01.png&quot;</span>;
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">BookElement</span>::<span class="ident">parse</span>(<span class="ident">input</span>, <span class="string">&quot;:&quot;</span>, <span class="bool-val">false</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>().<span class="ident">to_string</span>(), <span class="ident">input</span>);</pre>
 </div><h2 id='variants' class='variants small-section-header'>
                    Variants<a href='#variants' class='anchor'></a></h2>
-<span id="variant.Name" class="variant small-section-header"><a href="#variant.Name" class="anchor field"></a><span id='Name.v' class='invisible'><code>Name(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>E-book&#39;s title</p>
-
+<span id="variant.Name" class="variant small-section-header"><a href="#variant.Name" class="anchor field"></a><span id='Name.v' class='invisible'><code>Name(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>E-book's title</p>
 <p>Required: yes<br />
 Type: plaintext<br />
 Amount: 1</p>
 </div><span id="variant.Content" class="variant small-section-header"><a href="#variant.Content" class="anchor field"></a><span id='Content.v' class='invisible'><code>Content(<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>)</code></span></span><div class='docblock'><p>Content to put in the e-book</p>
-
 <p>The content is additionally parsed in search for the text chunk containing <code>&lt;!-- ePub title: &quot;TOC_NAME&quot; --&gt;</code>,
 where <code>TOC_NAME</code> is any string not containing the <code>&quot;</code> character.</p>
-
 <p>That string will be used as the TOC name of the content,
 which will allow users on e-book readers to jump directly to the content
 represented by the document containing this entry.</p>
-
 <p>Required: no<br />
 Value: relative path to (X)HTML chunk<br />
 Amount: any</p>
 </div><span id="variant.StringContent" class="variant small-section-header"><a href="#variant.StringContent" class="anchor field"></a><span id='StringContent.v' class='invisible'><code>StringContent(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>(X)HTML string to use as content</p>
-
 <p>Required: no<br />
 Value: (X)HTML string<br />
 Amount: any</p>
 </div><span id="variant.ImageContent" class="variant small-section-header"><a href="#variant.ImageContent" class="anchor field"></a><span id='ImageContent.v' class='invisible'><code>ImageContent(<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>)</code></span></span><div class='docblock'><p>Relative path to image to include in e-book</p>
-
 <p>Required: no<br />
 Type: file path<br />
 Amount: any</p>
 </div><span id="variant.NetworkImageContent" class="variant small-section-header"><a href="#variant.NetworkImageContent" class="anchor field"></a><span id='NetworkImageContent.v' class='invisible'><code>NetworkImageContent(<a class="struct" href="../../url/struct.Url.html" title="struct url::Url">Url</a>)</code></span></span><div class='docblock'><p>URL of image to include in e-book</p>
-
 <p>Required: no<br />
 Type: file URL<br />
 Amount: any</p>
 </div><span id="variant.Cover" class="variant small-section-header"><a href="#variant.Cover" class="anchor field"></a><span id='Cover.v' class='invisible'><code>Cover(<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>)</code></span></span><div class='docblock'><p>Relative path to image to use as e-book cover</p>
-
 <p>Required: no<br />
 Type: file path<br />
 Amount: 0-1<br />
 Remarks: exclusive with Network-Cover</p>
 </div><span id="variant.NetworkCover" class="variant small-section-header"><a href="#variant.NetworkCover" class="anchor field"></a><span id='NetworkCover.v' class='invisible'><code>NetworkCover(<a class="struct" href="../../url/struct.Url.html" title="struct url::Url">Url</a>)</code></span></span><div class='docblock'><p>URL of image to use as e-book cover</p>
-
 <p>Required: no<br />
 Type: file URL<br />
 Amount: 0-1<br />
 Remarks: exclusive with Cover</p>
 </div><span id="variant.Include" class="variant small-section-header"><a href="#variant.Include" class="anchor field"></a><span id='Include.v' class='invisible'><code>Include(<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>)</code></span></span><div class='docblock'><p>Auxilliary file to include in e-book</p>
-
 <p>This is useful for, e.g., CSS.</p>
-
 <p>Required: no<br />
 Value: relative path to (X)HTML chunk<br />
 Amount: any</p>
 </div><span id="variant.NetworkInclude" class="variant small-section-header"><a href="#variant.NetworkInclude" class="anchor field"></a><span id='NetworkInclude.v' class='invisible'><code>NetworkInclude(<a class="struct" href="../../url/struct.Url.html" title="struct url::Url">Url</a>)</code></span></span><div class='docblock'><p>URL of auxilliary file to include in e-book</p>
-
 <p>This is useful for, e.g., fonts.</p>
-
 <p>Required: no<br />
 Type: file URL<br />
 Amount: any</p>
-</div><span id="variant.Description" class="variant small-section-header"><a href="#variant.Description" class="anchor field"></a><span id='Description.v' class='invisible'><code>Description(<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>)</code></span></span><div class='docblock'><p>Relative path to file containing the book&#39;s description</p>
-
+</div><span id="variant.Description" class="variant small-section-header"><a href="#variant.Description" class="anchor field"></a><span id='Description.v' class='invisible'><code>Description(<a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a>)</code></span></span><div class='docblock'><p>Relative path to file containing the book's description</p>
 <p>Required: no<br />
 Value: relative path to (X)HTML chunk<br />
 Amount: 0-1<br />
 Remarks: exclusive with String-Description and Network-Description</p>
-</div><span id="variant.StringDescription" class="variant small-section-header"><a href="#variant.StringDescription" class="anchor field"></a><span id='StringDescription.v' class='invisible'><code>StringDescription(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Book&#39;s description</p>
-
+</div><span id="variant.StringDescription" class="variant small-section-header"><a href="#variant.StringDescription" class="anchor field"></a><span id='StringDescription.v' class='invisible'><code>StringDescription(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Book's description</p>
 <p>Required: no<br />
 Type: (X-)HTML<br />
 Amount: 0-1<br />
 Remarks: exclusive with Description and Network-Description</p>
-</div><span id="variant.NetworkDescription" class="variant small-section-header"><a href="#variant.NetworkDescription" class="anchor field"></a><span id='NetworkDescription.v' class='invisible'><code>NetworkDescription(<a class="struct" href="../../url/struct.Url.html" title="struct url::Url">Url</a>)</code></span></span><div class='docblock'><p>URL of auxilliary file containing the book&#39;s description</p>
-
+</div><span id="variant.NetworkDescription" class="variant small-section-header"><a href="#variant.NetworkDescription" class="anchor field"></a><span id='NetworkDescription.v' class='invisible'><code>NetworkDescription(<a class="struct" href="../../url/struct.Url.html" title="struct url::Url">Url</a>)</code></span></span><div class='docblock'><p>URL of auxilliary file containing the book's description</p>
 <p>Required: no<br />
 Type: file URL<br />
 Amount: 0-1<br />
 Remarks: exclusive with Description and String-Description</p>
-</div><span id="variant.Author" class="variant small-section-header"><a href="#variant.Author" class="anchor field"></a><span id='Author.v' class='invisible'><code>Author(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>E-book&#39;s author</p>
-
+</div><span id="variant.Author" class="variant small-section-header"><a href="#variant.Author" class="anchor field"></a><span id='Author.v' class='invisible'><code>Author(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>E-book's author</p>
 <p>Required: yes<br />
 Type: plaintext string<br />
 Amount: 1</p>
-</div><span id="variant.Date" class="variant small-section-header"><a href="#variant.Date" class="anchor field"></a><span id='Date.v' class='invisible'><code>Date(<a class="struct" href="../../chrono/datetime/struct.DateTime.html" title="struct chrono::datetime::DateTime">DateTime</a>&lt;<a class="struct" href="../../chrono/offset/fixed/struct.FixedOffset.html" title="struct chrono::offset::fixed::FixedOffset">FixedOffset</a>&gt;)</code></span></span><div class='docblock'><p>E-book&#39;s authoring/publishing date</p>
-
+</div><span id="variant.Date" class="variant small-section-header"><a href="#variant.Date" class="anchor field"></a><span id='Date.v' class='invisible'><code>Date(<a class="struct" href="../../chrono/datetime/struct.DateTime.html" title="struct chrono::datetime::DateTime">DateTime</a>&lt;<a class="struct" href="../../chrono/offset/fixed/struct.FixedOffset.html" title="struct chrono::offset::fixed::FixedOffset">FixedOffset</a>&gt;)</code></span></span><div class='docblock'><p>E-book's authoring/publishing date</p>
 <p>Required: yes<br />
 Type: <a href="https://tools.ietf.org/html/rfc3339">RFC3339</a>-compliant date<br />
 Amount: 1</p>
 </div><span id="variant.Language" class="variant small-section-header"><a href="#variant.Language" class="anchor field"></a><span id='Language.v' class='invisible'><code>Language(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span></span><div class='docblock'><p>Language used in e-book</p>
-
 <p>Required: yes<br />
 Type: <a href="https://tools.ietf.org/html/bcp47">BCP47</a>-compliant language code<br />
 Amount: 1</p>
@@ -179,17 +167,12 @@ Amount: 1</p>
 <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-custom-separator">separator</a>
 with the specified
 <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format">rigidness</a>.</p>
-
-<p>If the line isn&#39;t a descripting line or the line uses an unknown key, <code>Ok(None)</code> is returned.</p>
-
+<p>If the line isn't a descripting line or the line uses an unknown key, <code>Ok(None)</code> is returned.</p>
 <p><code>Err</code> will only be returned when parsing a <code>DateTime</code> or a <code>Url</code> fails.</p>
-
 <p>If <code>free_date</code> is <code>true</code>, in addition to the default RFC3339,
 RFC2822 and Unix-timestamp+tt:zz are accepted as correct <code>DateTime</code> formats.</p>
-
 <p>Any whitespace from both parts of the description line are stripped.</p>
-
-<h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
+<h1 id="examples-1" class="section-header"><a href="#examples-1">Examples</a></h1>
 <p>Incorrect format:</p>
 
 <pre class="rust rust-example-rendered">
@@ -197,7 +180,6 @@ RFC2822 and Unix-timestamp+tt:zz are accepted as correct <code>DateTime</code> f
 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse</span>(<span class="string">&quot;Date: 1486564218&quot;</span>, <span class="string">&quot;:&quot;</span>, <span class="bool-val">true</span>).<span class="ident">is_err</span>());
 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse</span>(<span class="string">&quot;Network-Image-Content: http/i.imgur.com/ViQ2WED.jpg&quot;</span>,
                            <span class="string">&quot;:&quot;</span>, <span class="bool-val">false</span>).<span class="ident">is_err</span>());</pre>
-
 <p>Not a description/unrecognised key:</p>
 
 <pre class="rust rust-example-rendered">
@@ -206,7 +188,6 @@ RFC2822 and Unix-timestamp+tt:zz are accepted as correct <code>DateTime</code> f
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse</span>(<span class="string">&quot;Content: used colon instead of equal sign -&gt;&quot;</span>, <span class="string">&quot;=&quot;</span>, <span class="bool-val">false</span>),
            <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>));
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">parse</span>(<span class="string">&quot;Workers all over the world, unite!&quot;</span>, <span class="string">&quot;:&quot;</span>, <span class="bool-val">false</span>), <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>));</pre>
-
 <p>Correct:</p>
 
 <pre class="rust rust-example-rendered">
@@ -222,8 +203,7 @@ RFC2822 and Unix-timestamp+tt:zz are accepted as correct <code>DateTime</code> f
            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">BookElement</span>::<span class="ident">Language</span>(<span class="string">&quot;pl&quot;</span>.<span class="ident">to_string</span>()))));</pre>
 </div><h4 id='method.name' class="method"><span id='name.v' class='invisible'><code>pub fn <a href='#method.name' class='fnname'>name</a>(&amp;self) -&gt; &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/gen_epub_book/ops/element.rs.html#241-259' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the descriptor name of this element.</p>
-
-<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<h1 id="examples-2" class="section-header"><a href="#examples-2">Examples</a></h1>
 <pre class="rust rust-example-rendered">
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">Name</span>(<span class="string">&quot;nabijaczleweli&quot;</span>.<span class="ident">to_string</span>()).<span class="ident">name</span>(), <span class="string">&quot;Name&quot;</span>);
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">BookElement</span>::<span class="ident">Content</span>(<span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="string">&quot;content/ch01.html&quot;</span>)).<span class="ident">name</span>(), <span class="string">&quot;Content&quot;</span>);
@@ -288,20 +268,22 @@ RFC2822 and Unix-timestamp+tt:zz are accepted as correct <code>DateTime</code> f
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

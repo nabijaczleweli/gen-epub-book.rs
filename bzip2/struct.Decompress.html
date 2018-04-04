@@ -10,8 +10,11 @@
     <title>bzip2::Decompress - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Struct Decompress</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.decompress">decompress</a><a href="#method.decompress_vec">decompress_vec</a><a href="#method.total_in">total_in</a><a href="#method.total_out">total_out</a></div></div><p class='location'><a href='index.html'>bzip2</a></p><script>window.sidebarCurrent = {name: 'Decompress', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,7 +61,6 @@
                    </a>
                </span><a class='srclink' href='../src/bzip2/mem.rs.html#24-26' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Decompress { /* fields omitted */ }</pre><div class='docblock'><p>Representation of an in-memory decompression stream.</p>
-
 <p>An instance of <code>Decompress</code> can be used to inflate a straem of bz2-encoded
 data.</p>
 </div>
@@ -61,7 +70,6 @@ data.</p>
                 <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../bzip2/struct.Decompress.html" title="struct bzip2::Decompress">Decompress</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/bzip2/mem.rs.html#194-263' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(small: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="struct" href="../bzip2/struct.Decompress.html" title="struct bzip2::Decompress">Decompress</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/bzip2/mem.rs.html#201-209' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Creates a new stream prepared for decompression.</p>
-
 <p>If <code>small</code> is true, then the library will use an alternative
 decompression algorithm which uses less memory but at the cost of
 decompressing more slowly (roughly speaking, half the speed, but the
@@ -70,7 +78,6 @@ maximum memory requirement drops to around 2300k). See</p>
 <div class='docblock'><p>Decompress a block of input into a block of output.</p>
 </div><h4 id='method.decompress_vec' class="method"><span id='decompress_vec.v' class='invisible'><code>pub fn <a href='#method.decompress_vec' class='fnname'>decompress_vec</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;mut self, <br>&nbsp;&nbsp;&nbsp;&nbsp;input: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;output: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>&gt;<br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="enum" href="../bzip2/enum.Status.html" title="enum bzip2::Status">Status</a>, <a class="enum" href="../bzip2/enum.Error.html" title="enum bzip2::Error">Error</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/bzip2/mem.rs.html#237-252' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Decompress a block of input into an output vector.</p>
-
 <p>This function will not grow <code>output</code>, but it will fill the space after
 its current length up to its capacity. The length of the vector will be
 adjusted appropriately.</p>
@@ -91,20 +98,22 @@ adjusted appropriately.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

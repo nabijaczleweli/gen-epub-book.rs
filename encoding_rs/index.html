@@ -10,8 +10,11 @@
     <title>encoding_rs - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Crate encoding_rs</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#statics">Statics</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'encoding_rs', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -56,12 +66,10 @@ Gecko-oriented means that converting to and from UTF-16 is supported in
 addition to converting to and from UTF-8, that the performance and
 streamability goals are browser-oriented, and that FFI-friendliness is a
 goal.</p>
-
 <p>Additionally, the <code>mem</code> module provides functions that are useful for
 applications that need to be able to deal with legacy in-memory
 representations of Unicode.</p>
-
-<h1 id='availability' class='section-header'><a href='#availability'>Availability</a></h1>
+<h1 id="availability" class="section-header"><a href="#availability">Availability</a></h1>
 <p>The code is available under the
 <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache license, Version 2.0</a>
 or the <a href="https://opensource.org/licenses/MIT">MIT license</a>, at your option.
@@ -70,16 +78,13 @@ See the
 file for details.
 The <a href="https://github.com/hsivonen/encoding_rs">repository is on GitHub</a>. The
 <a href="https://crates.io/crates/encoding_rs">crate is available on crates.io</a>.</p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
 <p>Example programs:</p>
-
 <ul>
 <li><a href="https://github.com/hsivonen/recode_rs">Rust</a></li>
 <li><a href="https://github.com/hsivonen/recode_c">C</a></li>
 <li><a href="https://github.com/hsivonen/recode_cpp">C++</a></li>
 </ul>
-
 <p>Decode using the non-streaming API:</p>
 
 <pre class="rust rust-example-rendered">
@@ -92,7 +97,6 @@ The <a href="https://github.com/hsivonen/encoding_rs">repository is on GitHub</a
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">cow</span>[..], <span class="ident">expectation</span>);
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">encoding_used</span>, <span class="ident">SHIFT_JIS</span>);
 <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">had_errors</span>);</pre>
-
 <p>Decode using the streaming API with minimal <code>unsafe</code>:</p>
 
 <pre class="rust rust-example-rendered">
@@ -187,40 +191,35 @@ The <a href="https://github.com/hsivonen/encoding_rs">repository is on GitHub</a
 
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>[..], <span class="ident">expectation</span>);
 <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">total_had_errors</span>);</pre>
-
-<h2 id='web--browser-focus' class='section-header'><a href='#web--browser-focus'>Web / Browser Focus</a></h2>
+<h2 id="web--browser-focus" class="section-header"><a href="#web--browser-focus">Web / Browser Focus</a></h2>
 <p>Both in terms of scope and performance, the focus is on the Web. For scope,
 this means that encoding_rs implements the Encoding Standard fully and
-doesn&#39;t implement encodings that are not specified in the Encoding
+doesn't implement encodings that are not specified in the Encoding
 Standard. For performance, this means that decoding performance is
 important as well as performance for encoding into UTF-8 or encoding the
 Basic Latin range (ASCII) into legacy encodings. Non-Basic Latin needs to
 be encoded into legacy encodings in only two places in the Web platform: in
-the query part of URLs, in which case it&#39;s a matter of relatively rare
+the query part of URLs, in which case it's a matter of relatively rare
 error handling, and in form submission, in which case the user action and
 networking tend to hide the performance of the encoder.</p>
-
 <p>Deemphasizing performance of encoding non-Basic Latin text into legacy
 encodings enables smaller code size thanks to the encoder side using the
 decode-optimized data tables without having encode-optimized data tables at
 all. Even in decoders, smaller lookup table size is preferred over avoiding
 multiplication operations.</p>
-
 <p>Additionally, performance is a non-goal for the ASCII-incompatible
 ISO-2022-JP and UTF-16 encodings, which are rarely used on the Web. For
 clarity, this means that performance is a non-goal for UTF-16 as used on
 the wire as an interchange encoding (UTF-16 on the <code>[u8]</code> side of the API).
 Good performance for UTF-16 used as an in-RAM Unicode representation
 (UTF-16 the <code>[u16]</code> side of the API) is a goal.</p>
-
 <p>Despite the focus on the Web, encoding_rs may well be useful for decoding
-email, although you&#39;ll need to implement UTF-7 decoding and label handling
+email, although you'll need to implement UTF-7 decoding and label handling
 by other means. (Due to the Web focus, patches to add UTF-7 are unwelcome
 in encoding_rs itself.) Also, despite the browser focus, the hope is that
 non-browser applications that wish to consume Web content or submit Web
 forms in a Web-compatible way will find encoding_rs useful.</p>
-
-<h1 id='streaming--non-streaming-rust--cc' class='section-header'><a href='#streaming--non-streaming-rust--cc'>Streaming &amp; Non-Streaming; Rust &amp; C/C++</a></h1>
+<h1 id="streaming--non-streaming-rust--cc" class="section-header"><a href="#streaming--non-streaming-rust--cc">Streaming &amp; Non-Streaming; Rust &amp; C/C++</a></h1>
 <p>The API in Rust has two modes of operation: streaming and non-streaming.
 The streaming API is the foundation of the implementation and should be
 used when processing data that arrives piecemeal from an i/o stream. The
@@ -229,11 +228,9 @@ to C callers. The non-streaming part of the API is for Rust callers only and
 is smart about borrowing instead of copying when possible. When
 streamability is not needed, the non-streaming API should be preferrer in
 order to avoid copying data when a borrow suffices.</p>
-
-<p>There is no analogous C API exposed via FFI, mainly because C doesn&#39;t have
+<p>There is no analogous C API exposed via FFI, mainly because C doesn't have
 standard types for growable byte buffers and Unicode strings that know
 their length.</p>
-
 <p>The C API (header file generated at <code>target/include/encoding_rs.h</code> when
 building encoding_rs) can, in turn, be wrapped for use from C++. Such a
 C++ wrapper can re-create the non-streaming API in C++ for C++ callers.
@@ -241,33 +238,27 @@ The C binding comes with a <a href="https://github.com/hsivonen/encoding_c/blob/
 <a href="https://github.com/Microsoft/GSL/">GSL</a> types and that recreates the non-streaming API in C++ on top of
 the streaming API. A C++ wrapper with XPCOM/MFBT types is being developed
 as part of Mozilla <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=encoding_rs">bug 1261841</a>.</p>
-
 <p>The <code>Encoding</code> type is common to both the streaming and non-streaming
 modes. In the streaming mode, decoding operations are performed with a
 <code>Decoder</code> and encoding operations with an <code>Encoder</code> object obtained via
 <code>Encoding</code>. In the non-streaming mode, decoding and encoding operations are
 performed using methods on <code>Encoding</code> objects themselves, so the <code>Decoder</code>
 and <code>Encoder</code> objects are not used at all.</p>
-
-<h1 id='memory-management' class='section-header'><a href='#memory-management'>Memory management</a></h1>
+<h1 id="memory-management" class="section-header"><a href="#memory-management">Memory management</a></h1>
 <p>The non-streaming mode never performs heap allocations (even the methods
 that write into a <code>Vec&lt;u8&gt;</code> or a <code>String</code> by taking them as arguments do
 not reallocate the backing buffer of the <code>Vec&lt;u8&gt;</code> or the <code>String</code>). That
 is, the non-streaming mode uses caller-allocated buffers exclusively.</p>
-
 <p>The methods of the streaming mode that return a <code>Vec&lt;u8&gt;</code> or a <code>String</code>
 perform heap allocations but only to allocate the backing buffer of the
 <code>Vec&lt;u8&gt;</code> or the <code>String</code>.</p>
-
 <p><code>Encoding</code> is always statically allocated. <code>Decoder</code> and <code>Encoder</code> need no
 <code>Drop</code> cleanup.</p>
-
-<h1 id='buffer-reading-and-writing-behavior' class='section-header'><a href='#buffer-reading-and-writing-behavior'>Buffer reading and writing behavior</a></h1>
+<h1 id="buffer-reading-and-writing-behavior" class="section-header"><a href="#buffer-reading-and-writing-behavior">Buffer reading and writing behavior</a></h1>
 <p>Based on experience gained with the <code>java.nio.charset</code> encoding converter
 API and with the Gecko uconv encoding converter API, the buffer reading
 and writing behaviors of encoding_rs are asymmetric: input buffers are
 fully drained but output buffers are not always fully filled.</p>
-
 <p>When reading from an input buffer, encoding_rs always consumes all input
 up to the next error or to the end of the buffer. In particular, when
 decoding, even if the input buffer ends in the middle of a byte sequence
@@ -279,12 +270,10 @@ encoding, the UTF-8 input buffers have to end at a character boundary, which
 is a requirement for the Rust <code>str</code> type anyway, and UTF-16 input buffer
 boundaries falling in the middle of a surrogate pair result in both
 suggorates being treated individually as unpaired surrogates.</p>
-
 <p>Additionally, decoders guarantee that they can be fed even one byte at a
 time and encoders guarantee that they can be fed even one code point at a
 time. This has the benefit of not placing restrictions on the size of
 chunks the content arrives e.g. from network.</p>
-
 <p>When writing into an output buffer, encoding_rs makes sure that the code
 unit sequence for a character is never split across output buffer
 boundaries. This may result in wasted space at the end of an output buffer,
@@ -296,12 +285,11 @@ far is always valid taken as whole. (In the case of encoding to ISO-2022-JP,
 the output needs to be considered as a whole, because the latest output
 buffer taken alone might not be valid taken alone if the transition away
 from the ASCII state occurred in an earlier output buffer. However, since
-the ISO-2022-JP decoder doesn&#39;t treat streams that don&#39;t end in the ASCII
+the ISO-2022-JP decoder doesn't treat streams that don't end in the ASCII
 state as being in error despite the encoder generating a transition to the
 ASCII state at the end, the claim about the partial output taken as a whole
 being valid is true even for ISO-2022-JP.)</p>
-
-<h1 id='error-reporting' class='section-header'><a href='#error-reporting'>Error Reporting</a></h1>
+<h1 id="error-reporting" class="section-header"><a href="#error-reporting">Error Reporting</a></h1>
 <p>Based on experience gained with the <code>java.nio.charset</code> encoding converter
 API and with the Gecko uconv encoding converter API, the error reporting
 behaviors of encoding_rs are asymmetric: decoder errors include offsets
@@ -309,10 +297,9 @@ that leave it up to the caller to extract the erroneous bytes from the
 input stream if the caller wishes to do so but encoder errors provide the
 code point associated with the error without requiring the caller to
 extract it from the input on its own.</p>
-
 <p>On the encoder side, an error is always triggered by the most recently
 pushed Unicode scalar, which makes it simple to pass the <code>char</code> to the
-caller. Also, it&#39;s very typical for the caller to wish to do something with
+caller. Also, it's very typical for the caller to wish to do something with
 this data: generate a numeric escape for the character. Additionally, the
 ISO-2022-JP encoder reports U+FFFD instead of the actual input character in
 certain cases, so requiring the caller to extract the character from the
@@ -320,22 +307,19 @@ input buffer would require the caller to handle ISO-2022-JP details.
 Furthermore, requiring the caller to extract the character from the input
 buffer would require the caller to implement UTF-8 or UTF-16 math, which is
 the job of an encoding conversion library.</p>
-
 <p>On the decoder side, errors are triggered in more complex ways. For
-example, when decoding the sequence ESC, &#39;$&#39;, <em>buffer boundary</em>, &#39;A&#39; as
+example, when decoding the sequence ESC, '$', <em>buffer boundary</em>, 'A' as
 ISO-2022-JP, the ESC byte is in error, but this is discovered only after
-the buffer boundary when processing &#39;A&#39;. Thus, the bytes in error might not
+the buffer boundary when processing 'A'. Thus, the bytes in error might not
 be the ones most recently pushed to the decoder and the error might not even
 be in the current buffer.</p>
-
 <p>Some encoding conversion APIs address the problem by not acknowledging
-trailing bytes of an input buffer as consumed if it&#39;s still possible for
+trailing bytes of an input buffer as consumed if it's still possible for
 future bytes to cause the trailing bytes to be in error. This way, error
 reporting can always refer to the most recently pushed buffer. This has the
 problem that the caller of the API has to copy the unconsumed trailing
 bytes to the start of the next buffer before being able to fill the rest
 of the next buffer. This is annoying, error-prone and inefficient.</p>
-
 <p>A possible solution would be making the decoder remember recently consumed
 bytes in order to be able to include a copy of the erroneous bytes when
 reporting an error. This has two problem: First, callers a rarely
@@ -343,114 +327,98 @@ interested in the erroneous bytes, so attempts to identify them are most
 often just overhead anyway. Second, the rare applications that are
 interested typically care about the location of the error in the input
 stream.</p>
-
 <p>To keep the API convenient for common uses and the overhead low while making
 it possible to develop applications, such as HTML validators, that care
 about which bytes were in error, encoding_rs reports the length of the
 erroneous sequence and the number of bytes consumed after the erroneous
-sequence. As long as the caller doesn&#39;t discard the 6 most recent bytes,
+sequence. As long as the caller doesn't discard the 6 most recent bytes,
 this makes it possible for callers that care about the erroneous bytes to
 locate them.</p>
-
-<h1 id='no-convenience-api-for-custom-replacements' class='section-header'><a href='#no-convenience-api-for-custom-replacements'>No Convenience API for Custom Replacements</a></h1>
+<h1 id="no-convenience-api-for-custom-replacements" class="section-header"><a href="#no-convenience-api-for-custom-replacements">No Convenience API for Custom Replacements</a></h1>
 <p>The Web Platform and, therefore, the Encoding Standard supports only one
 error recovery mode for decoders and only one error recovery mode for
 encoders. The supported error recovery mode for decoders is emitting the
 REPLACEMENT CHARACTER on error. The supported error recovery mode for
 encoders is emitting an HTML decimal numeric character reference for
 unmappable characters.</p>
-
 <p>Since encoding_rs is Web-focused, these are the only error recovery modes
 for which convenient support is provided. Moreover, on the decoder side,
-there aren&#39;t really good alternatives for emitting the REPLACEMENT CHARACTER
+there aren't really good alternatives for emitting the REPLACEMENT CHARACTER
 on error (other than treating errors as fatal). In particular, simply
 ignoring errors is a
 <a href="http://www.unicode.org/reports/tr36/#Substituting_for_Ill_Formed_Subsequences">security problem</a>,
 so it would be a bad idea for encoding_rs to provide a mode that encouraged
 callers to ignore errors.</p>
-
 <p>On the encoder side, there are plausible alternatives for HTML decimal
 numeric character references. For example, when outputting CSS, CSS-style
 escapes would seem to make sense. However, instead of facilitating the
 output of CSS, JS, etc. in non-UTF-8 encodings, encoding_rs takes the design
-position that you shouldn&#39;t generate output in encodings other than UTF-8,
+position that you shouldn't generate output in encodings other than UTF-8,
 except where backward compatibility with interacting with the legacy Web
 requires it. The legacy Web requires it only when parsing the query strings
 of URLs and when submitting forms, and those two both use HTML decimal
 numeric character references.</p>
-
-<p>While encoding_rs doesn&#39;t make encoder replacements other than HTML decimal
+<p>While encoding_rs doesn't make encoder replacements other than HTML decimal
 numeric character references easy, it does make them <em>possible</em>.
 <code>encode_from_utf8()</code>, which emits HTML decimal numeric character references
 for unmappable characters, is implemented on top of
 <code>encode_from_utf8_without_replacement()</code>. Applications that really, really
 want other replacement schemes for unmappable characters can likewise
 implement them on top of <code>encode_from_utf8_without_replacement()</code>.</p>
-
-<h1 id='no-extensibility-by-design' class='section-header'><a href='#no-extensibility-by-design'>No Extensibility by Design</a></h1>
+<h1 id="no-extensibility-by-design" class="section-header"><a href="#no-extensibility-by-design">No Extensibility by Design</a></h1>
 <p>The set of encodings supported by encoding_rs is not extensible by design.
 That is, <code>Encoding</code>, <code>Decoder</code> and <code>Encoder</code> are intentionally <code>struct</code>s
 rather than <code>trait</code>s. encoding_rs takes the design position that all future
 text interchange should be done using UTF-8, which can represent all of
 Unicode. (It is, in fact, the only encoding supported by the Encoding
 Standard and encoding_rs that can represent all of Unicode and that has
-encoder support. UTF-16LE and UTF-16BE don&#39;t have encoder support, and
+encoder support. UTF-16LE and UTF-16BE don't have encoder support, and
 gb18030 cannot encode U+E5E5.) The other encodings are supported merely for
 legacy compatibility and not due to non-UTF-8 encodings having benefits
 other than being able to consume legacy content.</p>
-
 <p>Considering that UTF-8 can represent all of Unicode and is already supported
-by all Web browsers, introducing a new encoding wouldn&#39;t add to the
+by all Web browsers, introducing a new encoding wouldn't add to the
 expressiveness but would add to compatibility problems. In that sense,
-adding new encodings to the Web Platform doesn&#39;t make sense, and, in fact,
+adding new encodings to the Web Platform doesn't make sense, and, in fact,
 post-UTF-8 attempts at encodings, such as BOCU-1, have been rejected from
 the Web Platform. On the other hand, the set of legacy encodings that must
 be supported for a Web browser to be able to be successful is not going to
 expand. Empirically, the set of encodings specified in the Encoding Standard
-is already sufficient and the set of legacy encodings won&#39;t grow
+is already sufficient and the set of legacy encodings won't grow
 retroactively.</p>
-
-<p>Since extensibility doesn&#39;t make sense considering the Web focus of
+<p>Since extensibility doesn't make sense considering the Web focus of
 encoding_rs and adding encodings to Web clients would be actively harmful,
 it makes sense to make the set of encodings that encoding_rs supports
 non-extensible and to take the (admittedly small) benefits arising from
 that, such as the size of <code>Decoder</code> and <code>Encoder</code> objects being known ahead
- of time, which enables stack allocation thereof.</p>
-
+of time, which enables stack allocation thereof.</p>
 <p>This does have downsides for applications that might want to put encoding_rs
-to non-Web uses if those non-Web uses involve legacy encodings that aren&#39;t
+to non-Web uses if those non-Web uses involve legacy encodings that aren't
 needed for Web uses. The needs of such applications should not complicate
 encoding_rs itself, though. It is up to those applications to provide a
 framework that delegates the operations with encodings that encoding_rs
 supports to encoding_rs and operations with other encodings to something
 else (as opposed to encoding_rs itself providing an extensibility
 framework).</p>
-
-<h1 id='panics' class='section-header'><a href='#panics'>Panics</a></h1>
+<h1 id="panics" class="section-header"><a href="#panics">Panics</a></h1>
 <p>Methods in encoding_rs can panic if the API is used against the requirements
-stated in the documentation, if a state that&#39;s supposed to be impossible
+stated in the documentation, if a state that's supposed to be impossible
 is reached due to an internal bug or on integer overflow. When used
 according to documentation with buffer sizes that stay below integer
 overflow, in the absence of internal bugs, encoding_rs does not panic.</p>
-
-<p>Panics arising from API misuse aren&#39;t documented beyond this on individual
+<p>Panics arising from API misuse aren't documented beyond this on individual
 methods.</p>
-
-<h1 id='at-risk-parts-of-the-api' class='section-header'><a href='#at-risk-parts-of-the-api'>At-Risk Parts of the API</a></h1>
+<h1 id="at-risk-parts-of-the-api" class="section-header"><a href="#at-risk-parts-of-the-api">At-Risk Parts of the API</a></h1>
 <p>The foreseeable source of partially backward-incompatible API change is the
 way the instances of <code>Encoding</code> are made available.</p>
-
-<p>If Rust changes to allow the entries of <code>[&amp;&#39;static Encoding; N]</code> to be
-initialized with <code>static</code>s of type <code>&amp;&#39;static Encoding</code>, the non-reference
+<p>If Rust changes to allow the entries of <code>[&amp;'static Encoding; N]</code> to be
+initialized with <code>static</code>s of type <code>&amp;'static Encoding</code>, the non-reference
 <code>FOO_INIT</code> public <code>Encoding</code> instances will be removed from the public API.</p>
-
-<p>If Rust changes to make the referent of <code>pub const FOO: &amp;&#39;static Encoding</code>
+<p>If Rust changes to make the referent of <code>pub const FOO: &amp;'static Encoding</code>
 unique when the constant is used in different crates, the reference-typed
 <code>static</code>s for the encoding instances will be changed from <code>static</code> to
 <code>const</code> and the non-reference-typed <code>_INIT</code> instances will be removed.</p>
-
-<h1 id='mapping-spec-concepts-onto-the-api' class='section-header'><a href='#mapping-spec-concepts-onto-the-api'>Mapping Spec Concepts onto the API</a></h1>
-<table>
+<h1 id="mapping-spec-concepts-onto-the-api" class="section-header"><a href="#mapping-spec-concepts-onto-the-api">Mapping Spec Concepts onto the API</a></h1><table>
 <thead>
 <tr><th>Spec Concept</th><th>Streaming</th><th>Non-Streaming</th></tr>
 </thead>
@@ -468,17 +436,14 @@ unique when the constant is used in different crates, the reference-typed
 <tr><td><a href="https://encoding.spec.whatwg.org/#utf-8-encode">UTF-8 encode</a></td><td>Use the UTF-8 nature of Rust strings directly:<br><code><var>write</var>(<var>src</var>.as_bytes());<br>// refill src<br><var>write</var>(<var>src</var>.as_bytes());<br>// refill src<br><var>write</var>(<var>src</var>.as_bytes());<br>// &hellip;</code></td><td>Use the UTF-8 nature of Rust strings directly:<br><code><var>src</var>.as_bytes()</code></td></tr>
 </tbody>
 </table>
-
-<h1 id='compatibility-with-the-rust-encoding-api' class='section-header'><a href='#compatibility-with-the-rust-encoding-api'>Compatibility with the rust-encoding API</a></h1>
+<h1 id="compatibility-with-the-rust-encoding-api" class="section-header"><a href="#compatibility-with-the-rust-encoding-api">Compatibility with the rust-encoding API</a></h1>
 <p>The crate
 <a href="https://github.com/hsivonen/encoding_rs_compat/">encoding_rs_compat</a>
 is a drop-in replacement for rust-encoding 0.2.32 that implements (most of)
 the API of rust-encoding 0.2.32 on top of encoding_rs.</p>
-
-<h1 id='mapping-rust-encoding-concepts-to-encoding_rs-concepts' class='section-header'><a href='#mapping-rust-encoding-concepts-to-encoding_rs-concepts'>Mapping rust-encoding concepts to encoding_rs concepts</a></h1>
+<h1 id="mapping-rust-encoding-concepts-to-encoding_rs-concepts" class="section-header"><a href="#mapping-rust-encoding-concepts-to-encoding_rs-concepts">Mapping rust-encoding concepts to encoding_rs concepts</a></h1>
 <p>The following table provides a mapping from rust-encoding constructs to
 encoding_rs ones.</p>
-
 <table>
 <thead>
 <tr><th>rust-encoding</th><th>encoding_rs</th></tr>
@@ -514,8 +479,7 @@ encoding_rs ones.</p>
 <tr><td><code>encoding::EncoderTrap::NcrEscape</code></td><td><code>encode*</code> methods that <i>do not</i> have <code>_without_replacement</code> in their name.</td></tr>
 <tr><td><code>encoding::EncoderTrap::Call(EncoderTrapFunc)</code></td><td>Can be implemented using <code>encode*</code> methods that have <code>_without_replacement</code> in their name.</td></tr>
 </tbody>
-</table>
-</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+</table></div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class="mod" href="mem/index.html"
@@ -524,6 +488,7 @@ encoding_rs ones.</p>
                                 <p>Functions for converting between different in-RAM representations of text
 and for quickly checking if the Unicode Bidirectional Algorithm can be
 avoided.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
@@ -533,6 +498,7 @@ avoided.</p>
                            <td class='docblock-short'>
                                 <p>A converter that decodes a byte stream into Unicode according to a
 character encoding in a streaming (incremental) manner.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -541,6 +507,7 @@ character encoding in a streaming (incremental) manner.</p>
                            <td class='docblock-short'>
                                 <p>A converter that encodes a Unicode stream into bytes according to a
 character encoding in a streaming (incremental) manner.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -548,6 +515,7 @@ character encoding in a streaming (incremental) manner.</p>
                                   title='struct encoding_rs::Encoding'>Encoding</a></td>
                            <td class='docblock-short'>
                                 <p>An encoding as defined in the <a href="https://encoding.spec.whatwg.org/">Encoding Standard</a>.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -557,6 +525,7 @@ character encoding in a streaming (incremental) manner.</p>
                            <td class='docblock-short'>
                                 <p>Result of a (potentially partial) decode or encode operation with
 replacement.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -564,6 +533,7 @@ replacement.</p>
                                   title='enum encoding_rs::DecoderResult'>DecoderResult</a></td>
                            <td class='docblock-short'>
                                 <p>Result of a (potentially partial) decode operation without replacement.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -571,6 +541,7 @@ replacement.</p>
                                   title='enum encoding_rs::EncoderResult'>EncoderResult</a></td>
                            <td class='docblock-short'>
                                 <p>Result of a (potentially partial) encode operation without replacement.</p>
+
                            </td>
                        </tr></table><h2 id='statics' class='section-header'><a href="#statics">Statics</a></h2>
 <table>
@@ -579,6 +550,7 @@ replacement.</p>
                                   title='static encoding_rs::BIG5'>BIG5</a></td>
                            <td class='docblock-short'>
                                 <p>The Big5 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -586,6 +558,7 @@ replacement.</p>
                                   title='static encoding_rs::BIG5_INIT'>BIG5_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the Big5 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -593,6 +566,7 @@ replacement.</p>
                                   title='static encoding_rs::EUC_JP'>EUC_JP</a></td>
                            <td class='docblock-short'>
                                 <p>The EUC-JP encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -600,6 +574,7 @@ replacement.</p>
                                   title='static encoding_rs::EUC_JP_INIT'>EUC_JP_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the EUC-JP encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -607,6 +582,7 @@ replacement.</p>
                                   title='static encoding_rs::EUC_KR'>EUC_KR</a></td>
                            <td class='docblock-short'>
                                 <p>The EUC-KR encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -614,6 +590,7 @@ replacement.</p>
                                   title='static encoding_rs::EUC_KR_INIT'>EUC_KR_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the EUC-KR encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -621,6 +598,7 @@ replacement.</p>
                                   title='static encoding_rs::GB18030'>GB18030</a></td>
                            <td class='docblock-short'>
                                 <p>The gb18030 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -628,6 +606,7 @@ replacement.</p>
                                   title='static encoding_rs::GB18030_INIT'>GB18030_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the gb18030 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -635,6 +614,7 @@ replacement.</p>
                                   title='static encoding_rs::GBK'>GBK</a></td>
                            <td class='docblock-short'>
                                 <p>The GBK encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -642,6 +622,7 @@ replacement.</p>
                                   title='static encoding_rs::GBK_INIT'>GBK_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the GBK encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -649,6 +630,7 @@ replacement.</p>
                                   title='static encoding_rs::IBM866'>IBM866</a></td>
                            <td class='docblock-short'>
                                 <p>The IBM866 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -656,6 +638,7 @@ replacement.</p>
                                   title='static encoding_rs::IBM866_INIT'>IBM866_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the IBM866 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -663,6 +646,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_2022_JP'>ISO_2022_JP</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-2022-JP encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -670,6 +654,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_2022_JP_INIT'>ISO_2022_JP_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-2022-JP encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -677,6 +662,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_2'>ISO_8859_2</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-2 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -684,6 +670,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_3'>ISO_8859_3</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-3 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -691,6 +678,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_4'>ISO_8859_4</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-4 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -698,6 +686,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_5'>ISO_8859_5</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-5 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -705,6 +694,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_6'>ISO_8859_6</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-6 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -712,6 +702,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_7'>ISO_8859_7</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-7 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -719,6 +710,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_8'>ISO_8859_8</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-8 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -726,6 +718,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_10'>ISO_8859_10</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-10 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -733,6 +726,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_13'>ISO_8859_13</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-13 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -740,6 +734,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_14'>ISO_8859_14</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-14 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -747,6 +742,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_15'>ISO_8859_15</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-15 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -754,6 +750,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_16'>ISO_8859_16</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-16 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -761,6 +758,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_10_INIT'>ISO_8859_10_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-10 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -768,6 +766,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_13_INIT'>ISO_8859_13_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-13 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -775,6 +774,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_14_INIT'>ISO_8859_14_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-14 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -782,6 +782,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_15_INIT'>ISO_8859_15_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-15 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -789,6 +790,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_16_INIT'>ISO_8859_16_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-16 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -796,6 +798,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_2_INIT'>ISO_8859_2_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-2 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -803,6 +806,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_3_INIT'>ISO_8859_3_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-3 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -810,6 +814,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_4_INIT'>ISO_8859_4_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-4 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -817,6 +822,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_5_INIT'>ISO_8859_5_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-5 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -824,6 +830,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_6_INIT'>ISO_8859_6_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-6 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -831,6 +838,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_7_INIT'>ISO_8859_7_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-7 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -838,6 +846,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_8_I'>ISO_8859_8_I</a></td>
                            <td class='docblock-short'>
                                 <p>The ISO-8859-8-I encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -845,6 +854,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_8_INIT'>ISO_8859_8_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-8 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -852,6 +862,7 @@ replacement.</p>
                                   title='static encoding_rs::ISO_8859_8_I_INIT'>ISO_8859_8_I_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the ISO-8859-8-I encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -859,6 +870,7 @@ replacement.</p>
                                   title='static encoding_rs::KOI8_R'>KOI8_R</a></td>
                            <td class='docblock-short'>
                                 <p>The KOI8-R encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -866,6 +878,7 @@ replacement.</p>
                                   title='static encoding_rs::KOI8_R_INIT'>KOI8_R_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the KOI8-R encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -873,6 +886,7 @@ replacement.</p>
                                   title='static encoding_rs::KOI8_U'>KOI8_U</a></td>
                            <td class='docblock-short'>
                                 <p>The KOI8-U encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -880,6 +894,7 @@ replacement.</p>
                                   title='static encoding_rs::KOI8_U_INIT'>KOI8_U_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the KOI8-U encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -887,6 +902,7 @@ replacement.</p>
                                   title='static encoding_rs::MACINTOSH'>MACINTOSH</a></td>
                            <td class='docblock-short'>
                                 <p>The macintosh encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -894,6 +910,7 @@ replacement.</p>
                                   title='static encoding_rs::MACINTOSH_INIT'>MACINTOSH_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the macintosh encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -901,6 +918,7 @@ replacement.</p>
                                   title='static encoding_rs::REPLACEMENT'>REPLACEMENT</a></td>
                            <td class='docblock-short'>
                                 <p>The replacement encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -908,6 +926,7 @@ replacement.</p>
                                   title='static encoding_rs::REPLACEMENT_INIT'>REPLACEMENT_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the replacement encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -915,6 +934,7 @@ replacement.</p>
                                   title='static encoding_rs::SHIFT_JIS'>SHIFT_JIS</a></td>
                            <td class='docblock-short'>
                                 <p>The Shift_JIS encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -922,6 +942,7 @@ replacement.</p>
                                   title='static encoding_rs::SHIFT_JIS_INIT'>SHIFT_JIS_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the Shift_JIS encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -929,6 +950,7 @@ replacement.</p>
                                   title='static encoding_rs::UTF_8'>UTF_8</a></td>
                            <td class='docblock-short'>
                                 <p>The UTF-8 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -936,6 +958,7 @@ replacement.</p>
                                   title='static encoding_rs::UTF_16BE'>UTF_16BE</a></td>
                            <td class='docblock-short'>
                                 <p>The UTF-16BE encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -943,6 +966,7 @@ replacement.</p>
                                   title='static encoding_rs::UTF_16BE_INIT'>UTF_16BE_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the UTF-16BE encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -950,6 +974,7 @@ replacement.</p>
                                   title='static encoding_rs::UTF_16LE'>UTF_16LE</a></td>
                            <td class='docblock-short'>
                                 <p>The UTF-16LE encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -957,6 +982,7 @@ replacement.</p>
                                   title='static encoding_rs::UTF_16LE_INIT'>UTF_16LE_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the UTF-16LE encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -964,6 +990,7 @@ replacement.</p>
                                   title='static encoding_rs::UTF_8_INIT'>UTF_8_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the UTF-8 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -971,6 +998,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_874'>WINDOWS_874</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-874 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -978,6 +1006,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1250'>WINDOWS_1250</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1250 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -985,6 +1014,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1251'>WINDOWS_1251</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1251 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -992,6 +1022,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1252'>WINDOWS_1252</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1252 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -999,6 +1030,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1253'>WINDOWS_1253</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1253 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1006,6 +1038,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1254'>WINDOWS_1254</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1254 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1013,6 +1046,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1255'>WINDOWS_1255</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1255 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1020,6 +1054,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1256'>WINDOWS_1256</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1256 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1027,6 +1062,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1257'>WINDOWS_1257</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1257 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1034,6 +1070,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1258'>WINDOWS_1258</a></td>
                            <td class='docblock-short'>
                                 <p>The windows-1258 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1041,6 +1078,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1250_INIT'>WINDOWS_1250_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1250 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1048,6 +1086,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1251_INIT'>WINDOWS_1251_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1251 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1055,6 +1094,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1252_INIT'>WINDOWS_1252_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1252 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1062,6 +1102,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1253_INIT'>WINDOWS_1253_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1253 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1069,6 +1110,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1254_INIT'>WINDOWS_1254_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1254 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1076,6 +1118,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1255_INIT'>WINDOWS_1255_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1255 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1083,6 +1126,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1256_INIT'>WINDOWS_1256_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1256 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1090,6 +1134,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1257_INIT'>WINDOWS_1257_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1257 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1097,6 +1142,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_1258_INIT'>WINDOWS_1258_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-1258 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1104,6 +1150,7 @@ replacement.</p>
                                   title='static encoding_rs::WINDOWS_874_INIT'>WINDOWS_874_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the windows-874 encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1111,6 +1158,7 @@ replacement.</p>
                                   title='static encoding_rs::X_MAC_CYRILLIC'>X_MAC_CYRILLIC</a></td>
                            <td class='docblock-short'>
                                 <p>The x-mac-cyrillic encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1118,6 +1166,7 @@ replacement.</p>
                                   title='static encoding_rs::X_MAC_CYRILLIC_INIT'>X_MAC_CYRILLIC_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the x-mac-cyrillic encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1125,6 +1174,7 @@ replacement.</p>
                                   title='static encoding_rs::X_USER_DEFINED'>X_USER_DEFINED</a></td>
                            <td class='docblock-short'>
                                 <p>The x-user-defined encoding.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -1132,6 +1182,7 @@ replacement.</p>
                                   title='static encoding_rs::X_USER_DEFINED_INIT'>X_USER_DEFINED_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the x-user-defined encoding.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -1146,20 +1197,22 @@ replacement.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

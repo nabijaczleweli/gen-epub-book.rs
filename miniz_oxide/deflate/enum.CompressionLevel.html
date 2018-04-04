@@ -10,8 +10,11 @@
     <title>miniz_oxide::deflate::CompressionLevel - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Enum CompressionLevel</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#variants">Variants</a><div class="sidebar-links"><a href="#variant.NoCompression">NoCompression</a><a href="#variant.BestSpeed">BestSpeed</a><a href="#variant.BestCompression">BestCompression</a><a href="#variant.UberCompression">UberCompression</a><a href="#variant.DefaultLevel">DefaultLevel</a><a href="#variant.DefaultCompression">DefaultCompression</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-Copy">Copy</a><a href="#impl-Clone">Clone</a><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Eq">Eq</a><a href="#impl-Hash">Hash</a></div></div><p class='location'><a href='../index.html'>miniz_oxide</a>::<wbr><a href='index.html'>deflate</a></p><script>window.sidebarCurrent = {name: 'CompressionLevel', ty: 'enum', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -63,7 +73,7 @@
 of checks for matches in the hash chains and whether to use lazy or greedy parsing.</p>
 </div><h2 id='variants' class='variants small-section-header'>
                    Variants<a href='#variants' class='anchor'></a></h2>
-<span id="variant.NoCompression" class="variant small-section-header"><a href="#variant.NoCompression" class="anchor field"></a><span id='NoCompression.v' class='invisible'><code>NoCompression</code></span></span><div class='docblock'><p>Don&#39;t do any compression, only output uncompressed blocks.</p>
+<span id="variant.NoCompression" class="variant small-section-header"><a href="#variant.NoCompression" class="anchor field"></a><span id='NoCompression.v' class='invisible'><code>NoCompression</code></span></span><div class='docblock'><p>Don't do any compression, only output uncompressed blocks.</p>
 </div><span id="variant.BestSpeed" class="variant small-section-header"><a href="#variant.BestSpeed" class="anchor field"></a><span id='BestSpeed.v' class='invisible'><code>BestSpeed</code></span></span><div class='docblock'><p>Fast compression. Uses a special compression routine that is optimized for speed.</p>
 </div><span id="variant.BestCompression" class="variant small-section-header"><a href="#variant.BestCompression" class="anchor field"></a><span id='BestCompression.v' class='invisible'><code>BestCompression</code></span></span><div class='docblock'><p>Slow/high compression. Do a lot of checks to try to find good matches.</p>
 </div><span id="variant.UberCompression" class="variant small-section-header"><a href="#variant.UberCompression" class="anchor field"></a><span id='UberCompression.v' class='invisible'><code>UberCompression</code></span></span><div class='docblock'><p>Even more checks, can be very slow.</p>
@@ -106,20 +116,22 @@ of checks for matches in the hash chains and whether to use lazy or greedy parsi
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

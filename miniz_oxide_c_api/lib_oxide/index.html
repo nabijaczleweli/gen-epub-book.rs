@@ -10,8 +10,11 @@
     <title>miniz_oxide_c_api::lib_oxide - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -30,9 +33,16 @@
     <nav class="sidebar">
         <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Module lib_oxide</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Reexports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'><a href='../index.html'>miniz_oxide_c_api</a></p><script>window.sidebarCurrent = {name: 'lib_oxide', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
+        <p class='location'>Module lib_oxide</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'><a href='../index.html'>miniz_oxide_c_api</a></p><script>window.sidebarCurrent = {name: 'lib_oxide', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,7 +61,7 @@
                    </a>
                </span><a class='srclink' href='../../src/miniz_oxide_c_api/lib_oxide.rs.html#1-644' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>This module mainly contains functionality replicating the miniz higher level API.</p>
-</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
 <table><tr><td><code>pub use self::<a class="mod" href="../../miniz_oxide_c_api/lib_oxide/return_status/index.html" title="mod miniz_oxide_c_api::lib_oxide::return_status">return_status</a>::*;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -67,6 +77,7 @@
                                   title='struct miniz_oxide_c_api::lib_oxide::BoxedState'>BoxedState</a></td>
                            <td class='docblock-short'>
                                 <p>Wrapper for a heap-allocated compressor/decompressor that frees the stucture on drop.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -88,6 +99,7 @@
                                   title='struct miniz_oxide_c_api::lib_oxide::mz_stream'>mz_stream</a></td>
                            <td class='docblock-short'>
                                 <p>Inner stream state containing pointers to the used buffers and internal state.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -96,6 +108,7 @@
                                   title='enum miniz_oxide_c_api::lib_oxide::mz_internal_state'>mz_internal_state</a></td>
                            <td class='docblock-short'>
                                 <p>Unused opaque pointer.</p>
+
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
@@ -104,6 +117,7 @@
                                   title='trait miniz_oxide_c_api::lib_oxide::StateType'>StateType</a></td>
                            <td class='docblock-short'>
                                 <p>Trait used for states that can be carried by BoxedState.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -112,6 +126,7 @@
                                   title='fn miniz_oxide_c_api::lib_oxide::def_alloc_func'>def_alloc_func</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Default allocation function using <code>malloc</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -119,6 +134,7 @@
                                   title='fn miniz_oxide_c_api::lib_oxide::def_free_func'>def_free_func</a><a title='unsafe function' href='#'><sup>⚠</sup></a></td>
                            <td class='docblock-short'>
                                 <p>Default free function using <code>free</code>.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -133,6 +149,7 @@
                                   title='fn miniz_oxide_c_api::lib_oxide::mz_deflate_end_oxide'>mz_deflate_end_oxide</a></td>
                            <td class='docblock-short'>
                                 <p>Free the inner compression state.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -140,6 +157,7 @@
                                   title='fn miniz_oxide_c_api::lib_oxide::mz_deflate_init2_oxide'>mz_deflate_init2_oxide</a></td>
                            <td class='docblock-short'>
                                 <p>Initialize the compressor with the requested parameters.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -147,6 +165,7 @@
                                   title='fn miniz_oxide_c_api::lib_oxide::mz_deflate_init_oxide'>mz_deflate_init_oxide</a></td>
                            <td class='docblock-short'>
                                 <p>Initialize the wrapped compressor with the requested level (0-10) and default settings.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -161,6 +180,7 @@
                                   title='fn miniz_oxide_c_api::lib_oxide::mz_deflate_reset_oxide'>mz_deflate_reset_oxide</a></td>
                            <td class='docblock-short'>
                                 <p>Reset the compressor, so it can be used to compress a new set of data.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -211,6 +231,7 @@
                                   title='type miniz_oxide_c_api::lib_oxide::mz_alloc_func'>mz_alloc_func</a></td>
                            <td class='docblock-short'>
                                 <p>Signature of function used to allocate the compressor/decompressor structs.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -218,6 +239,7 @@
                                   title='type miniz_oxide_c_api::lib_oxide::mz_free_func'>mz_free_func</a></td>
                            <td class='docblock-short'>
                                 <p>Signature of function used to free the compressor/decompressor structs.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -232,20 +254,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

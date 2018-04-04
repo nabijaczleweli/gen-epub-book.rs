@@ -10,8 +10,11 @@
     <title>gen_epub_book::ops - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         <p class='location'>Module ops</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'><a href='../index.html'>gen_epub_book</a></p><script>window.sidebarCurrent = {name: 'ops', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -51,7 +61,6 @@
                    </a>
                </span><a class='srclink' href='../../src/gen_epub_book/ops/mod.rs.html#1-179' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Main functions doing actual work.</p>
-
 <p>First, use <code>parse_descriptor()</code> to get an element list from a descriptor file,
 then construct an <code>EPubBook::from_elements()</code>, validate and absolutise paths via
 <code>EPubBook::normalise_paths()</code> and write the book with <code>EPubBook::write_zip()</code>.</p>
@@ -62,6 +71,7 @@ then construct an <code>EPubBook::from_elements()</code>, validate and absolutis
                                   title='struct gen_epub_book::ops::EPubBook'>EPubBook</a></td>
                            <td class='docblock-short'>
                                 <p>Full ePub book, bundled together.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
@@ -70,6 +80,7 @@ then construct an <code>EPubBook::from_elements()</code>, validate and absolutis
                                   title='enum gen_epub_book::ops::BookElement'>BookElement</a></td>
                            <td class='docblock-short'>
                                 <p>A single element of the e-book</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -77,6 +88,7 @@ then construct an <code>EPubBook::from_elements()</code>, validate and absolutis
                                   title='enum gen_epub_book::ops::EPubContentType'>EPubContentType</a></td>
                            <td class='docblock-short'>
                                 <p>Enum representing what can go in an ePub</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -85,6 +97,7 @@ then construct an <code>EPubBook::from_elements()</code>, validate and absolutis
                            <td class='docblock-short'>
                                 <p>Representation of an
 <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-include-dirs"><code>-I</code>nclude directory</a>.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
@@ -93,6 +106,7 @@ then construct an <code>EPubBook::from_elements()</code>, validate and absolutis
                                   title='fn gen_epub_book::ops::find_file'>find_file</a></td>
                            <td class='docblock-short'>
                                 <p>Find an appropriate <code>IncludeDirectory</code> for the specified file, or <code>None</code> otherwise</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -100,6 +114,7 @@ then construct an <code>EPubBook::from_elements()</code>, validate and absolutis
                                   title='fn gen_epub_book::ops::find_title'>find_title</a></td>
                            <td class='docblock-short'>
                                 <p>Find an ePub title line in the specified input stream.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -111,6 +126,7 @@ then construct an <code>EPubBook::from_elements()</code>, validate and absolutis
 with the specified
 <a href="https://nabijaczleweli.xyz/content/gen-epub-book/programmer.html#features-free-date-format">rigidness</a>,
 stopping at the first encountered error.</p>
+
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
@@ -119,6 +135,7 @@ stopping at the first encountered error.</p>
                                   title='type gen_epub_book::ops::EPubData'>EPubData</a></td>
                            <td class='docblock-short'>
                                 <p>An (ID, filename, data) tuple that represents a single data point of an ePub.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -133,20 +150,22 @@ stopping at the first encountered error.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 

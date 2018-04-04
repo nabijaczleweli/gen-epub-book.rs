@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.19/src/proto/h1/role.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.25/src/proto/h1/role.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>role.rs.html -- source</title>
 
     <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css" id="themeStyle">
+    <script src="../../../../storage.js"></script>
     
 
     
@@ -33,6 +36,13 @@
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -740,6 +750,91 @@
 <span id="694">694</span>
 <span id="695">695</span>
 <span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
+<span id="708">708</span>
+<span id="709">709</span>
+<span id="710">710</span>
+<span id="711">711</span>
+<span id="712">712</span>
+<span id="713">713</span>
+<span id="714">714</span>
+<span id="715">715</span>
+<span id="716">716</span>
+<span id="717">717</span>
+<span id="718">718</span>
+<span id="719">719</span>
+<span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Write</span>};
@@ -748,8 +843,8 @@
 <span class="kw">use</span> <span class="ident">bytes</span>::{<span class="ident">BytesMut</span>, <span class="ident">Bytes</span>};
 
 <span class="kw">use</span> <span class="ident">header</span>::{<span class="self">self</span>, <span class="ident">Headers</span>, <span class="ident">ContentLength</span>, <span class="ident">TransferEncoding</span>};
-<span class="kw">use</span> <span class="ident">proto</span>::{<span class="ident">MessageHead</span>, <span class="ident">RawStatus</span>, <span class="ident">Http1Transaction</span>, <span class="ident">ParseResult</span>,
-           <span class="ident">ServerTransaction</span>, <span class="ident">ClientTransaction</span>, <span class="ident">RequestLine</span>, <span class="ident">RequestHead</span>};
+<span class="kw">use</span> <span class="ident">proto</span>::{<span class="ident">Decode</span>, <span class="ident">MessageHead</span>, <span class="ident">RawStatus</span>, <span class="ident">Http1Transaction</span>, <span class="ident">ParseResult</span>,
+           <span class="ident">RequestLine</span>, <span class="ident">RequestHead</span>};
 <span class="kw">use</span> <span class="ident">proto</span>::<span class="ident">h1</span>::{<span class="ident">Encoder</span>, <span class="ident">Decoder</span>, <span class="ident">date</span>};
 <span class="kw">use</span> <span class="ident">method</span>::<span class="ident">Method</span>;
 <span class="kw">use</span> <span class="ident">status</span>::<span class="ident">StatusCode</span>;
@@ -758,7 +853,19 @@
 <span class="kw">const</span> <span class="ident">MAX_HEADERS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">100</span>;
 <span class="kw">const</span> <span class="ident">AVERAGE_HEADER_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">30</span>; <span class="comment">// totally scientific</span>
 
-<span class="kw">impl</span> <span class="ident">Http1Transaction</span> <span class="kw">for</span> <span class="ident">ServerTransaction</span> {
+<span class="comment">// There are 2 main roles, Client and Server.</span>
+<span class="comment">//</span>
+<span class="comment">// There is 1 modifier, OnUpgrade, which can wrap Client and Server,</span>
+<span class="comment">// to signal that HTTP upgrades are not supported.</span>
+
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">T</span>);
+
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">T</span>);
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Http1Transaction</span> <span class="kw">for</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">OnUpgrade</span>,
+{
     <span class="kw">type</span> <span class="ident">Incoming</span> <span class="op">=</span> <span class="ident">RequestLine</span>;
     <span class="kw">type</span> <span class="ident">Outgoing</span> <span class="op">=</span> <span class="ident">StatusCode</span>;
 
@@ -815,7 +922,7 @@
         }, <span class="ident">len</span>)))
     }
 
-    <span class="kw">fn</span> <span class="ident">decoder</span>(<span class="ident">head</span>: <span class="kw-2">&amp;</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Incoming</span><span class="op">&gt;</span>, <span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Decoder</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">decoder</span>(<span class="ident">head</span>: <span class="kw-2">&amp;</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Incoming</span><span class="op">&gt;</span>, <span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Decode</span><span class="op">&gt;</span> {
         <span class="kw">use</span> ::<span class="ident">header</span>;
 
         <span class="kw-2">*</span><span class="ident">method</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span>.<span class="ident">clone</span>());
@@ -838,37 +945,44 @@
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;HTTP/1.0 has Transfer-Encoding header&quot;</span>);
                 <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Header</span>)
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">encodings</span>.<span class="ident">last</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>::<span class="ident">Encoding</span>::<span class="ident">Chunked</span>) {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>()))
+                <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>()))
             } <span class="kw">else</span> {
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;request with transfer-encoding header, but not chunked, bad request&quot;</span>);
                 <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Header</span>)
             }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>::<span class="ident">ContentLength</span>(<span class="ident">len</span>)) <span class="op">=</span> <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">get</span>() {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="ident">len</span>)))
+            <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="ident">len</span>)))
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">has</span>::<span class="op">&lt;</span><span class="ident">header</span>::<span class="ident">ContentLength</span><span class="op">&gt;</span>() {
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;illegal Content-Length: {:?}&quot;</span>, <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">get_raw</span>(<span class="string">&quot;Content-Length&quot;</span>));
             <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Header</span>)
         } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>)))
+            <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>)))
         }
     }
 
 
     <span class="kw">fn</span> <span class="ident">encode</span>(<span class="kw-2">mut</span> <span class="ident">head</span>: <span class="ident">MessageHead</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Outgoing</span><span class="op">&gt;</span>, <span class="ident">has_body</span>: <span class="ident">bool</span>, <span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Encoder</span><span class="op">&gt;</span> {
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;ServerTransaction::encode has_body={}, method={:?}&quot;</span>, <span class="ident">has_body</span>, <span class="ident">method</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Server::encode has_body={}, method={:?}&quot;</span>, <span class="ident">has_body</span>, <span class="ident">method</span>);
 
         <span class="comment">// hyper currently doesn&#39;t support returning 1xx status codes as a Response</span>
         <span class="comment">// This is because Service only allows returning a single Response, and</span>
         <span class="comment">// so if you try to reply with a e.g. 100 Continue, you have no way of</span>
         <span class="comment">// replying with the latter status code response.</span>
-        <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">head</span>.<span class="ident">subject</span>.<span class="ident">is_informational</span>() {
+        <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="kw">if</span> ::<span class="ident">StatusCode</span>::<span class="ident">SwitchingProtocols</span> <span class="op">==</span> <span class="ident">head</span>.<span class="ident">subject</span> {
+            <span class="ident">T</span>::<span class="ident">on_encode_upgrade</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">head</span>)
+                .<span class="ident">map</span>(<span class="op">|</span>_<span class="op">|</span> {
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">enc</span> <span class="op">=</span> <span class="ident">Server</span>::<span class="ident">set_length</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">head</span>, <span class="ident">has_body</span>, <span class="ident">method</span>.<span class="ident">as_ref</span>());
+                    <span class="ident">enc</span>.<span class="ident">set_last</span>();
+                    <span class="ident">enc</span>
+                })
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">head</span>.<span class="ident">subject</span>.<span class="ident">is_informational</span>() {
             <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;response with 1xx status code not supported&quot;</span>);
             <span class="ident">head</span> <span class="op">=</span> <span class="ident">MessageHead</span>::<span class="ident">default</span>();
             <span class="ident">head</span>.<span class="ident">subject</span> <span class="op">=</span> ::<span class="ident">StatusCode</span>::<span class="ident">InternalServerError</span>;
             <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="number">0</span>));
             <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Status</span>)
         } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">ServerTransaction</span>::<span class="ident">set_length</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">head</span>, <span class="ident">has_body</span>, <span class="ident">method</span>.<span class="ident">as_ref</span>()))
+            <span class="prelude-val">Ok</span>(<span class="ident">Server</span>::<span class="ident">set_length</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">head</span>, <span class="ident">has_body</span>, <span class="ident">method</span>.<span class="ident">as_ref</span>()))
         };
 
 
@@ -922,7 +1036,7 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ServerTransaction</span> {
+<span class="kw">impl</span> <span class="ident">Server</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">set_length</span>(<span class="ident">head</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">StatusCode</span><span class="op">&gt;</span>, <span class="ident">has_body</span>: <span class="ident">bool</span>, <span class="ident">method</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Method</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Encoder</span> {
         <span class="comment">// these are here thanks to borrowck</span>
         <span class="comment">// `if method == Some(&amp;Method::Get)` says the RHS doesn&#39;t live long enough</span>
@@ -938,6 +1052,7 @@
                 <span class="kw">match</span> <span class="ident">head</span>.<span class="ident">subject</span> {
                     <span class="comment">// TODO: support for 1xx codes needs improvement everywhere</span>
                     <span class="comment">// would be 100...199 =&gt; false</span>
+                    <span class="ident">StatusCode</span>::<span class="ident">SwitchingProtocols</span> <span class="op">|</span>
                     <span class="ident">StatusCode</span>::<span class="ident">NoContent</span> <span class="op">|</span>
                     <span class="ident">StatusCode</span>::<span class="ident">NotModified</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
                     _ <span class="op">=&gt;</span> <span class="bool-val">true</span>,
@@ -957,7 +1072,10 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Http1Transaction</span> <span class="kw">for</span> <span class="ident">ClientTransaction</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Http1Transaction</span> <span class="kw">for</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">OnUpgrade</span>,
+{
     <span class="kw">type</span> <span class="ident">Incoming</span> <span class="op">=</span> <span class="ident">RawStatus</span>;
     <span class="kw">type</span> <span class="ident">Outgoing</span> <span class="op">=</span> <span class="ident">RequestLine</span>;
 
@@ -1005,7 +1123,7 @@
         }, <span class="ident">len</span>)))
     }
 
-    <span class="kw">fn</span> <span class="ident">decoder</span>(<span class="ident">inc</span>: <span class="kw-2">&amp;</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Incoming</span><span class="op">&gt;</span>, <span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Decoder</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">decoder</span>(<span class="ident">inc</span>: <span class="kw-2">&amp;</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Incoming</span><span class="op">&gt;</span>, <span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Decode</span><span class="op">&gt;</span> {
         <span class="comment">// According to https://tools.ietf.org/html/rfc7230#section-3.3.3</span>
         <span class="comment">// 1. HEAD responses, and Status 1xx, 204, and 304 cannot have a body.</span>
         <span class="comment">// 2. Status 2xx to a CONNECT cannot have a body.</span>
@@ -1017,30 +1135,29 @@
 
         <span class="kw">match</span> <span class="ident">inc</span>.<span class="ident">subject</span>.<span class="number">0</span> {
             <span class="number">101</span> <span class="op">=&gt;</span> {
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;received 101 upgrade response, not supported&quot;</span>);
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Upgrade</span>);
+                <span class="kw">return</span> <span class="ident">T</span>::<span class="ident">on_decode_upgrade</span>().<span class="ident">map</span>(<span class="ident">Decode</span>::<span class="ident">Final</span>);
             },
             <span class="number">100</span>...<span class="number">199</span> <span class="op">=&gt;</span> {
                 <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;ignoring informational response: {}&quot;</span>, <span class="ident">inc</span>.<span class="ident">subject</span>.<span class="number">0</span>);
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Ignore</span>);
             },
             <span class="number">204</span> <span class="op">|</span>
-            <span class="number">304</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>))),
+            <span class="number">304</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>))),
             _ <span class="op">=&gt;</span> (),
         }
         <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">method</span> {
             <span class="prelude-val">Some</span>(<span class="ident">Method</span>::<span class="ident">Head</span>) <span class="op">=&gt;</span> {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>)));
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>)));
             }
             <span class="prelude-val">Some</span>(<span class="ident">Method</span>::<span class="ident">Connect</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">inc</span>.<span class="ident">subject</span>.<span class="number">0</span> {
                 <span class="number">200</span>...<span class="number">299</span> <span class="op">=&gt;</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>)));
+                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Final</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>)));
                 },
                 _ <span class="op">=&gt;</span> {},
             },
             <span class="prelude-val">Some</span>(_) <span class="op">=&gt;</span> {},
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;ClientTransaction::decoder is missing the Method&quot;</span>);
+                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Client::decoder is missing the Method&quot;</span>);
             }
         }
 
@@ -1050,28 +1167,28 @@
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;HTTP/1.0 has Transfer-Encoding header&quot;</span>);
                 <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Header</span>)
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">codings</span>.<span class="ident">last</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>::<span class="ident">Encoding</span>::<span class="ident">Chunked</span>) {
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>()))
+                <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>()))
             } <span class="kw">else</span> {
                 <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;not chunked. read till eof&quot;</span>);
-                <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">eof</span>()))
+                <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">eof</span>()))
             }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>::<span class="ident">ContentLength</span>(<span class="ident">len</span>)) <span class="op">=</span> <span class="ident">inc</span>.<span class="ident">headers</span>.<span class="ident">get</span>() {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="ident">len</span>)))
+            <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="ident">len</span>)))
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">inc</span>.<span class="ident">headers</span>.<span class="ident">has</span>::<span class="op">&lt;</span><span class="ident">header</span>::<span class="ident">ContentLength</span><span class="op">&gt;</span>() {
             <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;illegal Content-Length: {:?}&quot;</span>, <span class="ident">inc</span>.<span class="ident">headers</span>.<span class="ident">get_raw</span>(<span class="string">&quot;Content-Length&quot;</span>));
             <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Header</span>)
         } <span class="kw">else</span> {
             <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;neither Transfer-Encoding nor Content-Length&quot;</span>);
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Decoder</span>::<span class="ident">eof</span>()))
+            <span class="prelude-val">Ok</span>(<span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">Decoder</span>::<span class="ident">eof</span>()))
         }
     }
 
     <span class="kw">fn</span> <span class="ident">encode</span>(<span class="kw-2">mut</span> <span class="ident">head</span>: <span class="ident">MessageHead</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Outgoing</span><span class="op">&gt;</span>, <span class="ident">has_body</span>: <span class="ident">bool</span>, <span class="ident">method</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Method</span><span class="op">&gt;</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Encoder</span><span class="op">&gt;</span> {
-        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;ClientTransaction::encode has_body={}, method={:?}&quot;</span>, <span class="ident">has_body</span>, <span class="ident">method</span>);
+        <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;Client::encode has_body={}, method={:?}&quot;</span>, <span class="ident">has_body</span>, <span class="ident">method</span>);
 
         <span class="kw-2">*</span><span class="ident">method</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span>.<span class="ident">clone</span>());
 
-        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">ClientTransaction</span>::<span class="ident">set_length</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">head</span>, <span class="ident">has_body</span>);
+        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">Client</span>::<span class="ident">set_length</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">head</span>, <span class="ident">has_body</span>);
 
         <span class="kw">let</span> <span class="ident">init_cap</span> <span class="op">=</span> <span class="number">30</span> <span class="op">+</span> <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="ident">AVERAGE_HEADER_SIZE</span>;
         <span class="ident">dst</span>.<span class="ident">reserve</span>(<span class="ident">init_cap</span>);
@@ -1094,7 +1211,7 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">ClientTransaction</span> {
+<span class="kw">impl</span> <span class="ident">Client</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">set_length</span>(<span class="ident">head</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">RequestHead</span>, <span class="ident">has_body</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Encoder</span> {
         <span class="kw">if</span> <span class="ident">has_body</span> {
             <span class="kw">let</span> <span class="ident">can_chunked</span> <span class="op">=</span> <span class="ident">head</span>.<span class="ident">version</span> <span class="op">==</span> <span class="ident">Http11</span>
@@ -1133,6 +1250,42 @@
     } <span class="kw">else</span> {
         <span class="ident">headers</span>.<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">TransferEncoding</span><span class="op">&gt;</span>();
         <span class="ident">Encoder</span>::<span class="ident">eof</span>()
+    }
+}
+
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OnUpgrade</span> {
+    <span class="kw">fn</span> <span class="ident">on_encode_upgrade</span>(<span class="ident">head</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">StatusCode</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">on_decode_upgrade</span>() <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Decoder</span><span class="op">&gt;</span>;
+}
+
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">YesUpgrades</span> {}
+
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NoUpgrades</span> {}
+
+<span class="kw">impl</span> <span class="ident">OnUpgrade</span> <span class="kw">for</span> <span class="ident">YesUpgrades</span> {
+    <span class="kw">fn</span> <span class="ident">on_encode_upgrade</span>(<span class="ident">_head</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">StatusCode</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">fn</span> <span class="ident">on_decode_upgrade</span>() <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Decoder</span><span class="op">&gt;</span> {
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;101 response received, upgrading&quot;</span>);
+        <span class="comment">// 101 upgrades always have no body</span>
+        <span class="prelude-val">Ok</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>))
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">OnUpgrade</span> <span class="kw">for</span> <span class="ident">NoUpgrades</span> {
+    <span class="kw">fn</span> <span class="ident">on_encode_upgrade</span>(<span class="ident">head</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">StatusCode</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;response with 101 status code not supported&quot;</span>);
+        <span class="kw-2">*</span><span class="ident">head</span> <span class="op">=</span> <span class="ident">MessageHead</span>::<span class="ident">default</span>();
+        <span class="ident">head</span>.<span class="ident">subject</span> <span class="op">=</span> ::<span class="ident">StatusCode</span>::<span class="ident">InternalServerError</span>;
+        <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="number">0</span>));
+        <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Status</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">on_decode_upgrade</span>() <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Decoder</span><span class="op">&gt;</span> {
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;received 101 upgrade response, not supported&quot;</span>);
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Upgrade</span>);
     }
 }
 
@@ -1199,8 +1352,35 @@
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="ident">bytes</span>::<span class="ident">BytesMut</span>;
 
-    <span class="kw">use</span> <span class="ident">proto</span>::{<span class="ident">MessageHead</span>, <span class="ident">ServerTransaction</span>, <span class="ident">ClientTransaction</span>, <span class="ident">Http1Transaction</span>};
+    <span class="kw">use</span> <span class="ident">proto</span>::{<span class="ident">Decode</span>, <span class="ident">MessageHead</span>};
+    <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Decoder</span>, <span class="ident">Server</span> <span class="kw">as</span> <span class="ident">S</span>, <span class="ident">Client</span> <span class="kw">as</span> <span class="ident">C</span>, <span class="ident">NoUpgrades</span>, <span class="ident">Http1Transaction</span>};
     <span class="kw">use</span> <span class="ident">header</span>::{<span class="ident">ContentLength</span>, <span class="ident">TransferEncoding</span>};
+
+    <span class="kw">type</span> <span class="ident">Server</span> <span class="op">=</span> <span class="ident">S</span><span class="op">&lt;</span><span class="ident">NoUpgrades</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Client</span> <span class="op">=</span> <span class="ident">C</span><span class="op">&lt;</span><span class="ident">NoUpgrades</span><span class="op">&gt;</span>;
+
+    <span class="kw">impl</span> <span class="ident">Decode</span> {
+        <span class="kw">fn</span> <span class="ident">final_</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Decoder</span> {
+            <span class="kw">match</span> <span class="self">self</span> {
+                <span class="ident">Decode</span>::<span class="ident">Final</span>(<span class="ident">d</span>) <span class="op">=&gt;</span> <span class="ident">d</span>,
+                <span class="ident">other</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;expected Final, found {:?}&quot;</span>, <span class="ident">other</span>),
+            }
+        }
+
+        <span class="kw">fn</span> <span class="ident">normal</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Decoder</span> {
+            <span class="kw">match</span> <span class="self">self</span> {
+                <span class="ident">Decode</span>::<span class="ident">Normal</span>(<span class="ident">d</span>) <span class="op">=&gt;</span> <span class="ident">d</span>,
+                <span class="ident">other</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;expected Normal, found {:?}&quot;</span>, <span class="ident">other</span>),
+            }
+        }
+
+        <span class="kw">fn</span> <span class="ident">ignore</span>(<span class="self">self</span>) {
+            <span class="kw">match</span> <span class="self">self</span> {
+                <span class="ident">Decode</span>::<span class="ident">Ignore</span> <span class="op">=&gt;</span> {},
+                <span class="ident">other</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;expected Ignore, found {:?}&quot;</span>, <span class="ident">other</span>),
+            }
+        }
+    }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_parse_request</span>() {
@@ -1208,7 +1388,7 @@
         <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">pretty_env_logger</span>::<span class="ident">try_init</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">BytesMut</span>::<span class="ident">from</span>(<span class="string">b&quot;GET /echo HTTP/1.1\r\nHost: hyper.rs\r\n\r\n&quot;</span>.<span class="ident">to_vec</span>());
         <span class="kw">let</span> <span class="ident">expected_len</span> <span class="op">=</span> <span class="ident">raw</span>.<span class="ident">len</span>();
-        <span class="kw">let</span> (<span class="ident">req</span>, <span class="ident">len</span>) <span class="op">=</span> <span class="ident">ServerTransaction</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> (<span class="ident">req</span>, <span class="ident">len</span>) <span class="op">=</span> <span class="ident">Server</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">len</span>, <span class="ident">expected_len</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">req</span>.<span class="ident">subject</span>.<span class="number">0</span>, ::<span class="ident">Method</span>::<span class="ident">Get</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">req</span>.<span class="ident">subject</span>.<span class="number">1</span>, <span class="string">&quot;/echo&quot;</span>);
@@ -1224,7 +1404,7 @@
         <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">pretty_env_logger</span>::<span class="ident">try_init</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">BytesMut</span>::<span class="ident">from</span>(<span class="string">b&quot;HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n&quot;</span>.<span class="ident">to_vec</span>());
         <span class="kw">let</span> <span class="ident">expected_len</span> <span class="op">=</span> <span class="ident">raw</span>.<span class="ident">len</span>();
-        <span class="kw">let</span> (<span class="ident">req</span>, <span class="ident">len</span>) <span class="op">=</span> <span class="ident">ClientTransaction</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> (<span class="ident">req</span>, <span class="ident">len</span>) <span class="op">=</span> <span class="ident">Client</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">len</span>, <span class="ident">expected_len</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">req</span>.<span class="ident">subject</span>.<span class="number">0</span>, <span class="number">200</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">req</span>.<span class="ident">subject</span>.<span class="number">1</span>, <span class="string">&quot;OK&quot;</span>);
@@ -1236,17 +1416,17 @@
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_parse_request_errors</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">BytesMut</span>::<span class="ident">from</span>(<span class="string">b&quot;GET htt:p// HTTP/1.1\r\nHost: hyper.rs\r\n\r\n&quot;</span>.<span class="ident">to_vec</span>());
-        <span class="ident">ServerTransaction</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap_err</span>();
+        <span class="ident">Server</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap_err</span>();
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_parse_raw_status</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">BytesMut</span>::<span class="ident">from</span>(<span class="string">b&quot;HTTP/1.1 200 OK\r\n\r\n&quot;</span>.<span class="ident">to_vec</span>());
-        <span class="kw">let</span> (<span class="ident">res</span>, _) <span class="op">=</span> <span class="ident">ClientTransaction</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> (<span class="ident">res</span>, _) <span class="op">=</span> <span class="ident">Client</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">subject</span>.<span class="number">1</span>, <span class="string">&quot;OK&quot;</span>);
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">raw</span> <span class="op">=</span> <span class="ident">BytesMut</span>::<span class="ident">from</span>(<span class="string">b&quot;HTTP/1.1 200 Howdy\r\n\r\n&quot;</span>.<span class="ident">to_vec</span>());
-        <span class="kw">let</span> (<span class="ident">res</span>, _) <span class="op">=</span> <span class="ident">ClientTransaction</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> (<span class="ident">res</span>, _) <span class="op">=</span> <span class="ident">Client</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>.<span class="ident">subject</span>.<span class="number">1</span>, <span class="string">&quot;Howdy&quot;</span>);
     }
 
@@ -1259,32 +1439,32 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">head</span> <span class="op">=</span> <span class="ident">MessageHead</span>::<span class="op">&lt;</span>::<span class="ident">proto</span>::<span class="ident">RequestLine</span><span class="op">&gt;</span>::<span class="ident">default</span>();
 
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> ::<span class="ident">Method</span>::<span class="ident">Get</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">method</span>, <span class="prelude-val">Some</span>(::<span class="ident">Method</span>::<span class="ident">Get</span>));
 
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> ::<span class="ident">Method</span>::<span class="ident">Post</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="ident">method</span>, <span class="prelude-val">Some</span>(::<span class="ident">Method</span>::<span class="ident">Post</span>));
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">TransferEncoding</span>::<span class="ident">chunked</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>(), <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>(), <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
         <span class="comment">// transfer-encoding and content-length = chunked</span>
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="number">10</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>(), <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>(), <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">TransferEncoding</span><span class="op">&gt;</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">10</span>), <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">10</span>), <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set_raw</span>(<span class="string">&quot;Content-Length&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">b&quot;5&quot;</span>.<span class="ident">to_vec</span>(), <span class="string">b&quot;5&quot;</span>.<span class="ident">to_vec</span>()]);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">5</span>), <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">5</span>), <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set_raw</span>(<span class="string">&quot;Content-Length&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">b&quot;10&quot;</span>.<span class="ident">to_vec</span>(), <span class="string">b&quot;11&quot;</span>.<span class="ident">to_vec</span>()]);
-        <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
+        <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">ContentLength</span><span class="op">&gt;</span>();
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set_raw</span>(<span class="string">&quot;Transfer-Encoding&quot;</span>, <span class="string">&quot;gzip&quot;</span>);
-        <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
+        <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
 
 
         <span class="comment">// http/1.0</span>
@@ -1292,14 +1472,14 @@
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">clear</span>();
 
         <span class="comment">// 1.0 requests can only have bodies if content-length is set</span>
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">TransferEncoding</span>::<span class="ident">chunked</span>());
-        <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
+        <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">TransferEncoding</span><span class="op">&gt;</span>();
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="number">15</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">15</span>), <span class="ident">ServerTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">15</span>), <span class="ident">Server</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1310,64 +1490,64 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">head</span> <span class="op">=</span> <span class="ident">MessageHead</span>::<span class="op">&lt;</span>::<span class="ident">proto</span>::<span class="ident">RawStatus</span><span class="op">&gt;</span>::<span class="ident">default</span>();
 
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> <span class="number">204</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> <span class="number">304</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> <span class="number">200</span>;
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">eof</span>(), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">eof</span>(), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="kw-2">*</span><span class="ident">method</span> <span class="op">=</span> <span class="prelude-val">Some</span>(::<span class="ident">Method</span>::<span class="ident">Head</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="kw-2">*</span><span class="ident">method</span> <span class="op">=</span> <span class="prelude-val">Some</span>(::<span class="ident">Method</span>::<span class="ident">Connect</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">0</span>), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">final_</span>());
 
 
         <span class="comment">// CONNECT receiving non 200 can have a body</span>
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> <span class="number">404</span>;
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="number">10</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">10</span>), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">10</span>), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">ContentLength</span><span class="op">&gt;</span>();
 
 
         <span class="kw-2">*</span><span class="ident">method</span> <span class="op">=</span> <span class="prelude-val">Some</span>(::<span class="ident">Method</span>::<span class="ident">Get</span>);
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">TransferEncoding</span>::<span class="ident">chunked</span>());
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>(), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>(), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="comment">// transfer-encoding and content-length = chunked</span>
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">ContentLength</span>(<span class="number">10</span>));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>(), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">chunked</span>(), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">remove</span>::<span class="op">&lt;</span><span class="ident">TransferEncoding</span><span class="op">&gt;</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">10</span>), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">10</span>), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set_raw</span>(<span class="string">&quot;Content-Length&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">b&quot;5&quot;</span>.<span class="ident">to_vec</span>(), <span class="string">b&quot;5&quot;</span>.<span class="ident">to_vec</span>()]);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">5</span>), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">length</span>(<span class="number">5</span>), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set_raw</span>(<span class="string">&quot;Content-Length&quot;</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="string">b&quot;10&quot;</span>.<span class="ident">to_vec</span>(), <span class="string">b&quot;11&quot;</span>.<span class="ident">to_vec</span>()]);
-        <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
+        <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">clear</span>();
 
         <span class="comment">// 1xx status codes</span>
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> <span class="number">100</span>;
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">is_none</span>());
+        <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">ignore</span>();
 
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> <span class="number">103</span>;
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">is_none</span>());
+        <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">ignore</span>();
 
         <span class="comment">// 101 upgrade not supported yet</span>
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> <span class="number">101</span>;
-        <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
+        <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
         <span class="ident">head</span>.<span class="ident">subject</span>.<span class="number">0</span> <span class="op">=</span> <span class="number">200</span>;
 
         <span class="comment">// http/1.0</span>
         <span class="ident">head</span>.<span class="ident">version</span> <span class="op">=</span> ::<span class="ident">HttpVersion</span>::<span class="ident">Http10</span>;
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">eof</span>(), <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">unwrap</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Decoder</span>::<span class="ident">eof</span>(), <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap</span>().<span class="ident">normal</span>());
 
         <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">TransferEncoding</span>::<span class="ident">chunked</span>());
-        <span class="ident">ClientTransaction</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
+        <span class="ident">Client</span>::<span class="ident">decoder</span>(<span class="kw-2">&amp;</span><span class="ident">head</span>, <span class="ident">method</span>).<span class="ident">unwrap_err</span>();
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>)]</span>
@@ -1399,7 +1579,7 @@
 
         <span class="ident">b</span>.<span class="ident">bytes</span> <span class="op">=</span> <span class="ident">len</span> <span class="kw">as</span> <span class="ident">u64</span>;
         <span class="ident">b</span>.<span class="ident">iter</span>(<span class="op">||</span> {
-            <span class="ident">ServerTransaction</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>();
+            <span class="ident">Server</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>).<span class="ident">unwrap</span>();
             <span class="ident">restart</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">raw</span>, <span class="ident">len</span>);
         });
 
@@ -1431,7 +1611,7 @@
 
         <span class="ident">b</span>.<span class="ident">iter</span>(<span class="op">||</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vec</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-            <span class="ident">ServerTransaction</span>::<span class="ident">encode</span>(<span class="ident">head</span>.<span class="ident">clone</span>(), <span class="bool-val">true</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-val">None</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">vec</span>).<span class="ident">unwrap</span>();
+            <span class="ident">Server</span>::<span class="ident">encode</span>(<span class="ident">head</span>.<span class="ident">clone</span>(), <span class="bool-val">true</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-val">None</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">vec</span>).<span class="ident">unwrap</span>();
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">vec</span>.<span class="ident">len</span>(), <span class="ident">len</span>);
             ::<span class="ident">test</span>::<span class="ident">black_box</span>(<span class="ident">vec</span>);
         })
@@ -1451,20 +1631,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>↑</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>↓</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>↹</dt>
+                    <dt><kbd>↹</kbd></dt>
                     <dd>Switch tab</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt style="width:31px;">+ / -</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
