@@ -5,9 +5,9 @@ use zip::write::{ZipWriter, FileOptions};
 use chrono::{DateTime, FixedOffset};
 use std::io::{self, Write, Seek};
 use std::collections::BTreeSet;
+use std::path::{PathBuf, Path};
 use self::super::super::Error;
 use std::iter::IntoIterator;
-use std::path::PathBuf;
 use std::fmt::Display;
 use std::fs::File;
 use uuid::Uuid;
@@ -287,6 +287,63 @@ impl EPubBook {
     /// # }
     /// ```
     pub fn write_zip<W: Write + Seek, V: Write>(&self, to: &mut W, verbose: bool, verb_out: &mut V) -> Result<(), Error> {
+        self.write_zip_ext(false, to, verbose, verb_out)
+    }
+
+    /// Write the book as ePub into the specified stream with additional configuration, optionally logging verbose output.
+    ///
+    /// This function is equivalent to [`write_zip()`](fn.write_zip.html) with all config arguments defaulted.
+    ///
+    /// Config arguments:
+    ///   * `string_toc` – whether to process `Raw` elements for TOC specifiers – default: `false`
+    ///
+    /// Note: functionality governed by this additional config is accessible only via the API.
+    ///
+    /// # Examples
+    ///
+    /// In the following example the resulting ePub will have the following TOC:
+    ///
+    /// * Introduxion
+    /// * The Parodies
+    ///
+    /// Wherease without `string_toc`, the TOC would be empty.
+    ///
+    /// ```
+    /// # extern crate gen_epub_book;
+    /// # extern crate chrono;
+    /// # fn main() {
+    /// # use self::gen_epub_book::ops::{IncludeDirectory, EPubContentType, BookElement, EPubBook};
+    /// # use self::chrono::DateTime;
+    /// # use std::fs::{self, File};
+    /// # use std::path::PathBuf;
+    /// # use std::env::temp_dir;
+    /// # use std::str::FromStr;
+    /// # use std::io::stdout;
+    /// # let tf = temp_dir().join("gen-epub-book.rs-doctest").join("ops-epub-book-write-zip-ext-0");
+    /// # fs::create_dir_all(&tf).unwrap();
+    /// let mut book = EPubBook::from_elements(vec![
+    ///     BookElement::Name("String TOC demonstration".to_string()),
+    ///     BookElement::StringContent(r#"
+    /// <!-- ePub title: "Introduxion" -->
+    /// It is a measure of Sherlock Holmes' immense popularity, that he's literature's most imitated character.
+    /// "#.to_string()),
+    ///     BookElement::StringContent(r#"
+    /// <!-- ePub title: "The Parodies" -->
+    /// Sherlock Holmes appeared for the first time in A Study in Scarlet and The Sign of The Four, two novels published in 1887 and 1890.
+    /// "#.to_string()),
+    ///     BookElement::Author("nabijaczleweli".to_string()),
+    ///     BookElement::Date(DateTime::parse_from_rfc3339("2018-06-27T12:30:38+02:00").unwrap()),
+    ///     BookElement::Language("en-GB".to_string()),
+    /// ]).unwrap();
+    /// # if false {
+    /// book.write_zip_ext(
+    ///     true, &mut File::create("write_zip_ext.epub").unwrap(), false, &mut stdout()).unwrap();
+    /// # }
+    /// # book.write_zip_ext(true, &mut File::create(tf.join("write_zip_ext.epub")).unwrap(), false, &mut vec![]).unwrap();
+    /// # assert!(tf.join("write_zip_ext.epub").metadata().unwrap().len() > 0);
+    /// # }
+    /// ```
+    pub fn write_zip_ext<W: Write + Seek, V: Write>(&self, string_toc: bool, to: &mut W, verbose: bool, verb_out: &mut V) -> Result<(), Error> {
         let mut w = ZipWriter::new(to);
 
         try!(w.start_file("META-INF/container.xml", FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "container file")));
@@ -299,7 +356,7 @@ impl EPubBook {
         try!(self.content_table(&mut w, verbose, verb_out));
 
         try!(w.start_file("toc.ncx", FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "table of contents")));
-        try!(self.table_of_contents(&mut w, verbose, verb_out));
+        try!(self.table_of_contents(string_toc, &mut w, verbose, verb_out));
 
         try!(self.write_content(&mut w, verbose, verb_out));
 
@@ -420,7 +477,7 @@ impl EPubBook {
         Ok(())
     }
 
-    fn table_of_contents<W: Write, V: Write>(&self, w: &mut W, verbose: bool, verb_out: &mut V) -> Result<(), Error> {
+    fn table_of_contents<W: Write, V: Write>(&self, string_toc: bool, w: &mut W, verbose: bool, verb_out: &mut V) -> Result<(), Error> {
         try!(writeln!(w, r#"<?xml version='1.0' encoding='utf-8'?>"#).map_err(|_| EPubBook::zip_error("write", "toc xml start")));
         try!(writeln!(w, r#"<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="{}">"#, self.language)
             .map_err(|_| EPubBook::zip_error("write", "toc ncx start")));
@@ -433,30 +490,44 @@ impl EPubBook {
         try!(writeln!(w, r#"  </docTitle>"#).map_err(|_| EPubBook::zip_error("write", "toc doc title end")));
         try!(writeln!(w, r#"  <navMap>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap start")));
 
-        let mut titles = 0;
-        for &(_, ref fname, ref tp) in &self.content {
-            if let EPubContentType::File(ref pb) = *tp {
-                if let Some(title) = find_title(&mut try!(File::open(pb).map_err(|_| {
-                    Error::Io {
-                        desc: "Content",
-                        op: "open",
-                        more: None,
-                    }
-                }))) {
-                    let uuid = Uuid::new_v4();
-                    titles += 1;
+        {
+            let mut titles = 0;
+            let mut insert_toc = |title, fname: &Path| {
+                titles += 1;
 
-                    try!(writeln!(w, r#"    <navPoint id="{}" playOrder="{}">"#, uuid.hyphenated(), titles)
-                        .map_err(|_| EPubBook::zip_error("write", "toc navmap point start")));
-                    try!(writeln!(w, r#"      <navLabel>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap label start")));
-                    try!(writeln!(w, r#"        <text>{}</text>"#, title).map_err(|_| EPubBook::zip_error("write", "toc navmap label text")));
-                    try!(writeln!(w, r#"      </navLabel>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap label end")));
-                    try!(writeln!(w, r#"      <content src="{}"/>"#, fname.display()).map_err(|_| EPubBook::zip_error("write", "toc navmap point content")));
-                    try!(writeln!(w, r#"    </navPoint>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap point end")));
+                try!(writeln!(w, r#"    <navPoint id="{}" playOrder="{}">"#, Uuid::new_v4().hyphenated(), titles)
+                    .map_err(|_| EPubBook::zip_error("write", "toc navmap point start")));
+                try!(writeln!(w, r#"      <navLabel>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap label start")));
+                try!(writeln!(w, r#"        <text>{}</text>"#, title).map_err(|_| EPubBook::zip_error("write", "toc navmap label text")));
+                try!(writeln!(w, r#"      </navLabel>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap label end")));
+                try!(writeln!(w, r#"      <content src="{}"/>"#, fname.display()).map_err(|_| EPubBook::zip_error("write", "toc navmap point content")));
+                try!(writeln!(w, r#"    </navPoint>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap point end")));
 
-                    if verbose {
-                        let _ = writeln!(verb_out, r#"Found title "{}" for {}."#, title, fname.display());
+                if verbose {
+                    let _ = writeln!(verb_out, r#"Found title "{}" for {}."#, title, fname.display());
+                }
+
+                Ok(())
+            };
+            for &(_, ref fname, ref tp) in &self.content {
+                match *tp {
+                    EPubContentType::File(ref pb) => {
+                        if let Some(title) = find_title(&mut try!(File::open(pb).map_err(|_| {
+                            Error::Io {
+                                desc: "Content",
+                                op: "open",
+                                more: None,
+                            }
+                        }))) {
+                            insert_toc(title, fname)?;
+                        }
                     }
+                    EPubContentType::Raw(ref data) if string_toc => {
+                        if let Some(title) = find_title(&mut data.as_bytes()) {
+                            insert_toc(title, fname)?;
+                        }
+                    }
+                    _ => {}
                 }
             }
         }
