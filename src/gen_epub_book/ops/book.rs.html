@@ -1,60 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/ops/book.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>book.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
-    <script src="../../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/ops/book.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>book.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -575,6 +519,77 @@
 <span id="519">519</span>
 <span id="520">520</span>
 <span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">CONTENT_TABLE_HEADER</span>, <span class="ident">CONTAINER</span>, <span class="ident">MIME_TYPE</span>, <span class="ident">write_string_content</span>, <span class="ident">xhtml_path_id</span>, <span class="ident">book_filename</span>, <span class="ident">xhtml_url_id</span>, <span class="ident">download_to</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">IncludeDirectory</span>, <span class="ident">BookElement</span>, <span class="ident">find_title</span>, <span class="ident">find_file</span>};
@@ -583,9 +598,9 @@
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">DateTime</span>, <span class="ident">FixedOffset</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Write</span>, <span class="ident">Seek</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeSet</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">PathBuf</span>, <span class="ident">Path</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">IntoIterator</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="kw">use</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span>;
@@ -865,19 +880,76 @@
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_zip</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span>, <span class="ident">V</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">to</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">verbose</span>: <span class="ident">bool</span>, <span class="ident">verb_out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">write_zip_ext</span>(<span class="bool-val">false</span>, <span class="ident">to</span>, <span class="ident">verbose</span>, <span class="ident">verb_out</span>)
+    }
+
+    <span class="doccomment">/// Write the book as ePub into the specified stream with additional configuration, optionally logging verbose output.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This function is equivalent to [`write_zip()`](fn.write_zip.html) with all config arguments defaulted.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Config arguments:</span>
+    <span class="doccomment">///   * `string_toc` – whether to process `Raw` elements for TOC specifiers – default: `false`</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note: functionality governed by this additional config is accessible only via the API.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// In the following example the resulting ePub will have the following TOC:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * Introduxion</span>
+    <span class="doccomment">/// * The Parodies</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Wherease without `string_toc`, the TOC would be empty.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # extern crate gen_epub_book;</span>
+    <span class="doccomment">/// # extern crate chrono;</span>
+    <span class="doccomment">/// # fn main() {</span>
+    <span class="doccomment">/// # use self::gen_epub_book::ops::{IncludeDirectory, EPubContentType, BookElement, EPubBook};</span>
+    <span class="doccomment">/// # use self::chrono::DateTime;</span>
+    <span class="doccomment">/// # use std::fs::{self, File};</span>
+    <span class="doccomment">/// # use std::path::PathBuf;</span>
+    <span class="doccomment">/// # use std::env::temp_dir;</span>
+    <span class="doccomment">/// # use std::str::FromStr;</span>
+    <span class="doccomment">/// # use std::io::stdout;</span>
+    <span class="doccomment">/// # let tf = temp_dir().join(&quot;gen-epub-book.rs-doctest&quot;).join(&quot;ops-epub-book-write-zip-ext-0&quot;);</span>
+    <span class="doccomment">/// # fs::create_dir_all(&amp;tf).unwrap();</span>
+    <span class="doccomment">/// let mut book = EPubBook::from_elements(vec![</span>
+    <span class="doccomment">///     BookElement::Name(&quot;String TOC demonstration&quot;.to_string()),</span>
+    <span class="doccomment">///     BookElement::StringContent(r#&quot;</span>
+    <span class="doccomment">/// &lt;!-- ePub title: &quot;Introduxion&quot; --&gt;</span>
+    <span class="doccomment">/// It is a measure of Sherlock Holmes&#39; immense popularity, that he&#39;s literature&#39;s most imitated character.</span>
+    <span class="doccomment">/// &quot;#.to_string()),</span>
+    <span class="doccomment">///     BookElement::StringContent(r#&quot;</span>
+    <span class="doccomment">/// &lt;!-- ePub title: &quot;The Parodies&quot; --&gt;</span>
+    <span class="doccomment">/// Sherlock Holmes appeared for the first time in A Study in Scarlet and The Sign of The Four, two novels published in 1887 and 1890.</span>
+    <span class="doccomment">/// &quot;#.to_string()),</span>
+    <span class="doccomment">///     BookElement::Author(&quot;nabijaczleweli&quot;.to_string()),</span>
+    <span class="doccomment">///     BookElement::Date(DateTime::parse_from_rfc3339(&quot;2018-06-27T12:30:38+02:00&quot;).unwrap()),</span>
+    <span class="doccomment">///     BookElement::Language(&quot;en-GB&quot;.to_string()),</span>
+    <span class="doccomment">/// ]).unwrap();</span>
+    <span class="doccomment">/// # if false {</span>
+    <span class="doccomment">/// book.write_zip_ext(</span>
+    <span class="doccomment">///     true, &amp;mut File::create(&quot;write_zip_ext.epub&quot;).unwrap(), false, &amp;mut stdout()).unwrap();</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # book.write_zip_ext(true, &amp;mut File::create(tf.join(&quot;write_zip_ext.epub&quot;)).unwrap(), false, &amp;mut vec![]).unwrap();</span>
+    <span class="doccomment">/// # assert!(tf.join(&quot;write_zip_ext.epub&quot;).metadata().unwrap().len() &gt; 0);</span>
+    <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_zip_ext</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span>, <span class="ident">V</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">string_toc</span>: <span class="ident">bool</span>, <span class="ident">to</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">verbose</span>: <span class="ident">bool</span>, <span class="ident">verb_out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">w</span> <span class="op">=</span> <span class="ident">ZipWriter</span>::<span class="ident">new</span>(<span class="ident">to</span>);
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="string">&quot;META-INF/container.xml&quot;</span>, <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;container file&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">write_all</span>(<span class="ident">CONTAINER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;container file&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="string">&quot;META-INF/container.xml&quot;</span>, <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;container file&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">write_all</span>(<span class="ident">CONTAINER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;container file&quot;</span>)));
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="string">&quot;mimetype&quot;</span>, <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;container file&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">write_all</span>(<span class="ident">MIME_TYPE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;container file&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="string">&quot;mimetype&quot;</span>, <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;container file&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">write_all</span>(<span class="ident">MIME_TYPE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;container file&quot;</span>)));
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="string">&quot;content.opf&quot;</span>, <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;content table&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="string">&quot;content.opf&quot;</span>, <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;content table&quot;</span>)));
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">content_table</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">w</span>, <span class="ident">verbose</span>, <span class="ident">verb_out</span>));
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="string">&quot;toc.ncx&quot;</span>, <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;table of contents&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">table_of_contents</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">w</span>, <span class="ident">verbose</span>, <span class="ident">verb_out</span>));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="string">&quot;toc.ncx&quot;</span>, <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;table of contents&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">table_of_contents</span>(<span class="ident">string_toc</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">w</span>, <span class="ident">verbose</span>, <span class="ident">verb_out</span>));
 
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_content</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">w</span>, <span class="ident">verbose</span>, <span class="ident">verb_out</span>));
 
@@ -912,7 +984,7 @@
                                 <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">root</span>) <span class="op">=</span> <span class="ident">find_file</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>, <span class="ident">relroots</span>) {
             <span class="kw">if</span> <span class="ident">verbose</span> {
-                <span class="kw">let</span> _ <span class="op">=</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">verb_out</span>, <span class="string">&quot;Normalised {} to {}{0} for {}.&quot;</span>, <span class="ident">file</span>.<span class="ident">display</span>(), <span class="ident">root</span>.<span class="ident">directory_name</span>(), <span class="ident">name</span>);
+                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">verb_out</span>, <span class="string">&quot;Normalised {} to {}{0} for {}.&quot;</span>, <span class="ident">file</span>.<span class="ident">display</span>(), <span class="ident">root</span>.<span class="ident">directory_name</span>(), <span class="ident">name</span>);
             }
             <span class="kw-2">*</span><span class="ident">id</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">packed_id</span>(<span class="ident">file</span>);
             <span class="kw-2">*</span><span class="ident">packed_name</span> <span class="op">=</span> <span class="ident">root</span>.<span class="ident">packed_name</span>(<span class="kw-2">&amp;</span><span class="ident">file</span>);
@@ -935,35 +1007,35 @@
     }
 
     <span class="kw">fn</span> <span class="ident">content_table</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span>, <span class="ident">V</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">verbose</span>: <span class="ident">bool</span>, <span class="ident">verb_out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">write_all</span>(<span class="ident">CONTENT_TABLE_HEADER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table header&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">&quot;    &lt;dc:title&gt;{}&lt;/dc:title&gt;&quot;</span>, <span class="self">self</span>.<span class="ident">name</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table title line&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">write_all</span>(<span class="ident">CONTENT_TABLE_HEADER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table header&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">&quot;    &lt;dc:title&gt;{}&lt;/dc:title&gt;&quot;</span>, <span class="self">self</span>.<span class="ident">name</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table title line&quot;</span>)));
         <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:creator opf:role=&quot;aut&quot;&gt;{}&lt;/dc:creator&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">author</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table author line&quot;</span>)));
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table author line&quot;</span>)));
         <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>,
                       <span class="string">r#&quot;    &lt;dc:identifier id=&quot;uuid&quot; opf:scheme=&quot;uuid&quot;&gt;{}&lt;/dc:identifier&gt;&quot;#</span>,
                       <span class="self">self</span>.<span class="ident">uuid</span>.<span class="ident">hyphenated</span>())
-            .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table uuid line&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:date&gt;{}&lt;/dc:date&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">date</span>.<span class="ident">to_rfc3339</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table date line&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:language&gt;{}&lt;/dc:language&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">language</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table language line&quot;</span>)));
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table uuid line&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:date&gt;{}&lt;/dc:date&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">date</span>.<span class="ident">to_rfc3339</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table date line&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:language&gt;{}&lt;/dc:language&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">language</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table language line&quot;</span>)));
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">id</span>, _, _)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cover</span>.<span class="ident">as_ref</span>() {
-            <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;meta name=&quot;cover&quot; content=&quot;{}&quot; /&gt;&quot;#</span>, <span class="ident">id</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table cover line&quot;</span>)));
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">id</span>, <span class="kw">_</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cover</span>.<span class="ident">as_ref</span>() {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;meta name=&quot;cover&quot; content=&quot;{}&quot; /&gt;&quot;#</span>, <span class="ident">id</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table cover line&quot;</span>)));
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">desc</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">description</span>.<span class="ident">as_ref</span>() {
-            <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:description&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table description open line&quot;</span>)));
+            <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:description&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table description open line&quot;</span>)));
             <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EPubBook</span>::<span class="ident">write_content_type</span>(<span class="ident">desc</span>, <span class="kw-2">&amp;</span><span class="string">&quot;description&quot;</span>, <span class="bool-val">false</span>, <span class="ident">w</span>, <span class="ident">verbose</span>, <span class="ident">verb_out</span>));
-            <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;/dc:description&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table description close line&quot;</span>)));
+            <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;/dc:description&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table description close line&quot;</span>)));
         }
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:language&gt;{}&lt;/dc:language&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">language</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table language line&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;dc:language&gt;{}&lt;/dc:language&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">language</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table language line&quot;</span>)));
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/metadata&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table metadata end&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;manifest&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest start&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/metadata&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table metadata end&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;manifest&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest start&quot;</span>)));
         <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;item href=&quot;toc.ncx&quot; id=&quot;toc&quot; media-type=&quot;application/x-dtbncx+xml&quot;/&gt;&quot;#</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest toc line&quot;</span>)));
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest toc line&quot;</span>)));
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">specified_ids</span> <span class="op">=</span> <span class="ident">BTreeSet</span>::<span class="ident">new</span>();
-        <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">id</span>, <span class="kw-2">ref</span> <span class="ident">fname</span>, _) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">cover</span>.<span class="ident">iter</span>().<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">content</span>.<span class="ident">iter</span>()).<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">non_content</span>.<span class="ident">iter</span>()) {
+        <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">id</span>, <span class="kw-2">ref</span> <span class="ident">fname</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">cover</span>.<span class="ident">iter</span>().<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">content</span>.<span class="ident">iter</span>()).<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">non_content</span>.<span class="ident">iter</span>()) {
             <span class="kw">if</span> <span class="op">!</span><span class="ident">specified_ids</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>[..]) {
                 <span class="ident">specified_ids</span>.<span class="ident">insert</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>[..]);
                 <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>,
@@ -971,86 +1043,100 @@
                               <span class="ident">fname</span>.<span class="ident">display</span>(),
                               <span class="ident">id</span>,
                               <span class="ident">EPubBook</span>::<span class="ident">guess_type</span>(<span class="ident">fname</span>))
-                    .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest content&quot;</span>)));
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest content&quot;</span>)));
             }
         }
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/manifest&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest end&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;spine toc=&quot;toc&quot;&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table spine start&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/manifest&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table manifest end&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;spine toc=&quot;toc&quot;&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table spine start&quot;</span>)));
 
-        <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">id</span>, _, _) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">content</span> {
-            <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;itemref idref=&quot;{}&quot; /&gt;&quot;#</span>, <span class="ident">id</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table spine content&quot;</span>)));
+        <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">id</span>, <span class="kw">_</span>, <span class="kw">_</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">content</span> {
+            <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;itemref idref=&quot;{}&quot; /&gt;&quot;#</span>, <span class="ident">id</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table spine content&quot;</span>)));
         }
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/spine&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table spine end&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;guide&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table guide start&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/spine&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table spine end&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;guide&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table guide start&quot;</span>)));
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">id</span>, <span class="kw-2">ref</span> <span class="ident">fname</span>, _)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cover</span>.<span class="ident">as_ref</span>() {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">id</span>, <span class="kw-2">ref</span> <span class="ident">fname</span>, <span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">cover</span>.<span class="ident">as_ref</span>() {
             <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;reference xmlns=&quot;http://www.idpf.org/2007/opf&quot; href=&quot;{}&quot; title=&quot;{}&quot; type=&quot;cover&quot; /&gt;&quot;#</span>, <span class="ident">fname</span>.<span class="ident">display</span>(), <span class="ident">id</span>)
-                .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table guide cover&quot;</span>)));
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table guide cover&quot;</span>)));
         }
 
         <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;reference href=&quot;toc.ncx&quot; title=&quot;Table of Contents&quot; type=&quot;toc&quot; /&gt;&quot;#</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table guide toc&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/guide&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table guide end&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;&lt;/package&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table package end&quot;</span>)));
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table guide toc&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/guide&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table guide end&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;&lt;/package&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;content table package end&quot;</span>)));
 
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">table_of_contents</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span>, <span class="ident">V</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">verbose</span>: <span class="ident">bool</span>, <span class="ident">verb_out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc xml start&quot;</span>)));
+    <span class="kw">fn</span> <span class="ident">table_of_contents</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span>, <span class="ident">V</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">string_toc</span>: <span class="ident">bool</span>, <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">verbose</span>: <span class="ident">bool</span>, <span class="ident">verb_out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;&lt;?xml version=&#39;1.0&#39; encoding=&#39;utf-8&#39;?&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc xml start&quot;</span>)));
         <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;&lt;ncx xmlns=&quot;http://www.daisy.org/z3986/2005/ncx/&quot; version=&quot;2005-1&quot; xml:lang=&quot;{}&quot;&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">language</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc ncx start&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;head&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc head start&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;meta content=&quot;{}&quot; name=&quot;dtb:uid&quot;/&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">uuid</span>.<span class="ident">hyphenated</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc head uuid&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;meta content=&quot;2&quot; name=&quot;dtb:depth&quot;/&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc head depth&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/head&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc head end&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;docTitle&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc doc title start&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;text&gt;{}&lt;/text&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">name</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc doc title&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/docTitle&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc doc title end&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;navMap&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap start&quot;</span>)));
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc ncx start&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;head&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc head start&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;meta content=&quot;{}&quot; name=&quot;dtb:uid&quot;/&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">uuid</span>.<span class="ident">hyphenated</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc head uuid&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;meta content=&quot;2&quot; name=&quot;dtb:depth&quot;/&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc head depth&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/head&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc head end&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;docTitle&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc doc title start&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;text&gt;{}&lt;/text&gt;&quot;#</span>, <span class="self">self</span>.<span class="ident">name</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc doc title&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/docTitle&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc doc title end&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;navMap&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap start&quot;</span>)));
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">titles</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="kw">for</span> <span class="kw-2">&amp;</span>(_, <span class="kw-2">ref</span> <span class="ident">fname</span>, <span class="kw-2">ref</span> <span class="ident">tp</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">content</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">EPubContentType</span>::<span class="ident">File</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">tp</span> {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">title</span>) <span class="op">=</span> <span class="ident">find_title</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">pb</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> {
-                    <span class="ident">Error</span>::<span class="ident">Io</span> {
-                        <span class="ident">desc</span>: <span class="string">&quot;Content&quot;</span>,
-                        <span class="ident">op</span>: <span class="string">&quot;open&quot;</span>,
-                        <span class="ident">more</span>: <span class="prelude-val">None</span>,
+        {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">titles</span> <span class="op">=</span> <span class="number">0</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">insert_toc</span> <span class="op">=</span> <span class="op">|</span><span class="ident">title</span>, <span class="ident">fname</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span><span class="op">|</span> {
+                <span class="ident">titles</span> <span class="op">+=</span> <span class="number">1</span>;
+
+                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;navPoint id=&quot;{}&quot; playOrder=&quot;{}&quot;&gt;&quot;#</span>, <span class="ident">Uuid</span>::<span class="ident">new_v4</span>().<span class="ident">hyphenated</span>(), <span class="ident">titles</span>)
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap point start&quot;</span>)));
+                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;      &lt;navLabel&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap label start&quot;</span>)));
+                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;        &lt;text&gt;{}&lt;/text&gt;&quot;#</span>, <span class="ident">title</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap label text&quot;</span>)));
+                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;      &lt;/navLabel&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap label end&quot;</span>)));
+                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;      &lt;content src=&quot;{}&quot;/&gt;&quot;#</span>, <span class="ident">fname</span>.<span class="ident">display</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap point content&quot;</span>)));
+                <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;/navPoint&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap point end&quot;</span>)));
+
+                <span class="kw">if</span> <span class="ident">verbose</span> {
+                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">verb_out</span>, <span class="string">r#&quot;Found title &quot;{}&quot; for {}.&quot;#</span>, <span class="ident">title</span>, <span class="ident">fname</span>.<span class="ident">display</span>());
+                }
+
+                <span class="prelude-val">Ok</span>(())
+            };
+            <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="kw-2">ref</span> <span class="ident">fname</span>, <span class="kw-2">ref</span> <span class="ident">tp</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">content</span> {
+                <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">tp</span> {
+                    <span class="ident">EPubContentType</span>::<span class="ident">File</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">=&gt;</span> {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">title</span>) <span class="op">=</span> <span class="ident">find_title</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">pb</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+                            <span class="ident">Error</span>::<span class="ident">Io</span> {
+                                <span class="ident">desc</span>: <span class="string">&quot;Content&quot;</span>,
+                                <span class="ident">op</span>: <span class="string">&quot;open&quot;</span>,
+                                <span class="ident">more</span>: <span class="prelude-val">None</span>,
+                            }
+                        }))) {
+                            <span class="ident">insert_toc</span>(<span class="ident">title</span>, <span class="ident">fname</span>)<span class="question-mark">?</span>;
+                        }
                     }
-                }))) {
-                    <span class="kw">let</span> <span class="ident">uuid</span> <span class="op">=</span> <span class="ident">Uuid</span>::<span class="ident">new_v4</span>();
-                    <span class="ident">titles</span> <span class="op">+=</span> <span class="number">1</span>;
-
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;navPoint id=&quot;{}&quot; playOrder=&quot;{}&quot;&gt;&quot;#</span>, <span class="ident">uuid</span>.<span class="ident">hyphenated</span>(), <span class="ident">titles</span>)
-                        .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap point start&quot;</span>)));
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;      &lt;navLabel&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap label start&quot;</span>)));
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;        &lt;text&gt;{}&lt;/text&gt;&quot;#</span>, <span class="ident">title</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap label text&quot;</span>)));
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;      &lt;/navLabel&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap label end&quot;</span>)));
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;      &lt;content src=&quot;{}&quot;/&gt;&quot;#</span>, <span class="ident">fname</span>.<span class="ident">display</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap point content&quot;</span>)));
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;    &lt;/navPoint&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap point end&quot;</span>)));
-
-                    <span class="kw">if</span> <span class="ident">verbose</span> {
-                        <span class="kw">let</span> _ <span class="op">=</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">verb_out</span>, <span class="string">r#&quot;Found title &quot;{}&quot; for {}.&quot;#</span>, <span class="ident">title</span>, <span class="ident">fname</span>.<span class="ident">display</span>());
+                    <span class="ident">EPubContentType</span>::<span class="ident">Raw</span>(<span class="kw-2">ref</span> <span class="ident">data</span>) <span class="kw">if</span> <span class="ident">string_toc</span> <span class="op">=&gt;</span> {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">title</span>) <span class="op">=</span> <span class="ident">find_title</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">data</span>.<span class="ident">as_bytes</span>()) {
+                            <span class="ident">insert_toc</span>(<span class="ident">title</span>, <span class="ident">fname</span>)<span class="question-mark">?</span>;
+                        }
                     }
+                    <span class="kw">_</span> <span class="op">=&gt;</span> {}
                 }
             }
         }
 
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/navMap&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap end&quot;</span>)));
-        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;&lt;/ncx&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc ncx end&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;  &lt;/navMap&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc navmap end&quot;</span>)));
+        <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">r#&quot;&lt;/ncx&gt;&quot;#</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;toc ncx end&quot;</span>)));
 
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">fn</span> <span class="ident">write_content</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Seek</span>, <span class="ident">V</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ZipWriter</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>, <span class="ident">verbose</span>: <span class="ident">bool</span>, <span class="ident">verb_out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">added_filenames</span> <span class="op">=</span> <span class="ident">BTreeSet</span>::<span class="ident">new</span>();
-        <span class="kw">for</span> <span class="kw-2">&amp;</span>(_, <span class="kw-2">ref</span> <span class="ident">fname</span>, <span class="kw-2">ref</span> <span class="ident">tp</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">cover</span>.<span class="ident">iter</span>().<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">content</span>.<span class="ident">iter</span>()).<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">non_content</span>.<span class="ident">iter</span>()) {
+        <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="kw-2">ref</span> <span class="ident">fname</span>, <span class="kw-2">ref</span> <span class="ident">tp</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">cover</span>.<span class="ident">iter</span>().<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">content</span>.<span class="ident">iter</span>()).<span class="ident">chain</span>(<span class="self">self</span>.<span class="ident">non_content</span>.<span class="ident">iter</span>()) {
             <span class="kw">if</span> <span class="op">!</span><span class="ident">added_filenames</span>.<span class="ident">contains</span>(<span class="ident">fname</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>()) {
                 <span class="ident">added_filenames</span>.<span class="ident">insert</span>(<span class="ident">fname</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>());
-                <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="ident">fname</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>(), <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;table of contents&quot;</span>)));
+                <span class="macro">try</span><span class="macro">!</span>(<span class="ident">w</span>.<span class="ident">start_file</span>(<span class="ident">fname</span>.<span class="ident">to_str</span>().<span class="ident">unwrap</span>(), <span class="ident">FileOptions</span>::<span class="ident">default</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;create&quot;</span>, <span class="string">&quot;table of contents&quot;</span>)));
                 <span class="macro">try</span><span class="macro">!</span>(<span class="ident">EPubBook</span>::<span class="ident">write_content_type</span>(<span class="ident">tp</span>, <span class="kw-2">&amp;</span><span class="ident">fname</span>.<span class="ident">display</span>(), <span class="bool-val">true</span>, <span class="ident">w</span>, <span class="ident">verbose</span>, <span class="ident">verb_out</span>));
             }
         }
@@ -1062,12 +1148,12 @@
                                                           <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">whom</span> {
             <span class="ident">EPubContentType</span>::<span class="ident">File</span>(<span class="kw-2">ref</span> <span class="ident">pb</span>) <span class="op">=&gt;</span> {
-                <span class="macro">try</span><span class="macro">!</span>(<span class="ident">io</span>::<span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">pb</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;open&quot;</span>, <span class="string">&quot;Content file&quot;</span>))), <span class="ident">w</span>)
-                    .<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;Content data&quot;</span>)));
+                <span class="macro">try</span><span class="macro">!</span>(<span class="ident">io</span>::<span class="ident">copy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">pb</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;open&quot;</span>, <span class="string">&quot;Content file&quot;</span>))), <span class="ident">w</span>)
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;Content data&quot;</span>)));
             }
             <span class="ident">EPubContentType</span>::<span class="ident">Network</span>(<span class="kw-2">ref</span> <span class="ident">u</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="ident">verbose</span> {
-                    <span class="kw">let</span> _ <span class="op">=</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">verb_out</span>, <span class="string">&quot;Downloading {} to {}.&quot;</span>, <span class="ident">u</span>, <span class="ident">fname</span>);
+                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">verb_out</span>, <span class="string">&quot;Downloading {} to {}.&quot;</span>, <span class="ident">u</span>, <span class="ident">fname</span>);
                 }
                 <span class="macro">try</span><span class="macro">!</span>(<span class="ident">download_to</span>(<span class="ident">w</span>, <span class="ident">u</span>));
             }
@@ -1075,7 +1161,7 @@
                 <span class="kw">if</span> <span class="ident">wrap_string</span> {
                     <span class="macro">try</span><span class="macro">!</span>(<span class="ident">write_string_content</span>(<span class="ident">w</span>, <span class="ident">s</span>));
                 } <span class="kw">else</span> {
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">s</span>).<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;string content&quot;</span>)));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">writeln</span><span class="macro">!</span>(<span class="ident">w</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">s</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">EPubBook</span>::<span class="ident">zip_error</span>(<span class="string">&quot;write&quot;</span>, <span class="string">&quot;string content&quot;</span>)));
                 }
             }
         }
@@ -1098,68 +1184,4 @@
     }
 }
 </pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../../";
-        window.currentCrate = "gen_epub_book";
-    </script>
-    <script src="../../../main.js"></script>
-    <script defer src="../../../search-index.js"></script>
-</body>
-</html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "gen_epub_book";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

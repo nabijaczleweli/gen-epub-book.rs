@@ -1,60 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.1/src/naive/datetime.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>datetime.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
-    <script src="../../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.4/src/naive/datetime.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>datetime.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -2016,6 +1960,96 @@
 <span id="1960">1960</span>
 <span id="1961">1961</span>
 <span id="1962">1962</span>
+<span id="1963">1963</span>
+<span id="1964">1964</span>
+<span id="1965">1965</span>
+<span id="1966">1966</span>
+<span id="1967">1967</span>
+<span id="1968">1968</span>
+<span id="1969">1969</span>
+<span id="1970">1970</span>
+<span id="1971">1971</span>
+<span id="1972">1972</span>
+<span id="1973">1973</span>
+<span id="1974">1974</span>
+<span id="1975">1975</span>
+<span id="1976">1976</span>
+<span id="1977">1977</span>
+<span id="1978">1978</span>
+<span id="1979">1979</span>
+<span id="1980">1980</span>
+<span id="1981">1981</span>
+<span id="1982">1982</span>
+<span id="1983">1983</span>
+<span id="1984">1984</span>
+<span id="1985">1985</span>
+<span id="1986">1986</span>
+<span id="1987">1987</span>
+<span id="1988">1988</span>
+<span id="1989">1989</span>
+<span id="1990">1990</span>
+<span id="1991">1991</span>
+<span id="1992">1992</span>
+<span id="1993">1993</span>
+<span id="1994">1994</span>
+<span id="1995">1995</span>
+<span id="1996">1996</span>
+<span id="1997">1997</span>
+<span id="1998">1998</span>
+<span id="1999">1999</span>
+<span id="2000">2000</span>
+<span id="2001">2001</span>
+<span id="2002">2002</span>
+<span id="2003">2003</span>
+<span id="2004">2004</span>
+<span id="2005">2005</span>
+<span id="2006">2006</span>
+<span id="2007">2007</span>
+<span id="2008">2008</span>
+<span id="2009">2009</span>
+<span id="2010">2010</span>
+<span id="2011">2011</span>
+<span id="2012">2012</span>
+<span id="2013">2013</span>
+<span id="2014">2014</span>
+<span id="2015">2015</span>
+<span id="2016">2016</span>
+<span id="2017">2017</span>
+<span id="2018">2018</span>
+<span id="2019">2019</span>
+<span id="2020">2020</span>
+<span id="2021">2021</span>
+<span id="2022">2022</span>
+<span id="2023">2023</span>
+<span id="2024">2024</span>
+<span id="2025">2025</span>
+<span id="2026">2026</span>
+<span id="2027">2027</span>
+<span id="2028">2028</span>
+<span id="2029">2029</span>
+<span id="2030">2030</span>
+<span id="2031">2031</span>
+<span id="2032">2032</span>
+<span id="2033">2033</span>
+<span id="2034">2034</span>
+<span id="2035">2035</span>
+<span id="2036">2036</span>
+<span id="2037">2037</span>
+<span id="2038">2038</span>
+<span id="2039">2039</span>
+<span id="2040">2040</span>
+<span id="2041">2041</span>
+<span id="2042">2042</span>
+<span id="2043">2043</span>
+<span id="2044">2044</span>
+<span id="2045">2045</span>
+<span id="2046">2046</span>
+<span id="2047">2047</span>
+<span id="2048">2048</span>
+<span id="2049">2049</span>
+<span id="2050">2050</span>
+<span id="2051">2051</span>
+<span id="2052">2052</span>
 </pre><pre class="rust ">
 <span class="comment">// This is a part of Chrono.</span>
 <span class="comment">// See README.md and LICENSE.txt for details.</span>
@@ -2158,7 +2192,7 @@
         <span class="kw">let</span> <span class="ident">time</span> <span class="op">=</span> <span class="ident">NaiveTime</span>::<span class="ident">from_num_seconds_from_midnight_opt</span>(<span class="ident">secs</span> <span class="kw">as</span> <span class="ident">u32</span>, <span class="ident">nsecs</span>);
         <span class="kw">match</span> (<span class="ident">date</span>, <span class="ident">time</span>) {
             (<span class="prelude-val">Some</span>(<span class="ident">date</span>), <span class="prelude-val">Some</span>(<span class="ident">time</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">NaiveDateTime</span> { <span class="ident">date</span>: <span class="ident">date</span>, <span class="ident">time</span>: <span class="ident">time</span> }),
-            (_, _) <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+            (<span class="kw">_</span>, <span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }
     }
 
@@ -2307,6 +2341,33 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timestamp_millis</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i64</span> {
         <span class="kw">let</span> <span class="ident">as_ms</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">timestamp</span>() <span class="op">*</span> <span class="number">1000</span>;
         <span class="ident">as_ms</span> <span class="op">+</span> <span class="ident">i64</span>::<span class="ident">from</span>(<span class="self">self</span>.<span class="ident">timestamp_subsec_millis</span>())
+    }
+
+    <span class="doccomment">/// Returns the number of non-leap *nanoseconds* since midnight on January 1, 1970.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that this does *not* account for the timezone!</span>
+    <span class="doccomment">/// The true &quot;UNIX timestamp&quot; would count seconds since the midnight *UTC* on the epoch.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note also that this does reduce the number of years that can be</span>
+    <span class="doccomment">/// represented from ~584 Billion to ~584. (If this is a problem,</span>
+    <span class="doccomment">/// please file an issue to let me know what domain needs nanosecond</span>
+    <span class="doccomment">/// precision over millenia, I&#39;m curious.)</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ~~~~</span>
+    <span class="doccomment">/// use chrono::NaiveDate;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let dt = NaiveDate::from_ymd(1970, 1, 1).and_hms_nano(0, 0, 1, 444);</span>
+    <span class="doccomment">/// assert_eq!(dt.timestamp_nanos(), 1_000_000_444);</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let dt = NaiveDate::from_ymd(2001, 9, 9).and_hms_nano(1, 46, 40, 555);</span>
+    <span class="doccomment">/// assert_eq!(dt.timestamp_nanos(), 1_000_000_000_000_000_555);</span>
+    <span class="doccomment">/// ~~~~</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timestamp_nanos</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">i64</span> {
+        <span class="kw">let</span> <span class="ident">as_ns</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">timestamp</span>() <span class="op">*</span> <span class="number">1_000_000_000</span>;
+        <span class="ident">as_ns</span> <span class="op">+</span> <span class="ident">i64</span>::<span class="ident">from</span>(<span class="self">self</span>.<span class="ident">timestamp_subsec_nanos</span>())
     }
 
     <span class="doccomment">/// Returns the number of milliseconds since the last whole non-leap second.</span>
@@ -3298,6 +3359,61 @@
     }
 }
 
+<span class="doccomment">/// Subtracts another `NaiveDateTime` from the current date and time.</span>
+<span class="doccomment">/// This does not overflow or underflow at all.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// As a part of Chrono&#39;s [leap second handling](./struct.NaiveTime.html#leap-second-handling),</span>
+<span class="doccomment">/// the subtraction assumes that **there is no leap second ever**,</span>
+<span class="doccomment">/// except when any of the `NaiveDateTime`s themselves represents a leap second</span>
+<span class="doccomment">/// in which case the assumption becomes that</span>
+<span class="doccomment">/// **there are exactly one (or two) leap second(s) ever**.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The implementation is a wrapper around</span>
+<span class="doccomment">/// [`NaiveDateTime::signed_duration_since`](#method.signed_duration_since).</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Example</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ~~~~</span>
+<span class="doccomment">/// # extern crate chrono; extern crate time; fn main() {</span>
+<span class="doccomment">/// use chrono::NaiveDate;</span>
+<span class="doccomment">/// use time::Duration;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let from_ymd = NaiveDate::from_ymd;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// let d = from_ymd(2016, 7, 8);</span>
+<span class="doccomment">/// assert_eq!(d.and_hms(3, 5, 7) - d.and_hms(2, 4, 6), Duration::seconds(3600 + 60 + 1));</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // July 8 is 190th day in the year 2016</span>
+<span class="doccomment">/// let d0 = from_ymd(2016, 1, 1);</span>
+<span class="doccomment">/// assert_eq!(d.and_hms_milli(0, 7, 6, 500) - d0.and_hms(0, 0, 0),</span>
+<span class="doccomment">///            Duration::seconds(189 * 86_400 + 7 * 60 + 6) + Duration::milliseconds(500));</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ~~~~</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Leap seconds are handled, but the subtraction assumes that</span>
+<span class="doccomment">/// there were no other leap seconds happened.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ~~~~</span>
+<span class="doccomment">/// # extern crate chrono; extern crate time; fn main() {</span>
+<span class="doccomment">/// # use chrono::NaiveDate;</span>
+<span class="doccomment">/// # use time::Duration;</span>
+<span class="doccomment">/// # let from_ymd = NaiveDate::from_ymd;</span>
+<span class="doccomment">/// let leap = from_ymd(2015, 6, 30).and_hms_milli(23, 59, 59, 1_500);</span>
+<span class="doccomment">/// assert_eq!(leap - from_ymd(2015, 6, 30).and_hms(23, 0, 0),</span>
+<span class="doccomment">///            Duration::seconds(3600) + Duration::milliseconds(500));</span>
+<span class="doccomment">/// assert_eq!(from_ymd(2015, 7, 1).and_hms(1, 0, 0) - leap,</span>
+<span class="doccomment">///            Duration::seconds(3600) - Duration::milliseconds(500));</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ~~~~</span>
+<span class="kw">impl</span> <span class="ident">Sub</span><span class="op">&lt;</span><span class="ident">NaiveDateTime</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">OldDuration</span>;
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">sub</span>(<span class="self">self</span>, <span class="ident">rhs</span>: <span class="ident">NaiveDateTime</span>) <span class="op">-&gt;</span> <span class="ident">OldDuration</span> {
+        <span class="self">self</span>.<span class="ident">signed_duration_since</span>(<span class="ident">rhs</span>)
+    }
+}
+
 <span class="doccomment">/// The `Debug` output of the naive date and time `dt` is same to</span>
 <span class="doccomment">/// [`dt.format(&quot;%Y-%m-%dT%H:%M:%S%.f&quot;)`](../format/strftime/index.html).</span>
 <span class="doccomment">///</span>
@@ -3516,30 +3632,38 @@
 
     <span class="kw">impl</span> <span class="ident">Decodable</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
         <span class="kw">fn</span> <span class="ident">decode</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Decoder</span><span class="op">&gt;</span>(<span class="ident">d</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">NaiveDateTime</span>, <span class="ident">D</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-            <span class="ident">d</span>.<span class="ident">read_str</span>()<span class="question-mark">?</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">d</span>.<span class="ident">error</span>(<span class="string">&quot;invalid date time string&quot;</span>))
+            <span class="ident">d</span>.<span class="ident">read_str</span>()<span class="question-mark">?</span>.<span class="ident">parse</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">error</span>(<span class="string">&quot;invalid date time string&quot;</span>))
         }
     }
 
     <span class="doccomment">/// A `DateTime` that can be deserialized from a seconds-based timestamp</span>
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;1.4.2&quot;</span>,
+                 <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;RustcSerialize will be removed before chrono 1.0, use Serde instead&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TsSeconds</span>(<span class="ident">NaiveDateTime</span>);
 
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
     <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">TsSeconds</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NaiveDateTime</span> {
         <span class="doccomment">/// Pull the internal NaiveDateTime out</span>
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">obj</span>: <span class="ident">TsSeconds</span>) <span class="op">-&gt;</span> <span class="ident">NaiveDateTime</span> {
             <span class="ident">obj</span>.<span class="number">0</span>
         }
     }
 
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
     <span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">TsSeconds</span> {
         <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">NaiveDateTime</span>;
 
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Target</span> {
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
         }
     }
 
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
     <span class="kw">impl</span> <span class="ident">Decodable</span> <span class="kw">for</span> <span class="ident">TsSeconds</span> {
+        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
         <span class="kw">fn</span> <span class="ident">decode</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Decoder</span><span class="op">&gt;</span>(<span class="ident">d</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TsSeconds</span>, <span class="ident">D</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
             <span class="prelude-val">Ok</span>(<span class="ident">TsSeconds</span>(
                 <span class="ident">NaiveDateTime</span>::<span class="ident">from_timestamp_opt</span>(<span class="ident">d</span>.<span class="ident">read_i64</span>()<span class="question-mark">?</span>, <span class="number">0</span>)
@@ -3980,68 +4104,4 @@
     }
 }
 </pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../../";
-        window.currentCrate = "chrono";
-    </script>
-    <script src="../../../main.js"></script>
-    <script defer src="../../../search-index.js"></script>
-</body>
-</html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "chrono";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

@@ -1,60 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/base64-0.9.0/src/line_wrap.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>line_wrap.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/base64-0.9.2/src/line_wrap.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>line_wrap.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -447,7 +391,6 @@
 <span id="391">391</span>
 <span id="392">392</span>
 <span id="393">393</span>
-<span id="394">394</span>
 </pre><pre class="rust ">
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">safemem</span>;
 
@@ -525,7 +468,6 @@
         <span class="ident">total_line_endings_len</span>: <span class="ident">total_line_endings_len</span>,
     }
 }
-
 
 <span class="doccomment">/// Insert line endings into the encoded base64 after each complete line (except the last line, even</span>
 <span class="doccomment">/// if it is complete).</span>
@@ -615,8 +557,8 @@
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-    <span class="kw">use</span> <span class="self">self</span>::<span class="ident">rand</span>::<span class="ident">Rng</span>;
     <span class="kw">use</span> <span class="self">self</span>::<span class="ident">rand</span>::<span class="ident">distributions</span>::{<span class="ident">IndependentSample</span>, <span class="ident">Range</span>};
+    <span class="kw">use</span> <span class="self">self</span>::<span class="ident">rand</span>::<span class="ident">Rng</span>;
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">line_params_perfect_multiple_of_line_length_lf</span>() {
@@ -759,7 +701,7 @@
         <span class="kw">let</span> <span class="ident">line_range</span> <span class="op">=</span> <span class="ident">Range</span>::<span class="ident">new</span>(<span class="number">10</span>, <span class="number">100</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">rng</span> <span class="op">=</span> <span class="ident">rand</span>::<span class="ident">weak_rng</span>();
 
-        <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="number">10_000</span> {
+        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">10_000</span> {
             <span class="ident">buf</span>.<span class="ident">clear</span>();
 
             <span class="kw">let</span> <span class="ident">buf_len</span> <span class="op">=</span> <span class="ident">buf_range</span>.<span class="ident">ind_sample</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">rng</span>);
@@ -771,7 +713,7 @@
             };
             <span class="kw">let</span> <span class="ident">line_ending_len</span> <span class="op">=</span> <span class="ident">line_ending</span>.<span class="ident">len</span>();
 
-            <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="ident">buf_len</span> {
+            <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">buf_len</span> {
                 <span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">rng</span>.<span class="ident">gen</span>());
             }
 
@@ -779,14 +721,14 @@
 
             <span class="kw">let</span> <span class="ident">not_wrapped_buf</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">to_vec</span>();
 
-            <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">do_line_wrap</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>, <span class="ident">line_len</span>, <span class="ident">line_ending</span>);
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">do_line_wrap</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>, <span class="ident">line_len</span>, <span class="ident">line_ending</span>);
 
             <span class="comment">// remove the endings</span>
             <span class="kw">for</span> <span class="ident">line_ending_num</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">line_wrap_params</span>.<span class="ident">lines_with_endings</span> {
                 <span class="kw">let</span> <span class="ident">line_ending_offset</span> <span class="op">=</span> (<span class="ident">line_ending_num</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">*</span> <span class="ident">line_len</span>;
 
-                <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="ident">line_ending_len</span> {
-                    <span class="kw">let</span> _ <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">remove</span>(<span class="ident">line_ending_offset</span>);
+                <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">line_ending_len</span> {
+                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">remove</span>(<span class="ident">line_ending_offset</span>);
                 }
             }
 
@@ -802,7 +744,7 @@
         <span class="comment">// A 3x inflation is enough for the worst case: line length 1, crlf ending.</span>
         <span class="comment">// We add on extra bytes so we&#39;ll have un-wrapped bytes at the end that shouldn&#39;t get</span>
         <span class="comment">// modified..</span>
-        <span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..(<span class="number">1000</span> <span class="op">+</span> <span class="number">2</span> <span class="op">*</span> <span class="ident">orig_len</span>) {
+        <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..(<span class="number">1000</span> <span class="op">+</span> <span class="number">2</span> <span class="op">*</span> <span class="ident">orig_len</span>) {
             <span class="ident">buf</span>.<span class="ident">push</span>(<span class="ident">rng</span>.<span class="ident">gen</span>());
         }
 
@@ -844,68 +786,4 @@
     }
 }
 </pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "base64";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "base64";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
