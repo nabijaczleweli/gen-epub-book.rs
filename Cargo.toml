@@ -13,17 +13,17 @@ version = "2.3.0"
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 
 [dependencies]
-lazy_static = "1.0"
+lazy_static = "1.1"
 mime_guess = "1.8"
-reqwest = "0.8"
+reqwest = "0.9"
 chrono = "0.4"
-regex = "0.2"
-clap = "2.26"
-url = "1.5"
-zip = "0.3"
+regex = "1.0"
+clap = "2.32"
+url = "1.7"
+zip = "0.4"
 
 [dependencies.uuid]
-version = "0.6"
+version = "0.7"
 features = ["v4"]
 
 

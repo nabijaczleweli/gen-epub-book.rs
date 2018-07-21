@@ -329,7 +329,8 @@ impl EPubBook {
     /// "#.to_string()),
     ///     BookElement::StringContent(r#"
     /// <!-- ePub title: "The Parodies" -->
-    /// Sherlock Holmes appeared for the first time in A Study in Scarlet and The Sign of The Four, two novels published in 1887 and 1890.
+    /// Sherlock Holmes appeared for the first time in A Study in Scarlet and The Sign of The Four, two novels published in
+    /// 1887 and 1890.
     /// "#.to_string()),
     ///     BookElement::Author("nabijaczleweli".to_string()),
     ///     BookElement::Date(DateTime::parse_from_rfc3339("2018-06-27T12:30:38+02:00").unwrap()),
@@ -420,7 +421,7 @@ impl EPubBook {
             .map_err(|_| EPubBook::zip_error("write", "content table author line")));
         try!(writeln!(w,
                       r#"    <dc:identifier id="uuid" opf:scheme="uuid">{}</dc:identifier>"#,
-                      self.uuid.hyphenated())
+                      self.uuid.to_hyphenated_ref())
             .map_err(|_| EPubBook::zip_error("write", "content table uuid line")));
         try!(writeln!(w, r#"    <dc:date>{}</dc:date>"#, self.date.to_rfc3339()).map_err(|_| EPubBook::zip_error("write", "content table date line")));
         try!(writeln!(w, r#"    <dc:language>{}</dc:language>"#, self.language).map_err(|_| EPubBook::zip_error("write", "content table language line")));
@@ -482,7 +483,7 @@ impl EPubBook {
         try!(writeln!(w, r#"<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="{}">"#, self.language)
             .map_err(|_| EPubBook::zip_error("write", "toc ncx start")));
         try!(writeln!(w, r#"  <head>"#).map_err(|_| EPubBook::zip_error("write", "toc head start")));
-        try!(writeln!(w, r#"    <meta content="{}" name="dtb:uid"/>"#, self.uuid.hyphenated()).map_err(|_| EPubBook::zip_error("write", "toc head uuid")));
+        try!(writeln!(w, r#"    <meta content="{}" name="dtb:uid"/>"#, self.uuid.to_hyphenated_ref()).map_err(|_| EPubBook::zip_error("write", "toc head uuid")));
         try!(writeln!(w, r#"    <meta content="2" name="dtb:depth"/>"#).map_err(|_| EPubBook::zip_error("write", "toc head depth")));
         try!(writeln!(w, r#"  </head>"#).map_err(|_| EPubBook::zip_error("write", "toc head end")));
         try!(writeln!(w, r#"  <docTitle>"#).map_err(|_| EPubBook::zip_error("write", "toc doc title start")));
@@ -495,7 +496,7 @@ impl EPubBook {
             let mut insert_toc = |title, fname: &Path| {
                 titles += 1;
 
-                try!(writeln!(w, r#"    <navPoint id="{}" playOrder="{}">"#, Uuid::new_v4().hyphenated(), titles)
+                try!(writeln!(w, r#"    <navPoint id="{}" playOrder="{}">"#, Uuid::new_v4().to_hyphenated(), titles)
                     .map_err(|_| EPubBook::zip_error("write", "toc navmap point start")));
                 try!(writeln!(w, r#"      <navLabel>"#).map_err(|_| EPubBook::zip_error("write", "toc navmap label start")));
                 try!(writeln!(w, r#"        <text>{}</text>"#, title).map_err(|_| EPubBook::zip_error("write", "toc navmap label text")));
