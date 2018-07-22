@@ -1,4 +1,4 @@
-version: 2.3.0-{build}
+version: 2.3.1-{build}
 skip_tags: false
 
 platform: x64
@@ -23,8 +23,8 @@ build: off
 build_script:
   - git submodule update --init --recursive
   - cargo build --verbose --release
-  - cp target\release\gen-epub-book.exe gen-epub-book-v2.3.0.exe
-  - strip --strip-all --remove-section=.comment --remove-section=.note gen-epub-book-v2.3.0.exe
+  - cp target\release\gen-epub-book.exe gen-epub-book-v2.3.1.exe
+  - strip --strip-all --remove-section=.comment --remove-section=.note gen-epub-book-v2.3.1.exe
 
 test: off
 test_script:
@@ -32,11 +32,11 @@ test_script:
   - make BUILD_TYPE=release
 
 artifacts:
-  - path: gen-epub-book-v2.3.0.exe
+  - path: gen-epub-book-v2.3.1.exe
 
 deploy:
   provider: GitHub
-  artifact: gen-epub-book-v2.3.0.exe
+  artifact: gen-epub-book-v2.3.1.exe
   auth_token:
     secure: tI3u7yq0/o6DmaQeUna5DXjXNLgJDbpIUKhDB6RkZCIGYCy+x/IuTcNZPp8PGxng
   on:
