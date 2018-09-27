@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mio-0.6.14/src/net/udp.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>udp.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mio-0.6.16/src/net/udp.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>udp.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -598,8 +598,6 @@
 <span id="598">598</span>
 <span id="599">599</span>
 <span id="600">600</span>
-<span id="601">601</span>
-<span id="602">602</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Primitives for working with UDP</span>
 <span class="doccomment">//!</span>
@@ -641,12 +639,12 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// // This operation will fail if the address is in use, so we select different ports for each</span>
 <span class="doccomment">/// // socket.</span>
-<span class="doccomment">/// let sender_socket = UdpSocket::bind(&amp;&quot;127.0.0.1:7777&quot;.parse()?)?;</span>
-<span class="doccomment">/// let echoer_socket = UdpSocket::bind(&amp;&quot;127.0.0.1:11100&quot;.parse()?)?;</span>
+<span class="doccomment">/// let sender_socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
+<span class="doccomment">/// let echoer_socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// // If we do not use connect here, SENDER and ECHOER would need to call send_to and recv_from</span>
 <span class="doccomment">/// // respectively.</span>
-<span class="doccomment">/// sender_socket.connect(&quot;127.0.0.1:11100&quot;.parse()?)?;</span>
+<span class="doccomment">/// sender_socket.connect(echoer_socket.local_addr().unwrap())?;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// // We need a Poll to check if SENDER is ready to be written into, and if ECHOER is ready to be</span>
 <span class="doccomment">/// // read from.</span>
@@ -706,7 +704,7 @@
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // We must bind it to an open address.</span>
-    <span class="doccomment">/// let socket = match UdpSocket::bind(&amp;&quot;127.0.0.1:7777&quot;.parse()?) {</span>
+    <span class="doccomment">/// let socket = match UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?) {</span>
     <span class="doccomment">///     Ok(new_socket) =&gt; new_socket,</span>
     <span class="doccomment">///     Err(fail) =&gt; {</span>
     <span class="doccomment">///         // We panic! here, but you could try to bind it again on another address.</span>
@@ -758,10 +756,8 @@
     <span class="doccomment">/// # fn try_main() -&gt; Result&lt;(), Box&lt;Error&gt;&gt; {</span>
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let addr = &quot;127.0.0.1:7777&quot;.parse()?;</span>
+    <span class="doccomment">/// let addr = &quot;127.0.0.1:0&quot;.parse()?;</span>
     <span class="doccomment">/// let socket = UdpSocket::bind(&amp;addr)?;</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(socket.local_addr()?, addr);</span>
     <span class="doccomment">/// #    Ok(())</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// #</span>
@@ -788,7 +784,7 @@
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // We must bind it to an open address.</span>
-    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:7777&quot;.parse()?)?;</span>
+    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
     <span class="doccomment">/// let cloned_socket = socket.try_clone()?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// assert_eq!(socket.local_addr()?, cloned_socket.local_addr()?);</span>
@@ -822,8 +818,8 @@
     <span class="doccomment">/// # use std::error::Error;</span>
     <span class="doccomment">/// # fn try_main() -&gt; Result&lt;(), Box&lt;Error&gt;&gt; {</span>
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
-    <span class="doccomment">/// </span>
-    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:7777&quot;.parse()?)?;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // We must check if the socket is writable before calling send_to,</span>
     <span class="doccomment">/// // or we could run into a WouldBlock error.</span>
@@ -853,7 +849,7 @@
     <span class="doccomment">/// # fn try_main() -&gt; Result&lt;(), Box&lt;Error&gt;&gt; {</span>
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:11100&quot;.parse()?)?;</span>
+    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // We must check if the socket is readable before calling recv_from,</span>
     <span class="doccomment">/// // or we could run into a WouldBlock error.</span>
@@ -905,11 +901,11 @@
     <span class="doccomment">/// # fn try_main() -&gt; Result&lt;(), Box&lt;Error&gt;&gt; {</span>
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let broadcast_socket = UdpSocket::bind(&amp;&quot;127.0.0.1:7777&quot;.parse()?)?;</span>
+    <span class="doccomment">/// let broadcast_socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
     <span class="doccomment">/// if broadcast_socket.broadcast()? == false {</span>
     <span class="doccomment">///     broadcast_socket.set_broadcast(true)?;</span>
     <span class="doccomment">/// }</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// assert_eq!(broadcast_socket.broadcast()?, true);</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// #    Ok(())</span>
@@ -938,7 +934,7 @@
     <span class="doccomment">/// # fn try_main() -&gt; Result&lt;(), Box&lt;Error&gt;&gt; {</span>
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let broadcast_socket = UdpSocket::bind(&amp;&quot;127.0.0.1:7777&quot;.parse()?)?;</span>
+    <span class="doccomment">/// let broadcast_socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
     <span class="doccomment">/// assert_eq!(broadcast_socket.broadcast()?, false);</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// #    Ok(())</span>
@@ -1022,7 +1018,7 @@
     <span class="doccomment">/// # fn try_main() -&gt; Result&lt;(), Box&lt;Error&gt;&gt; {</span>
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:7777&quot;.parse()?)?;</span>
+    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
     <span class="doccomment">/// if socket.ttl()? &lt; 255 {</span>
     <span class="doccomment">///     socket.set_ttl(255)?;</span>
     <span class="doccomment">/// }</span>
@@ -1054,7 +1050,7 @@
     <span class="doccomment">/// # fn try_main() -&gt; Result&lt;(), Box&lt;Error&gt;&gt; {</span>
     <span class="doccomment">/// use mio::net::UdpSocket;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:7777&quot;.parse()?)?;</span>
+    <span class="doccomment">/// let socket = UdpSocket::bind(&amp;&quot;127.0.0.1:0&quot;.parse()?)?;</span>
     <span class="doccomment">/// socket.set_ttl(255)?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// assert_eq!(socket.ttl()?, 255);</span>

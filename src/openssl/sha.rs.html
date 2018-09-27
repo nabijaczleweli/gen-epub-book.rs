@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.24/src/sha.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>sha.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.10.12/src/sha.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>sha.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -384,8 +384,6 @@
 <span id="384">384</span>
 <span id="385">385</span>
 <span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! The SHA family of hashes.</span>
 <span class="doccomment">//!</span>
@@ -407,7 +405,6 @@
 <span class="doccomment">//! extern crate hex;</span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! use openssl::sha;</span>
-<span class="doccomment">//! use hex::ToHex;</span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//! fn main() {</span>
 <span class="doccomment">//!     let mut hasher = sha::Sha256::new();</span>
@@ -416,7 +413,7 @@
 <span class="doccomment">//!     hasher.update(b&quot;world&quot;);</span>
 <span class="doccomment">//! </span>
 <span class="doccomment">//!     let hash = hasher.finish();</span>
-<span class="doccomment">//!     println!(&quot;Hashed \&quot;Hello, world\&quot; to {}&quot;, hash.to_hex());</span>
+<span class="doccomment">//!     println!(&quot;Hashed \&quot;Hello, world\&quot; to {}&quot;, hex::encode(hash));</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
@@ -429,11 +426,10 @@
 <span class="doccomment">//! extern crate hex;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! use openssl::sha::sha256;</span>
-<span class="doccomment">//! use hex::ToHex;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! fn main() {</span>
 <span class="doccomment">//!     let hash = sha256(b&quot;your data or message&quot;);</span>
-<span class="doccomment">//!     println!(&quot;Hash = {}&quot;, hash.to_hex());</span>
+<span class="doccomment">//!     println!(&quot;Hash = {}&quot;, hex::encode(hash));</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_void</span>;
@@ -677,7 +673,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident">hex</span>::<span class="ident">ToHex</span>;
+    <span class="kw">use</span> <span class="ident">hex</span>;
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
@@ -686,7 +682,7 @@
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="string">b&quot;abc&quot;</span>;
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;a9993e364706816aba3e25717850c26c9cd0d89d&quot;</span>;
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sha1</span>(<span class="ident">data</span>).<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="ident">sha1</span>(<span class="ident">data</span>)), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -696,7 +692,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident">Sha1</span>::<span class="ident">new</span>();
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;a&quot;</span>);
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;bc&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hasher</span>.<span class="ident">finish</span>().<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="ident">hasher</span>.<span class="ident">finish</span>()), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -704,7 +700,7 @@
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="string">b&quot;abc&quot;</span>;
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7&quot;</span>;
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sha224</span>(<span class="ident">data</span>).<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="ident">sha224</span>(<span class="ident">data</span>)), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -714,7 +710,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident">Sha224</span>::<span class="ident">new</span>();
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;a&quot;</span>);
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;bc&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hasher</span>.<span class="ident">finish</span>().<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="ident">hasher</span>.<span class="ident">finish</span>()), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -722,7 +718,7 @@
         <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="string">b&quot;abc&quot;</span>;
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad&quot;</span>;
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">sha256</span>(<span class="ident">data</span>).<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="ident">sha256</span>(<span class="ident">data</span>)), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -732,7 +728,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident">Sha256</span>::<span class="ident">new</span>();
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;a&quot;</span>);
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;bc&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hasher</span>.<span class="ident">finish</span>().<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="ident">hasher</span>.<span class="ident">finish</span>()), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -741,7 +737,7 @@
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e\
                         7cc2358baeca134c825a7&quot;</span>;
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>((<span class="kw-2">&amp;</span><span class="ident">sha384</span>(<span class="ident">data</span>)[..]).<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">sha384</span>(<span class="ident">data</span>)[..]), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -752,7 +748,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident">Sha384</span>::<span class="ident">new</span>();
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;a&quot;</span>);
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;bc&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>((<span class="kw-2">&amp;</span><span class="ident">hasher</span>.<span class="ident">finish</span>()[..]).<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">hasher</span>.<span class="ident">finish</span>()[..]), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -761,7 +757,7 @@
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274\
                         fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f&quot;</span>;
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>((<span class="kw-2">&amp;</span><span class="ident">sha512</span>(<span class="ident">data</span>)[..]).<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">sha512</span>(<span class="ident">data</span>)[..]), <span class="ident">expected</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -772,7 +768,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident">Sha512</span>::<span class="ident">new</span>();
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;a&quot;</span>);
         <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="string">b&quot;bc&quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>((<span class="kw-2">&amp;</span><span class="ident">hasher</span>.<span class="ident">finish</span>()[..]).<span class="ident">to_hex</span>(), <span class="ident">expected</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">hex</span>::<span class="ident">encode</span>(<span class="kw-2">&amp;</span><span class="ident">hasher</span>.<span class="ident">finish</span>()[..]), <span class="ident">expected</span>);
     }
 }
 </pre>

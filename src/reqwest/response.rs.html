@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.8.6/src/response.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>response.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.2/src/response.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>response.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -316,6 +316,26 @@
 <span id="316">316</span>
 <span id="317">317</span>
 <span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
@@ -325,17 +345,19 @@
 
 <span class="kw">use</span> <span class="ident">encoding_rs</span>::{<span class="ident">Encoding</span>, <span class="ident">UTF_8</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Poll</span>, <span class="ident">Stream</span>};
+<span class="kw">use</span> <span class="ident">mime</span>::<span class="ident">Mime</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>;
 <span class="kw">use</span> <span class="ident">serde_json</span>;
 
 <span class="kw">use</span> <span class="ident">client</span>::<span class="ident">KeepCoreThreadAlive</span>;
-<span class="kw">use</span> <span class="ident">header</span>::<span class="ident">Headers</span>;
-<span class="kw">use</span> {<span class="ident">async_impl</span>, <span class="ident">StatusCode</span>, <span class="ident">Url</span>, <span class="ident">wait</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::<span class="ident">HeaderMap</span>;
+<span class="kw">use</span> {<span class="ident">async_impl</span>, <span class="ident">StatusCode</span>, <span class="ident">Url</span>, <span class="ident">Version</span>, <span class="ident">wait</span>};
 
 <span class="doccomment">/// A Response to a submitted `Request`.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Response</span> {
     <span class="ident">inner</span>: <span class="ident">async_impl</span>::<span class="ident">Response</span>,
     <span class="ident">body</span>: <span class="ident">async_impl</span>::<span class="ident">ReadableChunks</span><span class="op">&lt;</span><span class="ident">WaitBody</span><span class="op">&gt;</span>,
+    <span class="ident">content_length</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
     <span class="ident">_thread_handle</span>: <span class="ident">KeepCoreThreadAlive</span>,
 }
 
@@ -389,8 +411,8 @@
     <span class="doccomment">///             .body(&quot;possibly too large&quot;)</span>
     <span class="doccomment">///             .send()?;</span>
     <span class="doccomment">/// match resp.status() {</span>
-    <span class="doccomment">///     StatusCode::Ok =&gt; println!(&quot;success!&quot;),</span>
-    <span class="doccomment">///     StatusCode::PayloadTooLarge =&gt; {</span>
+    <span class="doccomment">///     StatusCode::OK =&gt; println!(&quot;success!&quot;),</span>
+    <span class="doccomment">///     StatusCode::PAYLOAD_TOO_LARGE =&gt; {</span>
     <span class="doccomment">///         println!(&quot;Request payload is too large!&quot;);</span>
     <span class="doccomment">///     }</span>
     <span class="doccomment">///     s =&gt; println!(&quot;Received response status: {:?}&quot;, s),</span>
@@ -412,14 +434,15 @@
     <span class="doccomment">/// ```rust</span>
     <span class="doccomment">/// # use std::io::{Read, Write};</span>
     <span class="doccomment">/// # use reqwest::Client;</span>
-    <span class="doccomment">/// # use reqwest::header::ContentLength;</span>
+    <span class="doccomment">/// # use reqwest::header::CONTENT_LENGTH;</span>
     <span class="doccomment">/// #</span>
     <span class="doccomment">/// # fn run() -&gt; Result&lt;(), Box&lt;::std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// let client = Client::new();</span>
     <span class="doccomment">/// let mut resp = client.head(&quot;http://httpbin.org/bytes/3000&quot;).send()?;</span>
     <span class="doccomment">/// if resp.status().is_success() {</span>
-    <span class="doccomment">///     let len = resp.headers().get::&lt;ContentLength&gt;()</span>
-    <span class="doccomment">///                 .map(|ct_len| **ct_len)</span>
+    <span class="doccomment">///     let len = resp.headers().get(CONTENT_LENGTH)</span>
+    <span class="doccomment">///                 .and_then(|ct_len| ct_len.to_str().ok())</span>
+    <span class="doccomment">///                 .and_then(|ct_len| ct_len.parse().ok())</span>
     <span class="doccomment">///                 .unwrap_or(0);</span>
     <span class="doccomment">///     // limit 1mb response</span>
     <span class="doccomment">///     if len &lt;= 1_000_000 {</span>
@@ -434,8 +457,14 @@
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Headers</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">HeaderMap</span> {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">headers</span>()
+    }
+
+    <span class="doccomment">/// Get the HTTP `Version` of this `Response`.</span>
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Version</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">version</span>()
     }
 
     <span class="doccomment">/// Try and deserialize the response body as JSON using `serde`.</span>
@@ -508,14 +537,21 @@
     <span class="doccomment">/// This consumes the body. Trying to read more, or use of `response.json()`</span>
     <span class="doccomment">/// will return empty values.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">text</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers</span>().<span class="ident">get</span>::<span class="op">&lt;</span>::<span class="ident">header</span>::<span class="ident">ContentLength</span><span class="op">&gt;</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">ct_len</span><span class="op">|</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">ct_len</span>)
-            .<span class="ident">unwrap_or</span>(<span class="number">0</span>);
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">content_length</span>.<span class="ident">unwrap_or</span>(<span class="number">0</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">content</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>);
         <span class="self">self</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">content</span>).<span class="ident">map_err</span>(::<span class="ident">error</span>::<span class="ident">from</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">encoding_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers</span>().<span class="ident">get</span>::<span class="op">&lt;</span>::<span class="ident">header</span>::<span class="ident">ContentType</span><span class="op">&gt;</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">content_type</span><span class="op">|</span> {
-                <span class="ident">content_type</span>.<span class="ident">get_param</span>(<span class="string">&quot;charset&quot;</span>)
+        <span class="kw">let</span> <span class="ident">content_type</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers</span>().<span class="ident">get</span>(::<span class="ident">header</span>::<span class="ident">CONTENT_TYPE</span>)
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">value</span><span class="op">|</span> {
+                <span class="ident">value</span>.<span class="ident">to_str</span>().<span class="ident">ok</span>()
+            })
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">value</span><span class="op">|</span> {
+                <span class="ident">value</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">Mime</span><span class="op">&gt;</span>().<span class="ident">ok</span>()
+            });
+        <span class="kw">let</span> <span class="ident">encoding_name</span> <span class="op">=</span> <span class="ident">content_type</span>
+            .<span class="ident">as_ref</span>()
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">mime</span><span class="op">|</span> {
+                <span class="ident">mime</span>
+                    .<span class="ident">get_param</span>(<span class="string">&quot;charset&quot;</span>)
                     .<span class="ident">map</span>(<span class="op">|</span><span class="ident">charset</span><span class="op">|</span> <span class="ident">charset</span>.<span class="ident">as_str</span>())
             })
             .<span class="ident">unwrap_or</span>(<span class="string">&quot;utf-8&quot;</span>);
@@ -571,7 +607,7 @@
     <span class="doccomment">/// let res = reqwest::get(&quot;http://httpbin.org/status/400&quot;)?</span>
     <span class="doccomment">///     .error_for_status();</span>
     <span class="doccomment">/// if let Err(err) = res {</span>
-    <span class="doccomment">///     assert_eq!(err.status(), Some(reqwest::StatusCode::BadRequest));</span>
+    <span class="doccomment">///     assert_eq!(err.status(), Some(reqwest::StatusCode::BAD_REQUEST));</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// # Ok(())</span>
     <span class="doccomment">/// # }</span>
@@ -579,12 +615,13 @@
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">error_for_status</span>(<span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">Response</span> { <span class="ident">body</span>, <span class="ident">inner</span>, <span class="ident">_thread_handle</span> } <span class="op">=</span> <span class="self">self</span>;
+        <span class="kw">let</span> <span class="ident">Response</span> { <span class="ident">body</span>, <span class="ident">content_length</span>, <span class="ident">inner</span>, <span class="ident">_thread_handle</span> } <span class="op">=</span> <span class="self">self</span>;
         <span class="ident">inner</span>.<span class="ident">error_for_status</span>().<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> {
             <span class="ident">Response</span> {
-                <span class="ident">inner</span>: <span class="ident">inner</span>,
-                <span class="ident">body</span>: <span class="ident">body</span>,
-                <span class="ident">_thread_handle</span>: <span class="ident">_thread_handle</span>,
+                <span class="ident">inner</span>,
+                <span class="ident">body</span>,
+                <span class="ident">content_length</span>,
+                <span class="ident">_thread_handle</span>,
             }
         })
     }
@@ -625,6 +662,7 @@
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">res</span>: <span class="ident">async_impl</span>::<span class="ident">Response</span>, <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>, <span class="ident">thread</span>: <span class="ident">KeepCoreThreadAlive</span>) <span class="op">-&gt;</span> <span class="ident">Response</span> {
     <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="ident">res</span>.<span class="ident">body_mut</span>(), <span class="ident">async_impl</span>::<span class="ident">Decoder</span>::<span class="ident">empty</span>());
+    <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">body</span>.<span class="ident">content_length</span>();
     <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">async_impl</span>::<span class="ident">ReadableChunks</span>::<span class="ident">new</span>(<span class="ident">WaitBody</span> {
         <span class="ident">inner</span>: <span class="ident">wait</span>::<span class="ident">stream</span>(<span class="ident">body</span>, <span class="ident">timeout</span>)
     });
@@ -632,8 +670,10 @@
     <span class="ident">Response</span> {
         <span class="ident">inner</span>: <span class="ident">res</span>,
         <span class="ident">body</span>: <span class="ident">body</span>,
+        <span class="ident">content_length</span>: <span class="ident">len</span>,
         <span class="ident">_thread_handle</span>: <span class="ident">thread</span>,
     }
 }
+
 </pre>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "reqwest";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

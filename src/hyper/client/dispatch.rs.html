@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.27/src/client/dispatch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dispatch.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.12.10/src/client/dispatch.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>dispatch.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -213,6 +213,109 @@
 <span id="213">213</span>
 <span id="214">214</span>
 <span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Poll</span>, <span class="ident">Stream</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">sync</span>::{<span class="ident">mpsc</span>, <span class="ident">oneshot</span>};
@@ -220,14 +323,14 @@
 
 <span class="kw">use</span> <span class="ident">common</span>::<span class="ident">Never</span>;
 
-<span class="comment">//pub type Callback&lt;T, U&gt; = oneshot::Sender&lt;Result&lt;U, (::Error, Option&lt;T&gt;)&gt;&gt;;</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">RetryPromise</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">U</span>, (::<span class="ident">Error</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>)<span class="op">&gt;&gt;</span>;
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Promise</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, ::<span class="ident">Error</span><span class="op">&gt;&gt;</span>;
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">channel</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>() <span class="op">-&gt;</span> (<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>, <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>) {
-    <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">channel</span>(<span class="number">0</span>);
+    <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">unbounded</span>();
     <span class="kw">let</span> (<span class="ident">giver</span>, <span class="ident">taker</span>) <span class="op">=</span> <span class="ident">want</span>::<span class="ident">new</span>();
     <span class="kw">let</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">Sender</span> {
+        <span class="ident">buffered_once</span>: <span class="bool-val">false</span>,
         <span class="ident">giver</span>: <span class="ident">giver</span>,
         <span class="ident">inner</span>: <span class="ident">tx</span>,
     };
@@ -238,52 +341,117 @@
     (<span class="ident">tx</span>, <span class="ident">rx</span>)
 }
 
+<span class="doccomment">/// A bounded sender of requests and callbacks for when responses are ready.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// While the inner sender is unbounded, the Giver is used to determine</span>
+<span class="doccomment">/// if the Receiver is ready for another request.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
-    <span class="comment">// The Giver helps watch that the the Receiver side has been polled</span>
-    <span class="comment">// when the queue is empty. This helps us know when a request and</span>
-    <span class="comment">// response have been fully processed, and a connection is ready</span>
-    <span class="comment">// for more.</span>
+    <span class="doccomment">/// One message is always allowed, even if the Receiver hasn&#39;t asked</span>
+    <span class="doccomment">/// for it yet. This boolean keeps track of whether we&#39;ve sent one</span>
+    <span class="doccomment">/// without notice.</span>
+    <span class="ident">buffered_once</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// The Giver helps watch that the the Receiver side has been polled</span>
+    <span class="doccomment">/// when the queue is empty. This helps us know when a request and</span>
+    <span class="doccomment">/// response have been fully processed, and a connection is ready</span>
+    <span class="doccomment">/// for more.</span>
     <span class="ident">giver</span>: <span class="ident">want</span>::<span class="ident">Giver</span>,
-    <span class="ident">inner</span>: <span class="ident">mpsc</span>::<span class="ident">Sender</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">Callback</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+    <span class="doccomment">/// Actually bounded by the Giver, plus `buffered_once`.</span>
+    <span class="ident">inner</span>: <span class="ident">mpsc</span>::<span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">Envelope</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;&gt;</span>,
+}
+
+<span class="doccomment">/// An unbounded version.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Cannot poll the Giver, but can still use it to determine if the Receiver</span>
+<span class="doccomment">/// has been dropped. However, this version can be cloned.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Only used for `is_closed`, since mpsc::UnboundedSender cannot be checked.</span>
+    <span class="ident">giver</span>: <span class="ident">want</span>::<span class="ident">SharedGiver</span>,
+    <span class="ident">inner</span>: <span class="ident">mpsc</span>::<span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">Envelope</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll_ready</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">poll_ready</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(())) <span class="op">=&gt;</span> {
-                <span class="comment">// there&#39;s room in the queue, but does the Connection</span>
-                <span class="comment">// want a message yet?</span>
-                <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">poll_want</span>()
-                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ::<span class="ident">Error</span>::<span class="ident">Closed</span>)
-            },
-            <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">NotReady</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">NotReady</span>),
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Closed</span>),
-        }
+        <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">poll_want</span>()
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> ::<span class="ident">Error</span>::<span class="ident">new_closed</span>())
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">is_wanting</span>()
     }
 
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_closed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">is_canceled</span>()
+    }
+
+    <span class="kw">fn</span> <span class="ident">can_send</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">give</span>() <span class="op">||</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">buffered_once</span> {
+            <span class="comment">// If the receiver is ready *now*, then of course we can send.</span>
+            <span class="comment">//</span>
+            <span class="comment">// If the receiver isn&#39;t ready yet, but we don&#39;t have anything</span>
+            <span class="comment">// in the channel yet, then allow one message.</span>
+            <span class="self">self</span>.<span class="ident">buffered_once</span> <span class="op">=</span> <span class="bool-val">true</span>;
+            <span class="bool-val">true</span>
+        } <span class="kw">else</span> {
+            <span class="bool-val">false</span>
+        }
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_send</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RetryPromise</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">give</span>();
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">can_send</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">val</span>);
+        }
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">try_send</span>((<span class="ident">val</span>, <span class="ident">Callback</span>::<span class="ident">Retry</span>(<span class="ident">tx</span>)))
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">unbounded_send</span>(<span class="ident">Envelope</span>(<span class="prelude-val">Some</span>((<span class="ident">val</span>, <span class="ident">Callback</span>::<span class="ident">Retry</span>(<span class="ident">tx</span>)))))
             .<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">rx</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_inner</span>().<span class="number">0</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_inner</span>().<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;envelope not dropped&quot;</span>).<span class="number">0</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Promise</span><span class="op">&lt;</span><span class="ident">U</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">give</span>();
+        <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">can_send</span>() {
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">val</span>);
+        }
         <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">try_send</span>((<span class="ident">val</span>, <span class="ident">Callback</span>::<span class="ident">NoRetry</span>(<span class="ident">tx</span>)))
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">unbounded_send</span>(<span class="ident">Envelope</span>(<span class="prelude-val">Some</span>((<span class="ident">val</span>, <span class="ident">Callback</span>::<span class="ident">NoRetry</span>(<span class="ident">tx</span>)))))
             .<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">rx</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_inner</span>().<span class="number">0</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_inner</span>().<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;envelope not dropped&quot;</span>).<span class="number">0</span>)
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unbound</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+        <span class="ident">UnboundedSender</span> {
+            <span class="ident">giver</span>: <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">shared</span>(),
+            <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>,
+        }
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="op">!</span><span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">is_canceled</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_closed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">is_canceled</span>()
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_send</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RetryPromise</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>, <span class="ident">T</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">unbounded_send</span>(<span class="ident">Envelope</span>(<span class="prelude-val">Some</span>((<span class="ident">val</span>, <span class="ident">Callback</span>::<span class="ident">Retry</span>(<span class="ident">tx</span>)))))
+            .<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">rx</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">into_inner</span>().<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;envelope not dropped&quot;</span>).<span class="number">0</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">UnboundedSender</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">UnboundedSender</span> {
+            <span class="ident">giver</span>: <span class="self">self</span>.<span class="ident">giver</span>.<span class="ident">clone</span>(),
+            <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>(),
+        }
     }
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
-    <span class="ident">inner</span>: <span class="ident">mpsc</span>::<span class="ident">Receiver</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">Callback</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>)<span class="op">&gt;</span>,
+    <span class="ident">inner</span>: <span class="ident">mpsc</span>::<span class="ident">UnboundedReceiver</span><span class="op">&lt;</span><span class="ident">Envelope</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;&gt;</span>,
     <span class="ident">taker</span>: <span class="ident">want</span>::<span class="ident">Taker</span>,
 }
 
@@ -293,7 +461,9 @@
 
     <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span><span class="op">&gt;</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">poll</span>() {
-            <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="ident">item</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="ident">item</span>)),
+            <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="ident">item</span>)) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="ident">item</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">env</span><span class="op">|</span> {
+                <span class="ident">env</span>.<span class="number">0</span>.<span class="ident">take</span>().<span class="ident">expect</span>(<span class="string">&quot;envelope not dropped&quot;</span>)
+            }))),
             <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">NotReady</span>) <span class="op">=&gt;</span> {
                 <span class="self">self</span>.<span class="ident">taker</span>.<span class="ident">want</span>();
                 <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">NotReady</span>)
@@ -305,23 +475,20 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="comment">// Notify the giver about the closure first, before dropping</span>
+        <span class="comment">// the mpsc::Receiver.</span>
         <span class="self">self</span>.<span class="ident">taker</span>.<span class="ident">cancel</span>();
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">close</span>();
+    }
+}
 
-        <span class="comment">// This poll() is safe to call in `Drop`, because we&#39;ve</span>
-        <span class="comment">// called, `close`, which promises that no new messages</span>
-        <span class="comment">// will arrive, and thus, once we reach the end, we won&#39;t</span>
-        <span class="comment">// see a `NotReady` (and try to park), but a Ready(None).</span>
-        <span class="comment">//</span>
-        <span class="comment">// All other variants:</span>
-        <span class="comment">// - Ready(None): the end. we want to stop looping</span>
-        <span class="comment">// - NotReady: unreachable</span>
-        <span class="comment">// - Err: unreachable</span>
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="prelude-val">Some</span>((<span class="ident">val</span>, <span class="ident">cb</span>)))) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">poll</span>() {
+<span class="kw">struct</span> <span class="ident">Envelope</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">Callback</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>)<span class="op">&gt;</span>);
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Envelope</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">val</span>, <span class="ident">cb</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">take</span>() {
             <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">cb</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>((::<span class="ident">Error</span>::<span class="ident">new_canceled</span>(<span class="prelude-val">None</span>::<span class="op">&lt;</span>::<span class="ident">Error</span><span class="op">&gt;</span>), <span class="prelude-val">Some</span>(<span class="ident">val</span>))));
         }
     }
-
 }
 
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Callback</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span> {
@@ -355,33 +522,72 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>)]</span>
     <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">test</span>;
 
-    <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">future</span>, <span class="ident">Future</span>};
+    <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">future</span>, <span class="ident">Future</span>, <span class="ident">Stream</span>};
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>)]</span>
-    <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Stream</span>};
+
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+    <span class="kw">struct</span> <span class="ident">Custom</span>(<span class="ident">i32</span>);
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">drop_receiver_sends_cancel_errors</span>() {
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">pretty_env_logger</span>::<span class="ident">try_init</span>();
 
         <span class="ident">future</span>::<span class="ident">lazy</span>(<span class="op">||</span> {
-            <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-            <span class="kw">struct</span> <span class="ident">Custom</span>(<span class="ident">i32</span>);
-            <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">channel</span>::<span class="op">&lt;</span><span class="ident">Custom</span>, ()<span class="op">&gt;</span>();
+            <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">tx</span>, <span class="kw-2">mut</span> <span class="ident">rx</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">channel</span>::<span class="op">&lt;</span><span class="ident">Custom</span>, ()<span class="op">&gt;</span>();
+
+            <span class="comment">// must poll once for try_send to succeed</span>
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rx</span>.<span class="ident">poll</span>().<span class="ident">expect</span>(<span class="string">&quot;rx empty&quot;</span>).<span class="ident">is_not_ready</span>());
 
             <span class="kw">let</span> <span class="ident">promise</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">43</span>)).<span class="ident">unwrap</span>();
             <span class="ident">drop</span>(<span class="ident">rx</span>);
 
             <span class="ident">promise</span>.<span class="ident">then</span>(<span class="op">|</span><span class="ident">fulfilled</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">fulfilled</span>.<span class="ident">expect</span>(<span class="string">&quot;fulfilled&quot;</span>);
-                <span class="kw">match</span> <span class="ident">res</span>.<span class="ident">unwrap_err</span>() {
-                    (::<span class="ident">Error</span>::<span class="ident">Cancel</span>(<span class="kw">_</span>), <span class="prelude-val">Some</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> (),
+                <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">fulfilled</span>
+                    .<span class="ident">expect</span>(<span class="string">&quot;fulfilled&quot;</span>)
+                    .<span class="ident">expect_err</span>(<span class="string">&quot;promise should error&quot;</span>);
+
+                <span class="kw">match</span> (<span class="ident">err</span>.<span class="number">0</span>.<span class="ident">kind</span>(), <span class="ident">err</span>.<span class="number">1</span>) {
+                    (<span class="kw-2">&amp;</span>::<span class="ident">error</span>::<span class="ident">Kind</span>::<span class="ident">Canceled</span>, <span class="prelude-val">Some</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> (),
                     <span class="ident">e</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;expected Error::Cancel(_), found {:?}&quot;</span>, <span class="ident">e</span>),
                 }
 
                 <span class="prelude-val">Ok</span>::<span class="op">&lt;</span>(), ()<span class="op">&gt;</span>(())
             })
         }).<span class="ident">wait</span>().<span class="ident">unwrap</span>();
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">sender_checks_for_want_on_send</span>() {
+        <span class="ident">future</span>::<span class="ident">lazy</span>(<span class="op">||</span> {
+            <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">tx</span>, <span class="kw-2">mut</span> <span class="ident">rx</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">channel</span>::<span class="op">&lt;</span><span class="ident">Custom</span>, ()<span class="op">&gt;</span>();
+            <span class="comment">// one is allowed to buffer, second is rejected</span>
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">1</span>)).<span class="ident">expect</span>(<span class="string">&quot;1 buffered&quot;</span>);
+            <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">2</span>)).<span class="ident">expect_err</span>(<span class="string">&quot;2 not ready&quot;</span>);
+
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rx</span>.<span class="ident">poll</span>().<span class="ident">expect</span>(<span class="string">&quot;rx 1&quot;</span>).<span class="ident">is_ready</span>());
+            <span class="comment">// Even though 1 has been popped, only 1 could be buffered for the</span>
+            <span class="comment">// lifetime of the channel.</span>
+            <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">2</span>)).<span class="ident">expect_err</span>(<span class="string">&quot;2 still not ready&quot;</span>);
+
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">rx</span>.<span class="ident">poll</span>().<span class="ident">expect</span>(<span class="string">&quot;rx empty&quot;</span>).<span class="ident">is_not_ready</span>());
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">2</span>)).<span class="ident">expect</span>(<span class="string">&quot;2 ready&quot;</span>);
+
+            <span class="prelude-val">Ok</span>::<span class="op">&lt;</span>(), ()<span class="op">&gt;</span>(())
+        }).<span class="ident">wait</span>().<span class="ident">unwrap</span>();
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">unbounded_sender_doesnt_bound_on_want</span>() {
+        <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">channel</span>::<span class="op">&lt;</span><span class="ident">Custom</span>, ()<span class="op">&gt;</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">unbound</span>();
+
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">1</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">2</span>)).<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">3</span>)).<span class="ident">unwrap</span>();
+
+        <span class="ident">drop</span>(<span class="ident">rx</span>);
+
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">try_send</span>(<span class="ident">Custom</span>(<span class="number">4</span>)).<span class="ident">unwrap_err</span>();
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>)]</span>
@@ -422,7 +628,7 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">bench</span>]</span>
     <span class="kw">fn</span> <span class="ident">giver_queue_cancel</span>(<span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">test</span>::<span class="ident">Bencher</span>) {
-        <span class="kw">let</span> (<span class="ident">_tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">channel</span>::<span class="op">&lt;</span><span class="ident">i32</span>, ()<span class="op">&gt;</span>();
+        <span class="kw">let</span> (<span class="ident">_tx</span>, <span class="kw-2">mut</span> <span class="ident">rx</span>) <span class="op">=</span> <span class="kw">super</span>::<span class="ident">channel</span>::<span class="op">&lt;</span><span class="ident">i32</span>, ()<span class="op">&gt;</span>();
 
         <span class="ident">b</span>.<span class="ident">iter</span>(<span class="kw">move</span> <span class="op">||</span> {
             <span class="ident">rx</span>.<span class="ident">taker</span>.<span class="ident">cancel</span>();

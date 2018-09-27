@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.7.2/src/single_byte.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>single_byte.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.8.7/src/single_byte.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>single_byte.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -639,6 +639,32 @@
 <span id="639">639</span>
 <span id="640">640</span>
 <span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015-2016 Mozilla Foundation. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution.</span>
@@ -649,10 +675,10 @@
 <span class="comment">// option. This file may not be copied, modified, or distributed</span>
 <span class="comment">// except according to those terms.</span>
 
+<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">ascii</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">handles</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">variant</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">ascii</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SingleByteDecoder</span> {
     <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u16</span>; <span class="number">128</span>],
@@ -675,109 +701,118 @@
         <span class="ident">byte_length</span>.<span class="ident">checked_mul</span>(<span class="number">3</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_to_utf8_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                              <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-                              <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
-                              <span class="ident">_last</span>: <span class="ident">bool</span>)
-                              <span class="op">-&gt;</span> (<span class="ident">DecoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_to_utf8_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
+        <span class="ident">_last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">DecoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">ByteSource</span>::<span class="ident">new</span>(<span class="ident">src</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dest</span> <span class="op">=</span> <span class="ident">Utf8Destination</span>::<span class="ident">new</span>(<span class="ident">dst</span>);
         <span class="lifetime">&#39;outermost</span>: <span class="kw">loop</span> {
             <span class="kw">match</span> <span class="ident">dest</span>.<span class="ident">copy_ascii_from_check_space_bmp</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>) {
                 <span class="ident">CopyAsciiResult</span>::<span class="ident">Stop</span>(<span class="ident">ret</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">ret</span>,
-                <span class="ident">CopyAsciiResult</span>::<span class="ident">GoOn</span>((<span class="kw-2">mut</span> <span class="ident">non_ascii</span>, <span class="kw-2">mut</span> <span class="ident">handle</span>)) <span class="op">=&gt;</span> {
-                    <span class="lifetime">&#39;middle</span>: <span class="kw">loop</span> {
-                        <span class="comment">// Start non-boilerplate</span>
-                        <span class="comment">//</span>
-                        <span class="comment">// Since the non-ASCIIness of `non_ascii` is hidden from</span>
-                        <span class="comment">// the optimizer, it can&#39;t figure out that it&#39;s OK to</span>
-                        <span class="comment">// statically omit the bound check when accessing</span>
-                        <span class="comment">// `[u16; 128]` with an index</span>
-                        <span class="comment">// `non_ascii as usize - 0x80usize`.</span>
-                        <span class="kw">let</span> <span class="ident">mapped</span> <span class="op">=</span>
-                            <span class="kw">unsafe</span> { <span class="kw-2">*</span>(<span class="self">self</span>.<span class="ident">table</span>.<span class="ident">get_unchecked</span>(<span class="ident">non_ascii</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">-</span> <span class="number">0x80usize</span>)) };
-                        <span class="comment">// let mapped = self.table[non_ascii as usize - 0x80usize];</span>
-                        <span class="kw">if</span> <span class="ident">mapped</span> <span class="op">==</span> <span class="number">0u16</span> {
-                            <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">1</span>, <span class="number">0</span>),
-                                    <span class="ident">source</span>.<span class="ident">consumed</span>(),
-                                    <span class="ident">handle</span>.<span class="ident">written</span>());
+                <span class="ident">CopyAsciiResult</span>::<span class="ident">GoOn</span>((<span class="kw-2">mut</span> <span class="ident">non_ascii</span>, <span class="kw-2">mut</span> <span class="ident">handle</span>)) <span class="op">=&gt;</span> <span class="lifetime">&#39;middle</span>: <span class="kw">loop</span> {
+                    <span class="comment">// Start non-boilerplate</span>
+                    <span class="comment">//</span>
+                    <span class="comment">// Since the non-ASCIIness of `non_ascii` is hidden from</span>
+                    <span class="comment">// the optimizer, it can&#39;t figure out that it&#39;s OK to</span>
+                    <span class="comment">// statically omit the bound check when accessing</span>
+                    <span class="comment">// `[u16; 128]` with an index</span>
+                    <span class="comment">// `non_ascii as usize - 0x80usize`.</span>
+                    <span class="kw">let</span> <span class="ident">mapped</span> <span class="op">=</span>
+                        <span class="kw">unsafe</span> { <span class="kw-2">*</span>(<span class="self">self</span>.<span class="ident">table</span>.<span class="ident">get_unchecked</span>(<span class="ident">non_ascii</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">-</span> <span class="number">0x80usize</span>)) };
+                    <span class="comment">// let mapped = self.table[non_ascii as usize - 0x80usize];</span>
+                    <span class="kw">if</span> <span class="ident">mapped</span> <span class="op">==</span> <span class="number">0u16</span> {
+                        <span class="kw">return</span> (
+                            <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">1</span>, <span class="number">0</span>),
+                            <span class="ident">source</span>.<span class="ident">consumed</span>(),
+                            <span class="ident">handle</span>.<span class="ident">written</span>(),
+                        );
+                    }
+                    <span class="kw">let</span> <span class="ident">dest_again</span> <span class="op">=</span> <span class="ident">handle</span>.<span class="ident">write_bmp_excl_ascii</span>(<span class="ident">mapped</span>);
+                    <span class="comment">// End non-boilerplate</span>
+                    <span class="kw">match</span> <span class="ident">source</span>.<span class="ident">check_available</span>() {
+                        <span class="ident">Space</span>::<span class="ident">Full</span>(<span class="ident">src_consumed</span>) <span class="op">=&gt;</span> {
+                            <span class="kw">return</span> (
+                                <span class="ident">DecoderResult</span>::<span class="ident">InputEmpty</span>,
+                                <span class="ident">src_consumed</span>,
+                                <span class="ident">dest_again</span>.<span class="ident">written</span>(),
+                            );
                         }
-                        <span class="kw">let</span> <span class="ident">dest_again</span> <span class="op">=</span> <span class="ident">handle</span>.<span class="ident">write_bmp_excl_ascii</span>(<span class="ident">mapped</span>);
-                        <span class="comment">// End non-boilerplate</span>
-                        <span class="kw">match</span> <span class="ident">source</span>.<span class="ident">check_available</span>() {
-                            <span class="ident">Space</span>::<span class="ident">Full</span>(<span class="ident">src_consumed</span>) <span class="op">=&gt;</span> {
-                                <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">InputEmpty</span>,
-                                        <span class="ident">src_consumed</span>,
-                                        <span class="ident">dest_again</span>.<span class="ident">written</span>());
-                            }
-                            <span class="ident">Space</span>::<span class="ident">Available</span>(<span class="ident">source_handle</span>) <span class="op">=&gt;</span> {
-                                <span class="kw">match</span> <span class="ident">dest_again</span>.<span class="ident">check_space_bmp</span>() {
-                                    <span class="ident">Space</span>::<span class="ident">Full</span>(<span class="ident">dst_written</span>) <span class="op">=&gt;</span> {
-                                        <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">OutputFull</span>,
-                                                <span class="ident">source_handle</span>.<span class="ident">consumed</span>(),
-                                                <span class="ident">dst_written</span>);
-                                    }
-                                    <span class="ident">Space</span>::<span class="ident">Available</span>(<span class="kw-2">mut</span> <span class="ident">destination_handle</span>) <span class="op">=&gt;</span> {
-                                        <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">b</span>, <span class="ident">unread_handle</span>) <span class="op">=</span> <span class="ident">source_handle</span>.<span class="ident">read</span>();
-                                        <span class="kw">let</span> <span class="ident">source_again</span> <span class="op">=</span> <span class="ident">unread_handle</span>.<span class="ident">commit</span>();
-                                        <span class="lifetime">&#39;innermost</span>: <span class="kw">loop</span> {
-                                            <span class="kw">if</span> <span class="ident">b</span> <span class="op">&gt;</span> <span class="number">127</span> {
-                                                <span class="ident">non_ascii</span> <span class="op">=</span> <span class="ident">b</span>;
-                                                <span class="ident">handle</span> <span class="op">=</span> <span class="ident">destination_handle</span>;
-                                                <span class="kw">continue</span> <span class="lifetime">&#39;middle</span>;
-                                            }
-                                            <span class="comment">// Testing on Haswell says that we should write the</span>
-                                            <span class="comment">// byte unconditionally instead of trying to unread it</span>
-                                            <span class="comment">// to make it part of the next SIMD stride.</span>
-                                            <span class="kw">let</span> <span class="ident">dest_again_again</span> <span class="op">=</span>
-                                                <span class="ident">destination_handle</span>.<span class="ident">write_ascii</span>(<span class="ident">b</span>);
-                                            <span class="kw">if</span> <span class="ident">b</span> <span class="op">&lt;</span> <span class="number">60</span> {
-                                                <span class="comment">// We&#39;ve got punctuation</span>
-                                                <span class="kw">match</span> <span class="ident">source_again</span>.<span class="ident">check_available</span>() {
-                                                    <span class="ident">Space</span>::<span class="ident">Full</span>(<span class="ident">src_consumed_again</span>) <span class="op">=&gt;</span> {
-                                                        <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">InputEmpty</span>,
-                                                                <span class="ident">src_consumed_again</span>,
-                                                                <span class="ident">dest_again_again</span>.<span class="ident">written</span>());
-                                                    }
-                                                    <span class="ident">Space</span>::<span class="ident">Available</span>(<span class="ident">source_handle_again</span>) <span class="op">=&gt;</span> {
-                                                        <span class="kw">match</span> <span class="ident">dest_again_again</span>.<span class="ident">check_space_bmp</span>() {
-                                                            <span class="ident">Space</span>::<span class="ident">Full</span>(<span class="ident">dst_written_again</span>) <span class="op">=&gt;</span> {
-                                                                <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">OutputFull</span>,
-                                                                        <span class="ident">source_handle_again</span>
-                                                                            .<span class="ident">consumed</span>(),
-                                                                        <span class="ident">dst_written_again</span>);
-                                                            }
-                                                            <span class="ident">Space</span>::<span class="ident">Available</span>(<span class="ident">destination_handle_again</span>) <span class="op">=&gt;</span> {
-                                                                {
-                                                                    <span class="kw">let</span> (<span class="ident">b_again</span>, <span class="ident">_unread_handle_again</span>) <span class="op">=</span>
-                                                                        <span class="ident">source_handle_again</span>.<span class="ident">read</span>();
-                                                                    <span class="ident">b</span> <span class="op">=</span> <span class="ident">b_again</span>;
-                                                                    <span class="ident">destination_handle</span> <span class="op">=</span> <span class="ident">destination_handle_again</span>;
-                                                                    <span class="kw">continue</span> <span class="lifetime">&#39;innermost</span>;
-                                                                }
-                                                            }
+                        <span class="ident">Space</span>::<span class="ident">Available</span>(<span class="ident">source_handle</span>) <span class="op">=&gt;</span> {
+                            <span class="kw">match</span> <span class="ident">dest_again</span>.<span class="ident">check_space_bmp</span>() {
+                                <span class="ident">Space</span>::<span class="ident">Full</span>(<span class="ident">dst_written</span>) <span class="op">=&gt;</span> {
+                                    <span class="kw">return</span> (
+                                        <span class="ident">DecoderResult</span>::<span class="ident">OutputFull</span>,
+                                        <span class="ident">source_handle</span>.<span class="ident">consumed</span>(),
+                                        <span class="ident">dst_written</span>,
+                                    );
+                                }
+                                <span class="ident">Space</span>::<span class="ident">Available</span>(<span class="kw-2">mut</span> <span class="ident">destination_handle</span>) <span class="op">=&gt;</span> {
+                                    <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">b</span>, <span class="ident">unread_handle</span>) <span class="op">=</span> <span class="ident">source_handle</span>.<span class="ident">read</span>();
+                                    <span class="kw">let</span> <span class="ident">source_again</span> <span class="op">=</span> <span class="ident">unread_handle</span>.<span class="ident">commit</span>();
+                                    <span class="lifetime">&#39;innermost</span>: <span class="kw">loop</span> {
+                                        <span class="kw">if</span> <span class="ident">b</span> <span class="op">&gt;</span> <span class="number">127</span> {
+                                            <span class="ident">non_ascii</span> <span class="op">=</span> <span class="ident">b</span>;
+                                            <span class="ident">handle</span> <span class="op">=</span> <span class="ident">destination_handle</span>;
+                                            <span class="kw">continue</span> <span class="lifetime">&#39;middle</span>;
+                                        }
+                                        <span class="comment">// Testing on Haswell says that we should write the</span>
+                                        <span class="comment">// byte unconditionally instead of trying to unread it</span>
+                                        <span class="comment">// to make it part of the next SIMD stride.</span>
+                                        <span class="kw">let</span> <span class="ident">dest_again_again</span> <span class="op">=</span> <span class="ident">destination_handle</span>.<span class="ident">write_ascii</span>(<span class="ident">b</span>);
+                                        <span class="kw">if</span> <span class="ident">b</span> <span class="op">&lt;</span> <span class="number">60</span> {
+                                            <span class="comment">// We&#39;ve got punctuation</span>
+                                            <span class="kw">match</span> <span class="ident">source_again</span>.<span class="ident">check_available</span>() {
+                                                <span class="ident">Space</span>::<span class="ident">Full</span>(<span class="ident">src_consumed_again</span>) <span class="op">=&gt;</span> {
+                                                    <span class="kw">return</span> (
+                                                        <span class="ident">DecoderResult</span>::<span class="ident">InputEmpty</span>,
+                                                        <span class="ident">src_consumed_again</span>,
+                                                        <span class="ident">dest_again_again</span>.<span class="ident">written</span>(),
+                                                    );
+                                                }
+                                                <span class="ident">Space</span>::<span class="ident">Available</span>(<span class="ident">source_handle_again</span>) <span class="op">=&gt;</span> {
+                                                    <span class="kw">match</span> <span class="ident">dest_again_again</span>.<span class="ident">check_space_bmp</span>() {
+                                                        <span class="ident">Space</span>::<span class="ident">Full</span>(<span class="ident">dst_written_again</span>) <span class="op">=&gt;</span> {
+                                                            <span class="kw">return</span> (
+                                                                <span class="ident">DecoderResult</span>::<span class="ident">OutputFull</span>,
+                                                                <span class="ident">source_handle_again</span>.<span class="ident">consumed</span>(),
+                                                                <span class="ident">dst_written_again</span>,
+                                                            );
+                                                        }
+                                                        <span class="ident">Space</span>::<span class="ident">Available</span>(
+                                                            <span class="ident">destination_handle_again</span>,
+                                                        ) <span class="op">=&gt;</span> {
+                                                            <span class="kw">let</span> (<span class="ident">b_again</span>, <span class="ident">_unread_handle_again</span>) <span class="op">=</span>
+                                                                <span class="ident">source_handle_again</span>.<span class="ident">read</span>();
+                                                            <span class="ident">b</span> <span class="op">=</span> <span class="ident">b_again</span>;
+                                                            <span class="ident">destination_handle</span> <span class="op">=</span>
+                                                                <span class="ident">destination_handle_again</span>;
+                                                            <span class="kw">continue</span> <span class="lifetime">&#39;innermost</span>;
                                                         }
                                                     }
                                                 }
                                             }
-                                            <span class="comment">// We&#39;ve got markup or ASCII text</span>
-                                            <span class="kw">continue</span> <span class="lifetime">&#39;outermost</span>;
                                         }
+                                        <span class="comment">// We&#39;ve got markup or ASCII text</span>
+                                        <span class="kw">continue</span> <span class="lifetime">&#39;outermost</span>;
                                     }
                                 }
                             }
                         }
                     }
-                }
+                },
             }
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_to_utf16_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                               <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-                               <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u16</span>],
-                               <span class="ident">_last</span>: <span class="ident">bool</span>)
-                               <span class="op">-&gt;</span> (<span class="ident">DecoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_to_utf16_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u16</span>],
+        <span class="ident">_last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">DecoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">let</span> (<span class="ident">pending</span>, <span class="ident">length</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">dst</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">src</span>.<span class="ident">len</span>() {
             (<span class="ident">DecoderResult</span>::<span class="ident">OutputFull</span>, <span class="ident">dst</span>.<span class="ident">len</span>())
         } <span class="kw">else</span> {
@@ -786,12 +821,12 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">converted</span> <span class="op">=</span> <span class="number">0usize</span>;
         <span class="lifetime">&#39;outermost</span>: <span class="kw">loop</span> {
             <span class="kw">match</span> <span class="kw">unsafe</span> {
-                      <span class="ident">ascii_to_basic_latin</span>(
+                <span class="ident">ascii_to_basic_latin</span>(
                     <span class="ident">src</span>.<span class="ident">as_ptr</span>().<span class="ident">offset</span>(<span class="ident">converted</span> <span class="kw">as</span> <span class="ident">isize</span>),
                     <span class="ident">dst</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">offset</span>(<span class="ident">converted</span> <span class="kw">as</span> <span class="ident">isize</span>),
                     <span class="ident">length</span> <span class="op">-</span> <span class="ident">converted</span>,
                 )
-                  } {
+            } {
                 <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
                     <span class="kw">return</span> (<span class="ident">pending</span>, <span class="ident">length</span>, <span class="ident">length</span>);
                 }
@@ -808,9 +843,11 @@
                             <span class="kw">unsafe</span> { <span class="kw-2">*</span>(<span class="self">self</span>.<span class="ident">table</span>.<span class="ident">get_unchecked</span>(<span class="ident">non_ascii</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">-</span> <span class="number">0x80usize</span>)) };
                         <span class="comment">// let mapped = self.table[non_ascii as usize - 0x80usize];</span>
                         <span class="kw">if</span> <span class="ident">mapped</span> <span class="op">==</span> <span class="number">0u16</span> {
-                            <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">1</span>, <span class="number">0</span>),
-                                    <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
-                                    <span class="ident">converted</span>);
+                            <span class="kw">return</span> (
+                                <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">1</span>, <span class="number">0</span>),
+                                <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
+                                <span class="ident">converted</span>,
+                            );
                         }
                         <span class="kw">unsafe</span> {
                             <span class="comment">// The bound check has already been performed</span>
@@ -871,15 +908,17 @@
         )
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf16_without_replacement</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                                                            <span class="ident">u16_length</span>: <span class="ident">usize</span>)
-                                                            <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf16_without_replacement</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">u16_length</span>: <span class="ident">usize</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">u16_length</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf8_without_replacement</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                                                           <span class="ident">byte_length</span>: <span class="ident">usize</span>)
-                                                           <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf8_without_replacement</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">byte_length</span>: <span class="ident">usize</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">byte_length</span>)
     }
 
@@ -939,9 +978,11 @@
             <span class="kw">match</span> <span class="self">self</span>.<span class="ident">encode_u16</span>(<span class="ident">bmp</span>) {
                 <span class="prelude-val">Some</span>(<span class="ident">byte</span>) <span class="op">=&gt;</span> <span class="ident">handle</span>.<span class="ident">write_one</span>(<span class="ident">byte</span>),
                 <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                    <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">unmappable_from_bmp</span>(<span class="ident">bmp</span>),
-                            <span class="ident">source</span>.<span class="ident">consumed</span>(),
-                            <span class="ident">handle</span>.<span class="ident">written</span>());
+                    <span class="kw">return</span> (
+                        <span class="ident">EncoderResult</span>::<span class="ident">unmappable_from_bmp</span>(<span class="ident">bmp</span>),
+                        <span class="ident">source</span>.<span class="ident">consumed</span>(),
+                        <span class="ident">handle</span>.<span class="ident">written</span>(),
+                    );
                 }
             }
         },
@@ -957,11 +998,12 @@
         <span class="bool-val">true</span>
     );
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf16_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                                 <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
-                                 <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
-                                 <span class="ident">_last</span>: <span class="ident">bool</span>)
-                                 <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf16_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
+        <span class="ident">_last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">let</span> (<span class="ident">pending</span>, <span class="ident">length</span>) <span class="op">=</span> <span class="kw">if</span> <span class="ident">dst</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">src</span>.<span class="ident">len</span>() {
             (<span class="ident">EncoderResult</span>::<span class="ident">OutputFull</span>, <span class="ident">dst</span>.<span class="ident">len</span>())
         } <span class="kw">else</span> {
@@ -970,12 +1012,12 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">converted</span> <span class="op">=</span> <span class="number">0usize</span>;
         <span class="lifetime">&#39;outermost</span>: <span class="kw">loop</span> {
             <span class="kw">match</span> <span class="kw">unsafe</span> {
-                      <span class="ident">basic_latin_to_ascii</span>(
+                <span class="ident">basic_latin_to_ascii</span>(
                     <span class="ident">src</span>.<span class="ident">as_ptr</span>().<span class="ident">offset</span>(<span class="ident">converted</span> <span class="kw">as</span> <span class="ident">isize</span>),
                     <span class="ident">dst</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">offset</span>(<span class="ident">converted</span> <span class="kw">as</span> <span class="ident">isize</span>),
                     <span class="ident">length</span> <span class="op">-</span> <span class="ident">converted</span>,
                 )
-                  } {
+            } {
                 <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
                     <span class="kw">return</span> (<span class="ident">pending</span>, <span class="ident">length</span>, <span class="ident">length</span>);
                 }
@@ -998,39 +1040,49 @@
                                     <span class="comment">// high surrogate</span>
                                     <span class="kw">if</span> <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span> <span class="op">==</span> <span class="ident">length</span> {
                                         <span class="comment">// End of buffer. This surrogate is unpaired.</span>
-                                        <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="string">&#39;\u{FFFD}&#39;</span>),
-                                                <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
-                                                <span class="ident">converted</span>);
+                                        <span class="kw">return</span> (
+                                            <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="string">&#39;\u{FFFD}&#39;</span>),
+                                            <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
+                                            <span class="ident">converted</span>,
+                                        );
                                     }
-                                    <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="kw-2">*</span><span class="ident">src</span>.<span class="ident">get_unchecked</span>(<span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>) } <span class="kw">as</span>
-                                                 <span class="ident">u32</span>;
+                                    <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span>
+                                        <span class="kw">unsafe</span> { <span class="kw-2">*</span><span class="ident">src</span>.<span class="ident">get_unchecked</span>(<span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>) } <span class="kw">as</span> <span class="ident">u32</span>;
                                     <span class="kw">if</span> <span class="ident">second</span> <span class="op">&amp;</span> <span class="number">0xFC00u32</span> <span class="op">!=</span> <span class="number">0xDC00u32</span> {
-                                        <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="string">&#39;\u{FFFD}&#39;</span>),
-                                                <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
-                                                <span class="ident">converted</span>);
+                                        <span class="kw">return</span> (
+                                            <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="string">&#39;\u{FFFD}&#39;</span>),
+                                            <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
+                                            <span class="ident">converted</span>,
+                                        );
                                     }
                                     <span class="comment">// The next code unit is a low surrogate.</span>
                                     <span class="kw">let</span> <span class="ident">astral</span>: <span class="ident">char</span> <span class="op">=</span> <span class="kw">unsafe</span> {
                                         ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>(
-                                            ((<span class="ident">non_ascii</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">+</span> <span class="ident">second</span> <span class="op">-</span>
-                                            (((<span class="number">0xD800u32</span> <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">-</span> <span class="number">0x10000u32</span>) <span class="op">+</span> <span class="number">0xDC00u32</span>)
+                                            ((<span class="ident">non_ascii</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">+</span> <span class="ident">second</span>
+                                                <span class="op">-</span> (((<span class="number">0xD800u32</span> <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">-</span> <span class="number">0x10000u32</span>) <span class="op">+</span> <span class="number">0xDC00u32</span>),
                                         )
                                     };
-                                    <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">astral</span>),
-                                            <span class="ident">converted</span> <span class="op">+</span> <span class="number">2</span>, <span class="comment">// +2 `for non_ascii` and `second`</span>
-                                            <span class="ident">converted</span>);
+                                    <span class="kw">return</span> (
+                                        <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">astral</span>),
+                                        <span class="ident">converted</span> <span class="op">+</span> <span class="number">2</span>, <span class="comment">// +2 `for non_ascii` and `second`</span>
+                                        <span class="ident">converted</span>,
+                                    );
                                 }
                                 <span class="kw">if</span> <span class="ident">high_bits</span> <span class="op">==</span> <span class="number">0xDC00u16</span> {
                                     <span class="comment">// Unpaired low surrogate</span>
-                                    <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="string">&#39;\u{FFFD}&#39;</span>),
-                                            <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
-                                            <span class="ident">converted</span>);
+                                    <span class="kw">return</span> (
+                                        <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="string">&#39;\u{FFFD}&#39;</span>),
+                                        <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
+                                        <span class="ident">converted</span>,
+                                    );
                                 }
                                 <span class="kw">let</span> <span class="ident">thirty_two</span> <span class="op">=</span> <span class="ident">non_ascii</span> <span class="kw">as</span> <span class="ident">u32</span>;
                                 <span class="kw">let</span> <span class="ident">bmp</span>: <span class="ident">char</span> <span class="op">=</span> <span class="kw">unsafe</span> { ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">thirty_two</span>) };
-                                <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">bmp</span>),
-                                        <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
-                                        <span class="ident">converted</span>);
+                                <span class="kw">return</span> (
+                                    <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">bmp</span>),
+                                    <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
+                                    <span class="ident">converted</span>,
+                                );
                             }
                         }
                         <span class="comment">// Next, handle ASCII punctuation and non-ASCII without</span>
@@ -1144,17 +1196,17 @@
         );
     }
 
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">HIGH_BYTES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">128</span>] <span class="op">=</span>
-        <span class="kw-2">&amp;</span>[<span class="number">0x80</span>, <span class="number">0x81</span>, <span class="number">0x82</span>, <span class="number">0x83</span>, <span class="number">0x84</span>, <span class="number">0x85</span>, <span class="number">0x86</span>, <span class="number">0x87</span>, <span class="number">0x88</span>, <span class="number">0x89</span>, <span class="number">0x8A</span>, <span class="number">0x8B</span>, <span class="number">0x8C</span>, <span class="number">0x8D</span>,
-          <span class="number">0x8E</span>, <span class="number">0x8F</span>, <span class="number">0x90</span>, <span class="number">0x91</span>, <span class="number">0x92</span>, <span class="number">0x93</span>, <span class="number">0x94</span>, <span class="number">0x95</span>, <span class="number">0x96</span>, <span class="number">0x97</span>, <span class="number">0x98</span>, <span class="number">0x99</span>, <span class="number">0x9A</span>, <span class="number">0x9B</span>,
-          <span class="number">0x9C</span>, <span class="number">0x9D</span>, <span class="number">0x9E</span>, <span class="number">0x9F</span>, <span class="number">0xA0</span>, <span class="number">0xA1</span>, <span class="number">0xA2</span>, <span class="number">0xA3</span>, <span class="number">0xA4</span>, <span class="number">0xA5</span>, <span class="number">0xA6</span>, <span class="number">0xA7</span>, <span class="number">0xA8</span>, <span class="number">0xA9</span>,
-          <span class="number">0xAA</span>, <span class="number">0xAB</span>, <span class="number">0xAC</span>, <span class="number">0xAD</span>, <span class="number">0xAE</span>, <span class="number">0xAF</span>, <span class="number">0xB0</span>, <span class="number">0xB1</span>, <span class="number">0xB2</span>, <span class="number">0xB3</span>, <span class="number">0xB4</span>, <span class="number">0xB5</span>, <span class="number">0xB6</span>, <span class="number">0xB7</span>,
-          <span class="number">0xB8</span>, <span class="number">0xB9</span>, <span class="number">0xBA</span>, <span class="number">0xBB</span>, <span class="number">0xBC</span>, <span class="number">0xBD</span>, <span class="number">0xBE</span>, <span class="number">0xBF</span>, <span class="number">0xC0</span>, <span class="number">0xC1</span>, <span class="number">0xC2</span>, <span class="number">0xC3</span>, <span class="number">0xC4</span>, <span class="number">0xC5</span>,
-          <span class="number">0xC6</span>, <span class="number">0xC7</span>, <span class="number">0xC8</span>, <span class="number">0xC9</span>, <span class="number">0xCA</span>, <span class="number">0xCB</span>, <span class="number">0xCC</span>, <span class="number">0xCD</span>, <span class="number">0xCE</span>, <span class="number">0xCF</span>, <span class="number">0xD0</span>, <span class="number">0xD1</span>, <span class="number">0xD2</span>, <span class="number">0xD3</span>,
-          <span class="number">0xD4</span>, <span class="number">0xD5</span>, <span class="number">0xD6</span>, <span class="number">0xD7</span>, <span class="number">0xD8</span>, <span class="number">0xD9</span>, <span class="number">0xDA</span>, <span class="number">0xDB</span>, <span class="number">0xDC</span>, <span class="number">0xDD</span>, <span class="number">0xDE</span>, <span class="number">0xDF</span>, <span class="number">0xE0</span>, <span class="number">0xE1</span>,
-          <span class="number">0xE2</span>, <span class="number">0xE3</span>, <span class="number">0xE4</span>, <span class="number">0xE5</span>, <span class="number">0xE6</span>, <span class="number">0xE7</span>, <span class="number">0xE8</span>, <span class="number">0xE9</span>, <span class="number">0xEA</span>, <span class="number">0xEB</span>, <span class="number">0xEC</span>, <span class="number">0xED</span>, <span class="number">0xEE</span>, <span class="number">0xEF</span>,
-          <span class="number">0xF0</span>, <span class="number">0xF1</span>, <span class="number">0xF2</span>, <span class="number">0xF3</span>, <span class="number">0xF4</span>, <span class="number">0xF5</span>, <span class="number">0xF6</span>, <span class="number">0xF7</span>, <span class="number">0xF8</span>, <span class="number">0xF9</span>, <span class="number">0xFA</span>, <span class="number">0xFB</span>, <span class="number">0xFC</span>, <span class="number">0xFD</span>,
-          <span class="number">0xFE</span>, <span class="number">0xFF</span>];
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">HIGH_BYTES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>; <span class="number">128</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
+        <span class="number">0x80</span>, <span class="number">0x81</span>, <span class="number">0x82</span>, <span class="number">0x83</span>, <span class="number">0x84</span>, <span class="number">0x85</span>, <span class="number">0x86</span>, <span class="number">0x87</span>, <span class="number">0x88</span>, <span class="number">0x89</span>, <span class="number">0x8A</span>, <span class="number">0x8B</span>, <span class="number">0x8C</span>, <span class="number">0x8D</span>, <span class="number">0x8E</span>,
+        <span class="number">0x8F</span>, <span class="number">0x90</span>, <span class="number">0x91</span>, <span class="number">0x92</span>, <span class="number">0x93</span>, <span class="number">0x94</span>, <span class="number">0x95</span>, <span class="number">0x96</span>, <span class="number">0x97</span>, <span class="number">0x98</span>, <span class="number">0x99</span>, <span class="number">0x9A</span>, <span class="number">0x9B</span>, <span class="number">0x9C</span>, <span class="number">0x9D</span>,
+        <span class="number">0x9E</span>, <span class="number">0x9F</span>, <span class="number">0xA0</span>, <span class="number">0xA1</span>, <span class="number">0xA2</span>, <span class="number">0xA3</span>, <span class="number">0xA4</span>, <span class="number">0xA5</span>, <span class="number">0xA6</span>, <span class="number">0xA7</span>, <span class="number">0xA8</span>, <span class="number">0xA9</span>, <span class="number">0xAA</span>, <span class="number">0xAB</span>, <span class="number">0xAC</span>,
+        <span class="number">0xAD</span>, <span class="number">0xAE</span>, <span class="number">0xAF</span>, <span class="number">0xB0</span>, <span class="number">0xB1</span>, <span class="number">0xB2</span>, <span class="number">0xB3</span>, <span class="number">0xB4</span>, <span class="number">0xB5</span>, <span class="number">0xB6</span>, <span class="number">0xB7</span>, <span class="number">0xB8</span>, <span class="number">0xB9</span>, <span class="number">0xBA</span>, <span class="number">0xBB</span>,
+        <span class="number">0xBC</span>, <span class="number">0xBD</span>, <span class="number">0xBE</span>, <span class="number">0xBF</span>, <span class="number">0xC0</span>, <span class="number">0xC1</span>, <span class="number">0xC2</span>, <span class="number">0xC3</span>, <span class="number">0xC4</span>, <span class="number">0xC5</span>, <span class="number">0xC6</span>, <span class="number">0xC7</span>, <span class="number">0xC8</span>, <span class="number">0xC9</span>, <span class="number">0xCA</span>,
+        <span class="number">0xCB</span>, <span class="number">0xCC</span>, <span class="number">0xCD</span>, <span class="number">0xCE</span>, <span class="number">0xCF</span>, <span class="number">0xD0</span>, <span class="number">0xD1</span>, <span class="number">0xD2</span>, <span class="number">0xD3</span>, <span class="number">0xD4</span>, <span class="number">0xD5</span>, <span class="number">0xD6</span>, <span class="number">0xD7</span>, <span class="number">0xD8</span>, <span class="number">0xD9</span>,
+        <span class="number">0xDA</span>, <span class="number">0xDB</span>, <span class="number">0xDC</span>, <span class="number">0xDD</span>, <span class="number">0xDE</span>, <span class="number">0xDF</span>, <span class="number">0xE0</span>, <span class="number">0xE1</span>, <span class="number">0xE2</span>, <span class="number">0xE3</span>, <span class="number">0xE4</span>, <span class="number">0xE5</span>, <span class="number">0xE6</span>, <span class="number">0xE7</span>, <span class="number">0xE8</span>,
+        <span class="number">0xE9</span>, <span class="number">0xEA</span>, <span class="number">0xEB</span>, <span class="number">0xEC</span>, <span class="number">0xED</span>, <span class="number">0xEE</span>, <span class="number">0xEF</span>, <span class="number">0xF0</span>, <span class="number">0xF1</span>, <span class="number">0xF2</span>, <span class="number">0xF3</span>, <span class="number">0xF4</span>, <span class="number">0xF5</span>, <span class="number">0xF6</span>, <span class="number">0xF7</span>,
+        <span class="number">0xF8</span>, <span class="number">0xF9</span>, <span class="number">0xFA</span>, <span class="number">0xFB</span>, <span class="number">0xFC</span>, <span class="number">0xFD</span>, <span class="number">0xFE</span>, <span class="number">0xFF</span>,
+    ];
 
     <span class="kw">fn</span> <span class="ident">decode_single_byte</span>(<span class="ident">encoding</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Encoding</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u16</span>; <span class="number">128</span>]) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">with_replacement</span> <span class="op">=</span> [<span class="number">0u16</span>; <span class="number">128</span>];

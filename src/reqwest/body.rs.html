@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.8.6/src/body.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>body.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.2/src/body.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>body.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -251,15 +251,33 @@
 <span id="251">251</span>
 <span id="252">252</span>
 <span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Cursor</span>, <span class="ident">Read</span>};
 
 <span class="kw">use</span> <span class="ident">bytes</span>::<span class="ident">Bytes</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::{<span class="self">self</span>, <span class="ident">Chunk</span>};
+<span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">Future</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::{<span class="self">self</span>};
 
-<span class="kw">use</span> {<span class="ident">async_impl</span>, <span class="ident">wait</span>};
+<span class="kw">use</span> {<span class="ident">async_impl</span>};
 
 <span class="doccomment">/// The body of a `Request`.</span>
 <span class="doccomment">///</span>
@@ -329,6 +347,37 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sized</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="ident">reader</span>: <span class="ident">R</span>, <span class="ident">len</span>: <span class="ident">u64</span>) <span class="op">-&gt;</span> <span class="ident">Body</span> {
         <span class="ident">Body</span> {
             <span class="ident">kind</span>: <span class="ident">Kind</span>::<span class="ident">Reader</span>(<span class="ident">Box</span>::<span class="ident">from</span>(<span class="ident">reader</span>), <span class="prelude-val">Some</span>(<span class="ident">len</span>)),
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Reader</span>(<span class="kw">_</span>, <span class="ident">len</span>) <span class="op">=&gt;</span> <span class="ident">len</span>,
+            <span class="ident">Kind</span>::<span class="ident">Bytes</span>(<span class="kw-2">ref</span> <span class="ident">bytes</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">bytes</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>),
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_reader</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Reader</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Reader</span>(<span class="ident">r</span>, <span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">Reader</span>::<span class="ident">Reader</span>(<span class="ident">r</span>),
+            <span class="ident">Kind</span>::<span class="ident">Bytes</span>(<span class="ident">b</span>) <span class="op">=&gt;</span> <span class="ident">Reader</span>::<span class="ident">Bytes</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">b</span>)),
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_async</span>(<span class="self">self</span>) <span class="op">-&gt;</span> (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&gt;</span>, <span class="ident">async_impl</span>::<span class="ident">Body</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>) {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Reader</span>(<span class="ident">read</span>, <span class="ident">len</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Body</span>::<span class="ident">channel</span>();
+                <span class="kw">let</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">Sender</span> {
+                    <span class="ident">body</span>: (<span class="ident">read</span>, <span class="ident">len</span>),
+                    <span class="ident">tx</span>: <span class="ident">tx</span>,
+                };
+                (<span class="prelude-val">Some</span>(<span class="ident">tx</span>), <span class="ident">async_impl</span>::<span class="ident">body</span>::<span class="ident">wrap</span>(<span class="ident">rx</span>), <span class="ident">len</span>)
+            },
+            <span class="ident">Kind</span>::<span class="ident">Bytes</span>(<span class="ident">chunk</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">chunk</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+                (<span class="prelude-val">None</span>, <span class="ident">async_impl</span>::<span class="ident">body</span>::<span class="ident">reusable</span>(<span class="ident">chunk</span>), <span class="prelude-val">Some</span>(<span class="ident">len</span>))
+            }
         }
     }
 }
@@ -404,27 +453,9 @@
     }
 }
 
-
-<span class="comment">// pub(crate)</span>
-
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">len</span>(<span class="ident">body</span>: <span class="kw-2">&amp;</span><span class="ident">Body</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
-    <span class="kw">match</span> <span class="ident">body</span>.<span class="ident">kind</span> {
-        <span class="ident">Kind</span>::<span class="ident">Reader</span>(<span class="kw">_</span>, <span class="ident">len</span>) <span class="op">=&gt;</span> <span class="ident">len</span>,
-        <span class="ident">Kind</span>::<span class="ident">Bytes</span>(<span class="kw-2">ref</span> <span class="ident">bytes</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">bytes</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>),
-    }
-}
-
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Reader</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">Reader</span> {
     <span class="ident">Reader</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Read</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>),
     <span class="ident">Bytes</span>(<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Bytes</span><span class="op">&gt;</span>),
-}
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reader</span>(<span class="ident">body</span>: <span class="ident">Body</span>) <span class="op">-&gt;</span> <span class="ident">Reader</span> {
-    <span class="kw">match</span> <span class="ident">body</span>.<span class="ident">kind</span> {
-        <span class="ident">Kind</span>::<span class="ident">Reader</span>(<span class="ident">r</span>, <span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">Reader</span>::<span class="ident">Reader</span>(<span class="ident">r</span>),
-        <span class="ident">Kind</span>::<span class="ident">Bytes</span>(<span class="ident">b</span>) <span class="op">=&gt;</span> <span class="ident">Reader</span>::<span class="ident">Bytes</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">b</span>)),
-    }
 }
 
 <span class="kw">impl</span> <span class="ident">Read</span> <span class="kw">for</span> <span class="ident">Reader</span> {
@@ -436,68 +467,71 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Sender</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Sender</span> {
     <span class="ident">body</span>: (<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Read</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>),
-    <span class="ident">tx</span>: <span class="ident">wait</span>::<span class="ident">WaitSink</span><span class="op">&lt;</span>::<span class="ident">futures</span>::<span class="ident">sync</span>::<span class="ident">mpsc</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">hyper</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Chunk</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">tx</span>: <span class="ident">hyper</span>::<span class="ident">body</span>::<span class="ident">Sender</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Sender</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="comment">// A `Future` that may do blocking read calls.</span>
+    <span class="comment">// As a `Future`, this integrates easily with `wait::timeout`.</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">send</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(), <span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>;
         <span class="kw">use</span> <span class="ident">bytes</span>::{<span class="ident">BufMut</span>, <span class="ident">BytesMut</span>};
+        <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">future</span>;
 
+        <span class="kw">let</span> <span class="ident">con_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">body</span>.<span class="number">1</span>;
         <span class="kw">let</span> <span class="ident">cap</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">min</span>(<span class="self">self</span>.<span class="ident">body</span>.<span class="number">1</span>.<span class="ident">unwrap_or</span>(<span class="number">8192</span>), <span class="number">8192</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">written</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">BytesMut</span>::<span class="ident">with_capacity</span>(<span class="ident">cap</span> <span class="kw">as</span> <span class="ident">usize</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">body</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">body</span>.<span class="number">0</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tx</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tx</span>;
-        <span class="kw">loop</span> {
+        <span class="comment">// Put in an option so that it can be consumed on error to call abort()</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tx</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">tx</span>);
+
+        <span class="ident">future</span>::<span class="ident">poll_fn</span>(<span class="kw">move</span> <span class="op">||</span> <span class="kw">loop</span> {
+            <span class="kw">if</span> <span class="prelude-val">Some</span>(<span class="ident">written</span>) <span class="op">==</span> <span class="ident">con_len</span> {
+                <span class="comment">// Written up to content-length, so stop.</span>
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(().<span class="ident">into</span>());
+            }
+
+            <span class="macro">try_ready</span><span class="macro">!</span>(<span class="ident">tx</span>
+                .<span class="ident">as_mut</span>()
+                .<span class="ident">expect</span>(<span class="string">&quot;tx only taken on error&quot;</span>)
+                .<span class="ident">poll_ready</span>()
+                .<span class="ident">map_err</span>(::<span class="ident">error</span>::<span class="ident">from</span>));
+
+            <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">remaining_mut</span>() <span class="op">==</span> <span class="number">0</span> {
+                <span class="ident">buf</span>.<span class="ident">reserve</span>(<span class="number">8192</span>);
+            }
+
             <span class="kw">match</span> <span class="ident">body</span>.<span class="ident">read</span>(<span class="kw">unsafe</span> { <span class="ident">buf</span>.<span class="ident">bytes_mut</span>() }) {
-                <span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(()),
+                <span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(().<span class="ident">into</span>())
+                },
                 <span class="prelude-val">Ok</span>(<span class="ident">n</span>) <span class="op">=&gt;</span> {
                     <span class="kw">unsafe</span> { <span class="ident">buf</span>.<span class="ident">advance_mut</span>(<span class="ident">n</span>); }
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">take</span>().<span class="ident">freeze</span>().<span class="ident">into</span>())) {
-                        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">wait</span>::<span class="ident">Waited</span>::<span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">e</span> {
-                            <span class="kw">let</span> <span class="ident">epipe</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">BrokenPipe</span>, <span class="string">&quot;broken pipe&quot;</span>);
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">error</span>::<span class="ident">from</span>(<span class="ident">epipe</span>));
-                        } <span class="kw">else</span> {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">error</span>::<span class="ident">timedout</span>(<span class="prelude-val">None</span>));
-                        }
-                    }
-                    <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">remaining_mut</span>() <span class="op">==</span> <span class="number">0</span> {
-                        <span class="ident">buf</span>.<span class="ident">reserve</span>(<span class="number">8192</span>);
+                    <span class="ident">written</span> <span class="op">+=</span> <span class="ident">n</span> <span class="kw">as</span> <span class="ident">u64</span>;
+                    <span class="kw">let</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">as_mut</span>().<span class="ident">expect</span>(<span class="string">&quot;tx only taken on error&quot;</span>);
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send_data</span>(<span class="ident">buf</span>.<span class="ident">take</span>().<span class="ident">freeze</span>().<span class="ident">into</span>()) {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">error</span>::<span class="ident">timedout</span>(<span class="prelude-val">None</span>));
                     }
                 }
                 <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
                     <span class="kw">let</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">e</span>.<span class="ident">kind</span>(), <span class="ident">e</span>.<span class="ident">to_string</span>());
-                    <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>(<span class="ident">e</span>.<span class="ident">into</span>()));
+                    <span class="ident">tx</span>
+                        .<span class="ident">take</span>()
+                        .<span class="ident">expect</span>(<span class="string">&quot;tx only taken on error&quot;</span>)
+                        .<span class="ident">abort</span>();
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">error</span>::<span class="ident">from</span>(<span class="ident">ret</span>));
                 }
             }
-        }
-    }
-}
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">async</span>(<span class="ident">body</span>: <span class="ident">Body</span>) <span class="op">-&gt;</span> (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&gt;</span>, <span class="ident">async_impl</span>::<span class="ident">Body</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>) {
-    <span class="kw">match</span> <span class="ident">body</span>.<span class="ident">kind</span> {
-        <span class="ident">Kind</span>::<span class="ident">Reader</span>(<span class="ident">read</span>, <span class="ident">len</span>) <span class="op">=&gt;</span> {
-            <span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">hyper</span>::<span class="ident">Body</span>::<span class="ident">pair</span>();
-            <span class="kw">let</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">Sender</span> {
-                <span class="ident">body</span>: (<span class="ident">read</span>, <span class="ident">len</span>),
-                <span class="ident">tx</span>: <span class="ident">wait</span>::<span class="ident">sink</span>(<span class="ident">tx</span>, <span class="prelude-val">None</span>),
-            };
-            (<span class="prelude-val">Some</span>(<span class="ident">tx</span>), <span class="ident">async_impl</span>::<span class="ident">body</span>::<span class="ident">wrap</span>(<span class="ident">rx</span>), <span class="ident">len</span>)
-        },
-        <span class="ident">Kind</span>::<span class="ident">Bytes</span>(<span class="ident">chunk</span>) <span class="op">=&gt;</span> {
-            <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">chunk</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>;
-            (<span class="prelude-val">None</span>, <span class="ident">async_impl</span>::<span class="ident">body</span>::<span class="ident">reusable</span>(<span class="ident">chunk</span>), <span class="prelude-val">Some</span>(<span class="ident">len</span>))
-        }
+        })
     }
 }
 
 <span class="comment">// useful for tests, but not publicly exposed</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_to_string</span>(<span class="kw-2">mut</span> <span class="ident">body</span>: <span class="ident">Body</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">read_to_string</span>(<span class="kw-2">mut</span> <span class="ident">body</span>: <span class="ident">Body</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
     <span class="kw">match</span> <span class="ident">body</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Reader</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">reader</span>, <span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">reader</span>.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">s</span>),

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.7.2/src/macros.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>macros.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.8.7/src/macros.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>macros.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1570,6 +1570,54 @@
 <span id="1570">1570</span>
 <span id="1571">1571</span>
 <span id="1572">1572</span>
+<span id="1573">1573</span>
+<span id="1574">1574</span>
+<span id="1575">1575</span>
+<span id="1576">1576</span>
+<span id="1577">1577</span>
+<span id="1578">1578</span>
+<span id="1579">1579</span>
+<span id="1580">1580</span>
+<span id="1581">1581</span>
+<span id="1582">1582</span>
+<span id="1583">1583</span>
+<span id="1584">1584</span>
+<span id="1585">1585</span>
+<span id="1586">1586</span>
+<span id="1587">1587</span>
+<span id="1588">1588</span>
+<span id="1589">1589</span>
+<span id="1590">1590</span>
+<span id="1591">1591</span>
+<span id="1592">1592</span>
+<span id="1593">1593</span>
+<span id="1594">1594</span>
+<span id="1595">1595</span>
+<span id="1596">1596</span>
+<span id="1597">1597</span>
+<span id="1598">1598</span>
+<span id="1599">1599</span>
+<span id="1600">1600</span>
+<span id="1601">1601</span>
+<span id="1602">1602</span>
+<span id="1603">1603</span>
+<span id="1604">1604</span>
+<span id="1605">1605</span>
+<span id="1606">1606</span>
+<span id="1607">1607</span>
+<span id="1608">1608</span>
+<span id="1609">1609</span>
+<span id="1610">1610</span>
+<span id="1611">1611</span>
+<span id="1612">1612</span>
+<span id="1613">1613</span>
+<span id="1614">1614</span>
+<span id="1615">1615</span>
+<span id="1616">1616</span>
+<span id="1617">1617</span>
+<span id="1618">1618</span>
+<span id="1619">1619</span>
+<span id="1620">1620</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015-2016 Mozilla Foundation. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution.</span>
@@ -1644,49 +1692,55 @@
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">decoder_functions</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">preamble</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">loop_preable</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> (
-    <span class="macro">decoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">preamble</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">loop_preable</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                      <span class="ident">decode_to_utf8_raw</span>,
-                      <span class="ident">u8</span>,
-                      <span class="ident">Utf8Destination</span>);
-    <span class="macro">decoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">preamble</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">loop_preable</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                      <span class="ident">decode_to_utf16_raw</span>,
-                      <span class="ident">u16</span>,
-                      <span class="ident">Utf16Destination</span>);
-    );
+    (
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">preamble</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">loop_preable</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>
+    ) <span class="op">=&gt;</span> {
+        <span class="macro">decoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">preamble</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">loop_preable</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="ident">decode_to_utf8_raw</span>,
+            <span class="ident">u8</span>,
+            <span class="ident">Utf8Destination</span>
+        );
+        <span class="macro">decoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">preamble</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">loop_preable</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="ident">decode_to_utf16_raw</span>,
+            <span class="ident">u16</span>,
+            <span class="ident">Utf16Destination</span>
+        );
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">ascii_compatible_two_byte_decoder_function</span> {
@@ -1851,52 +1905,58 @@
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">ascii_compatible_two_byte_decoder_functions</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trail</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead_minus_offset</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>:<span class="ident">tt</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> (
-         <span class="macro">ascii_compatible_two_byte_decoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trail</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead_minus_offset</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                                                      <span class="ident">decode_to_utf8_raw</span>,
-                                                      <span class="ident">u8</span>,
-                                                      <span class="ident">Utf8Destination</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>);
-         <span class="macro">ascii_compatible_two_byte_decoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trail</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead_minus_offset</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                                                      <span class="ident">decode_to_utf16_raw</span>,
-                                                      <span class="ident">u16</span>,
-                                                      <span class="ident">Utf16Destination</span>,
-                                                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>);
-    );
+    (
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trail</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead_minus_offset</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>:<span class="ident">tt</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>:<span class="ident">expr</span>
+    ) <span class="op">=&gt;</span> {
+        <span class="macro">ascii_compatible_two_byte_decoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trail</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="ident">decode_to_utf8_raw</span>,
+            <span class="ident">u8</span>,
+            <span class="ident">Utf8Destination</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>
+        );
+        <span class="macro">ascii_compatible_two_byte_decoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">trail</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="ident">decode_to_utf16_raw</span>,
+            <span class="ident">u16</span>,
+            <span class="ident">Utf16Destination</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>
+        );
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">gb18030_decoder_function</span> {
@@ -2156,70 +2216,76 @@
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">gb18030_decoder_functions</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_minus_offset</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_minus_offset</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_second</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_minus_offset</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_third</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_minus_offset</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_fourth</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>:<span class="ident">tt</span>) <span class="op">=&gt;</span> (
-    <span class="macro">gb18030_decoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_body</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_body</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_body</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_body</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_minus_offset</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_minus_offset</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_second</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_minus_offset</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_third</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_minus_offset</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_fourth</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>,
-                              <span class="ident">decode_to_utf8_raw</span>,
-                              <span class="ident">u8</span>,
-                              <span class="ident">Utf8Destination</span>);
-    <span class="macro">gb18030_decoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_body</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_body</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_body</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_body</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_minus_offset</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_minus_offset</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_second</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_minus_offset</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_third</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_minus_offset</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_fourth</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                              <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>,
-                              <span class="ident">decode_to_utf16_raw</span>,
-                              <span class="ident">u16</span>,
-                              <span class="ident">Utf16Destination</span>);
-    );
+    (
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_minus_offset</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_minus_offset</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_second</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_minus_offset</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_third</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_minus_offset</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_fourth</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>:<span class="ident">tt</span>
+    ) <span class="op">=&gt;</span> {
+        <span class="macro">gb18030_decoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_second</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_third</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_fourth</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>,
+            <span class="ident">decode_to_utf8_raw</span>,
+            <span class="ident">u8</span>,
+            <span class="ident">Utf8Destination</span>
+        );
+        <span class="macro">gb18030_decoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">second_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_second</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">third_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_third</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">fourth_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_fourth</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">outermost</span>,
+            <span class="ident">decode_to_utf16_raw</span>,
+            <span class="ident">u16</span>,
+            <span class="ident">Utf16Destination</span>
+        );
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">euc_jp_decoder_function</span> {
@@ -2453,55 +2519,61 @@
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">euc_jp_decoder_functions</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0802_trail_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_lead_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_trail_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">half_width_katakana_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0208_lead_minus_offset</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0212_lead_minus_offset</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_jis0212</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> (
-    <span class="macro">euc_jp_decoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0802_trail_body</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_lead_body</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_trail_body</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">half_width_katakana_body</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0208_lead_minus_offset</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0212_lead_minus_offset</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_jis0212</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                             <span class="ident">decode_to_utf8_raw</span>,
-                             <span class="ident">u8</span>,
-                             <span class="ident">Utf8Destination</span>);
-    <span class="macro">euc_jp_decoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0802_trail_body</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_lead_body</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_trail_body</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">half_width_katakana_body</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0208_lead_minus_offset</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0212_lead_minus_offset</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_jis0212</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                             <span class="ident">decode_to_utf16_raw</span>,
-                             <span class="ident">u16</span>,
-                             <span class="ident">Utf16Destination</span>);
+    (
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0802_trail_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_lead_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_trail_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">half_width_katakana_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0208_lead_minus_offset</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0212_lead_minus_offset</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_jis0212</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>
+    ) <span class="op">=&gt;</span> {
+        <span class="macro">euc_jp_decoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0802_trail_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_lead_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_trail_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">half_width_katakana_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0208_lead_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0212_lead_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_jis0212</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="ident">decode_to_utf8_raw</span>,
+            <span class="ident">u8</span>,
+            <span class="ident">Utf8Destination</span>
         );
+        <span class="macro">euc_jp_decoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0802_trail_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_lead_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0812_trail_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">half_width_katakana_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">non_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0208_lead_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">byte</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_trail</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">jis0212_lead_minus_offset</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">lead</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle_jis0212</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="ident">decode_to_utf16_raw</span>,
+            <span class="ident">u16</span>,
+            <span class="ident">Utf16Destination</span>
+        );
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">encoder_function</span> {
@@ -2556,43 +2628,49 @@
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">encoder_functions</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> (
-    <span class="macro">encoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                      <span class="ident">encode_from_utf8_raw</span>,
-                      <span class="ident">str</span>,
-                      <span class="ident">Utf8Source</span>);
-    <span class="macro">encoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>,
-                      <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                      <span class="ident">encode_from_utf16_raw</span>,
-                      [<span class="ident">u16</span>],
-                      <span class="ident">Utf16Source</span>);
-    );
+    (
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>
+    ) <span class="op">=&gt;</span> {
+        <span class="macro">encoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="ident">encode_from_utf8_raw</span>,
+            <span class="ident">str</span>,
+            <span class="ident">Utf8Source</span>
+        );
+        <span class="macro">encoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">eof</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">src_consumed</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">dest</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">c</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">unread_handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="ident">encode_from_utf16_raw</span>,
+            [<span class="ident">u16</span>],
+            <span class="ident">Utf16Source</span>
+        );
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">ascii_compatible_encoder_function</span> {
@@ -2706,101 +2784,119 @@
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">ascii_compatible_encoder_functions</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> (
-    <span class="macro">ascii_compatible_encoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral_body</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                                       <span class="ident">encode_from_utf8_raw</span>,
-                                       <span class="ident">str</span>,
-                                       <span class="ident">Utf8Source</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>);
-    <span class="macro">ascii_compatible_encoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral_body</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                                       <span class="ident">encode_from_utf16_raw</span>,
-                                       [<span class="ident">u16</span>],
-                                       <span class="ident">Utf16Source</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>);
-     );
+    (
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>:<span class="ident">expr</span>
+    ) <span class="op">=&gt;</span> {
+        <span class="macro">ascii_compatible_encoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="ident">encode_from_utf8_raw</span>,
+            <span class="ident">str</span>,
+            <span class="ident">Utf8Source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>
+        );
+        <span class="macro">ascii_compatible_encoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral_body</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">astral</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="ident">encode_from_utf16_raw</span>,
+            [<span class="ident">u16</span>],
+            <span class="ident">Utf16Source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>
+        );
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">ascii_compatible_bmp_encoder_function</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>:<span class="ident">ty</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source_struct</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> (
-    <span class="macro">ascii_compatible_encoder_function</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>,
-                                       {
-                                           <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">astral</span>),
-                                                   <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>.<span class="ident">consumed</span>(),
-                                                   <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>.<span class="ident">written</span>());
-                                       },
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>,
-                                       <span class="ident">astral</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source_struct</span>,
-                                       <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>);
-     );
+    (
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>:<span class="ident">ty</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source_struct</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>:<span class="ident">expr</span>
+    ) <span class="op">=&gt;</span> {
+        <span class="macro">ascii_compatible_encoder_function</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>,
+            {
+                <span class="kw">return</span> (
+                    <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">astral</span>),
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>.<span class="ident">consumed</span>(),
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>.<span class="ident">written</span>(),
+                );
+            },
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>,
+            <span class="ident">astral</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">input</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source_struct</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>
+        );
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">ascii_compatible_bmp_encoder_functions</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>:<span class="ident">block</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>,
-     <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> (
-    <span class="macro">ascii_compatible_encoder_functions</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>,
-                                        {
-                                            <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">astral</span>),
-                                                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>.<span class="ident">consumed</span>(),
-                                                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>.<span class="ident">written</span>());
-                                        },
-                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>,
-                                        <span class="ident">astral</span>,
-                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
-                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
-                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
-                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
-                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
-                                        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>);
-     );
+    (
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>:<span class="ident">block</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>:<span class="ident">ident</span>,
+        <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>:<span class="ident">expr</span>
+    ) <span class="op">=&gt;</span> {
+        <span class="macro">ascii_compatible_encoder_functions</span><span class="macro">!</span>(
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp_body</span>,
+            {
+                <span class="kw">return</span> (
+                    <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">astral</span>),
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>.<span class="ident">consumed</span>(),
+                    <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>.<span class="ident">written</span>(),
+                );
+            },
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">bmp</span>,
+            <span class="ident">astral</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">slf</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">source</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">handle</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">copy_ascii</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">destination_check</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">ascii_punctuation</span>
+        );
+    };
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">public_decode_function</span>{

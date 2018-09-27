@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `openssl` crate."><meta name="keywords" content="rust, rustlang, rust-lang, openssl"><title>openssl - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate openssl</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'openssl', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>openssl</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/openssl/lib.rs.html#1-84' title='goto source code'>[src]</a></span></h1><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `openssl` crate."><meta name="keywords" content="rust, rustlang, rust-lang, openssl"><title>openssl - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate openssl</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'openssl', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>openssl</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/openssl/lib.rs.html#1-90' title='goto source code'>[src]</a></span></h1><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class="mod" href="aes/index.html"
@@ -41,6 +41,14 @@
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="mod" href="derive/index.html"
+                                  title='mod openssl::derive'>derive</a></td>
+                           <td class='docblock-short'>
+                                <p>Shared secret derivation.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="mod" href="dh/index.html"
                                   title='mod openssl::dh'>dh</a></td>
                            <td class='docblock-short'>
@@ -64,6 +72,14 @@
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="mod" href="ecdsa/index.html"
+                                  title='mod openssl::ecdsa'>ecdsa</a></td>
+                           <td class='docblock-short'>
+                                <p>Low level Elliptic Curve Digital Signature Algorithm (ECDSA) functions.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="mod" href="error/index.html"
                                   title='mod openssl::error'>error</a></td>
                            <td class='docblock-short'>
@@ -76,6 +92,14 @@
                                   title='mod openssl::ex_data'>ex_data</a></td>
                            <td class='docblock-short'>
                                 
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="fips/index.html"
+                                  title='mod openssl::fips'>fips</a></td>
+                           <td class='docblock-short'>
+                                <p>FIPS 140-2 support.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -127,7 +151,8 @@
                            <td><a class="mod" href="pkey/index.html"
                                   title='mod openssl::pkey'>pkey</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Public/private key processing.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -142,7 +167,8 @@
                            <td><a class="mod" href="rsa/index.html"
                                   title='mod openssl::rsa'>rsa</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Rivest–Shamir–Adleman cryptosystem</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -159,6 +185,13 @@
                            <td class='docblock-short'>
                                 <p>Message signatures.</p>
 
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="srtp/index.html"
+                                  title='mod openssl::srtp'>srtp</a></td>
+                           <td class='docblock-short'>
+                                
                            </td>
                        </tr>
                        <tr class=' module-item'>
@@ -192,13 +225,6 @@
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="mod" href="types/index.html"
-                                  title='mod openssl::types'>types</a></td>
-                           <td class='docblock-short'>
-                                
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
                            <td><a class="mod" href="version/index.html"
                                   title='mod openssl::version'>version</a></td>
                            <td class='docblock-short'>
@@ -209,7 +235,8 @@
                            <td><a class="mod" href="x509/index.html"
                                   title='mod openssl::x509'>x509</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>The standard defining the format of public key certificates.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>

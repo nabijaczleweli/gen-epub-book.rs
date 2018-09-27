@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.7.2/src/variant.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>variant.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.8.7/src/variant.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>variant.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -335,6 +335,11 @@
 <span id="335">335</span>
 <span id="336">336</span>
 <span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015-2016 Mozilla Foundation. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution.</span>
@@ -357,18 +362,18 @@
 <span class="doccomment">//! The purpose of making `Decoder` and `Encoder` `Sized` is to allow stack</span>
 <span class="doccomment">//! allocation in Rust code, including the convenience methods on `Encoding`.</span>
 
-<span class="kw">use</span> <span class="ident">single_byte</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">utf_8</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">gb18030</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">big5</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">euc_jp</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">iso_2022_jp</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">shift_jis</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">euc_kr</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">gb18030</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">iso_2022_jp</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">replacement</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">x_user_defined</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">shift_jis</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">single_byte</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">utf_16</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">utf_8</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">x_user_defined</span>::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">VariantDecoder</span> {
     <span class="ident">SingleByte</span>(<span class="ident">SingleByteDecoder</span>),
@@ -455,11 +460,12 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_to_utf16_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                               <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-                               <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u16</span>],
-                               <span class="ident">last</span>: <span class="ident">bool</span>)
-                               <span class="op">-&gt;</span> (<span class="ident">DecoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_to_utf16_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u16</span>],
+        <span class="ident">last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">DecoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">VariantDecoder</span>::<span class="ident">SingleByte</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">decode_to_utf16_raw</span>(<span class="ident">src</span>, <span class="ident">dst</span>, <span class="ident">last</span>),
             <span class="ident">VariantDecoder</span>::<span class="ident">Utf8</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">decode_to_utf16_raw</span>(<span class="ident">src</span>, <span class="ident">dst</span>, <span class="ident">last</span>),
@@ -475,11 +481,12 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_to_utf8_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                              <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-                              <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
-                              <span class="ident">last</span>: <span class="ident">bool</span>)
-                              <span class="op">-&gt;</span> (<span class="ident">DecoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_to_utf8_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
+        <span class="ident">last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">DecoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">VariantDecoder</span>::<span class="ident">SingleByte</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">decode_to_utf8_raw</span>(<span class="ident">src</span>, <span class="ident">dst</span>, <span class="ident">last</span>),
             <span class="ident">VariantDecoder</span>::<span class="ident">Utf8</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">decode_to_utf8_raw</span>(<span class="ident">src</span>, <span class="ident">dst</span>, <span class="ident">last</span>),
@@ -515,9 +522,10 @@
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf16_without_replacement</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                                                            <span class="ident">u16_length</span>: <span class="ident">usize</span>)
-                                                            <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf16_without_replacement</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">u16_length</span>: <span class="ident">usize</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">VariantEncoder</span>::<span class="ident">SingleByte</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
                 <span class="ident">v</span>.<span class="ident">max_buffer_length_from_utf16_without_replacement</span>(<span class="ident">u16_length</span>)
@@ -549,9 +557,10 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf8_without_replacement</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                                                           <span class="ident">byte_length</span>: <span class="ident">usize</span>)
-                                                           <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf8_without_replacement</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">byte_length</span>: <span class="ident">usize</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">VariantEncoder</span>::<span class="ident">SingleByte</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
                 <span class="ident">v</span>.<span class="ident">max_buffer_length_from_utf8_without_replacement</span>(<span class="ident">byte_length</span>)
@@ -583,11 +592,12 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf16_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                                 <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
-                                 <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
-                                 <span class="ident">last</span>: <span class="ident">bool</span>)
-                                 <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf16_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
+        <span class="ident">last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">VariantEncoder</span>::<span class="ident">SingleByte</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">encode_from_utf16_raw</span>(<span class="ident">src</span>, <span class="ident">dst</span>, <span class="ident">last</span>),
             <span class="ident">VariantEncoder</span>::<span class="ident">Utf8</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">encode_from_utf16_raw</span>(<span class="ident">src</span>, <span class="ident">dst</span>, <span class="ident">last</span>),
@@ -601,11 +611,12 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf8_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                                <span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                                <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
-                                <span class="ident">last</span>: <span class="ident">bool</span>)
-                                <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf8_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
+        <span class="ident">last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">VariantEncoder</span>::<span class="ident">SingleByte</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">encode_from_utf8_raw</span>(<span class="ident">src</span>, <span class="ident">dst</span>, <span class="ident">last</span>),
             <span class="ident">VariantEncoder</span>::<span class="ident">Utf8</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">encode_from_utf8_raw</span>(<span class="ident">src</span>, <span class="ident">dst</span>, <span class="ident">last</span>),
@@ -641,8 +652,7 @@
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">VariantEncoding</span>::<span class="ident">SingleByte</span>(<span class="ident">table</span>) <span class="op">=&gt;</span> <span class="ident">SingleByteDecoder</span>::<span class="ident">new</span>(<span class="ident">table</span>),
             <span class="ident">VariantEncoding</span>::<span class="ident">Utf8</span> <span class="op">=&gt;</span> <span class="ident">Utf8Decoder</span>::<span class="ident">new</span>(),
-            <span class="ident">VariantEncoding</span>::<span class="ident">Gbk</span> <span class="op">|</span>
-            <span class="ident">VariantEncoding</span>::<span class="ident">Gb18030</span> <span class="op">=&gt;</span> <span class="ident">Gb18030Decoder</span>::<span class="ident">new</span>(),
+            <span class="ident">VariantEncoding</span>::<span class="ident">Gbk</span> <span class="op">|</span> <span class="ident">VariantEncoding</span>::<span class="ident">Gb18030</span> <span class="op">=&gt;</span> <span class="ident">Gb18030Decoder</span>::<span class="ident">new</span>(),
             <span class="ident">VariantEncoding</span>::<span class="ident">Big5</span> <span class="op">=&gt;</span> <span class="ident">Big5Decoder</span>::<span class="ident">new</span>(),
             <span class="ident">VariantEncoding</span>::<span class="ident">EucJp</span> <span class="op">=&gt;</span> <span class="ident">EucJpDecoder</span>::<span class="ident">new</span>(),
             <span class="ident">VariantEncoding</span>::<span class="ident">Iso2022Jp</span> <span class="op">=&gt;</span> <span class="ident">Iso2022JpDecoder</span>::<span class="ident">new</span>(),
@@ -667,9 +677,9 @@
             <span class="ident">VariantEncoding</span>::<span class="ident">ShiftJis</span> <span class="op">=&gt;</span> <span class="ident">ShiftJisEncoder</span>::<span class="ident">new</span>(<span class="ident">encoding</span>),
             <span class="ident">VariantEncoding</span>::<span class="ident">EucKr</span> <span class="op">=&gt;</span> <span class="ident">EucKrEncoder</span>::<span class="ident">new</span>(<span class="ident">encoding</span>),
             <span class="ident">VariantEncoding</span>::<span class="ident">UserDefined</span> <span class="op">=&gt;</span> <span class="ident">UserDefinedEncoder</span>::<span class="ident">new</span>(<span class="ident">encoding</span>),
-            <span class="ident">VariantEncoding</span>::<span class="ident">Utf16Be</span> <span class="op">|</span>
-            <span class="ident">VariantEncoding</span>::<span class="ident">Replacement</span> <span class="op">|</span>
-            <span class="ident">VariantEncoding</span>::<span class="ident">Utf16Le</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="ident">VariantEncoding</span>::<span class="ident">Utf16Be</span> <span class="op">|</span> <span class="ident">VariantEncoding</span>::<span class="ident">Replacement</span> <span class="op">|</span> <span class="ident">VariantEncoding</span>::<span class="ident">Utf16Le</span> <span class="op">=&gt;</span> {
+                <span class="macro">unreachable</span><span class="macro">!</span>()
+            }
         }
     }
 }

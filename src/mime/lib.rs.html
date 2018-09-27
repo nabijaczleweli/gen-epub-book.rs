@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mime-0.3.7/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mime-0.3.9/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -855,6 +855,20 @@
 <span id="855">855</span>
 <span id="856">856</span>
 <span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! # Mime</span>
 <span class="doccomment">//!</span>
@@ -881,7 +895,7 @@
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/mime/0.3.7&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/mime/0.3.9&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">warnings</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_debug_implementations</span>)]</span>
@@ -1427,21 +1441,28 @@
     <span class="ident">CSS</span>, <span class="string">&quot;css&quot;</span>;
     <span class="ident">CSV</span>, <span class="string">&quot;csv&quot;</span>;
     <span class="ident">EVENT_STREAM</span>, <span class="string">&quot;event-stream&quot;</span>;
+    <span class="ident">VCARD</span>, <span class="string">&quot;vcard&quot;</span>;
 
     <span class="comment">// common application/*</span>
     <span class="ident">JSON</span>, <span class="string">&quot;json&quot;</span>;
     <span class="ident">WWW_FORM_URLENCODED</span>, <span class="string">&quot;x-www-form-urlencoded&quot;</span>;
     <span class="ident">MSGPACK</span>, <span class="string">&quot;msgpack&quot;</span>;
     <span class="ident">OCTET_STREAM</span>, <span class="string">&quot;octet-stream&quot;</span>;
+    <span class="ident">PDF</span>, <span class="string">&quot;pdf&quot;</span>;
+
+    <span class="comment">// common font/*</span>
+    <span class="ident">WOFF</span>, <span class="string">&quot;woff&quot;</span>;
+    <span class="ident">WOFF2</span>, <span class="string">&quot;woff2&quot;</span>;
 
     <span class="comment">// multipart/*</span>
     <span class="ident">FORM_DATA</span>, <span class="string">&quot;form-data&quot;</span>;
 
     <span class="comment">// common image/*</span>
-    <span class="ident">PNG</span>, <span class="string">&quot;png&quot;</span>;
-    <span class="ident">GIF</span>, <span class="string">&quot;gif&quot;</span>;
     <span class="ident">BMP</span>, <span class="string">&quot;bmp&quot;</span>;
+    <span class="ident">GIF</span>, <span class="string">&quot;gif&quot;</span>;
     <span class="ident">JPEG</span>, <span class="string">&quot;jpeg&quot;</span>;
+    <span class="ident">PNG</span>, <span class="string">&quot;png&quot;</span>;
+    <span class="ident">SVG</span>, <span class="string">&quot;svg&quot;</span>;
 
     <span class="comment">// audio/*</span>
     <span class="ident">BASIC</span>, <span class="string">&quot;basic&quot;</span>;
@@ -1456,7 +1477,7 @@
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">mimes</span> {
-    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>:<span class="ident">ident</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">piece</span>:<span class="ident">tt</span>),<span class="kw-2">*</span>;)<span class="kw-2">*</span>) <span class="op">=&gt;</span> (
+    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>:<span class="ident">ident</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">piece</span>:<span class="ident">expr</span>),<span class="kw-2">*</span>;)<span class="kw-2">*</span>) <span class="op">=&gt;</span> (
         <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
         <span class="kw">enum</span> <span class="ident">__Atoms</span> {
             <span class="ident">__Dynamic</span>,
@@ -1473,7 +1494,7 @@
 
         <span class="attribute">#[<span class="ident">test</span>]</span>
         <span class="kw">fn</span> <span class="ident">test_mimes_macro_consts</span>() {
-            [
+            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> [
             $(
             <span class="macro">mime_constant_test</span><span class="macro">!</span> {
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">id</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">piece</span>),<span class="op">*</span>
@@ -1558,6 +1579,7 @@
     <span class="ident">TEXT_HTML</span>, <span class="string">&quot;text/html&quot;</span>, <span class="number">4</span>;
     <span class="ident">TEXT_HTML_UTF_8</span>, <span class="string">&quot;text/html; charset=utf-8&quot;</span>, <span class="number">4</span>, <span class="prelude-val">None</span>, <span class="number">9</span>;
     <span class="ident">TEXT_CSS</span>, <span class="string">&quot;text/css&quot;</span>, <span class="number">4</span>;
+    <span class="ident">TEXT_CSS_UTF_8</span>, <span class="string">&quot;text/css; charset=utf-8&quot;</span>, <span class="number">4</span>, <span class="prelude-val">None</span>, <span class="number">8</span>;
     <span class="ident">TEXT_JAVASCRIPT</span>, <span class="string">&quot;text/javascript&quot;</span>, <span class="number">4</span>;
     <span class="ident">TEXT_XML</span>, <span class="string">&quot;text/xml&quot;</span>, <span class="number">4</span>;
     <span class="ident">TEXT_EVENT_STREAM</span>, <span class="string">&quot;text/event-stream&quot;</span>, <span class="number">4</span>;
@@ -1565,12 +1587,17 @@
     <span class="ident">TEXT_CSV_UTF_8</span>, <span class="string">&quot;text/csv; charset=utf-8&quot;</span>, <span class="number">4</span>, <span class="prelude-val">None</span>, <span class="number">8</span>;
     <span class="ident">TEXT_TAB_SEPARATED_VALUES</span>, <span class="string">&quot;text/tab-separated-values&quot;</span>, <span class="number">4</span>;
     <span class="ident">TEXT_TAB_SEPARATED_VALUES_UTF_8</span>, <span class="string">&quot;text/tab-separated-values; charset=utf-8&quot;</span>, <span class="number">4</span>, <span class="prelude-val">None</span>, <span class="number">25</span>;
+    <span class="ident">TEXT_VCARD</span>, <span class="string">&quot;text/vcard&quot;</span>, <span class="number">4</span>;
 
     <span class="ident">IMAGE_STAR</span>, <span class="string">&quot;image/*&quot;</span>, <span class="number">5</span>;
     <span class="ident">IMAGE_JPEG</span>, <span class="string">&quot;image/jpeg&quot;</span>, <span class="number">5</span>;
     <span class="ident">IMAGE_GIF</span>, <span class="string">&quot;image/gif&quot;</span>, <span class="number">5</span>;
     <span class="ident">IMAGE_PNG</span>, <span class="string">&quot;image/png&quot;</span>, <span class="number">5</span>;
     <span class="ident">IMAGE_BMP</span>, <span class="string">&quot;image/bmp&quot;</span>, <span class="number">5</span>;
+    <span class="ident">IMAGE_SVG</span>, <span class="string">&quot;image/svg+xml&quot;</span>, <span class="number">5</span>, <span class="prelude-val">Some</span>(<span class="number">9</span>);
+
+    <span class="ident">FONT_WOFF</span>, <span class="string">&quot;font/woff&quot;</span>, <span class="number">4</span>;
+    <span class="ident">FONT_WOFF2</span>, <span class="string">&quot;font/woff2&quot;</span>, <span class="number">4</span>;
 
     <span class="ident">APPLICATION_JSON</span>, <span class="string">&quot;application/json&quot;</span>, <span class="number">11</span>;
     <span class="ident">APPLICATION_JAVASCRIPT</span>, <span class="string">&quot;application/javascript&quot;</span>, <span class="number">11</span>;
@@ -1578,6 +1605,7 @@
     <span class="ident">APPLICATION_WWW_FORM_URLENCODED</span>, <span class="string">&quot;application/x-www-form-urlencoded&quot;</span>, <span class="number">11</span>;
     <span class="ident">APPLICATION_OCTET_STREAM</span>, <span class="string">&quot;application/octet-stream&quot;</span>, <span class="number">11</span>;
     <span class="ident">APPLICATION_MSGPACK</span>, <span class="string">&quot;application/msgpack&quot;</span>, <span class="number">11</span>;
+    <span class="ident">APPLICATION_PDF</span>, <span class="string">&quot;application/pdf&quot;</span>, <span class="number">11</span>;
 
     <span class="ident">MULTIPART_FORM_DATA</span>, <span class="string">&quot;multipart/form-data&quot;</span>, <span class="number">9</span>;
 }

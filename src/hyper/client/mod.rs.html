@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.27/src/client/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.12.10/src/client/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -680,317 +680,800 @@
 <span id="680">680</span>
 <span id="681">681</span>
 <span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
+<span id="708">708</span>
+<span id="709">709</span>
+<span id="710">710</span>
+<span id="711">711</span>
+<span id="712">712</span>
+<span id="713">713</span>
+<span id="714">714</span>
+<span id="715">715</span>
+<span id="716">716</span>
+<span id="717">717</span>
+<span id="718">718</span>
+<span id="719">719</span>
+<span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
+<span id="733">733</span>
+<span id="734">734</span>
+<span id="735">735</span>
+<span id="736">736</span>
+<span id="737">737</span>
+<span id="738">738</span>
+<span id="739">739</span>
+<span id="740">740</span>
+<span id="741">741</span>
+<span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
+<span id="777">777</span>
+<span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
+<span id="793">793</span>
+<span id="794">794</span>
+<span id="795">795</span>
+<span id="796">796</span>
+<span id="797">797</span>
+<span id="798">798</span>
+<span id="799">799</span>
+<span id="800">800</span>
+<span id="801">801</span>
+<span id="802">802</span>
+<span id="803">803</span>
+<span id="804">804</span>
+<span id="805">805</span>
+<span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
+<span id="809">809</span>
+<span id="810">810</span>
+<span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
+<span id="816">816</span>
+<span id="817">817</span>
+<span id="818">818</span>
+<span id="819">819</span>
+<span id="820">820</span>
+<span id="821">821</span>
+<span id="822">822</span>
+<span id="823">823</span>
+<span id="824">824</span>
+<span id="825">825</span>
+<span id="826">826</span>
+<span id="827">827</span>
+<span id="828">828</span>
+<span id="829">829</span>
+<span id="830">830</span>
+<span id="831">831</span>
+<span id="832">832</span>
+<span id="833">833</span>
+<span id="834">834</span>
+<span id="835">835</span>
+<span id="836">836</span>
+<span id="837">837</span>
+<span id="838">838</span>
+<span id="839">839</span>
+<span id="840">840</span>
+<span id="841">841</span>
+<span id="842">842</span>
+<span id="843">843</span>
+<span id="844">844</span>
+<span id="845">845</span>
+<span id="846">846</span>
+<span id="847">847</span>
+<span id="848">848</span>
+<span id="849">849</span>
+<span id="850">850</span>
+<span id="851">851</span>
+<span id="852">852</span>
+<span id="853">853</span>
+<span id="854">854</span>
+<span id="855">855</span>
+<span id="856">856</span>
+<span id="857">857</span>
+<span id="858">858</span>
+<span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
+<span id="870">870</span>
+<span id="871">871</span>
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
+<span id="926">926</span>
+<span id="927">927</span>
+<span id="928">928</span>
+<span id="929">929</span>
+<span id="930">930</span>
+<span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
+<span id="937">937</span>
+<span id="938">938</span>
+<span id="939">939</span>
+<span id="940">940</span>
+<span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
+<span id="948">948</span>
+<span id="949">949</span>
+<span id="950">950</span>
+<span id="951">951</span>
+<span id="952">952</span>
+<span id="953">953</span>
+<span id="954">954</span>
+<span id="955">955</span>
+<span id="956">956</span>
+<span id="957">957</span>
+<span id="958">958</span>
+<span id="959">959</span>
+<span id="960">960</span>
+<span id="961">961</span>
+<span id="962">962</span>
+<span id="963">963</span>
+<span id="964">964</span>
+<span id="965">965</span>
+<span id="966">966</span>
+<span id="967">967</span>
+<span id="968">968</span>
+<span id="969">969</span>
+<span id="970">970</span>
+<span id="971">971</span>
+<span id="972">972</span>
+<span id="973">973</span>
+<span id="974">974</span>
+<span id="975">975</span>
+<span id="976">976</span>
+<span id="977">977</span>
+<span id="978">978</span>
+<span id="979">979</span>
+<span id="980">980</span>
+<span id="981">981</span>
+<span id="982">982</span>
+<span id="983">983</span>
+<span id="984">984</span>
+<span id="985">985</span>
+<span id="986">986</span>
+<span id="987">987</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! HTTP Client</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! There are two levels of APIs provided for construct HTTP clients:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! - The higher-level [`Client`](Client) type.</span>
+<span class="doccomment">//! - The lower-level [conn](conn) module.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Client</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! The [`Client`](Client) is the main way to send HTTP requests to a server.</span>
+<span class="doccomment">//! The default `Client` provides these things on top of the lower-level API:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! - A default **connector**, able to resolve hostnames and connect to</span>
+<span class="doccomment">//!   destinations over plain-text TCP.</span>
+<span class="doccomment">//! - A **pool** of existing connections, allowing better performance when</span>
+<span class="doccomment">//!   making multiple requests to the same hostname.</span>
+<span class="doccomment">//! - Automatic setting of the `Host` header, based on the request `Uri`.</span>
+<span class="doccomment">//! - Automatic request **retries** when a pooled connection is closed by the</span>
+<span class="doccomment">//!   server before any bytes have been written.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! Many of these features can configured, by making use of</span>
+<span class="doccomment">//! [`Client::builder`](Client::builder).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ## Example</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! For a small example program simply fetching a URL, take a look at the</span>
+<span class="doccomment">//! [full client example](https://github.com/hyperium/hyper/blob/master/examples/client.rs).</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! extern crate hyper;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! use hyper::Client;</span>
+<span class="doccomment">//! # #[cfg(feature = &quot;runtime&quot;)]</span>
+<span class="doccomment">//! use hyper::rt::{self, Future, Stream};</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # #[cfg(feature = &quot;runtime&quot;)]</span>
+<span class="doccomment">//! # fn fetch_httpbin() {</span>
+<span class="doccomment">//! let client = Client::new();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! let fut = client</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // Make a GET /ip to &#39;http://httpbin.org&#39;</span>
+<span class="doccomment">//!     .get(&quot;http://httpbin.org/ip&quot;.parse().unwrap())</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // And then, if the request gets a response...</span>
+<span class="doccomment">//!     .and_then(|res| {</span>
+<span class="doccomment">//!         println!(&quot;status: {}&quot;, res.status());</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!         // Concatenate the body stream into a single buffer...</span>
+<span class="doccomment">//!         // This returns a new future, since we must stream body.</span>
+<span class="doccomment">//!         res.into_body().concat2()</span>
+<span class="doccomment">//!     })</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // And then, if reading the full body succeeds...</span>
+<span class="doccomment">//!     .and_then(|body| {</span>
+<span class="doccomment">//!         // The body is just bytes, but let&#39;s print a string...</span>
+<span class="doccomment">//!         let s = ::std::str::from_utf8(&amp;body)</span>
+<span class="doccomment">//!             .expect(&quot;httpbin sends utf-8 JSON&quot;);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!         println!(&quot;body: {}&quot;, s);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!         // and_then requires we return a new Future, and it turns</span>
+<span class="doccomment">//!         // out that Result is a Future that is ready immediately.</span>
+<span class="doccomment">//!         Ok(())</span>
+<span class="doccomment">//!     })</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // Map any errors that might have happened...</span>
+<span class="doccomment">//!     .map_err(|err| {</span>
+<span class="doccomment">//!         println!(&quot;error: {}&quot;, err);</span>
+<span class="doccomment">//!     });</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // A runtime is needed to execute our asynchronous code. In order to</span>
+<span class="doccomment">//! // spawn the future into the runtime, it should already have been</span>
+<span class="doccomment">//! // started and running before calling this code.</span>
+<span class="doccomment">//! rt::spawn(fut);</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! # fn main () {}</span>
+<span class="doccomment">//! ```</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 
-<span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Future</span>, <span class="ident">Poll</span>, <span class="ident">Stream</span>};
-<span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">future</span>::{<span class="self">self</span>, <span class="ident">Executor</span>};
+<span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Future</span>, <span class="ident">Poll</span>};
+<span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">future</span>::{<span class="self">self</span>, <span class="ident">Either</span>, <span class="ident">Executor</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">sync</span>::<span class="ident">oneshot</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;compat&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">http</span>;
-<span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">reactor</span>::<span class="ident">Handle</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">tokio_service</span>::<span class="ident">Service</span>;
+<span class="kw">use</span> <span class="ident">http</span>::{<span class="ident">Method</span>, <span class="ident">Request</span>, <span class="ident">Response</span>, <span class="ident">Uri</span>, <span class="ident">Version</span>};
+<span class="kw">use</span> <span class="ident">http</span>::<span class="ident">header</span>::{<span class="ident">Entry</span>, <span class="ident">HeaderValue</span>, <span class="ident">HOST</span>};
+<span class="kw">use</span> <span class="ident">http</span>::<span class="ident">uri</span>::<span class="ident">Scheme</span>;
 
-<span class="kw">use</span> <span class="ident">header</span>::{<span class="ident">Host</span>};
-<span class="kw">use</span> <span class="ident">proto</span>;
-<span class="kw">use</span> <span class="ident">proto</span>::<span class="ident">request</span>;
-<span class="kw">use</span> <span class="ident">method</span>::<span class="ident">Method</span>;
-<span class="kw">use</span> <span class="self">self</span>::<span class="ident">pool</span>::<span class="ident">Pool</span>;
-<span class="kw">use</span> <span class="ident">uri</span>::{<span class="self">self</span>, <span class="ident">Uri</span>};
-<span class="kw">use</span> <span class="ident">version</span>::<span class="ident">HttpVersion</span>;
+<span class="kw">use</span> <span class="ident">body</span>::{<span class="ident">Body</span>, <span class="ident">Payload</span>};
+<span class="kw">use</span> <span class="ident">common</span>::<span class="ident">Exec</span>;
+<span class="kw">use</span> <span class="ident">common</span>::<span class="ident">lazy</span> <span class="kw">as</span> <span class="ident">hyper_lazy</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">connect</span>::{<span class="ident">Connect</span>, <span class="ident">Destination</span>};
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">pool</span>::{<span class="ident">Pool</span>, <span class="ident">Poolable</span>, <span class="ident">Reservation</span>};
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">proto</span>::<span class="ident">response</span>::<span class="ident">Response</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">proto</span>::<span class="ident">request</span>::<span class="ident">Request</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">connect</span>::{<span class="ident">HttpConnector</span>, <span class="ident">Connect</span>};
-
-<span class="kw">use</span> <span class="self">self</span>::<span class="ident">background</span>::{<span class="ident">bg</span>, <span class="ident">Background</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime&quot;</span>)]</span> <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">connect</span>::<span class="ident">HttpConnector</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">conn</span>;
-<span class="kw">mod</span> <span class="ident">connect</span>;
-<span class="comment">//TODO(easy): move cancel and dispatch into common instead</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">connect</span>;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">dispatch</span>;
-<span class="kw">mod</span> <span class="ident">dns</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime&quot;</span>)]</span> <span class="kw">mod</span> <span class="ident">dns</span>;
 <span class="kw">mod</span> <span class="ident">pool</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;compat&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">compat</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span>;
 
 <span class="doccomment">/// A Client to make outgoing HTTP requests.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span> <span class="op">=</span> <span class="ident">proto</span>::<span class="ident">Body</span><span class="op">&gt;</span> {
-    <span class="ident">connector</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span> <span class="op">=</span> <span class="ident">Body</span><span class="op">&gt;</span> {
+    <span class="ident">connector</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>,
     <span class="ident">executor</span>: <span class="ident">Exec</span>,
     <span class="ident">h1_writev</span>: <span class="ident">bool</span>,
+    <span class="ident">h1_title_case_headers</span>: <span class="ident">bool</span>,
     <span class="ident">pool</span>: <span class="ident">Pool</span><span class="op">&lt;</span><span class="ident">PoolClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span>,
     <span class="ident">retry_canceled_requests</span>: <span class="ident">bool</span>,
     <span class="ident">set_host</span>: <span class="ident">bool</span>,
+    <span class="ident">ver</span>: <span class="ident">Ver</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">proto</span>::<span class="ident">Body</span><span class="op">&gt;</span> {
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">Body</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Create a new Client with the default config.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Note</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The default connector does **not** handle TLS. Speaking to `https`</span>
+    <span class="doccomment">/// destinations will require configuring a connector that implements TLS.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">proto</span>::<span class="ident">Body</span><span class="op">&gt;</span> {
-        <span class="ident">Config</span>::<span class="ident">default</span>().<span class="ident">build</span>(<span class="ident">handle</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">Body</span><span class="op">&gt;</span> {
+        <span class="ident">Builder</span>::<span class="ident">default</span>().<span class="ident">build_http</span>()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">proto</span>::<span class="ident">Body</span><span class="op">&gt;</span> {
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">Body</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">Body</span><span class="op">&gt;</span> {
+        <span class="ident">Client</span>::<span class="ident">new</span>()
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Client</span><span class="op">&lt;</span>(), <span class="ident">Body</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Configure a Client.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ```no_run</span>
+    <span class="doccomment">/// ```</span>
     <span class="doccomment">/// # extern crate hyper;</span>
-    <span class="doccomment">/// # extern crate tokio_core;</span>
+    <span class="doccomment">/// # #[cfg(feature  = &quot;runtime&quot;)]</span>
+    <span class="doccomment">/// fn run () {</span>
+    <span class="doccomment">/// use hyper::Client;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// # fn main() {</span>
-    <span class="doccomment">/// # let core = tokio_core::reactor::Core::new().unwrap();</span>
-    <span class="doccomment">/// # let handle = core.handle();</span>
-    <span class="doccomment">/// let client = hyper::Client::configure()</span>
+    <span class="doccomment">/// let client = Client::builder()</span>
     <span class="doccomment">///     .keep_alive(true)</span>
-    <span class="doccomment">///     .build(&amp;handle);</span>
-    <span class="doccomment">/// # drop(client);</span>
+    <span class="doccomment">///     .build_http();</span>
+    <span class="doccomment">/// # let infer: Client&lt;_, hyper::Body&gt; = client;</span>
+    <span class="doccomment">/// # drop(infer);</span>
     <span class="doccomment">/// # }</span>
+    <span class="doccomment">/// # fn main() {}</span>
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">configure</span>() <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">UseDefaultConnector</span>, <span class="ident">proto</span>::<span class="ident">Body</span><span class="op">&gt;</span> {
-        <span class="ident">Config</span>::<span class="ident">default</span>()
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="comment">// Eventually, a Client won&#39;t really care about a tokio Handle, and only</span>
-    <span class="comment">// the executor used to spawn background tasks. Removing this method is</span>
-    <span class="comment">// a breaking change, so for now, it&#39;s just deprecated.</span>
-    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="attribute">#[<span class="ident">deprecated</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">handle</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Handle</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">executor</span> {
-            <span class="ident">Exec</span>::<span class="ident">Handle</span>(<span class="kw-2">ref</span> <span class="ident">h</span>) <span class="op">=&gt;</span> <span class="ident">h</span>,
-            <span class="ident">Exec</span>::<span class="ident">Executor</span>(..) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Client not built with a Handle&quot;</span>),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">configured</span>(<span class="ident">config</span>: <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">exec</span>: <span class="ident">Exec</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-        <span class="ident">Client</span> {
-            <span class="ident">connector</span>: <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">config</span>.<span class="ident">connector</span>),
-            <span class="ident">executor</span>: <span class="ident">exec</span>,
-            <span class="ident">h1_writev</span>: <span class="ident">config</span>.<span class="ident">h1_writev</span>,
-            <span class="ident">pool</span>: <span class="ident">Pool</span>::<span class="ident">new</span>(<span class="ident">config</span>.<span class="ident">keep_alive</span>, <span class="ident">config</span>.<span class="ident">keep_alive_timeout</span>),
-            <span class="ident">retry_canceled_requests</span>: <span class="ident">config</span>.<span class="ident">retry_canceled_requests</span>,
-            <span class="ident">set_host</span>: <span class="ident">config</span>.<span class="ident">set_host</span>,
-        }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>() <span class="op">-&gt;</span> <span class="ident">Builder</span> {
+        <span class="ident">Builder</span>::<span class="ident">default</span>()
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>
-<span class="kw">where</span> <span class="ident">C</span>: <span class="ident">Connect</span>,
-      <span class="ident">B</span>: <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-      <span class="ident">B</span>::<span class="ident">Item</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+<span class="kw">where</span> <span class="ident">C</span>: <span class="ident">Connect</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+      <span class="ident">C</span>::<span class="ident">Transport</span>: <span class="lifetime">&#39;static</span>,
+      <span class="ident">C</span>::<span class="ident">Future</span>: <span class="lifetime">&#39;static</span>,
+      <span class="ident">B</span>: <span class="ident">Payload</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+      <span class="ident">B</span>::<span class="ident">Data</span>: <span class="ident">Send</span>,
 {
-    <span class="doccomment">/// Send a GET Request using this Client.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">url</span>: <span class="ident">Uri</span>) <span class="op">-&gt;</span> <span class="ident">FutureResponse</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">Request</span>::<span class="ident">new</span>(<span class="ident">Method</span>::<span class="ident">Get</span>, <span class="ident">url</span>))
+
+    <span class="doccomment">/// Send a `GET` request to the supplied `Uri`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Note</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This requires that the `Payload` type have a `Default` implementation.</span>
+    <span class="doccomment">/// It *should* return an &quot;empty&quot; version of itself, such that</span>
+    <span class="doccomment">/// `Payload::is_end_stream` is `true`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">uri</span>: <span class="ident">Uri</span>) <span class="op">-&gt;</span> <span class="ident">ResponseFuture</span>
+    <span class="kw">where</span>
+        <span class="ident">B</span>: <span class="ident">Default</span>,
+    {
+        <span class="kw">let</span> <span class="ident">body</span> <span class="op">=</span> <span class="ident">B</span>::<span class="ident">default</span>();
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">body</span>.<span class="ident">is_end_stream</span>() {
+            <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;default Payload used for get() does not return true for is_end_stream&quot;</span>);
+        }
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">Request</span>::<span class="ident">new</span>(<span class="ident">body</span>);
+        <span class="kw-2">*</span><span class="ident">req</span>.<span class="ident">uri_mut</span>() <span class="op">=</span> <span class="ident">uri</span>;
+        <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">req</span>)
     }
 
     <span class="doccomment">/// Send a constructed Request using this Client.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">FutureResponse</span> {
-        <span class="comment">// TODO(0.12): do this at construction time.</span>
-        <span class="comment">//</span>
-        <span class="comment">// It cannot be done in the constructor because the Client::configured</span>
-        <span class="comment">// does not have `B: &#39;static` bounds, which are required to spawn</span>
-        <span class="comment">// the interval. In 0.12, add a static bounds to the constructor,</span>
-        <span class="comment">// and move this.</span>
-        <span class="self">self</span>.<span class="ident">schedule_pool_timer</span>();
-
-        <span class="kw">match</span> <span class="ident">req</span>.<span class="ident">version</span>() {
-            <span class="ident">HttpVersion</span>::<span class="ident">Http10</span> <span class="op">|</span>
-            <span class="ident">HttpVersion</span>::<span class="ident">Http11</span> <span class="op">=&gt;</span> (),
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">ResponseFuture</span> {
+        <span class="kw">let</span> <span class="ident">is_http_11</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ver</span> <span class="op">==</span> <span class="ident">Ver</span>::<span class="ident">Http1</span> <span class="op">&amp;&amp;</span> <span class="kw">match</span> <span class="ident">req</span>.<span class="ident">version</span>() {
+            <span class="ident">Version</span>::<span class="ident">HTTP_11</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="ident">Version</span>::<span class="ident">HTTP_10</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
             <span class="ident">other</span> <span class="op">=&gt;</span> {
-                <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Request has unsupported version \&quot;{}\&quot;&quot;</span>, <span class="ident">other</span>);
-                <span class="kw">return</span> <span class="ident">FutureResponse</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">future</span>::<span class="ident">err</span>(::<span class="ident">Error</span>::<span class="ident">Version</span>)));
-            }
-        }
-
-        <span class="kw">if</span> <span class="ident">req</span>.<span class="ident">method</span>() <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">Method</span>::<span class="ident">Connect</span> {
-            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Client does not support CONNECT requests&quot;</span>);
-            <span class="kw">return</span> <span class="ident">FutureResponse</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">future</span>::<span class="ident">err</span>(::<span class="ident">Error</span>::<span class="ident">Method</span>)));
-        }
-
-        <span class="kw">let</span> <span class="ident">domain</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">uri</span>::<span class="ident">scheme_and_authority</span>(<span class="ident">req</span>.<span class="ident">uri</span>()) {
-            <span class="prelude-val">Some</span>(<span class="ident">uri</span>) <span class="op">=&gt;</span> <span class="ident">uri</span>,
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
-                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;request uri does not include scheme and authority&quot;</span>);
-                <span class="kw">return</span> <span class="ident">FutureResponse</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">future</span>::<span class="ident">err</span>(::<span class="ident">Error</span>::<span class="ident">Io</span>(
-                    <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(
-                        <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">InvalidInput</span>,
-                        <span class="string">&quot;invalid URI for Client Request&quot;</span>
-                    )
-                ))));
+                <span class="macro">error</span><span class="macro">!</span>(<span class="string">&quot;Request has unsupported version \&quot;{:?}\&quot;&quot;</span>, <span class="ident">other</span>);
+                <span class="kw">return</span> <span class="ident">ResponseFuture</span>::<span class="ident">new</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">future</span>::<span class="ident">err</span>(::<span class="ident">Error</span>::<span class="ident">new_user_unsupported_version</span>())));
             }
         };
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">set_host</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">req</span>.<span class="ident">headers</span>().<span class="ident">has</span>::<span class="op">&lt;</span><span class="ident">Host</span><span class="op">&gt;</span>() {
-            <span class="kw">let</span> <span class="ident">host</span> <span class="op">=</span> <span class="ident">Host</span>::<span class="ident">new</span>(
-                <span class="ident">domain</span>.<span class="ident">host</span>().<span class="ident">expect</span>(<span class="string">&quot;authority implies host&quot;</span>).<span class="ident">to_owned</span>(),
-                <span class="ident">domain</span>.<span class="ident">port</span>(),
-            );
-            <span class="ident">req</span>.<span class="ident">headers_mut</span>().<span class="ident">set_pos</span>(<span class="number">0</span>, <span class="ident">host</span>);
+
+        <span class="kw">let</span> <span class="ident">is_http_connect</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">method</span>() <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">Method</span>::<span class="ident">CONNECT</span>;
+
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">is_http_11</span> <span class="op">&amp;&amp;</span> <span class="ident">is_http_connect</span> {
+            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;client does not support CONNECT requests for {:?}&quot;</span>, <span class="ident">req</span>.<span class="ident">version</span>());
+            <span class="kw">return</span> <span class="ident">ResponseFuture</span>::<span class="ident">new</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">future</span>::<span class="ident">err</span>(::<span class="ident">Error</span>::<span class="ident">new_user_unsupported_request_method</span>())));
         }
 
+
+        <span class="kw">let</span> <span class="ident">uri</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">uri</span>().<span class="ident">clone</span>();
+        <span class="kw">let</span> <span class="ident">domain</span> <span class="op">=</span> <span class="kw">match</span> (<span class="ident">uri</span>.<span class="ident">scheme_part</span>(), <span class="ident">uri</span>.<span class="ident">authority_part</span>()) {
+            (<span class="prelude-val">Some</span>(<span class="ident">scheme</span>), <span class="prelude-val">Some</span>(<span class="ident">auth</span>)) <span class="op">=&gt;</span> {
+                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}&quot;</span>, <span class="ident">scheme</span>, <span class="ident">auth</span>)
+            }
+            (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="ident">auth</span>)) <span class="kw">if</span> <span class="ident">is_http_connect</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">scheme</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">auth</span>.<span class="ident">port</span>() {
+                    <span class="prelude-val">Some</span>(<span class="number">443</span>) <span class="op">=&gt;</span> {
+                        <span class="ident">set_scheme</span>(<span class="ident">req</span>.<span class="ident">uri_mut</span>(), <span class="ident">Scheme</span>::<span class="ident">HTTPS</span>);
+                        <span class="string">&quot;https&quot;</span>
+                    },
+                    <span class="kw">_</span> <span class="op">=&gt;</span> {
+                        <span class="ident">set_scheme</span>(<span class="ident">req</span>.<span class="ident">uri_mut</span>(), <span class="ident">Scheme</span>::<span class="ident">HTTP</span>);
+                        <span class="string">&quot;http&quot;</span>
+                    },
+                };
+                <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}://{}&quot;</span>, <span class="ident">scheme</span>, <span class="ident">auth</span>)
+            },
+            <span class="kw">_</span> <span class="op">=&gt;</span> {
+                <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Client requires absolute-form URIs, received: {:?}&quot;</span>, <span class="ident">uri</span>);
+                <span class="kw">return</span> <span class="ident">ResponseFuture</span>::<span class="ident">new</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">future</span>::<span class="ident">err</span>(::<span class="ident">Error</span>::<span class="ident">new_user_absolute_uri_required</span>())))
+            }
+        };
+
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">set_host</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">ver</span> <span class="op">==</span> <span class="ident">Ver</span>::<span class="ident">Http1</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Entry</span>::<span class="ident">Vacant</span>(<span class="ident">entry</span>) <span class="op">=</span> <span class="ident">req</span>.<span class="ident">headers_mut</span>().<span class="ident">entry</span>(<span class="ident">HOST</span>).<span class="ident">expect</span>(<span class="string">&quot;HOST is always valid header name&quot;</span>) {
+                <span class="kw">let</span> <span class="ident">hostname</span> <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">host</span>().<span class="ident">expect</span>(<span class="string">&quot;authority implies host&quot;</span>);
+                <span class="kw">let</span> <span class="ident">host</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">port</span>) <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">port</span>() {
+                    <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}:{}&quot;</span>, <span class="ident">hostname</span>, <span class="ident">port</span>);
+                    <span class="ident">HeaderValue</span>::<span class="ident">from_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>)
+                } <span class="kw">else</span> {
+                    <span class="ident">HeaderValue</span>::<span class="ident">from_str</span>(<span class="ident">hostname</span>)
+                }.<span class="ident">expect</span>(<span class="string">&quot;uri host is valid header value&quot;</span>);
+                <span class="ident">entry</span>.<span class="ident">insert</span>(<span class="ident">host</span>);
+            }
+        }
+
+
         <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
-        <span class="kw">let</span> <span class="ident">is_proxy</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">is_proxy</span>();
         <span class="kw">let</span> <span class="ident">uri</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">uri</span>().<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">RetryableSendRequest</span> {
             <span class="ident">client</span>: <span class="ident">client</span>,
             <span class="ident">future</span>: <span class="self">self</span>.<span class="ident">send_request</span>(<span class="ident">req</span>, <span class="kw-2">&amp;</span><span class="ident">domain</span>),
             <span class="ident">domain</span>: <span class="ident">domain</span>,
-            <span class="ident">is_proxy</span>: <span class="ident">is_proxy</span>,
             <span class="ident">uri</span>: <span class="ident">uri</span>,
         };
-        <span class="ident">FutureResponse</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">fut</span>))
-    }
-
-    <span class="doccomment">/// Send an `http::Request` using this Client.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;compat&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">request_compat</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="ident">http</span>::<span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">compat</span>::<span class="ident">CompatFutureResponse</span> {
-        <span class="self">self</span>::<span class="ident">compat</span>::<span class="ident">future</span>(<span class="self">self</span>.<span class="ident">call</span>(<span class="ident">req</span>.<span class="ident">into</span>()))
-    }
-
-    <span class="doccomment">/// Convert into a client accepting `http::Request`.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;compat&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_compat</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">compat</span>::<span class="ident">CompatClient</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-        <span class="self">self</span>::<span class="ident">compat</span>::<span class="ident">client</span>(<span class="self">self</span>)
+        <span class="ident">ResponseFuture</span>::<span class="ident">new</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">fut</span>))
     }
 
     <span class="comment">//TODO: replace with `impl Future` when stable</span>
-    <span class="kw">fn</span> <span class="ident">send_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">domain</span>: <span class="kw-2">&amp;</span><span class="ident">Uri</span>) <span class="op">-&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">Response</span>, <span class="ident">Error</span><span class="op">=</span><span class="ident">ClientError</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span> {
-    <span class="comment">//fn send_request(&amp;self, req: Request&lt;B&gt;, domain: &amp;Uri) -&gt; Box&lt;Future&lt;Item=Response, Error=::Error&gt;&gt; {</span>
+    <span class="kw">fn</span> <span class="ident">send_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">domain</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">=</span><span class="ident">ClientError</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="ident">req</span>.<span class="ident">uri</span>().<span class="ident">clone</span>();
-        <span class="kw">let</span> <span class="ident">checkout</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">checkout</span>(<span class="ident">domain</span>.<span class="ident">as_ref</span>());
+        <span class="kw">let</span> <span class="ident">ver</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">ver</span>;
+        <span class="kw">let</span> <span class="ident">pool_key</span> <span class="op">=</span> (<span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">domain</span>.<span class="ident">to_string</span>()), <span class="self">self</span>.<span class="ident">ver</span>);
+        <span class="kw">let</span> <span class="ident">checkout</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">checkout</span>(<span class="ident">pool_key</span>.<span class="ident">clone</span>());
         <span class="kw">let</span> <span class="ident">connect</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="ident">executor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">executor</span>.<span class="ident">clone</span>();
             <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">clone</span>();
-            <span class="kw">let</span> <span class="ident">pool_key</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">domain</span>.<span class="ident">to_string</span>());
             <span class="kw">let</span> <span class="ident">h1_writev</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">h1_writev</span>;
+            <span class="kw">let</span> <span class="ident">h1_title_case_headers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">h1_title_case_headers</span>;
             <span class="kw">let</span> <span class="ident">connector</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">connector</span>.<span class="ident">clone</span>();
-            <span class="ident">future</span>::<span class="ident">lazy</span>(<span class="kw">move</span> <span class="op">||</span> {
-                <span class="ident">connector</span>.<span class="ident">connect</span>(<span class="ident">url</span>)
-                    .<span class="ident">from_err</span>()
-                    .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">io</span><span class="op">|</span> {
-                        <span class="ident">conn</span>::<span class="ident">Builder</span>::<span class="ident">new</span>()
-                            .<span class="ident">h1_writev</span>(<span class="ident">h1_writev</span>)
-                            .<span class="ident">handshake_no_upgrades</span>(<span class="ident">io</span>)
-                    }).<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">tx</span>, <span class="ident">conn</span>)<span class="op">|</span> {
-                        <span class="ident">executor</span>.<span class="ident">execute</span>(<span class="ident">conn</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;client connection error: {}&quot;</span>, <span class="ident">e</span>)))<span class="question-mark">?</span>;
-                        <span class="prelude-val">Ok</span>(<span class="ident">pool</span>.<span class="ident">pooled</span>(<span class="ident">pool_key</span>, <span class="ident">PoolClient</span> {
-                            <span class="ident">tx</span>: <span class="ident">tx</span>,
+            <span class="kw">let</span> <span class="ident">dst</span> <span class="op">=</span> <span class="ident">Destination</span> {
+                <span class="ident">uri</span>: <span class="ident">url</span>,
+            };
+            <span class="ident">hyper_lazy</span>(<span class="kw">move</span> <span class="op">||</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">connecting</span>) <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">connecting</span>(<span class="kw-2">&amp;</span><span class="ident">pool_key</span>) {
+                    <span class="ident">Either</span>::<span class="ident">A</span>(<span class="ident">connector</span>.<span class="ident">connect</span>(<span class="ident">dst</span>)
+                        .<span class="ident">map_err</span>(::<span class="ident">Error</span>::<span class="ident">new_connect</span>)
+                        .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">io</span>, <span class="ident">connected</span>)<span class="op">|</span> {
+                            <span class="ident">conn</span>::<span class="ident">Builder</span>::<span class="ident">new</span>()
+                                .<span class="ident">exec</span>(<span class="ident">executor</span>.<span class="ident">clone</span>())
+                                .<span class="ident">h1_writev</span>(<span class="ident">h1_writev</span>)
+                                .<span class="ident">h1_title_case_headers</span>(<span class="ident">h1_title_case_headers</span>)
+                                .<span class="ident">http2_only</span>(<span class="ident">pool_key</span>.<span class="number">1</span> <span class="op">==</span> <span class="ident">Ver</span>::<span class="ident">Http2</span>)
+                                .<span class="ident">handshake</span>(<span class="ident">io</span>)
+                                .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">tx</span>, <span class="ident">conn</span>)<span class="op">|</span> {
+                                    <span class="kw">let</span> <span class="ident">bg</span> <span class="op">=</span> <span class="ident">executor</span>.<span class="ident">execute</span>(<span class="ident">conn</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+                                        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;client connection error: {}&quot;</span>, <span class="ident">e</span>)
+                                    }));
+
+                                    <span class="comment">// This task is critical, so an execute error</span>
+                                    <span class="comment">// should be returned.</span>
+                                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">bg</span> {
+                                        <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;error spawning critical client task: {}&quot;</span>, <span class="ident">err</span>);
+                                        <span class="kw">return</span> <span class="ident">Either</span>::<span class="ident">A</span>(<span class="ident">future</span>::<span class="ident">err</span>(<span class="ident">err</span>));
+                                    }
+
+                                    <span class="comment">// Wait for &#39;conn&#39; to ready up before we</span>
+                                    <span class="comment">// declare this tx as usable</span>
+                                    <span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">tx</span>.<span class="ident">when_ready</span>())
+                                })
+                                .<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">tx</span><span class="op">|</span> {
+                                    <span class="ident">pool</span>.<span class="ident">pooled</span>(<span class="ident">connecting</span>, <span class="ident">PoolClient</span> {
+                                        <span class="ident">is_proxied</span>: <span class="ident">connected</span>.<span class="ident">is_proxied</span>,
+                                        <span class="ident">tx</span>: <span class="kw">match</span> <span class="ident">ver</span> {
+                                            <span class="ident">Ver</span>::<span class="ident">Http1</span> <span class="op">=&gt;</span> <span class="ident">PoolTx</span>::<span class="ident">Http1</span>(<span class="ident">tx</span>),
+                                            <span class="ident">Ver</span>::<span class="ident">Http2</span> <span class="op">=&gt;</span> <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="ident">tx</span>.<span class="ident">into_http2</span>()),
+                                        },
+                                    })
+                                })
                         }))
-                    })
+                } <span class="kw">else</span> {
+                    <span class="kw">let</span> <span class="ident">canceled</span> <span class="op">=</span> ::<span class="ident">Error</span>::<span class="ident">new_canceled</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;HTTP/2 connection in progress&quot;</span>));
+                    <span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">future</span>::<span class="ident">err</span>(<span class="ident">canceled</span>))
+                }
             })
         };
 
-        <span class="kw">let</span> <span class="ident">race</span> <span class="op">=</span> <span class="ident">checkout</span>.<span class="ident">select</span>(<span class="ident">connect</span>)
-            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">pooled</span>, <span class="ident">_work</span>)<span class="op">|</span> <span class="ident">pooled</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span>(<span class="ident">e</span>, <span class="ident">_checkout</span>)<span class="op">|</span> {
-                <span class="comment">// the Pool Checkout cannot error, so the only error</span>
-                <span class="comment">// is from the Connector</span>
-                <span class="comment">// XXX: should wait on the Checkout? Problem is</span>
-                <span class="comment">// that if the connector is failing, it may be that we</span>
-                <span class="comment">// never had a pooled stream at all</span>
-                <span class="ident">ClientError</span>::<span class="ident">Normal</span>(<span class="ident">e</span>)
+        <span class="kw">let</span> <span class="ident">executor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">executor</span>.<span class="ident">clone</span>();
+        <span class="comment">// The order of the `select` is depended on below...</span>
+        <span class="kw">let</span> <span class="ident">race</span> <span class="op">=</span> <span class="ident">checkout</span>.<span class="ident">select2</span>(<span class="ident">connect</span>)
+            .<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">either</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">either</span> {
+                <span class="comment">// Checkout won, connect future may have been started or not.</span>
+                <span class="comment">//</span>
+                <span class="comment">// If it has, let it finish and insert back into the pool,</span>
+                <span class="comment">// so as to not waste the socket...</span>
+                <span class="ident">Either</span>::<span class="ident">A</span>((<span class="ident">checked_out</span>, <span class="ident">connecting</span>)) <span class="op">=&gt;</span> {
+                    <span class="comment">// This depends on the `select` above having the correct</span>
+                    <span class="comment">// order, such that if the checkout future were ready</span>
+                    <span class="comment">// immediately, the connect future will never have been</span>
+                    <span class="comment">// started.</span>
+                    <span class="comment">//</span>
+                    <span class="comment">// If it *wasn&#39;t* ready yet, then the connect future will</span>
+                    <span class="comment">// have been started...</span>
+                    <span class="kw">if</span> <span class="ident">connecting</span>.<span class="ident">started</span>() {
+                        <span class="kw">let</span> <span class="ident">bg</span> <span class="op">=</span> <span class="ident">connecting</span>
+                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">_pooled</span><span class="op">|</span> {
+                                <span class="comment">// dropping here should just place it in</span>
+                                <span class="comment">// the Pool for us...</span>
+                            })
+                            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;background connect error: {}&quot;</span>, <span class="ident">err</span>);
+                            });
+                        <span class="comment">// An execute error here isn&#39;t important, we&#39;re just trying</span>
+                        <span class="comment">// to prevent a waste of a socket...</span>
+                        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">executor</span>.<span class="ident">execute</span>(<span class="ident">bg</span>);
+                    }
+                    <span class="ident">checked_out</span>
+                },
+                <span class="comment">// Connect won, checkout can just be dropped.</span>
+                <span class="ident">Either</span>::<span class="ident">B</span>((<span class="ident">connected</span>, <span class="ident">_checkout</span>)) <span class="op">=&gt;</span> {
+                    <span class="ident">connected</span>
+                },
+            })
+            .<span class="ident">or_else</span>(<span class="op">|</span><span class="ident">either</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">either</span> {
+                <span class="comment">// Either checkout or connect could get canceled:</span>
+                <span class="comment">//</span>
+                <span class="comment">// 1. Connect is canceled if this is HTTP/2 and there is</span>
+                <span class="comment">//    an outstanding HTTP/2 connecting task.</span>
+                <span class="comment">// 2. Checkout is canceled if the pool cannot deliver an</span>
+                <span class="comment">//    idle connection reliably.</span>
+                <span class="comment">//</span>
+                <span class="comment">// In both cases, we should just wait for the other future.</span>
+                <span class="ident">Either</span>::<span class="ident">A</span>((<span class="ident">err</span>, <span class="ident">connecting</span>)) <span class="op">=&gt;</span> {
+                    <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_canceled</span>() {
+                        <span class="ident">Either</span>::<span class="ident">A</span>(<span class="ident">Either</span>::<span class="ident">A</span>(<span class="ident">connecting</span>.<span class="ident">map_err</span>(<span class="ident">ClientError</span>::<span class="ident">Normal</span>)))
+                    } <span class="kw">else</span> {
+                        <span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">future</span>::<span class="ident">err</span>(<span class="ident">ClientError</span>::<span class="ident">Normal</span>(<span class="ident">err</span>)))
+                    }
+                },
+                <span class="ident">Either</span>::<span class="ident">B</span>((<span class="ident">err</span>, <span class="ident">checkout</span>)) <span class="op">=&gt;</span> {
+                    <span class="kw">if</span> <span class="ident">err</span>.<span class="ident">is_canceled</span>() {
+                        <span class="ident">Either</span>::<span class="ident">A</span>(<span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">checkout</span>.<span class="ident">map_err</span>(<span class="ident">ClientError</span>::<span class="ident">Normal</span>)))
+                    } <span class="kw">else</span> {
+                        <span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">future</span>::<span class="ident">err</span>(<span class="ident">ClientError</span>::<span class="ident">Normal</span>(<span class="ident">err</span>)))
+                    }
+                }
             });
-
 
         <span class="kw">let</span> <span class="ident">executor</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">executor</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">resp</span> <span class="op">=</span> <span class="ident">race</span>.<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">pooled</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">conn_reused</span> <span class="op">=</span> <span class="ident">pooled</span>.<span class="ident">is_reused</span>();
-            <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">pooled</span>.<span class="ident">tx</span>.<span class="ident">send_request_retryable</span>(<span class="ident">req</span>)
-                .<span class="ident">map_err</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">err</span>, <span class="ident">orig_req</span>)<span class="op">|</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">orig_req</span> {
-                        <span class="ident">ClientError</span>::<span class="ident">Canceled</span> {
-                            <span class="ident">connection_reused</span>: <span class="ident">conn_reused</span>,
-                            <span class="ident">reason</span>: <span class="ident">err</span>,
-                            <span class="ident">req</span>: <span class="ident">req</span>,
+            <span class="kw">if</span> <span class="ident">ver</span> <span class="op">==</span> <span class="ident">Ver</span>::<span class="ident">Http1</span> {
+                <span class="comment">// CONNECT always sends origin-form, so check it first...</span>
+                <span class="kw">if</span> <span class="ident">req</span>.<span class="ident">method</span>() <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">Method</span>::<span class="ident">CONNECT</span> {
+                    <span class="ident">authority_form</span>(<span class="ident">req</span>.<span class="ident">uri_mut</span>());
+                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">pooled</span>.<span class="ident">is_proxied</span> {
+                    <span class="ident">absolute_form</span>(<span class="ident">req</span>.<span class="ident">uri_mut</span>());
+                } <span class="kw">else</span> {
+                    <span class="ident">origin_form</span>(<span class="ident">req</span>.<span class="ident">uri_mut</span>());
+                };
+            } <span class="kw">else</span> {
+                <span class="macro">debug_assert</span><span class="macro">!</span>(
+                    <span class="ident">req</span>.<span class="ident">method</span>() <span class="op">!=</span> <span class="kw-2">&amp;</span><span class="ident">Method</span>::<span class="ident">CONNECT</span>,
+                    <span class="string">&quot;Client should have returned Error for HTTP2 CONNECT&quot;</span>
+                );
+            }
+
+            <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">pooled</span>.<span class="ident">send_request_retryable</span>(<span class="ident">req</span>);
+
+            <span class="comment">// As of futures@0.1.21, there is a race condition in the mpsc</span>
+            <span class="comment">// channel, such that sending when the receiver is closing can</span>
+            <span class="comment">// result in the message being stuck inside the queue. It won&#39;t</span>
+            <span class="comment">// ever notify until the Sender side is dropped.</span>
+            <span class="comment">//</span>
+            <span class="comment">// To counteract this, we must check if our senders &#39;want&#39; channel</span>
+            <span class="comment">// has been closed after having tried to send. If so, error out...</span>
+            <span class="kw">if</span> <span class="ident">pooled</span>.<span class="ident">is_closed</span>() {
+                <span class="ident">drop</span>(<span class="ident">pooled</span>);
+                <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">fut</span>
+                    .<span class="ident">map_err</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">err</span>, <span class="ident">orig_req</span>)<span class="op">|</span> {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">orig_req</span> {
+                            <span class="ident">ClientError</span>::<span class="ident">Canceled</span> {
+                                <span class="ident">connection_reused</span>: <span class="ident">conn_reused</span>,
+                                <span class="ident">reason</span>: <span class="ident">err</span>,
+                                <span class="ident">req</span>,
+                            }
+                        } <span class="kw">else</span> {
+                            <span class="ident">ClientError</span>::<span class="ident">Normal</span>(<span class="ident">err</span>)
                         }
-                    } <span class="kw">else</span> {
-                        <span class="ident">ClientError</span>::<span class="ident">Normal</span>(<span class="ident">err</span>)
-                    }
-                })
-                .<span class="ident">map</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">res</span><span class="op">|</span> {
-                    <span class="comment">// when pooled is dropped, it will try to insert back into the</span>
-                    <span class="comment">// pool. To delay that, spawn a future that completes once the</span>
-                    <span class="comment">// sender is ready again.</span>
-                    <span class="comment">//</span>
-                    <span class="comment">// This *should* only be once the related `Connection` has polled</span>
-                    <span class="comment">// for a new request to start.</span>
-                    <span class="comment">//</span>
-                    <span class="comment">// It won&#39;t be ready if there is a body to stream.</span>
-                    <span class="kw">if</span> <span class="ident">pooled</span>.<span class="ident">tx</span>.<span class="ident">is_ready</span>() {
-                        <span class="ident">drop</span>(<span class="ident">pooled</span>);
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">body</span>) <span class="op">=</span> <span class="ident">res</span>.<span class="ident">body_mut</span>() {
-                        <span class="kw">let</span> (<span class="ident">delayed_tx</span>, <span class="ident">delayed_rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
-                        <span class="ident">body</span>.<span class="ident">delayed_eof</span>(<span class="ident">delayed_rx</span>);
-                        <span class="comment">// If the executor doesn&#39;t have room, oh well. Things will likely</span>
-                        <span class="comment">// be blowing up soon, but this specific task isn&#39;t required.</span>
-                        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">executor</span>.<span class="ident">execute</span>(<span class="ident">future</span>::<span class="ident">poll_fn</span>(<span class="kw">move</span> <span class="op">||</span> {
-                            <span class="ident">pooled</span>.<span class="ident">tx</span>.<span class="ident">poll_ready</span>()
-                        }).<span class="ident">then</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
-                            <span class="comment">// At this point, `pooled` is dropped, and had a chance</span>
-                            <span class="comment">// to insert into the pool (if conn was idle)</span>
-                            <span class="ident">drop</span>(<span class="ident">delayed_tx</span>);
-                            <span class="prelude-val">Ok</span>(())
-                        }));
-                    } <span class="kw">else</span> {
-                        <span class="comment">// There&#39;s no body to delay, but the connection isn&#39;t</span>
-                        <span class="comment">// ready yet. Only re-insert when it&#39;s ready...</span>
-                        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">executor</span>.<span class="ident">execute</span>(
-                            <span class="ident">future</span>::<span class="ident">poll_fn</span>(<span class="kw">move</span> <span class="op">||</span> {
-                                <span class="ident">pooled</span>.<span class="ident">tx</span>.<span class="ident">poll_ready</span>()
+                    });
+                <span class="ident">Either</span>::<span class="ident">A</span>(<span class="ident">fut</span>)
+            } <span class="kw">else</span> {
+                <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">fut</span>
+                    .<span class="ident">map_err</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">err</span>, <span class="ident">orig_req</span>)<span class="op">|</span> {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">req</span>) <span class="op">=</span> <span class="ident">orig_req</span> {
+                            <span class="ident">ClientError</span>::<span class="ident">Canceled</span> {
+                                <span class="ident">connection_reused</span>: <span class="ident">conn_reused</span>,
+                                <span class="ident">reason</span>: <span class="ident">err</span>,
+                                <span class="ident">req</span>,
+                            }
+                        } <span class="kw">else</span> {
+                            <span class="ident">ClientError</span>::<span class="ident">Normal</span>(<span class="ident">err</span>)
+                        }
+                    })
+                    .<span class="ident">and_then</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">res</span><span class="op">|</span> {
+                        <span class="comment">// If pooled is HTTP/2, we can toss this reference immediately.</span>
+                        <span class="comment">//</span>
+                        <span class="comment">// when pooled is dropped, it will try to insert back into the</span>
+                        <span class="comment">// pool. To delay that, spawn a future that completes once the</span>
+                        <span class="comment">// sender is ready again.</span>
+                        <span class="comment">//</span>
+                        <span class="comment">// This *should* only be once the related `Connection` has polled</span>
+                        <span class="comment">// for a new request to start.</span>
+                        <span class="comment">//</span>
+                        <span class="comment">// It won&#39;t be ready if there is a body to stream.</span>
+                        <span class="kw">if</span> <span class="ident">ver</span> <span class="op">==</span> <span class="ident">Ver</span>::<span class="ident">Http2</span> <span class="op">||</span> <span class="op">!</span><span class="ident">pooled</span>.<span class="ident">is_pool_enabled</span>() <span class="op">||</span> <span class="ident">pooled</span>.<span class="ident">is_ready</span>() {
+                            <span class="ident">drop</span>(<span class="ident">pooled</span>);
+                        } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">res</span>.<span class="ident">body</span>().<span class="ident">is_end_stream</span>() {
+                            <span class="kw">let</span> (<span class="ident">delayed_tx</span>, <span class="ident">delayed_rx</span>) <span class="op">=</span> <span class="ident">oneshot</span>::<span class="ident">channel</span>();
+                            <span class="ident">res</span>.<span class="ident">body_mut</span>().<span class="ident">delayed_eof</span>(<span class="ident">delayed_rx</span>);
+                            <span class="kw">let</span> <span class="ident">on_idle</span> <span class="op">=</span> <span class="ident">future</span>::<span class="ident">poll_fn</span>(<span class="kw">move</span> <span class="op">||</span> {
+                                <span class="ident">pooled</span>.<span class="ident">poll_ready</span>()
                             })
-                            .<span class="ident">then</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="prelude-val">Ok</span>(()))
-                        );
-                    }
+                                .<span class="ident">then</span>(<span class="kw">move</span> <span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
+                                    <span class="comment">// At this point, `pooled` is dropped, and had a chance</span>
+                                    <span class="comment">// to insert into the pool (if conn was idle)</span>
+                                    <span class="ident">drop</span>(<span class="ident">delayed_tx</span>);
+                                    <span class="prelude-val">Ok</span>(())
+                                });
 
-                    <span class="ident">res</span>
-                });
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">executor</span>.<span class="ident">execute</span>(<span class="ident">on_idle</span>) {
+                                <span class="comment">// This task isn&#39;t critical, so just log and ignore.</span>
+                                <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;error spawning task to insert idle connection: {}&quot;</span>, <span class="ident">err</span>);
+                            }
+                        } <span class="kw">else</span> {
+                            <span class="comment">// There&#39;s no body to delay, but the connection isn&#39;t</span>
+                            <span class="comment">// ready yet. Only re-insert when it&#39;s ready</span>
+                            <span class="kw">let</span> <span class="ident">on_idle</span> <span class="op">=</span> <span class="ident">future</span>::<span class="ident">poll_fn</span>(<span class="kw">move</span> <span class="op">||</span> {
+                                <span class="ident">pooled</span>.<span class="ident">poll_ready</span>()
+                            })
+                                .<span class="ident">then</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="prelude-val">Ok</span>(()));
 
-
-            <span class="ident">fut</span>
+                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">executor</span>.<span class="ident">execute</span>(<span class="ident">on_idle</span>) {
+                                <span class="comment">// This task isn&#39;t critical, so just log and ignore.</span>
+                                <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;error spawning task to insert idle connection: {}&quot;</span>, <span class="ident">err</span>);
+                            }
+                        }
+                        <span class="prelude-val">Ok</span>(<span class="ident">res</span>)
+                    });
+                <span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">fut</span>)
+            }
         });
 
         <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">resp</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">schedule_pool_timer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Exec</span>::<span class="ident">Handle</span>(<span class="kw-2">ref</span> <span class="ident">h</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">executor</span> {
-            <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">spawn_expired_interval</span>(<span class="ident">h</span>);
-        }
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Service</span> <span class="kw">for</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>
-<span class="kw">where</span> <span class="ident">C</span>: <span class="ident">Connect</span>,
-      <span class="ident">B</span>: <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-      <span class="ident">B</span>::<span class="ident">Item</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-{
-    <span class="kw">type</span> <span class="ident">Request</span> <span class="op">=</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Response</span> <span class="op">=</span> <span class="ident">Response</span>;
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> ::<span class="ident">Error</span>;
-    <span class="kw">type</span> <span class="ident">Future</span> <span class="op">=</span> <span class="ident">FutureResponse</span>;
-
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">req</span>: <span class="self">Self</span>::<span class="ident">Request</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Future</span> {
-        <span class="self">self</span>.<span class="ident">request</span>(<span class="ident">req</span>)
     }
 }
 
@@ -1000,9 +1483,11 @@
             <span class="ident">connector</span>: <span class="self">self</span>.<span class="ident">connector</span>.<span class="ident">clone</span>(),
             <span class="ident">executor</span>: <span class="self">self</span>.<span class="ident">executor</span>.<span class="ident">clone</span>(),
             <span class="ident">h1_writev</span>: <span class="self">self</span>.<span class="ident">h1_writev</span>,
+            <span class="ident">h1_title_case_headers</span>: <span class="self">self</span>.<span class="ident">h1_title_case_headers</span>,
             <span class="ident">pool</span>: <span class="self">self</span>.<span class="ident">pool</span>.<span class="ident">clone</span>(),
             <span class="ident">retry_canceled_requests</span>: <span class="self">self</span>.<span class="ident">retry_canceled_requests</span>,
             <span class="ident">set_host</span>: <span class="self">self</span>.<span class="ident">set_host</span>,
+            <span class="ident">ver</span>: <span class="self">self</span>.<span class="ident">ver</span>,
         }
     }
 }
@@ -1016,38 +1501,54 @@
 
 <span class="doccomment">/// A `Future` that will resolve to an HTTP Response.</span>
 <span class="attribute">#[<span class="ident">must_use</span> <span class="op">=</span> <span class="string">&quot;futures do nothing unless polled&quot;</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">FutureResponse</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">Response</span>, <span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>);
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ResponseFuture</span> {
+    <span class="ident">inner</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>,
+}
 
-<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">FutureResponse</span> {
+<span class="kw">impl</span> <span class="ident">ResponseFuture</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">fut</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">inner</span>: <span class="ident">fut</span>,
+        }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">ResponseFuture</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="ident">f</span>.<span class="ident">pad</span>(<span class="string">&quot;Future&lt;Response&gt;&quot;</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">FutureResponse</span> {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Response</span>;
+<span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">ResponseFuture</span> {
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> ::<span class="ident">Error</span>;
 
     <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">poll</span>()
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">poll</span>()
     }
 }
 
 <span class="kw">struct</span> <span class="ident">RetryableSendRequest</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="ident">client</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>,
-    <span class="ident">domain</span>: <span class="ident">Uri</span>,
-    <span class="ident">future</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">Response</span>, <span class="ident">Error</span><span class="op">=</span><span class="ident">ClientError</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">is_proxy</span>: <span class="ident">bool</span>,
+    <span class="ident">domain</span>: <span class="ident">String</span>,
+    <span class="ident">future</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">=</span><span class="ident">ClientError</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>,
     <span class="ident">uri</span>: <span class="ident">Uri</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">RetryableSendRequest</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">f</span>.<span class="ident">pad</span>(<span class="string">&quot;Future&lt;Response&gt;&quot;</span>)
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">RetryableSendRequest</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">C</span>: <span class="ident">Connect</span>,
-    <span class="ident">B</span>: <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">B</span>::<span class="ident">Item</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
+    <span class="ident">C</span>: <span class="ident">Connect</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">C</span>::<span class="ident">Future</span>: <span class="lifetime">&#39;static</span>,
+    <span class="ident">B</span>: <span class="ident">Payload</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">B</span>::<span class="ident">Data</span>: <span class="ident">Send</span>,
 {
-    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Response</span>;
+    <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> ::<span class="ident">Error</span>;
 
     <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
@@ -1058,7 +1559,7 @@
                 <span class="prelude-val">Err</span>(<span class="ident">ClientError</span>::<span class="ident">Normal</span>(<span class="ident">err</span>)) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
                 <span class="prelude-val">Err</span>(<span class="ident">ClientError</span>::<span class="ident">Canceled</span> {
                     <span class="ident">connection_reused</span>,
-                    <span class="ident">req</span>,
+                    <span class="kw-2">mut</span> <span class="ident">req</span>,
                     <span class="ident">reason</span>,
                 }) <span class="op">=&gt;</span> {
                     <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">client</span>.<span class="ident">retry_canceled_requests</span> <span class="op">||</span> <span class="op">!</span><span class="ident">connection_reused</span> {
@@ -1068,9 +1569,7 @@
                     }
 
                     <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;unstarted request canceled, trying again (reason={:?})&quot;</span>, <span class="ident">reason</span>);
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">req</span> <span class="op">=</span> <span class="ident">request</span>::<span class="ident">join</span>(<span class="ident">req</span>);
-                    <span class="ident">req</span>.<span class="ident">set_proxy</span>(<span class="self">self</span>.<span class="ident">is_proxy</span>);
-                    <span class="ident">req</span>.<span class="ident">set_uri</span>(<span class="self">self</span>.<span class="ident">uri</span>.<span class="ident">clone</span>());
+                    <span class="kw-2">*</span><span class="ident">req</span>.<span class="ident">uri_mut</span>() <span class="op">=</span> <span class="self">self</span>.<span class="ident">uri</span>.<span class="ident">clone</span>();
                     <span class="self">self</span>.<span class="ident">future</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">send_request</span>(<span class="ident">req</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">domain</span>);
                 }
             }
@@ -1079,104 +1578,197 @@
 }
 
 <span class="kw">struct</span> <span class="ident">PoolClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="ident">tx</span>: <span class="ident">conn</span>::<span class="ident">SendRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+    <span class="ident">is_proxied</span>: <span class="ident">bool</span>,
+    <span class="ident">tx</span>: <span class="ident">PoolTx</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="self">self</span>::<span class="ident">pool</span>::<span class="ident">Closed</span> <span class="kw">for</span> <span class="ident">PoolClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">B</span>: <span class="lifetime">&#39;static</span>,
-{
-    <span class="kw">fn</span> <span class="ident">is_open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">tx</span>.<span class="ident">is_ready</span>()
+<span class="kw">enum</span> <span class="ident">PoolTx</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="ident">Http1</span>(<span class="ident">conn</span>::<span class="ident">SendRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>),
+    <span class="ident">Http2</span>(<span class="ident">conn</span>::<span class="ident">Http2SendRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>),
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="ident">PoolClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">poll_ready</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">tx</span> {
+            <span class="ident">PoolTx</span>::<span class="ident">Http1</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">tx</span>.<span class="ident">poll_ready</span>(),
+            <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(())),
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">is_ready</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">tx</span> {
+            <span class="ident">PoolTx</span>::<span class="ident">Http1</span>(<span class="kw-2">ref</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">tx</span>.<span class="ident">is_ready</span>(),
+            <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="kw-2">ref</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">tx</span>.<span class="ident">is_ready</span>(),
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">is_closed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">tx</span> {
+            <span class="ident">PoolTx</span>::<span class="ident">Http1</span>(<span class="kw-2">ref</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">tx</span>.<span class="ident">is_closed</span>(),
+            <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="kw-2">ref</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">tx</span>.<span class="ident">is_closed</span>(),
+        }
     }
 }
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">ClientError</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Payload</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span> <span class="ident">PoolClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">send_request_retryable</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="macro">impl_trait</span><span class="macro">!</span>(<span class="ident">ty</span>: <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="ident">Body</span><span class="op">&gt;</span>, <span class="ident">Error</span> <span class="op">=</span> (::<span class="ident">Error</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span>)<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span>)
+    <span class="kw">where</span>
+        <span class="ident">B</span>: <span class="ident">Send</span>,
+    {
+        <span class="macro">impl_trait</span><span class="macro">!</span>(<span class="ident">e</span>: <span class="kw">match</span> <span class="self">self</span>.<span class="ident">tx</span> {
+            <span class="ident">PoolTx</span>::<span class="ident">Http1</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">Either</span>::<span class="ident">A</span>(<span class="ident">tx</span>.<span class="ident">send_request_retryable</span>(<span class="ident">req</span>)),
+            <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">tx</span>.<span class="ident">send_request_retryable</span>(<span class="ident">req</span>)),
+        })
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Poolable</span> <span class="kw">for</span> <span class="ident">PoolClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">B</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+{
+    <span class="kw">fn</span> <span class="ident">is_open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">tx</span> {
+            <span class="ident">PoolTx</span>::<span class="ident">Http1</span>(<span class="kw-2">ref</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">tx</span>.<span class="ident">is_ready</span>(),
+            <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="kw-2">ref</span> <span class="ident">tx</span>) <span class="op">=&gt;</span> <span class="ident">tx</span>.<span class="ident">is_ready</span>(),
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">reserve</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Reservation</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">tx</span> {
+            <span class="ident">PoolTx</span>::<span class="ident">Http1</span>(<span class="ident">tx</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Reservation</span>::<span class="ident">Unique</span>(<span class="ident">PoolClient</span> {
+                    <span class="ident">is_proxied</span>: <span class="self">self</span>.<span class="ident">is_proxied</span>,
+                    <span class="ident">tx</span>: <span class="ident">PoolTx</span>::<span class="ident">Http1</span>(<span class="ident">tx</span>),
+                })
+            },
+            <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="ident">tx</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">PoolClient</span> {
+                    <span class="ident">is_proxied</span>: <span class="self">self</span>.<span class="ident">is_proxied</span>,
+                    <span class="ident">tx</span>: <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="ident">tx</span>.<span class="ident">clone</span>()),
+                };
+                <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">PoolClient</span> {
+                    <span class="ident">is_proxied</span>: <span class="self">self</span>.<span class="ident">is_proxied</span>,
+                    <span class="ident">tx</span>: <span class="ident">PoolTx</span>::<span class="ident">Http2</span>(<span class="ident">tx</span>),
+                };
+                <span class="ident">Reservation</span>::<span class="ident">Shared</span>(<span class="ident">a</span>, <span class="ident">b</span>)
+            }
+        }
+    }
+}
+
+<span class="kw">enum</span> <span class="ident">ClientError</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="ident">Normal</span>(::<span class="ident">Error</span>),
     <span class="ident">Canceled</span> {
         <span class="ident">connection_reused</span>: <span class="ident">bool</span>,
-        <span class="ident">req</span>: (::<span class="ident">proto</span>::<span class="ident">RequestHead</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>),
+        <span class="ident">req</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
         <span class="ident">reason</span>: ::<span class="ident">Error</span>,
     }
 }
 
-<span class="doccomment">/// Configuration for a Client</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="ident">_body_type</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+<span class="doccomment">/// A marker to identify what version a pooled connection is.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
+<span class="kw">enum</span> <span class="ident">Ver</span> {
+    <span class="ident">Http1</span>,
+    <span class="ident">Http2</span>,
+}
+
+<span class="kw">fn</span> <span class="ident">origin_form</span>(<span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Uri</span>) {
+    <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">uri</span>.<span class="ident">path_and_query</span>() {
+        <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">as_str</span>() <span class="op">!=</span> <span class="string">&quot;/&quot;</span> <span class="op">=&gt;</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parts</span> <span class="op">=</span> ::<span class="ident">http</span>::<span class="ident">uri</span>::<span class="ident">Parts</span>::<span class="ident">default</span>();
+            <span class="ident">parts</span>.<span class="ident">path_and_query</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>.<span class="ident">clone</span>());
+            <span class="ident">Uri</span>::<span class="ident">from_parts</span>(<span class="ident">parts</span>).<span class="ident">expect</span>(<span class="string">&quot;path is valid uri&quot;</span>)
+        },
+        <span class="ident">_none_or_just_slash</span> <span class="op">=&gt;</span> {
+            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">Uri</span>::<span class="ident">default</span>() <span class="op">==</span> <span class="string">&quot;/&quot;</span>);
+            <span class="ident">Uri</span>::<span class="ident">default</span>()
+        }
+    };
+    <span class="kw-2">*</span><span class="ident">uri</span> <span class="op">=</span> <span class="ident">path</span>
+}
+
+<span class="kw">fn</span> <span class="ident">absolute_form</span>(<span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Uri</span>) {
+    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">scheme_part</span>().<span class="ident">is_some</span>(), <span class="string">&quot;absolute_form needs a scheme&quot;</span>);
+    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">authority_part</span>().<span class="ident">is_some</span>(), <span class="string">&quot;absolute_form needs an authority&quot;</span>);
+    <span class="comment">// If the URI is to HTTPS, and the connector claimed to be a proxy,</span>
+    <span class="comment">// then it *should* have tunneled, and so we don&#39;t want to send</span>
+    <span class="comment">// absolute-form in that case.</span>
+    <span class="kw">if</span> <span class="ident">uri</span>.<span class="ident">scheme_part</span>() <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">Scheme</span>::<span class="ident">HTTPS</span>) {
+        <span class="ident">origin_form</span>(<span class="ident">uri</span>);
+    }
+}
+
+<span class="kw">fn</span> <span class="ident">authority_form</span>(<span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Uri</span>) {
+    <span class="kw">if</span> <span class="macro">log_enabled</span><span class="macro">!</span>(::<span class="ident">log</span>::<span class="ident">Level</span>::<span class="ident">Warn</span>) {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">path</span>) <span class="op">=</span> <span class="ident">uri</span>.<span class="ident">path_and_query</span>() {
+            <span class="comment">// `https://hyper.rs` would parse with `/` path, don&#39;t</span>
+            <span class="comment">// annoy people about that...</span>
+            <span class="kw">if</span> <span class="ident">path</span> <span class="op">!=</span> <span class="string">&quot;/&quot;</span> {
+                <span class="macro">warn</span><span class="macro">!</span>(
+                    <span class="string">&quot;HTTP/1.1 CONNECT request stripping path: {:?}&quot;</span>,
+                    <span class="ident">path</span>
+                );
+            }
+        }
+    }
+    <span class="kw-2">*</span><span class="ident">uri</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">uri</span>.<span class="ident">authority_part</span>() {
+        <span class="prelude-val">Some</span>(<span class="ident">auth</span>) <span class="op">=&gt;</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parts</span> <span class="op">=</span> ::<span class="ident">http</span>::<span class="ident">uri</span>::<span class="ident">Parts</span>::<span class="ident">default</span>();
+            <span class="ident">parts</span>.<span class="ident">authority</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">auth</span>.<span class="ident">clone</span>());
+            <span class="ident">Uri</span>::<span class="ident">from_parts</span>(<span class="ident">parts</span>).<span class="ident">expect</span>(<span class="string">&quot;authority is valid&quot;</span>)
+        },
+        <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+            <span class="macro">unreachable</span><span class="macro">!</span>(<span class="string">&quot;authority_form with relative uri&quot;</span>);
+        }
+    };
+}
+
+<span class="kw">fn</span> <span class="ident">set_scheme</span>(<span class="ident">uri</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Uri</span>, <span class="ident">scheme</span>: <span class="ident">Scheme</span>) {
+    <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">scheme_part</span>().<span class="ident">is_none</span>(), <span class="string">&quot;set_scheme expects no existing scheme&quot;</span>);
+    <span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="ident">uri</span>, <span class="ident">Uri</span>::<span class="ident">default</span>());
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">parts</span>: ::<span class="ident">http</span>::<span class="ident">uri</span>::<span class="ident">Parts</span> <span class="op">=</span> <span class="ident">old</span>.<span class="ident">into</span>();
+    <span class="ident">parts</span>.<span class="ident">scheme</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">scheme</span>);
+    <span class="ident">parts</span>.<span class="ident">path_and_query</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="string">&quot;/&quot;</span>.<span class="ident">parse</span>().<span class="ident">expect</span>(<span class="string">&quot;slash is a valid path&quot;</span>));
+    <span class="kw-2">*</span><span class="ident">uri</span> <span class="op">=</span> <span class="ident">Uri</span>::<span class="ident">from_parts</span>(<span class="ident">parts</span>).<span class="ident">expect</span>(<span class="string">&quot;scheme is valid&quot;</span>);
+}
+
+<span class="doccomment">/// Builder for a Client</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Builder</span> {
     <span class="comment">//connect_timeout: Duration,</span>
-    <span class="ident">connector</span>: <span class="ident">C</span>,
+    <span class="ident">exec</span>: <span class="ident">Exec</span>,
     <span class="ident">keep_alive</span>: <span class="ident">bool</span>,
     <span class="ident">keep_alive_timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>,
     <span class="ident">h1_writev</span>: <span class="ident">bool</span>,
-    <span class="comment">//TODO: make use of max_idle config</span>
-    <span class="ident">max_idle</span>: <span class="ident">usize</span>,
+    <span class="ident">h1_title_case_headers</span>: <span class="ident">bool</span>,
+    <span class="ident">max_idle_per_host</span>: <span class="ident">usize</span>,
     <span class="ident">retry_canceled_requests</span>: <span class="ident">bool</span>,
     <span class="ident">set_host</span>: <span class="ident">bool</span>,
+    <span class="ident">ver</span>: <span class="ident">Ver</span>,
 }
 
-<span class="doccomment">/// Phantom type used to signal that `Config` should create a `HttpConnector`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UseDefaultConnector</span>(());
-
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">UseDefaultConnector</span>, <span class="ident">proto</span>::<span class="ident">Body</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">UseDefaultConnector</span>, <span class="ident">proto</span>::<span class="ident">Body</span><span class="op">&gt;</span> {
-        <span class="ident">Config</span> {
-            <span class="ident">_body_type</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">proto</span>::<span class="ident">Body</span><span class="op">&gt;</span>,
-            <span class="ident">connector</span>: <span class="ident">UseDefaultConnector</span>(()),
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Builder</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">exec</span>: <span class="ident">Exec</span>::<span class="ident">Default</span>,
             <span class="ident">keep_alive</span>: <span class="bool-val">true</span>,
             <span class="ident">keep_alive_timeout</span>: <span class="prelude-val">Some</span>(<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">90</span>)),
             <span class="ident">h1_writev</span>: <span class="bool-val">true</span>,
-            <span class="ident">max_idle</span>: <span class="number">5</span>,
+            <span class="ident">h1_title_case_headers</span>: <span class="bool-val">false</span>,
+            <span class="ident">max_idle_per_host</span>: ::<span class="ident">std</span>::<span class="ident">usize</span>::<span class="ident">MAX</span>,
             <span class="ident">retry_canceled_requests</span>: <span class="bool-val">true</span>,
             <span class="ident">set_host</span>: <span class="bool-val">true</span>,
+            <span class="ident">ver</span>: <span class="ident">Ver</span>::<span class="ident">Http1</span>,
         }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Set the body stream to be used by the `Client`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Example</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ```rust</span>
-    <span class="doccomment">/// # use hyper::client::Config;</span>
-    <span class="doccomment">/// let cfg = Config::default()</span>
-    <span class="doccomment">///     .body::&lt;hyper::Body&gt;();</span>
-    <span class="doccomment">/// # drop(cfg);</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">body</span><span class="op">&lt;</span><span class="ident">BB</span><span class="op">&gt;</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">BB</span><span class="op">&gt;</span> {
-        <span class="ident">Config</span> {
-            <span class="ident">_body_type</span>: <span class="ident">PhantomData</span>::<span class="op">&lt;</span><span class="ident">BB</span><span class="op">&gt;</span>,
-            <span class="ident">connector</span>: <span class="self">self</span>.<span class="ident">connector</span>,
-            <span class="ident">keep_alive</span>: <span class="self">self</span>.<span class="ident">keep_alive</span>,
-            <span class="ident">keep_alive_timeout</span>: <span class="self">self</span>.<span class="ident">keep_alive_timeout</span>,
-            <span class="ident">h1_writev</span>: <span class="self">self</span>.<span class="ident">h1_writev</span>,
-            <span class="ident">max_idle</span>: <span class="self">self</span>.<span class="ident">max_idle</span>,
-            <span class="ident">retry_canceled_requests</span>: <span class="self">self</span>.<span class="ident">retry_canceled_requests</span>,
-            <span class="ident">set_host</span>: <span class="self">self</span>.<span class="ident">set_host</span>,
-        }
-    }
-
-    <span class="doccomment">/// Set the `Connect` type to be used.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connector</span><span class="op">&lt;</span><span class="ident">CC</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">val</span>: <span class="ident">CC</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">CC</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-        <span class="ident">Config</span> {
-            <span class="ident">_body_type</span>: <span class="self">self</span>.<span class="ident">_body_type</span>,
-            <span class="ident">connector</span>: <span class="ident">val</span>,
-            <span class="ident">keep_alive</span>: <span class="self">self</span>.<span class="ident">keep_alive</span>,
-            <span class="ident">keep_alive_timeout</span>: <span class="self">self</span>.<span class="ident">keep_alive_timeout</span>,
-            <span class="ident">h1_writev</span>: <span class="self">self</span>.<span class="ident">h1_writev</span>,
-            <span class="ident">max_idle</span>: <span class="self">self</span>.<span class="ident">max_idle</span>,
-            <span class="ident">retry_canceled_requests</span>: <span class="self">self</span>.<span class="ident">retry_canceled_requests</span>,
-            <span class="ident">set_host</span>: <span class="self">self</span>.<span class="ident">set_host</span>,
-        }
-    }
-
+<span class="kw">impl</span> <span class="ident">Builder</span> {
     <span class="doccomment">/// Enable or disable keep-alive mechanics.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default is enabled.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keep_alive</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keep_alive</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">keep_alive</span> <span class="op">=</span> <span class="ident">val</span>;
         <span class="self">self</span>
     }
@@ -1187,8 +1779,11 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default is 90 seconds.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keep_alive_timeout</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">keep_alive_timeout</span> <span class="op">=</span> <span class="ident">val</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keep_alive_timeout</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>
+    <span class="kw">where</span>
+        <span class="ident">D</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;&gt;</span>,
+    {
+        <span class="self">self</span>.<span class="ident">keep_alive_timeout</span> <span class="op">=</span> <span class="ident">val</span>.<span class="ident">into</span>();
         <span class="self">self</span>
     }
 
@@ -1201,8 +1796,41 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default is `true`.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http1_writev</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http1_writev</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">h1_writev</span> <span class="op">=</span> <span class="ident">val</span>;
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set whether HTTP/1 connections will write header names as title case at</span>
+    <span class="doccomment">/// the socket level.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that this setting does not affect HTTP/2.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default is false.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http1_title_case_headers</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">h1_title_case_headers</span> <span class="op">=</span> <span class="ident">val</span>;
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set whether the connection **must** use HTTP/2.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Note that setting this to true prevents HTTP/1 from being allowed.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default is false.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http2_only</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">ver</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">val</span> {
+            <span class="ident">Ver</span>::<span class="ident">Http2</span>
+        } <span class="kw">else</span> {
+            <span class="ident">Ver</span>::<span class="ident">Http1</span>
+        };
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the maximum idle connection per host allowed in the pool.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default is `usize::MAX` (no limit).</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_idle_per_host</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">max_idle</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">max_idle_per_host</span> <span class="op">=</span> <span class="ident">max_idle</span>;
         <span class="self">self</span>
     }
 
@@ -1213,12 +1841,12 @@
     <span class="doccomment">/// connection, and then encounters an error immediately as the idle</span>
     <span class="doccomment">/// connection was found to be unusable.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// When this is set to `false`, the related `FutureResponse` would instead</span>
+    <span class="doccomment">/// When this is set to `false`, the related `ResponseFuture` would instead</span>
     <span class="doccomment">/// resolve to an `Error::Cancel`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default is `true`.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">retry_canceled_requests</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">retry_canceled_requests</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">retry_canceled_requests</span> <span class="op">=</span> <span class="ident">val</span>;
         <span class="self">self</span>
     }
@@ -1230,138 +1858,120 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default is `true`.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_host</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_host</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">val</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">set_host</span> <span class="op">=</span> <span class="ident">val</span>;
         <span class="self">self</span>
     }
 
-    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span><span class="op">=</span><span class="string">&quot;0.11.11&quot;</span>, <span class="ident">note</span><span class="op">=</span><span class="string">&quot;no_proto is always enabled&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">no_proto</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Provide an executor to execute background `Connection` tasks.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">executor</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">exec</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>
+    <span class="kw">where</span>
+        <span class="ident">E</span>: <span class="ident">Executor</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(), <span class="ident">Error</span><span class="op">=</span>()<span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    {
+        <span class="self">self</span>.<span class="ident">exec</span> <span class="op">=</span> <span class="ident">Exec</span>::<span class="ident">Executor</span>(<span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">exec</span>));
         <span class="self">self</span>
     }
-}
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>
-<span class="kw">where</span> <span class="ident">C</span>: <span class="ident">Connect</span>,
-      <span class="ident">B</span>: <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span>,
-      <span class="ident">B</span>::<span class="ident">Item</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-{
-    <span class="doccomment">/// Construct the Client with this configuration.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-        <span class="ident">Client</span>::<span class="ident">configured</span>(<span class="self">self</span>, <span class="ident">Exec</span>::<span class="ident">Handle</span>(<span class="ident">handle</span>.<span class="ident">clone</span>()))
-    }
-
-    <span class="doccomment">/// Construct a Client with this configuration and an executor.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The executor will be used to spawn &quot;background&quot; connection tasks</span>
-    <span class="doccomment">/// to drive requests and responses.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">executor</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">executor</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>
+    <span class="doccomment">/// Builder a client with this configuration and the default `HttpConnector`.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build_http</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">B</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="ident">E</span>: <span class="ident">Executor</span><span class="op">&lt;</span><span class="ident">Background</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="ident">B</span>: <span class="ident">Payload</span> <span class="op">+</span> <span class="ident">Send</span>,
+        <span class="ident">B</span>::<span class="ident">Data</span>: <span class="ident">Send</span>,
     {
-        <span class="ident">Client</span>::<span class="ident">configured</span>(<span class="self">self</span>, <span class="ident">Exec</span>::<span class="ident">Executor</span>(<span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">executor</span>)))
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">UseDefaultConnector</span>, <span class="ident">B</span><span class="op">&gt;</span>
-<span class="kw">where</span> <span class="ident">B</span>: <span class="ident">Stream</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">=</span>::<span class="ident">Error</span><span class="op">&gt;</span>,
-      <span class="ident">B</span>::<span class="ident">Item</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>,
-{
-    <span class="doccomment">/// Construct the Client with this configuration.</span>
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>, <span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="ident">Handle</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">HttpConnector</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">HttpConnector</span>::<span class="ident">new</span>(<span class="number">4</span>, <span class="ident">handle</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">connector</span> <span class="op">=</span> <span class="ident">HttpConnector</span>::<span class="ident">new</span>(<span class="number">4</span>);
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">keep_alive</span> {
             <span class="ident">connector</span>.<span class="ident">set_keepalive</span>(<span class="self">self</span>.<span class="ident">keep_alive_timeout</span>);
         }
-        <span class="self">self</span>.<span class="ident">connector</span>(<span class="ident">connector</span>).<span class="ident">build</span>(<span class="ident">handle</span>)
+        <span class="self">self</span>.<span class="ident">build</span>(<span class="ident">connector</span>)
+    }
+
+    <span class="doccomment">/// Combine the configuration of this builder with a connector to create a `Client`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">connector</span>: <span class="ident">C</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">C</span>: <span class="ident">Connect</span>,
+        <span class="ident">C</span>::<span class="ident">Transport</span>: <span class="lifetime">&#39;static</span>,
+        <span class="ident">C</span>::<span class="ident">Future</span>: <span class="lifetime">&#39;static</span>,
+        <span class="ident">B</span>: <span class="ident">Payload</span> <span class="op">+</span> <span class="ident">Send</span>,
+        <span class="ident">B</span>::<span class="ident">Data</span>: <span class="ident">Send</span>,
+    {
+        <span class="ident">Client</span> {
+            <span class="ident">connector</span>: <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">connector</span>),
+            <span class="ident">executor</span>: <span class="self">self</span>.<span class="ident">exec</span>.<span class="ident">clone</span>(),
+            <span class="ident">h1_writev</span>: <span class="self">self</span>.<span class="ident">h1_writev</span>,
+            <span class="ident">h1_title_case_headers</span>: <span class="self">self</span>.<span class="ident">h1_title_case_headers</span>,
+            <span class="ident">pool</span>: <span class="ident">Pool</span>::<span class="ident">new</span>(
+                <span class="ident">pool</span>::<span class="ident">Enabled</span>(<span class="self">self</span>.<span class="ident">keep_alive</span>),
+                <span class="ident">pool</span>::<span class="ident">IdleTimeout</span>(<span class="self">self</span>.<span class="ident">keep_alive_timeout</span>),
+                <span class="ident">pool</span>::<span class="ident">MaxIdlePerHost</span>(<span class="self">self</span>.<span class="ident">max_idle_per_host</span>),
+                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">exec</span>,
+            ),
+            <span class="ident">retry_canceled_requests</span>: <span class="self">self</span>.<span class="ident">retry_canceled_requests</span>,
+            <span class="ident">set_host</span>: <span class="self">self</span>.<span class="ident">set_host</span>,
+            <span class="ident">ver</span>: <span class="self">self</span>.<span class="ident">ver</span>,
+        }
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Builder</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Config&quot;</span>)
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Builder&quot;</span>)
             .<span class="ident">field</span>(<span class="string">&quot;keep_alive&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">keep_alive</span>)
             .<span class="ident">field</span>(<span class="string">&quot;keep_alive_timeout&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">keep_alive_timeout</span>)
             .<span class="ident">field</span>(<span class="string">&quot;http1_writev&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">h1_writev</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;max_idle&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">max_idle</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;max_idle_per_host&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">max_idle_per_host</span>)
             .<span class="ident">field</span>(<span class="string">&quot;set_host&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">set_host</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;version&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ver</span>)
             .<span class="ident">finish</span>()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Clone</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Config</span><span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-        <span class="ident">Config</span> {
-            <span class="ident">connector</span>: <span class="self">self</span>.<span class="ident">connector</span>.<span class="ident">clone</span>(),
-            .. <span class="kw-2">*</span><span class="self">self</span>
-        }
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+<span class="kw">mod</span> <span class="ident">unit_tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">set_relative_uri_with_implicit_path</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="string">&quot;http://hyper.rs&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+        <span class="ident">origin_form</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">uri</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">to_string</span>(), <span class="string">&quot;/&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_origin_form</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="string">&quot;http://hyper.rs/guides&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+        <span class="ident">origin_form</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">uri</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">to_string</span>(), <span class="string">&quot;/guides&quot;</span>);
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="string">&quot;http://hyper.rs/guides?foo=bar&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+        <span class="ident">origin_form</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">uri</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">to_string</span>(), <span class="string">&quot;/guides?foo=bar&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_absolute_form</span>() {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="string">&quot;http://hyper.rs/guides&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+        <span class="ident">absolute_form</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">uri</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">to_string</span>(), <span class="string">&quot;http://hyper.rs/guides&quot;</span>);
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="string">&quot;https://hyper.rs/guides&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+        <span class="ident">absolute_form</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">uri</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">to_string</span>(), <span class="string">&quot;/guides&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_authority_form</span>() {
+        <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pretty_env_logger</span>;
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">pretty_env_logger</span>::<span class="ident">try_init</span>();
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="string">&quot;http://hyper.rs&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+        <span class="ident">authority_form</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">uri</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">to_string</span>(), <span class="string">&quot;hyper.rs&quot;</span>);
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">uri</span> <span class="op">=</span> <span class="string">&quot;hyper.rs&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
+        <span class="ident">authority_form</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">uri</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">uri</span>.<span class="ident">to_string</span>(), <span class="string">&quot;hyper.rs&quot;</span>);
     }
 }
-
-
-<span class="comment">// ===== impl Exec =====</span>
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">enum</span> <span class="ident">Exec</span> {
-    <span class="ident">Handle</span>(<span class="ident">Handle</span>),
-    <span class="ident">Executor</span>(<span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Executor</span><span class="op">&lt;</span><span class="ident">Background</span><span class="op">&gt;&gt;</span>),
-}
-
-
-<span class="kw">impl</span> <span class="ident">Exec</span> {
-    <span class="kw">fn</span> <span class="ident">execute</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fut</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
-    <span class="kw">where</span>
-        <span class="ident">F</span>: <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(), <span class="ident">Error</span><span class="op">=</span>()<span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Exec</span>::<span class="ident">Handle</span>(<span class="kw-2">ref</span> <span class="ident">h</span>) <span class="op">=&gt;</span> <span class="ident">h</span>.<span class="ident">spawn</span>(<span class="ident">fut</span>),
-            <span class="ident">Exec</span>::<span class="ident">Executor</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> {
-                <span class="ident">e</span>.<span class="ident">execute</span>(<span class="ident">bg</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">fut</span>)))
-                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-                        <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;executor error: {:?}&quot;</span>, <span class="ident">err</span>.<span class="ident">kind</span>());
-                        <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(
-                            <span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>,
-                            <span class="string">&quot;executor error&quot;</span>,
-                        )
-                    })<span class="question-mark">?</span>
-            },
-        }
-        <span class="prelude-val">Ok</span>(())
-    }
-}
-
-<span class="comment">// ===== impl Background =====</span>
-
-<span class="comment">// The types inside this module are not exported out of the crate,</span>
-<span class="comment">// so they are in essence un-nameable.</span>
-<span class="kw">mod</span> <span class="ident">background</span> {
-    <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Future</span>, <span class="ident">Poll</span>};
-
-    <span class="comment">// This is basically `impl Future`, since the type is un-nameable,</span>
-    <span class="comment">// and only implementeds `Future`.</span>
-    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_debug_implementations</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Background</span> {
-        <span class="ident">inner</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(), <span class="ident">Error</span><span class="op">=</span>()<span class="op">&gt;&gt;</span>,
-    }
-
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bg</span>(<span class="ident">fut</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span>(), <span class="ident">Error</span><span class="op">=</span>()<span class="op">&gt;&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Background</span> {
-        <span class="ident">Background</span> {
-            <span class="ident">inner</span>: <span class="ident">fut</span>,
-        }
-    }
-
-    <span class="kw">impl</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">Background</span> {
-        <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> ();
-        <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> ();
-
-        <span class="kw">fn</span> <span class="ident">poll</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Item</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">poll</span>()
-        }
-    }
-}
-
 </pre>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "hyper";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

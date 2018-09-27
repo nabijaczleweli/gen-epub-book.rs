@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.7.2/src/utf_16.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>utf_16.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.8.7/src/utf_16.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>utf_16.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -376,6 +376,32 @@
 <span id="376">376</span>
 <span id="377">377</span>
 <span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015-2016 Mozilla Foundation. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution.</span>
@@ -386,9 +412,9 @@
 <span class="comment">// option. This file may not be copied, modified, or distributed</span>
 <span class="comment">// except according to those terms.</span>
 
+<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">handles</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">variant</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Utf16Decoder</span> {
     <span class="ident">lead_surrogate</span>: <span class="ident">u16</span>, <span class="comment">// If non-zero and pending_bmp == false, a pending lead surrogate</span>
@@ -399,19 +425,18 @@
 
 <span class="kw">impl</span> <span class="ident">Utf16Decoder</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">big_endian</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">VariantDecoder</span> {
-        <span class="ident">VariantDecoder</span>::<span class="ident">Utf16</span>(
-            <span class="ident">Utf16Decoder</span> {
-                <span class="ident">lead_surrogate</span>: <span class="number">0</span>,
-                <span class="ident">lead_byte</span>: <span class="prelude-val">None</span>,
-                <span class="ident">be</span>: <span class="ident">big_endian</span>,
-                <span class="ident">pending_bmp</span>: <span class="bool-val">false</span>,
-            }
-        )
+        <span class="ident">VariantDecoder</span>::<span class="ident">Utf16</span>(<span class="ident">Utf16Decoder</span> {
+            <span class="ident">lead_surrogate</span>: <span class="number">0</span>,
+            <span class="ident">lead_byte</span>: <span class="prelude-val">None</span>,
+            <span class="ident">be</span>: <span class="ident">big_endian</span>,
+            <span class="ident">pending_bmp</span>: <span class="bool-val">false</span>,
+        })
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">additional_from_state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="number">1</span> <span class="op">+</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lead_byte</span>.<span class="ident">is_some</span>() { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> } <span class="op">+</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">==</span> <span class="number">0</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="number">2</span> }
+        <span class="number">1</span>
+            <span class="op">+</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lead_byte</span>.<span class="ident">is_some</span>() { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> }
+            <span class="op">+</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">==</span> <span class="number">0</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="number">2</span> }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_utf16_buffer_length</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">byte_length</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
@@ -456,7 +481,19 @@
                 }
             }
         },
-        {},
+        {
+            <span class="comment">// This is the fast path. The rest runs only at the</span>
+            <span class="comment">// start and end for partial sequences.</span>
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lead_byte</span>.<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">read</span>, <span class="ident">written</span>)) <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">be</span> {
+                    <span class="ident">dest</span>.<span class="ident">copy_utf16_from</span>::<span class="op">&lt;</span><span class="ident">BigEndian</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>)
+                } <span class="kw">else</span> {
+                    <span class="ident">dest</span>.<span class="ident">copy_utf16_from</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">source</span>)
+                } {
+                    <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">2</span>, <span class="number">0</span>), <span class="ident">read</span>, <span class="ident">written</span>);
+                }
+            }
+        },
         {
             <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="self">self</span>.<span class="ident">pending_bmp</span>);
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">!=</span> <span class="number">0</span> {
@@ -500,9 +537,11 @@
                             <span class="comment">// error and this one becomes the new</span>
                             <span class="comment">// pending one.</span>
                             <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">=</span> <span class="ident">code_unit</span> <span class="kw">as</span> <span class="ident">u16</span>;
-                            <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">2</span>, <span class="number">2</span>),
-                                    <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
-                                    <span class="ident">destination_handle</span>.<span class="ident">written</span>());
+                            <span class="kw">return</span> (
+                                <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">2</span>, <span class="number">2</span>),
+                                <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
+                                <span class="ident">destination_handle</span>.<span class="ident">written</span>(),
+                            );
                         }
                         <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">=</span> <span class="ident">code_unit</span>;
                         <span class="kw">continue</span>;
@@ -510,9 +549,11 @@
                     <span class="kw">if</span> <span class="ident">high_bits</span> <span class="op">==</span> <span class="number">0xDC00u16</span> {
                         <span class="comment">// low surrogate</span>
                         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">==</span> <span class="number">0</span> {
-                            <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">2</span>, <span class="number">0</span>),
-                                    <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
-                                    <span class="ident">destination_handle</span>.<span class="ident">written</span>());
+                            <span class="kw">return</span> (
+                                <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">2</span>, <span class="number">0</span>),
+                                <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
+                                <span class="ident">destination_handle</span>.<span class="ident">written</span>(),
+                            );
                         }
                         <span class="ident">destination_handle</span>.<span class="ident">write_surrogate_pair</span>(<span class="self">self</span>.<span class="ident">lead_surrogate</span>, <span class="ident">code_unit</span>);
                         <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">=</span> <span class="number">0</span>;
@@ -525,9 +566,11 @@
                         <span class="comment">// pending BMP character.</span>
                         <span class="self">self</span>.<span class="ident">lead_surrogate</span> <span class="op">=</span> <span class="ident">code_unit</span>;
                         <span class="self">self</span>.<span class="ident">pending_bmp</span> <span class="op">=</span> <span class="bool-val">true</span>;
-                        <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">2</span>, <span class="number">2</span>),
-                                <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
-                                <span class="ident">destination_handle</span>.<span class="ident">written</span>());
+                        <span class="kw">return</span> (
+                            <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">2</span>, <span class="number">2</span>),
+                            <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
+                            <span class="ident">destination_handle</span>.<span class="ident">written</span>(),
+                        );
                     }
                     <span class="ident">destination_handle</span>.<span class="ident">write_bmp</span>(<span class="ident">code_unit</span>);
                     <span class="kw">continue</span>;
@@ -594,6 +637,15 @@
 
         <span class="ident">decode_utf_16le</span>(<span class="string">b&quot;\x3D\xD8\x03\x26&quot;</span>, <span class="string">&quot;\u{FFFD}\u{2603}&quot;</span>);
         <span class="ident">decode_utf_16be</span>(<span class="string">b&quot;\xD8\x3D\x26\x03&quot;</span>, <span class="string">&quot;\u{FFFD}\u{2603}&quot;</span>);
+
+        <span class="comment">// The \xFF makes sure that the parts before and after have different alignment</span>
+        <span class="kw">let</span> <span class="ident">long_le</span> <span class="op">=</span> <span class="string">b&quot;\x00\x00\x00\x00\x00\x00\x00\x00\x3D\xD8\xA9\xDC\x00\x00\x00\x00\x00\x00\x00\x00\x3D\xD8\x00\x00\x00\x00\x00\x00\x00\x00\xA9\xDC\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3D\xD8\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x3D\xD8\xA9\xDC\x00\x00\x00\x00\x00\x00\x00\x00\x3D\xD8\x00\x00\x00\x00\x00\x00\x00\x00\xA9\xDC\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3D\xD8&quot;</span>;
+        <span class="kw">let</span> <span class="ident">long_be</span> <span class="op">=</span> <span class="string">b&quot;\x00\x00\x00\x00\x00\x00\x00\x00\xD8\x3D\xDC\xA9\x00\x00\x00\x00\x00\x00\x00\x00\xD8\x3D\x00\x00\x00\x00\x00\x00\x00\x00\xDC\xA9\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xD8\x3D\xFF\x00\x00\x00\x00\x00\x00\x00\x00\xD8\x3D\xDC\xA9\x00\x00\x00\x00\x00\x00\x00\x00\xD8\x3D\x00\x00\x00\x00\x00\x00\x00\x00\xDC\xA9\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xD8\x3D&quot;</span>;
+        <span class="kw">let</span> <span class="ident">long_expect</span> <span class="op">=</span> <span class="string">&quot;\x00\x00\x00\x00\u{1F4A9}\x00\x00\x00\x00\u{FFFD}\x00\x00\x00\x00\u{FFFD}\x00\x00\x00\x00\x00\x00\x00\x00\u{FFFD}&quot;</span>;
+        <span class="ident">decode_utf_16le</span>(<span class="kw-2">&amp;</span><span class="ident">long_le</span>[..<span class="ident">long_le</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">2</span>], <span class="ident">long_expect</span>);
+        <span class="ident">decode_utf_16be</span>(<span class="kw-2">&amp;</span><span class="ident">long_be</span>[..<span class="ident">long_be</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">2</span>], <span class="ident">long_expect</span>);
+        <span class="ident">decode_utf_16le</span>(<span class="kw-2">&amp;</span><span class="ident">long_le</span>[<span class="ident">long_le</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">2</span> <span class="op">+</span> <span class="number">1</span>..], <span class="ident">long_expect</span>);
+        <span class="ident">decode_utf_16be</span>(<span class="kw-2">&amp;</span><span class="ident">long_be</span>[<span class="ident">long_be</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">2</span> <span class="op">+</span> <span class="number">1</span>..], <span class="ident">long_expect</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

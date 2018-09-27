@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.8.6/src/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.2/src/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -494,6 +494,24 @@
 <span id="494">494</span>
 <span id="495">495</span>
 <span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">StdError</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
@@ -547,16 +565,30 @@
 <span class="doccomment">///    }</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span> {
+    <span class="ident">inner</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&gt;</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">struct</span> <span class="ident">Inner</span> {
     <span class="ident">kind</span>: <span class="ident">Kind</span>,
     <span class="ident">url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>,
 }
+
 
 <span class="doccomment">/// A `Result` alias where the `Err` case is `reqwest::Error`.</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">kind</span>: <span class="ident">Kind</span>, <span class="ident">url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span> {
+            <span class="ident">inner</span>: <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">Inner</span> {
+                <span class="ident">kind</span>,
+                <span class="ident">url</span>,
+            }),
+        }
+    }
+
     <span class="doccomment">/// Returns a possible URL related to this error.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
@@ -576,7 +608,13 @@
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Url</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">url</span>.<span class="ident">as_ref</span>()
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">url</span>.<span class="ident">as_ref</span>()
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">with_url</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">url</span>, <span class="prelude-val">None</span>, <span class="string">&quot;with_url overriding existing url&quot;</span>);
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">url</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">url</span>);
+        <span class="self">self</span>
     }
 
     <span class="doccomment">/// Returns a reference to the internal error, if available.</span>
@@ -607,13 +645,16 @@
     <span class="doccomment">/// ```</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="ident">StdError</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>)<span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Http</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>),
+            <span class="ident">Kind</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>),
+            <span class="ident">Kind</span>::<span class="ident">Mime</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>),
             <span class="ident">Kind</span>::<span class="ident">Url</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>),
             <span class="ident">Kind</span>::<span class="ident">Tls</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>),
             <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>),
             <span class="ident">Kind</span>::<span class="ident">UrlEncoded</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>),
             <span class="ident">Kind</span>::<span class="ident">Json</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>),
+            <span class="ident">Kind</span>::<span class="ident">UrlBadScheme</span> <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">TooManyRedirects</span> <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">RedirectLoop</span> <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">ClientError</span>(<span class="kw">_</span>) <span class="op">|</span>
@@ -624,8 +665,9 @@
     <span class="doccomment">/// Returns true if the error is related to HTTP.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_http</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Http</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="ident">Kind</span>::<span class="ident">Hyper</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
         }
     }
@@ -633,7 +675,7 @@
     <span class="doccomment">/// Returns true if the error is serialization related.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_serialization</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Json</span>(<span class="kw">_</span>) <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">UrlEncoded</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
@@ -643,7 +685,7 @@
     <span class="doccomment">/// Returns true if the error is from a `RedirectPolicy`.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_redirect</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">TooManyRedirects</span> <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">RedirectLoop</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
@@ -653,7 +695,7 @@
     <span class="doccomment">/// Returns true if the error is from a request returning a 4xx error.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_client_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">ClientError</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
         }
@@ -662,7 +704,7 @@
     <span class="doccomment">/// Returns true if the error is from a request returning a 5xx error.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_server_error</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">ServerError</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
         }
@@ -671,7 +713,7 @@
     <span class="doccomment">/// Returns the status code, if the error was generated from a response.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">status</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StatusCode</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">ClientError</span>(<span class="ident">code</span>) <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">ServerError</span>(<span class="ident">code</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">code</span>),
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
@@ -679,15 +721,24 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="ident">fmt</span>::<span class="ident">Debug</span>::<span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>, <span class="ident">f</span>)
+    }
+}
+
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">url</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">url</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">url</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">url</span> {
             <span class="macro">try</span><span class="macro">!</span>(<span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">url</span>, <span class="ident">f</span>));
             <span class="macro">try</span><span class="macro">!</span>(<span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;: &quot;</span>));
         }
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Http</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
+            <span class="ident">Kind</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
+            <span class="ident">Kind</span>::<span class="ident">Mime</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
             <span class="ident">Kind</span>::<span class="ident">Url</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
+            <span class="ident">Kind</span>::<span class="ident">UrlBadScheme</span> <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="string">&quot;URL scheme is not allowed&quot;</span>),
             <span class="ident">Kind</span>::<span class="ident">Tls</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
             <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
             <span class="ident">Kind</span>::<span class="ident">UrlEncoded</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
@@ -708,9 +759,12 @@
 
 <span class="kw">impl</span> <span class="ident">StdError</span> <span class="kw">for</span> <span class="ident">Error</span> {
     <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Http</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
+            <span class="ident">Kind</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
+            <span class="ident">Kind</span>::<span class="ident">Mime</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
             <span class="ident">Kind</span>::<span class="ident">Url</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
+            <span class="ident">Kind</span>::<span class="ident">UrlBadScheme</span> <span class="op">=&gt;</span> <span class="string">&quot;URL scheme is not allowed&quot;</span>,
             <span class="ident">Kind</span>::<span class="ident">Tls</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
             <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
             <span class="ident">Kind</span>::<span class="ident">UrlEncoded</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
@@ -723,13 +777,16 @@
     }
 
     <span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">StdError</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Http</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>(),
+            <span class="ident">Kind</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>(),
+            <span class="ident">Kind</span>::<span class="ident">Mime</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>(),
             <span class="ident">Kind</span>::<span class="ident">Url</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>(),
             <span class="ident">Kind</span>::<span class="ident">Tls</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>(),
             <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>(),
             <span class="ident">Kind</span>::<span class="ident">UrlEncoded</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>(),
             <span class="ident">Kind</span>::<span class="ident">Json</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>(),
+            <span class="ident">Kind</span>::<span class="ident">UrlBadScheme</span> <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">TooManyRedirects</span> <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">RedirectLoop</span> <span class="op">|</span>
             <span class="ident">Kind</span>::<span class="ident">ClientError</span>(<span class="kw">_</span>) <span class="op">|</span>
@@ -741,9 +798,12 @@
 <span class="comment">// pub(crate)</span>
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Kind</span> {
-    <span class="ident">Http</span>(::<span class="ident">hyper</span>::<span class="ident">Error</span>),
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">Kind</span> {
+    <span class="ident">Http</span>(::<span class="ident">http</span>::<span class="ident">Error</span>),
+    <span class="ident">Hyper</span>(::<span class="ident">hyper</span>::<span class="ident">Error</span>),
+    <span class="ident">Mime</span>(::<span class="ident">mime</span>::<span class="ident">FromStrError</span>),
     <span class="ident">Url</span>(::<span class="ident">url</span>::<span class="ident">ParseError</span>),
+    <span class="ident">UrlBadScheme</span>,
     <span class="ident">Tls</span>(::<span class="ident">native_tls</span>::<span class="ident">Error</span>),
     <span class="ident">Io</span>(<span class="ident">io</span>::<span class="ident">Error</span>),
     <span class="ident">UrlEncoded</span>(::<span class="ident">serde_urlencoded</span>::<span class="ident">ser</span>::<span class="ident">Error</span>),
@@ -755,14 +815,24 @@
 }
 
 
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>::<span class="ident">http</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Kind</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: ::<span class="ident">http</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Kind</span> {
+        <span class="ident">Kind</span>::<span class="ident">Http</span>(<span class="ident">err</span>)
+    }
+}
+
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>::<span class="ident">hyper</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Kind</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: ::<span class="ident">hyper</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Kind</span> {
-        <span class="kw">match</span> <span class="ident">err</span> {
-            ::<span class="ident">hyper</span>::<span class="ident">Error</span>::<span class="ident">Io</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">err</span>),
-            <span class="comment">//::hyper::Error::Uri(err) =&gt; Kind::Url(err),</span>
-            <span class="ident">other</span> <span class="op">=&gt;</span> <span class="ident">Kind</span>::<span class="ident">Http</span>(<span class="ident">other</span>),
-        }
+        <span class="ident">Kind</span>::<span class="ident">Hyper</span>(<span class="ident">err</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span>::<span class="ident">mime</span>::<span class="ident">FromStrError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Kind</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: ::<span class="ident">mime</span>::<span class="ident">FromStrError</span>) <span class="op">-&gt;</span> <span class="ident">Kind</span> {
+        <span class="ident">Kind</span>::<span class="ident">Mime</span>(<span class="ident">err</span>)
     }
 }
 
@@ -820,10 +890,8 @@
     <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">TimedOut</span>, <span class="string">&quot;timed out&quot;</span>)
 }
 
-<span class="comment">// pub(crate)</span>
-
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_debug_implementations</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InternalFrom</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="ident">T</span>, <span class="kw">pub</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>);
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">InternalFrom</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw">pub</span> <span class="ident">T</span>, <span class="kw">pub</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>);
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span> <span class="comment">// https://github.com/rust-lang/rust/issues/42323</span>
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">InternalFrom</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
@@ -840,24 +908,19 @@
 {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">InternalFrom</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-        <span class="ident">Error</span> {
-            <span class="ident">kind</span>: <span class="ident">other</span>.<span class="number">0</span>.<span class="ident">into</span>(),
-            <span class="ident">url</span>: <span class="ident">other</span>.<span class="number">1</span>,
-        }
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">other</span>.<span class="number">0</span>.<span class="ident">into</span>(), <span class="ident">other</span>.<span class="number">1</span>)
     }
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">err</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Error</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">err</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Error</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Kind</span><span class="op">&gt;</span>,
 {
     <span class="ident">InternalFrom</span>(<span class="ident">err</span>, <span class="prelude-val">None</span>).<span class="ident">into</span>()
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_io</span>(<span class="ident">e</span>: <span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="ident">Error</span> {
-    <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">kind</span> {
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_io</span>(<span class="ident">e</span>: <span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="ident">Error</span> {
+    <span class="kw">match</span> <span class="ident">e</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
         <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">io</span>) <span class="op">=&gt;</span> <span class="ident">io</span>,
         <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">e</span>),
     }
@@ -883,63 +946,33 @@
     )
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">loop_detected</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-    <span class="ident">Error</span> {
-        <span class="ident">kind</span>: <span class="ident">Kind</span>::<span class="ident">RedirectLoop</span>,
-        <span class="ident">url</span>: <span class="prelude-val">Some</span>(<span class="ident">url</span>),
-    }
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">loop_detected</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">RedirectLoop</span>, <span class="prelude-val">Some</span>(<span class="ident">url</span>))
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">too_many_redirects</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-    <span class="ident">Error</span> {
-        <span class="ident">kind</span>: <span class="ident">Kind</span>::<span class="ident">TooManyRedirects</span>,
-        <span class="ident">url</span>: <span class="prelude-val">Some</span>(<span class="ident">url</span>),
-    }
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">too_many_redirects</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">TooManyRedirects</span>, <span class="prelude-val">Some</span>(<span class="ident">url</span>))
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timedout</span>(<span class="ident">url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-    <span class="ident">Error</span> {
-        <span class="ident">kind</span>: <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">io_timeout</span>()),
-        <span class="ident">url</span>: <span class="ident">url</span>,
-    }
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">timedout</span>(<span class="ident">url</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Url</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">io_timeout</span>()), <span class="ident">url</span>)
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">client_error</span>(<span class="ident">url</span>: <span class="ident">Url</span>, <span class="ident">status</span>: <span class="ident">StatusCode</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-    <span class="ident">Error</span> {
-        <span class="ident">kind</span>: <span class="ident">Kind</span>::<span class="ident">ClientError</span>(<span class="ident">status</span>),
-        <span class="ident">url</span>: <span class="prelude-val">Some</span>(<span class="ident">url</span>),
-    }
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">client_error</span>(<span class="ident">url</span>: <span class="ident">Url</span>, <span class="ident">status</span>: <span class="ident">StatusCode</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">ClientError</span>(<span class="ident">status</span>), <span class="prelude-val">Some</span>(<span class="ident">url</span>))
 }
 
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">server_error</span>(<span class="ident">url</span>: <span class="ident">Url</span>, <span class="ident">status</span>: <span class="ident">StatusCode</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-    <span class="ident">Error</span> {
-        <span class="ident">kind</span>: <span class="ident">Kind</span>::<span class="ident">ServerError</span>(<span class="ident">status</span>),
-        <span class="ident">url</span>: <span class="prelude-val">Some</span>(<span class="ident">url</span>),
-    }
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">server_error</span>(<span class="ident">url</span>: <span class="ident">Url</span>, <span class="ident">status</span>: <span class="ident">StatusCode</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">ServerError</span>(<span class="ident">status</span>), <span class="prelude-val">Some</span>(<span class="ident">url</span>))
+}
+
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">url_bad_scheme</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">UrlBadScheme</span>, <span class="prelude-val">Some</span>(<span class="ident">url</span>))
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_error_get_ref_downcasts</span>() {
-        <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">Error</span> <span class="op">=</span> <span class="ident">from</span>(::<span class="ident">hyper</span>::<span class="ident">Error</span>::<span class="ident">Status</span>);
-        <span class="kw">let</span> <span class="ident">cause</span> <span class="op">=</span> <span class="ident">err</span>.<span class="ident">get_ref</span>()
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">downcast_ref</span>::<span class="op">&lt;</span>::<span class="ident">hyper</span>::<span class="ident">Error</span><span class="op">&gt;</span>()
-            .<span class="ident">unwrap</span>();
-
-        <span class="kw">match</span> <span class="ident">cause</span> {
-            <span class="kw-2">&amp;</span>::<span class="ident">hyper</span>::<span class="ident">Error</span>::<span class="ident">Status</span> <span class="op">=&gt;</span> (),
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;unexpected downcast: {:?}&quot;</span>, <span class="ident">cause</span>),
-        }
-    }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_cause_chain</span>() {
@@ -973,12 +1006,9 @@
             }
         }
 
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">from</span>(::<span class="ident">hyper</span>::<span class="ident">Error</span>::<span class="ident">Status</span>);
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">cause</span>().<span class="ident">is_none</span>());
-
         <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">Chain</span>(<span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>);
         <span class="kw">let</span> <span class="ident">io</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(::<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">root</span>);
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">Error</span> { <span class="ident">kind</span>: <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">io</span>), <span class="ident">url</span>: <span class="prelude-val">None</span> };
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">io</span>), <span class="prelude-val">None</span>);
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">cause</span>().<span class="ident">is_none</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">to_string</span>(), <span class="string">&quot;root&quot;</span>);
 
@@ -986,9 +1016,15 @@
         <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(::<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">Chain</span>(<span class="prelude-val">None</span>::<span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>));
         <span class="kw">let</span> <span class="ident">link</span> <span class="op">=</span> <span class="ident">Chain</span>(<span class="prelude-val">Some</span>(<span class="ident">root</span>));
         <span class="kw">let</span> <span class="ident">io</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(::<span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">link</span>);
-        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">Error</span> { <span class="ident">kind</span>: <span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">io</span>), <span class="ident">url</span>: <span class="prelude-val">None</span> };
+        <span class="kw">let</span> <span class="ident">err</span> <span class="op">=</span> <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Io</span>(<span class="ident">io</span>), <span class="prelude-val">None</span>);
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">cause</span>().<span class="ident">is_some</span>());
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">err</span>.<span class="ident">to_string</span>(), <span class="string">&quot;chain: root&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">mem_size_of</span>() {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>;
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>(), <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>());
     }
 }
 </pre>

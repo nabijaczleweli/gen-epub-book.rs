@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.9.24/src/stack.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>stack.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/openssl-0.10.12/src/stack.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>stack.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -358,27 +358,45 @@
 <span id="358">358</span>
 <span id="359">359</span>
 <span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
 </pre><pre class="rust ">
-<span class="kw">use</span> <span class="ident">foreign_types</span>::{<span class="ident">ForeignTypeRef</span>, <span class="ident">ForeignType</span>, <span class="ident">Opaque</span>};
+<span class="kw">use</span> <span class="ident">ffi</span>;
+<span class="kw">use</span> <span class="ident">foreign_types</span>::{<span class="ident">ForeignType</span>, <span class="ident">ForeignTypeRef</span>, <span class="ident">Opaque</span>};
 <span class="kw">use</span> <span class="ident">libc</span>::<span class="ident">c_int</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Borrow</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">AsRef</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
-<span class="kw">use</span> <span class="ident">ffi</span>;
 
-<span class="kw">use</span> {<span class="ident">cvt</span>, <span class="ident">cvt_p</span>};
 <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">ErrorStack</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>, <span class="ident">Index</span>, <span class="ident">IndexMut</span>};
+<span class="kw">use</span> {<span class="ident">cvt</span>, <span class="ident">cvt_p</span>};
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">ossl10x</span>)]</span>
-<span class="kw">use</span> <span class="ident">ffi</span>::{<span class="ident">sk_pop</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_pop</span>, <span class="ident">sk_free</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_free</span>, <span class="ident">sk_num</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_num</span>,
-          <span class="ident">sk_value</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_value</span>, <span class="ident">_STACK</span> <span class="kw">as</span> <span class="ident">OPENSSL_STACK</span>,
-          <span class="ident">sk_new_null</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_new_null</span>, <span class="ident">sk_push</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_push</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">ossl110</span>)]</span>
-<span class="kw">use</span> <span class="ident">ffi</span>::{<span class="ident">OPENSSL_sk_pop</span>, <span class="ident">OPENSSL_sk_free</span>, <span class="ident">OPENSSL_sk_num</span>, <span class="ident">OPENSSL_sk_value</span>, <span class="ident">OPENSSL_STACK</span>,
-          <span class="ident">OPENSSL_sk_new_null</span>, <span class="ident">OPENSSL_sk_push</span>};
+<span class="macro">cfg_if</span><span class="macro">!</span> {
+    <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">ossl110</span>)]</span> {
+        <span class="kw">use</span> <span class="ident">ffi</span>::{
+            <span class="ident">OPENSSL_sk_pop</span>, <span class="ident">OPENSSL_sk_free</span>, <span class="ident">OPENSSL_sk_num</span>, <span class="ident">OPENSSL_sk_value</span>, <span class="ident">OPENSSL_STACK</span>,
+            <span class="ident">OPENSSL_sk_new_null</span>, <span class="ident">OPENSSL_sk_push</span>,
+        };
+    } <span class="kw">else</span> {
+        <span class="kw">use</span> <span class="ident">ffi</span>::{
+            <span class="ident">sk_pop</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_pop</span>, <span class="ident">sk_free</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_free</span>, <span class="ident">sk_num</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_num</span>,
+            <span class="ident">sk_value</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_value</span>, <span class="ident">_STACK</span> <span class="kw">as</span> <span class="ident">OPENSSL_STACK</span>,
+            <span class="ident">sk_new_null</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_new_null</span>, <span class="ident">sk_push</span> <span class="kw">as</span> <span class="ident">OPENSSL_sk_push</span>,
+        };
+    }
+}
 
 <span class="doccomment">/// Trait implemented by types which can be placed in a stack.</span>
 <span class="doccomment">///</span>
@@ -394,21 +412,24 @@
 <span class="doccomment">/// An owned stack of `T`.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span><span class="op">&gt;</span>(<span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">T</span>::<span class="ident">StackType</span>);
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span><span class="op">&gt;</span> <span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
-        <span class="kw">unsafe</span> {
-            <span class="ident">ffi</span>::<span class="ident">init</span>();
-            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">cvt_p</span>(<span class="ident">OPENSSL_sk_new_null</span>())<span class="question-mark">?</span>;
-            <span class="prelude-val">Ok</span>(<span class="ident">Stack</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>))
-        }
-    }
-}
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="kw">unsafe</span> {
             <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">pop</span>() {}
             <span class="ident">OPENSSL_sk_free</span>(<span class="self">self</span>.<span class="number">0</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>);
+        }
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span><span class="op">&gt;</span> <span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Stack</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
+        <span class="kw">unsafe</span> {
+            <span class="ident">ffi</span>::<span class="ident">init</span>();
+            <span class="kw">let</span> <span class="ident">ptr</span> <span class="op">=</span> <span class="ident">cvt_p</span>(<span class="ident">OPENSSL_sk_new_null</span>())<span class="question-mark">?</span>;
+            <span class="prelude-val">Ok</span>(<span class="ident">Stack</span>(<span class="ident">ptr</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>))
         }
     }
 }
@@ -448,7 +469,7 @@
         <span class="macro">assert</span><span class="macro">!</span>(
             <span class="op">!</span><span class="ident">ptr</span>.<span class="ident">is_null</span>(),
             <span class="string">&quot;Must not instantiate a Stack from a null-ptr - use Stack::new() in \
-                                 that case&quot;</span>
+             that case&quot;</span>
         );
         <span class="ident">Stack</span>(<span class="ident">ptr</span>)
     }
@@ -518,6 +539,9 @@
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StackRef</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span><span class="op">&gt;</span>(<span class="ident">Opaque</span>, <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>);
 
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">StackRef</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span> <span class="ident">Sync</span> <span class="kw">for</span> <span class="ident">StackRef</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {}
+
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Stackable</span><span class="op">&gt;</span> <span class="ident">ForeignTypeRef</span> <span class="kw">for</span> <span class="ident">StackRef</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">CType</span> <span class="op">=</span> <span class="ident">T</span>::<span class="ident">StackType</span>;
 }
@@ -579,9 +603,7 @@
     <span class="doccomment">/// Pushes a value onto the top of the stack.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ErrorStack</span><span class="op">&gt;</span> {
         <span class="kw">unsafe</span> {
-            <span class="ident">cvt</span>(
-                <span class="ident">OPENSSL_sk_push</span>(<span class="self">self</span>.<span class="ident">as_stack</span>(), <span class="ident">data</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>),
-            )<span class="question-mark">?</span>;
+            <span class="ident">cvt</span>(<span class="ident">OPENSSL_sk_push</span>(<span class="self">self</span>.<span class="ident">as_stack</span>(), <span class="ident">data</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="kw">_</span>))<span class="question-mark">?</span>;
             <span class="ident">mem</span>::<span class="ident">forget</span>(<span class="ident">data</span>);
             <span class="prelude-val">Ok</span>(())
         }

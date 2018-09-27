@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.7.2/src/utf_8.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>utf_8.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.8.7/src/utf_8.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>utf_8.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1037,6 +1037,64 @@
 <span id="1037">1037</span>
 <span id="1038">1038</span>
 <span id="1039">1039</span>
+<span id="1040">1040</span>
+<span id="1041">1041</span>
+<span id="1042">1042</span>
+<span id="1043">1043</span>
+<span id="1044">1044</span>
+<span id="1045">1045</span>
+<span id="1046">1046</span>
+<span id="1047">1047</span>
+<span id="1048">1048</span>
+<span id="1049">1049</span>
+<span id="1050">1050</span>
+<span id="1051">1051</span>
+<span id="1052">1052</span>
+<span id="1053">1053</span>
+<span id="1054">1054</span>
+<span id="1055">1055</span>
+<span id="1056">1056</span>
+<span id="1057">1057</span>
+<span id="1058">1058</span>
+<span id="1059">1059</span>
+<span id="1060">1060</span>
+<span id="1061">1061</span>
+<span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015-2016 Mozilla Foundation. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution.</span>
@@ -1050,11 +1108,29 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;parallel-utf8&quot;</span>)]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">rayon</span>;
 
-<span class="kw">use</span> <span class="ident">handles</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">variant</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">ascii</span>::<span class="ident">ascii_to_basic_latin</span>;
 <span class="kw">use</span> <span class="ident">ascii</span>::<span class="ident">basic_latin_to_ascii</span>;
+<span class="kw">use</span> <span class="ident">handles</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">variant</span>::<span class="kw-2">*</span>;
+
+<span class="macro">cfg_if</span><span class="macro">!</span>{
+    <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;simd-accel&quot;</span>)]</span> {
+        <span class="kw">use</span> ::<span class="ident">std</span>::<span class="ident">intrinsics</span>::<span class="ident">unlikely</span>;
+        <span class="kw">use</span> ::<span class="ident">std</span>::<span class="ident">intrinsics</span>::<span class="ident">likely</span>;
+    } <span class="kw">else</span> {
+        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+        <span class="comment">// Unsafe to match the intrinsic, which is needlessly unsafe.</span>
+        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">unlikely</span>(<span class="ident">b</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+            <span class="ident">b</span>
+        }
+        <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+        <span class="comment">// Unsafe to match the intrinsic, which is needlessly unsafe.</span>
+        <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">likely</span>(<span class="ident">b</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+            <span class="ident">b</span>
+        }
+    }
+}
 
 <span class="comment">// Keep this cfg_if in sync with whether the utf_8_core module is defined in lib.rs.</span>
 <span class="macro">cfg_if</span><span class="macro">!</span> {
@@ -1088,21 +1164,22 @@
 <span class="comment">// Instead, please regenerate using generate-encoding-data.py</span>
 
 <span class="doccomment">/// Bit is 1 if the trail is invalid.</span>
-<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">UTF8_TRAIL_INVALID</span>: [<span class="ident">u8</span>; <span class="number">256</span>] <span class="op">=</span>
-    [<span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>,
-     <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>,
-     <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>,
-     <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
-     <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>];
+<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">UTF8_TRAIL_INVALID</span>: [<span class="ident">u8</span>; <span class="number">256</span>] <span class="op">=</span> [
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>,
+    <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">80</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>,
+    <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">144</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>,
+    <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">160</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+    <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>, <span class="number">248</span>,
+];
 <span class="comment">// END GENERATED CODE</span>
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;parallel-utf8&quot;</span>)]</span>
@@ -1120,9 +1197,9 @@
         <span class="comment">// which we are trying to optimize here.</span>
         <span class="kw">if</span> <span class="ident">len</span> <span class="op">&lt;</span> <span class="number">290000</span> {
             <span class="kw">return</span> <span class="kw">match</span> <span class="ident">run_utf8_validation</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>[..<span class="ident">len</span>]) {
-                       <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">bytes</span>.<span class="ident">len</span>(),
-                       <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">valid_up_to</span>(),
-                   };
+                <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">bytes</span>.<span class="ident">len</span>(),
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">valid_up_to</span>(),
+            };
         }
         <span class="kw">let</span> <span class="ident">mid</span> <span class="op">=</span> <span class="ident">len</span> <span class="op">&gt;&gt;</span> <span class="number">1</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">adjusted</span> <span class="op">=</span> <span class="ident">mid</span>;
@@ -1172,12 +1249,8 @@
             <span class="kw">let</span> <span class="ident">dst_remaining</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dst</span>[<span class="ident">written</span>..];
             <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">min</span>(<span class="ident">src_remaining</span>.<span class="ident">len</span>(), <span class="ident">dst_remaining</span>.<span class="ident">len</span>());
             <span class="kw">match</span> <span class="kw">unsafe</span> {
-                      <span class="ident">ascii_to_basic_latin</span>(
-                    <span class="ident">src_remaining</span>.<span class="ident">as_ptr</span>(),
-                    <span class="ident">dst_remaining</span>.<span class="ident">as_mut_ptr</span>(),
-                    <span class="ident">length</span>,
-                )
-                  } {
+                <span class="ident">ascii_to_basic_latin</span>(<span class="ident">src_remaining</span>.<span class="ident">as_ptr</span>(), <span class="ident">dst_remaining</span>.<span class="ident">as_mut_ptr</span>(), <span class="ident">length</span>)
+            } {
                 <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
                     <span class="ident">read</span> <span class="op">+=</span> <span class="ident">length</span>;
                     <span class="ident">written</span> <span class="op">+=</span> <span class="ident">length</span>;
@@ -1225,14 +1298,15 @@
                         <span class="comment">// Three-byte normal</span>
                         <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                         <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
-                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                           <span class="number">0</span> {
+                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                            <span class="op">!=</span> <span class="number">0</span>
+                        {
                             <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                         }
-                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span>
-                                    ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                                    (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                            <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                            <span class="op">|</span> (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                         <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="ident">point</span> <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">read</span> <span class="op">+=</span> <span class="number">3</span>;
                         <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
@@ -1241,15 +1315,16 @@
                         <span class="comment">// Three-byte special lower bound</span>
                         <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                         <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
-                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span>
-                             <span class="ident">UTF8_THREE_BYTE_SPECIAL_LOWER_BOUND_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                           <span class="number">0</span> {
+                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>]
+                            <span class="op">&amp;</span> <span class="ident">UTF8_THREE_BYTE_SPECIAL_LOWER_BOUND_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                            <span class="op">!=</span> <span class="number">0</span>
+                        {
                             <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                         }
-                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span>
-                                    ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                                    (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                            <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                            <span class="op">|</span> (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                         <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="ident">point</span> <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">read</span> <span class="op">+=</span> <span class="number">3</span>;
                         <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
@@ -1258,15 +1333,16 @@
                         <span class="comment">// Three-byte special upper bound</span>
                         <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                         <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
-                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span>
-                             <span class="ident">UTF8_THREE_BYTE_SPECIAL_UPPER_BOUND_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                           <span class="number">0</span> {
+                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>]
+                            <span class="op">&amp;</span> <span class="ident">UTF8_THREE_BYTE_SPECIAL_UPPER_BOUND_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                            <span class="op">!=</span> <span class="number">0</span>
+                        {
                             <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                         }
-                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span>
-                                    ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                                    (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                            <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                            <span class="op">|</span> (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                         <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="ident">point</span> <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">read</span> <span class="op">+=</span> <span class="number">3</span>;
                         <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
@@ -1279,16 +1355,17 @@
                         <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                         <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
                         <span class="kw">let</span> <span class="ident">fourth</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">3</span>];
-                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                           <span class="number">0</span> {
+                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                            <span class="op">!=</span> <span class="number">0</span>
+                        {
                             <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                         }
-                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0x7u32</span>) <span class="op">&lt;&lt;</span> <span class="number">18</span>) <span class="op">|</span>
-                                    ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span>
-                                    ((<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                                    (<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0x7u32</span>) <span class="op">&lt;&lt;</span> <span class="number">18</span>)
+                            <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                            <span class="op">|</span> ((<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                            <span class="op">|</span> (<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                         <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="number">0xD7C0</span> <span class="op">+</span> (<span class="ident">point</span> <span class="op">&gt;&gt;</span> <span class="number">10</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">dst</span>[<span class="ident">written</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">=</span> (<span class="number">0xDC00</span> <span class="op">+</span> (<span class="ident">point</span> <span class="op">&amp;</span> <span class="number">0x3FF</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">read</span> <span class="op">+=</span> <span class="number">4</span>;
@@ -1302,17 +1379,18 @@
                         <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                         <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
                         <span class="kw">let</span> <span class="ident">fourth</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">3</span>];
-                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span>
-                             <span class="ident">UTF8_FOUR_BYTE_SPECIAL_LOWER_BOUND_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                           <span class="number">0</span> {
+                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>]
+                            <span class="op">&amp;</span> <span class="ident">UTF8_FOUR_BYTE_SPECIAL_LOWER_BOUND_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                            <span class="op">!=</span> <span class="number">0</span>
+                        {
                             <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                         }
-                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0x7u32</span>) <span class="op">&lt;&lt;</span> <span class="number">18</span>) <span class="op">|</span>
-                                    ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span>
-                                    ((<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                                    (<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0x7u32</span>) <span class="op">&lt;&lt;</span> <span class="number">18</span>)
+                            <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                            <span class="op">|</span> ((<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                            <span class="op">|</span> (<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                         <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="number">0xD7C0</span> <span class="op">+</span> (<span class="ident">point</span> <span class="op">&gt;&gt;</span> <span class="number">10</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">dst</span>[<span class="ident">written</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">=</span> (<span class="number">0xDC00</span> <span class="op">+</span> (<span class="ident">point</span> <span class="op">&amp;</span> <span class="number">0x3FF</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">read</span> <span class="op">+=</span> <span class="number">4</span>;
@@ -1326,17 +1404,18 @@
                         <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                         <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
                         <span class="kw">let</span> <span class="ident">fourth</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">3</span>];
-                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span>
-                             <span class="ident">UTF8_FOUR_BYTE_SPECIAL_UPPER_BOUND_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>) <span class="op">|</span>
-                            (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                           <span class="number">0</span> {
+                        <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>]
+                            <span class="op">&amp;</span> <span class="ident">UTF8_FOUR_BYTE_SPECIAL_UPPER_BOUND_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)
+                            <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                            <span class="op">!=</span> <span class="number">0</span>
+                        {
                             <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                         }
-                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0x7u32</span>) <span class="op">&lt;&lt;</span> <span class="number">18</span>) <span class="op">|</span>
-                                    ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span>
-                                    ((<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                                    (<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                        <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0x7u32</span>) <span class="op">&lt;&lt;</span> <span class="number">18</span>)
+                            <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                            <span class="op">|</span> ((<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                            <span class="op">|</span> (<span class="ident">fourth</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                         <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="number">0xD7C0</span> <span class="op">+</span> (<span class="ident">point</span> <span class="op">&gt;&gt;</span> <span class="number">10</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">dst</span>[<span class="ident">written</span> <span class="op">+</span> <span class="number">1</span>] <span class="op">=</span> (<span class="number">0xDC00</span> <span class="op">+</span> (<span class="ident">point</span> <span class="op">&amp;</span> <span class="number">0x3FF</span>)) <span class="kw">as</span> <span class="ident">u16</span>;
                         <span class="ident">read</span> <span class="op">+=</span> <span class="number">4</span>;
@@ -1403,13 +1482,15 @@
                 }
                 <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                 <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
-                <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>) <span class="op">|</span>
-                    (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                   <span class="number">0</span> {
+                <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)
+                    <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                    <span class="op">!=</span> <span class="number">0</span>
+                {
                     <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                 }
-                <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                            (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                    <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                    <span class="op">|</span> (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                 <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="ident">point</span> <span class="kw">as</span> <span class="ident">u16</span>;
                 <span class="ident">read</span> <span class="op">=</span> <span class="ident">new_read</span>;
                 <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
@@ -1422,14 +1503,16 @@
                 }
                 <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                 <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
-                <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span>
-                     <span class="ident">UTF8_THREE_BYTE_SPECIAL_LOWER_BOUND_TRAIL</span>) <span class="op">|</span>
-                    (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                   <span class="number">0</span> {
+                <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>]
+                    <span class="op">&amp;</span> <span class="ident">UTF8_THREE_BYTE_SPECIAL_LOWER_BOUND_TRAIL</span>)
+                    <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                    <span class="op">!=</span> <span class="number">0</span>
+                {
                     <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                 }
-                <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                            (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                    <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                    <span class="op">|</span> (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                 <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="ident">point</span> <span class="kw">as</span> <span class="ident">u16</span>;
                 <span class="ident">read</span> <span class="op">=</span> <span class="ident">new_read</span>;
                 <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
@@ -1442,14 +1525,16 @@
                 }
                 <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">1</span>];
                 <span class="kw">let</span> <span class="ident">third</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span> <span class="op">+</span> <span class="number">2</span>];
-                <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span>
-                     <span class="ident">UTF8_THREE_BYTE_SPECIAL_UPPER_BOUND_TRAIL</span>) <span class="op">|</span>
-                    (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>)) <span class="op">!=</span>
-                   <span class="number">0</span> {
+                <span class="kw">if</span> ((<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">second</span> <span class="kw">as</span> <span class="ident">usize</span>]
+                    <span class="op">&amp;</span> <span class="ident">UTF8_THREE_BYTE_SPECIAL_UPPER_BOUND_TRAIL</span>)
+                    <span class="op">|</span> (<span class="ident">UTF8_TRAIL_INVALID</span>[<span class="ident">third</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">&amp;</span> <span class="ident">UTF8_NORMAL_TRAIL</span>))
+                    <span class="op">!=</span> <span class="number">0</span>
+                {
                     <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                 }
-                <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>) <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>) <span class="op">|</span>
-                            (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
+                <span class="kw">let</span> <span class="ident">point</span> <span class="op">=</span> (((<span class="ident">byte</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&amp;</span> <span class="number">0xFu32</span>) <span class="op">&lt;&lt;</span> <span class="number">12</span>)
+                    <span class="op">|</span> ((<span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="op">&lt;&lt;</span> <span class="number">6</span>)
+                    <span class="op">|</span> (<span class="ident">third</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>);
                 <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="ident">point</span> <span class="kw">as</span> <span class="ident">u16</span>;
                 <span class="ident">read</span> <span class="op">=</span> <span class="ident">new_read</span>;
                 <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
@@ -1466,7 +1551,7 @@
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Utf8Decoder</span> {
     <span class="ident">code_point</span>: <span class="ident">u32</span>,
-    <span class="ident">bytes_seen</span>: <span class="ident">usize</span>, <span class="comment">// 1, 2 or 3: counts continuations only</span>
+    <span class="ident">bytes_seen</span>: <span class="ident">usize</span>,   <span class="comment">// 1, 2 or 3: counts continuations only</span>
     <span class="ident">bytes_needed</span>: <span class="ident">usize</span>, <span class="comment">// 1, 2 or 3: counts continuations only</span>
     <span class="ident">lower_boundary</span>: <span class="ident">u8</span>,
     <span class="ident">upper_boundary</span>: <span class="ident">u8</span>,
@@ -1525,7 +1610,11 @@
                 <span class="self">self</span>.<span class="ident">code_point</span> <span class="op">=</span> <span class="number">0</span>;
                 <span class="self">self</span>.<span class="ident">bytes_needed</span> <span class="op">=</span> <span class="number">0</span>;
                 <span class="self">self</span>.<span class="ident">bytes_seen</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="ident">bad_bytes</span>, <span class="number">0</span>), <span class="ident">src_consumed</span>, <span class="ident">dest</span>.<span class="ident">written</span>());
+                <span class="kw">return</span> (
+                    <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="ident">bad_bytes</span>, <span class="number">0</span>),
+                    <span class="ident">src_consumed</span>,
+                    <span class="ident">dest</span>.<span class="ident">written</span>(),
+                );
             }
         },
         {
@@ -1535,9 +1624,11 @@
                     <span class="kw">continue</span>;
                 }
                 <span class="kw">if</span> <span class="ident">b</span> <span class="op">&lt;</span> <span class="number">0xC2u8</span> {
-                    <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">1</span>, <span class="number">0</span>),
-                            <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
-                            <span class="ident">destination_handle</span>.<span class="ident">written</span>());
+                    <span class="kw">return</span> (
+                        <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">1</span>, <span class="number">0</span>),
+                        <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
+                        <span class="ident">destination_handle</span>.<span class="ident">written</span>(),
+                    );
                 }
                 <span class="kw">if</span> <span class="ident">b</span> <span class="op">&lt;</span> <span class="number">0xE0u8</span> {
                     <span class="self">self</span>.<span class="ident">bytes_needed</span> <span class="op">=</span> <span class="number">1</span>;
@@ -1564,9 +1655,11 @@
                     <span class="self">self</span>.<span class="ident">code_point</span> <span class="op">=</span> <span class="ident">b</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">&amp;</span> <span class="number">0x7</span>;
                     <span class="kw">continue</span>;
                 }
-                <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">1</span>, <span class="number">0</span>),
-                        <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
-                        <span class="ident">destination_handle</span>.<span class="ident">written</span>());
+                <span class="kw">return</span> (
+                    <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="number">1</span>, <span class="number">0</span>),
+                    <span class="ident">unread_handle</span>.<span class="ident">consumed</span>(),
+                    <span class="ident">destination_handle</span>.<span class="ident">written</span>(),
+                );
             }
             <span class="comment">// self.bytes_needed != 0</span>
             <span class="kw">if</span> <span class="op">!</span>(<span class="ident">b</span> <span class="op">&gt;=</span> <span class="self">self</span>.<span class="ident">lower_boundary</span> <span class="op">&amp;&amp;</span> <span class="ident">b</span> <span class="op">&lt;=</span> <span class="self">self</span>.<span class="ident">upper_boundary</span>) {
@@ -1576,9 +1669,11 @@
                 <span class="self">self</span>.<span class="ident">bytes_seen</span> <span class="op">=</span> <span class="number">0</span>;
                 <span class="self">self</span>.<span class="ident">lower_boundary</span> <span class="op">=</span> <span class="number">0x80u8</span>;
                 <span class="self">self</span>.<span class="ident">upper_boundary</span> <span class="op">=</span> <span class="number">0xBFu8</span>;
-                <span class="kw">return</span> (<span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="ident">bad_bytes</span>, <span class="number">0</span>),
-                        <span class="ident">unread_handle</span>.<span class="ident">unread</span>(),
-                        <span class="ident">destination_handle</span>.<span class="ident">written</span>());
+                <span class="kw">return</span> (
+                    <span class="ident">DecoderResult</span>::<span class="ident">Malformed</span>(<span class="ident">bad_bytes</span>, <span class="number">0</span>),
+                    <span class="ident">unread_handle</span>.<span class="ident">unread</span>(),
+                    <span class="ident">destination_handle</span>.<span class="ident">written</span>(),
+                );
             }
             <span class="self">self</span>.<span class="ident">lower_boundary</span> <span class="op">=</span> <span class="number">0x80u8</span>;
             <span class="self">self</span>.<span class="ident">upper_boundary</span> <span class="op">=</span> <span class="number">0xBFu8</span>;
@@ -1615,24 +1710,27 @@
         <span class="ident">Encoder</span>::<span class="ident">new</span>(<span class="ident">encoding</span>, <span class="ident">VariantEncoder</span>::<span class="ident">Utf8</span>(<span class="ident">Utf8Encoder</span>))
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf16_without_replacement</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                                                            <span class="ident">u16_length</span>: <span class="ident">usize</span>)
-                                                            <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf16_without_replacement</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">u16_length</span>: <span class="ident">usize</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="ident">checked_add</span>(<span class="number">1</span>, <span class="ident">u16_length</span>.<span class="ident">checked_mul</span>(<span class="number">3</span>))
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf8_without_replacement</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
-                                                           <span class="ident">byte_length</span>: <span class="ident">usize</span>)
-                                                           <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">max_buffer_length_from_utf8_without_replacement</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">byte_length</span>: <span class="ident">usize</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">byte_length</span>)
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cargo-clippy&quot;</span>, <span class="ident">allow</span>(<span class="ident">never_loop</span>))]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf16_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                                 <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
-                                 <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
-                                 <span class="ident">_last</span>: <span class="ident">bool</span>)
-                                 <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf16_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
+        <span class="ident">_last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">read</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">written</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="lifetime">&#39;outer</span>: <span class="kw">loop</span> {
@@ -1645,12 +1743,8 @@
                     (<span class="ident">EncoderResult</span>::<span class="ident">InputEmpty</span>, <span class="ident">src_remaining</span>.<span class="ident">len</span>())
                 };
                 <span class="kw">match</span> <span class="kw">unsafe</span> {
-                          <span class="ident">basic_latin_to_ascii</span>(
-                        <span class="ident">src_remaining</span>.<span class="ident">as_ptr</span>(),
-                        <span class="ident">dst_remaining</span>.<span class="ident">as_mut_ptr</span>(),
-                        <span class="ident">length</span>,
-                    )
-                      } {
+                    <span class="ident">basic_latin_to_ascii</span>(<span class="ident">src_remaining</span>.<span class="ident">as_ptr</span>(), <span class="ident">dst_remaining</span>.<span class="ident">as_mut_ptr</span>(), <span class="ident">length</span>)
+                } {
                     <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
                         <span class="ident">read</span> <span class="op">+=</span> <span class="ident">length</span>;
                         <span class="ident">written</span> <span class="op">+=</span> <span class="ident">length</span>;
@@ -1666,54 +1760,68 @@
             <span class="lifetime">&#39;inner</span>: <span class="kw">loop</span> {
                 <span class="comment">// The following loop is only broken out of as a goto forward.</span>
                 <span class="kw">loop</span> {
-                    <span class="kw">if</span> <span class="ident">written</span> <span class="op">+</span> <span class="number">4</span> <span class="op">&gt;</span> <span class="ident">dst</span>.<span class="ident">len</span>() {
+                    <span class="comment">// Unfortunately, this check isn&#39;t enough for the compiler to elide</span>
+                    <span class="comment">// the bound checks on writes to dst, which is why they are manually</span>
+                    <span class="comment">// elided, which makes a measurable difference.</span>
+                    <span class="kw">if</span> <span class="ident">written</span>.<span class="ident">checked_add</span>(<span class="number">4</span>).<span class="ident">unwrap</span>() <span class="op">&gt;</span> <span class="ident">dst</span>.<span class="ident">len</span>() {
                         <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">OutputFull</span>, <span class="ident">read</span>, <span class="ident">written</span>);
                     }
                     <span class="ident">read</span> <span class="op">+=</span> <span class="number">1</span>;
                     <span class="kw">if</span> <span class="ident">unit</span> <span class="op">&lt;</span> <span class="number">0x800</span> {
-                        <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="ident">unit</span> <span class="op">&gt;&gt;</span> <span class="number">6</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0xC0u8</span>;
-                        <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                        <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="ident">unit</span> <span class="op">&amp;</span> <span class="number">0x3F</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
-                        <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                        <span class="kw">unsafe</span> {
+                            <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> (<span class="ident">unit</span> <span class="op">&gt;&gt;</span> <span class="number">6</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0xC0u8</span>;
+                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                            <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> (<span class="ident">unit</span> <span class="op">&amp;</span> <span class="number">0x3F</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
+                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                        }
                         <span class="kw">break</span>;
                     }
                     <span class="kw">let</span> <span class="ident">unit_minus_surrogate_start</span> <span class="op">=</span> <span class="ident">unit</span>.<span class="ident">wrapping_sub</span>(<span class="number">0xD800</span>);
-                    <span class="kw">if</span> <span class="ident">unit_minus_surrogate_start</span> <span class="op">&gt;</span> (<span class="number">0xDFFF</span> <span class="op">-</span> <span class="number">0xD800</span>) {
-                        <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="ident">unit</span> <span class="op">&gt;&gt;</span> <span class="number">12</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0xE0u8</span>;
-                        <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                        <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> ((<span class="ident">unit</span> <span class="op">&amp;</span> <span class="number">0xFC0</span>) <span class="op">&gt;&gt;</span> <span class="number">6</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
-                        <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                        <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="ident">unit</span> <span class="op">&amp;</span> <span class="number">0x3F</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
-                        <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">likely</span>(<span class="ident">unit_minus_surrogate_start</span> <span class="op">&gt;</span> (<span class="number">0xDFFF</span> <span class="op">-</span> <span class="number">0xD800</span>)) } {
+                        <span class="kw">unsafe</span> {
+                            <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> (<span class="ident">unit</span> <span class="op">&gt;&gt;</span> <span class="number">12</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0xE0u8</span>;
+                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                            <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> ((<span class="ident">unit</span> <span class="op">&amp;</span> <span class="number">0xFC0</span>) <span class="op">&gt;&gt;</span> <span class="number">6</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
+                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                            <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> (<span class="ident">unit</span> <span class="op">&amp;</span> <span class="number">0x3F</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
+                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                        }
                         <span class="kw">break</span>;
                     }
-                    <span class="kw">if</span> <span class="ident">unit_minus_surrogate_start</span> <span class="op">&lt;=</span> (<span class="number">0xDBFF</span> <span class="op">-</span> <span class="number">0xD800</span>) {
+                    <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">likely</span>(<span class="ident">unit_minus_surrogate_start</span> <span class="op">&lt;=</span> (<span class="number">0xDBFF</span> <span class="op">-</span> <span class="number">0xD800</span>)) } {
                         <span class="comment">// high surrogate</span>
-                        <span class="kw">if</span> <span class="ident">read</span> <span class="op">==</span> <span class="ident">src</span>.<span class="ident">len</span>() {
+                        <span class="comment">// read &gt; src.len() is impossible, but using</span>
+                        <span class="comment">// &gt;= instead of == allows the compiler to elide a bound check.</span>
+                        <span class="kw">if</span> <span class="ident">read</span> <span class="op">&gt;=</span> <span class="ident">src</span>.<span class="ident">len</span>() {
+                            <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="ident">read</span>, <span class="ident">src</span>.<span class="ident">len</span>());
                             <span class="comment">// Unpaired surrogate at the end of the buffer.</span>
-                            <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="number">0xEFu8</span>;
-                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                            <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="number">0xBFu8</span>;
-                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                            <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="number">0xBDu8</span>;
-                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                            <span class="kw">unsafe</span> {
+                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> <span class="number">0xEFu8</span>;
+                                <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> <span class="number">0xBFu8</span>;
+                                <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> <span class="number">0xBDu8</span>;
+                                <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                            }
                             <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">InputEmpty</span>, <span class="ident">read</span>, <span class="ident">written</span>);
                         }
                         <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span>];
                         <span class="kw">let</span> <span class="ident">second_minus_low_surrogate_start</span> <span class="op">=</span> <span class="ident">second</span>.<span class="ident">wrapping_sub</span>(<span class="number">0xDC00</span>);
-                        <span class="kw">if</span> <span class="ident">second_minus_low_surrogate_start</span> <span class="op">&lt;=</span> (<span class="number">0xDFFF</span> <span class="op">-</span> <span class="number">0xDC00</span>) {
+                        <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">likely</span>(<span class="ident">second_minus_low_surrogate_start</span> <span class="op">&lt;=</span> (<span class="number">0xDFFF</span> <span class="op">-</span> <span class="number">0xDC00</span>)) } {
                             <span class="comment">// The next code unit is a low surrogate. Advance position.</span>
                             <span class="ident">read</span> <span class="op">+=</span> <span class="number">1</span>;
-                            <span class="kw">let</span> <span class="ident">astral</span> <span class="op">=</span> ((<span class="ident">unit</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">+</span> <span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span> <span class="op">-</span>
-                                         (((<span class="number">0xD800u32</span> <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">-</span> <span class="number">0x10000u32</span>) <span class="op">+</span> <span class="number">0xDC00u32</span>);
-                            <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="ident">astral</span> <span class="op">&gt;&gt;</span> <span class="number">18</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0xF0u8</span>;
-                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                            <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> ((<span class="ident">astral</span> <span class="op">&amp;</span> <span class="number">0x3F000u32</span>) <span class="op">&gt;&gt;</span> <span class="number">12</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
-                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                            <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> ((<span class="ident">astral</span> <span class="op">&amp;</span> <span class="number">0xFC0u32</span>) <span class="op">&gt;&gt;</span> <span class="number">6</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
-                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                            <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> (<span class="ident">astral</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
-                            <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                            <span class="kw">let</span> <span class="ident">astral</span> <span class="op">=</span> ((<span class="ident">unit</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">+</span> <span class="ident">second</span> <span class="kw">as</span> <span class="ident">u32</span>
+                                <span class="op">-</span> (((<span class="number">0xD800u32</span> <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">-</span> <span class="number">0x10000u32</span>) <span class="op">+</span> <span class="number">0xDC00u32</span>);
+                            <span class="kw">unsafe</span> {
+                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> (<span class="ident">astral</span> <span class="op">&gt;&gt;</span> <span class="number">18</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0xF0u8</span>;
+                                <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> ((<span class="ident">astral</span> <span class="op">&amp;</span> <span class="number">0x3F000u32</span>) <span class="op">&gt;&gt;</span> <span class="number">12</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
+                                <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> ((<span class="ident">astral</span> <span class="op">&amp;</span> <span class="number">0xFC0u32</span>) <span class="op">&gt;&gt;</span> <span class="number">6</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
+                                <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> (<span class="ident">astral</span> <span class="op">&amp;</span> <span class="number">0x3Fu32</span>) <span class="kw">as</span> <span class="ident">u8</span> <span class="op">|</span> <span class="number">0x80u8</span>;
+                                <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                            }
                             <span class="kw">break</span>;
                         }
                         <span class="comment">// The next code unit is not a low surrogate. Don&#39;t advance</span>
@@ -1721,21 +1829,29 @@
                         <span class="comment">// Fall through</span>
                     }
                     <span class="comment">// Unpaired low surrogate</span>
-                    <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="number">0xEFu8</span>;
-                    <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                    <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="number">0xBFu8</span>;
-                    <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
-                    <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="number">0xBDu8</span>;
-                    <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="kw">unsafe</span> {
+                        <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> <span class="number">0xEFu8</span>;
+                        <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                        <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> <span class="number">0xBFu8</span>;
+                        <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                        <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">written</span>)) <span class="op">=</span> <span class="number">0xBDu8</span>;
+                        <span class="ident">written</span> <span class="op">+=</span> <span class="number">1</span>;
+                    }
                     <span class="kw">break</span>;
                 }
                 <span class="comment">// Now see if the next unit is Basic Latin</span>
-                <span class="kw">if</span> <span class="ident">read</span> <span class="op">==</span> <span class="ident">src</span>.<span class="ident">len</span>() {
+                <span class="comment">// read &gt; src.len() is impossible, but using</span>
+                <span class="comment">// &gt;= instead of == allows the compiler to elide a bound check.</span>
+                <span class="kw">if</span> <span class="ident">read</span> <span class="op">&gt;=</span> <span class="ident">src</span>.<span class="ident">len</span>() {
+                    <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="ident">read</span>, <span class="ident">src</span>.<span class="ident">len</span>());
                     <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">InputEmpty</span>, <span class="ident">read</span>, <span class="ident">written</span>);
                 }
                 <span class="ident">unit</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">read</span>];
-                <span class="kw">if</span> <span class="ident">unit</span> <span class="op">&lt;</span> <span class="number">0x80</span> {
-                    <span class="kw">if</span> <span class="ident">written</span> <span class="op">==</span> <span class="ident">dst</span>.<span class="ident">len</span>() {
+                <span class="kw">if</span> <span class="kw">unsafe</span> { <span class="ident">unlikely</span>(<span class="ident">unit</span> <span class="op">&lt;</span> <span class="number">0x80</span>) } {
+                    <span class="comment">// written &gt; dst.len() is impossible, but using</span>
+                    <span class="comment">// &gt;= instead of == allows the compiler to elide a bound check.</span>
+                    <span class="kw">if</span> <span class="ident">written</span> <span class="op">&gt;=</span> <span class="ident">dst</span>.<span class="ident">len</span>() {
+                        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="ident">written</span>, <span class="ident">dst</span>.<span class="ident">len</span>());
                         <span class="kw">return</span> (<span class="ident">EncoderResult</span>::<span class="ident">OutputFull</span>, <span class="ident">read</span>, <span class="ident">written</span>);
                     }
                     <span class="ident">dst</span>[<span class="ident">written</span>] <span class="op">=</span> <span class="ident">unit</span> <span class="kw">as</span> <span class="ident">u8</span>;
@@ -1750,11 +1866,12 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf8_raw</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                                <span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-                                <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
-                                <span class="ident">_last</span>: <span class="ident">bool</span>)
-                                <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encode_from_utf8_raw</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
+        <span class="ident">_last</span>: <span class="ident">bool</span>,
+    ) <span class="op">-&gt;</span> (<span class="ident">EncoderResult</span>, <span class="ident">usize</span>, <span class="ident">usize</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">to_write</span> <span class="op">=</span> <span class="ident">src</span>.<span class="ident">len</span>();
         <span class="kw">if</span> <span class="ident">to_write</span> <span class="op">&lt;=</span> <span class="ident">dst</span>.<span class="ident">len</span>() {
             <span class="kw">unsafe</span> {
@@ -1962,7 +2079,6 @@
         <span class="comment">// Highest four-byte with last byte replaced with 0xFF</span>
         <span class="ident">decode_utf8_to_utf8</span>(<span class="string">b&quot;a\xF4\x8F\xBF\xFF&quot;</span>, <span class="string">&quot;a\u{FFFD}\u{FFFD}&quot;</span>);
         <span class="ident">decode_utf8_to_utf8</span>(<span class="string">b&quot;a\xF4\x8F\xBF\xFFZ&quot;</span>, <span class="string">&quot;a\u{FFFD}\u{FFFD}Z&quot;</span>);
-
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

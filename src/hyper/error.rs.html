@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.27/src/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.12.10/src/error.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>error.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -243,189 +243,525 @@
 <span id="243">243</span>
 <span id="244">244</span>
 <span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Error and Result module.</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">StdError</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IoError</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">Utf8Error</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">FromUtf8Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
 
 <span class="kw">use</span> <span class="ident">httparse</span>;
-
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">uri</span>::<span class="ident">UriError</span>;
-
-<span class="kw">use</span> <span class="self">self</span>::<span class="ident">Error</span>::{
-    <span class="ident">Method</span>,
-    <span class="ident">Uri</span>,
-    <span class="ident">Version</span>,
-    <span class="ident">Header</span>,
-    <span class="ident">Status</span>,
-    <span class="ident">Timeout</span>,
-    <span class="ident">Upgrade</span>,
-    <span class="ident">Closed</span>,
-    <span class="ident">Cancel</span>,
-    <span class="ident">Io</span>,
-    <span class="ident">TooLarge</span>,
-    <span class="ident">Incomplete</span>,
-    <span class="ident">Utf8</span>
-};
+<span class="kw">use</span> <span class="ident">http</span>;
 
 <span class="doccomment">/// Result type often returned from methods that can have hyper `Error`s.</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
-<span class="doccomment">/// A set of errors that can occur parsing HTTP streams.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
-    <span class="doccomment">/// An invalid `Method`, such as `GE,T`.</span>
-    <span class="ident">Method</span>,
-    <span class="doccomment">/// An invalid `Uri`, such as `exam ple.domain`.</span>
-    <span class="ident">Uri</span>(<span class="ident">UriError</span>),
-    <span class="doccomment">/// An invalid `HttpVersion`, such as `HTP/1.1`</span>
-    <span class="ident">Version</span>,
-    <span class="doccomment">/// An invalid `Header`.</span>
-    <span class="ident">Header</span>,
-    <span class="doccomment">/// A message head is too large to be reasonable.</span>
-    <span class="ident">TooLarge</span>,
+<span class="kw">type</span> <span class="ident">Cause</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">StdError</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>;
+
+<span class="doccomment">/// Represents errors that can occur handling HTTP streams.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Error</span> {
+    <span class="ident">inner</span>: <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">ErrorImpl</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">struct</span> <span class="ident">ErrorImpl</span> {
+    <span class="ident">kind</span>: <span class="ident">Kind</span>,
+    <span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;</span>,
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">Kind</span> {
+    <span class="ident">Parse</span>(<span class="ident">Parse</span>),
     <span class="doccomment">/// A message reached EOF, but is not complete.</span>
     <span class="ident">Incomplete</span>,
-    <span class="doccomment">/// An invalid `Status`, such as `1337 ELITE`.</span>
-    <span class="ident">Status</span>,
-    <span class="doccomment">/// A timeout occurred waiting for an IO event.</span>
-    <span class="ident">Timeout</span>,
-    <span class="doccomment">/// A protocol upgrade was encountered, but not yet supported in hyper.</span>
-    <span class="ident">Upgrade</span>,
+    <span class="doccomment">/// A client connection received a response when not waiting for one.</span>
+    <span class="ident">MismatchedResponse</span>,
     <span class="doccomment">/// A pending item was dropped before ever being processed.</span>
-    <span class="ident">Cancel</span>(<span class="ident">Canceled</span>),
+    <span class="ident">Canceled</span>,
     <span class="doccomment">/// Indicates a connection is closed.</span>
     <span class="ident">Closed</span>,
     <span class="doccomment">/// An `io::Error` that occurred while trying to read or write to a network stream.</span>
-    <span class="ident">Io</span>(<span class="ident">IoError</span>),
-    <span class="doccomment">/// Parsing a field as string failed</span>
-    <span class="ident">Utf8</span>(<span class="ident">Utf8Error</span>),
+    <span class="ident">Io</span>,
+    <span class="doccomment">/// Error occurred while connecting.</span>
+    <span class="ident">Connect</span>,
+    <span class="doccomment">/// Error creating a TcpListener.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime&quot;</span>)]</span>
+    <span class="ident">Listen</span>,
+    <span class="doccomment">/// Error accepting on an Incoming stream.</span>
+    <span class="ident">Accept</span>,
+    <span class="doccomment">/// Error calling user&#39;s NewService::new_service().</span>
+    <span class="ident">NewService</span>,
+    <span class="doccomment">/// Error from future of user&#39;s Service::call().</span>
+    <span class="ident">Service</span>,
+    <span class="doccomment">/// Error while reading a body from connection.</span>
+    <span class="ident">Body</span>,
+    <span class="doccomment">/// Error while writing a body to connection.</span>
+    <span class="ident">BodyWrite</span>,
+    <span class="doccomment">/// Error calling user&#39;s Payload::poll_data().</span>
+    <span class="ident">BodyUser</span>,
+    <span class="doccomment">/// Error calling AsyncWrite::shutdown()</span>
+    <span class="ident">Shutdown</span>,
 
-    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-    <span class="ident">__Nonexhaustive</span>(<span class="ident">Void</span>)
+    <span class="doccomment">/// A general error from h2.</span>
+    <span class="ident">Http2</span>,
+
+    <span class="doccomment">/// User tried to create a Request with bad version.</span>
+    <span class="ident">UnsupportedVersion</span>,
+    <span class="doccomment">/// User tried to create a CONNECT Request with the Client.</span>
+    <span class="ident">UnsupportedRequestMethod</span>,
+    <span class="doccomment">/// User tried to respond with a 1xx (not 101) response code.</span>
+    <span class="ident">UnsupportedStatusCode</span>,
+    <span class="doccomment">/// User tried to send a Request with Client with non-absolute URI.</span>
+    <span class="ident">AbsoluteUriRequired</span>,
+
+    <span class="doccomment">/// User tried polling for an upgrade that doesn&#39;t exist.</span>
+    <span class="ident">NoUpgrade</span>,
+
+    <span class="doccomment">/// User polled for an upgrade, but low-level API is not using upgrades.</span>
+    <span class="ident">ManualUpgrade</span>,
+
+    <span class="doccomment">/// Error trying to call `Executor::execute`.</span>
+    <span class="ident">Execute</span>,
 }
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">enum</span> <span class="ident">Parse</span> {
+    <span class="ident">Method</span>,
+    <span class="ident">Version</span>,
+    <span class="ident">VersionH2</span>,
+    <span class="ident">Uri</span>,
+    <span class="ident">Header</span>,
+    <span class="ident">TooLarge</span>,
+    <span class="ident">Status</span>,
+}
+
+<span class="comment">/*
+#[derive(Debug)]
+pub(crate) enum User {
+    VersionNotSupported,
+    MethodNotSupported,
+    InvalidRequestUri,
+}
+*/</span>
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_canceled</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">StdError</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-        <span class="ident">Error</span>::<span class="ident">Cancel</span>(<span class="ident">Canceled</span> {
-            <span class="ident">cause</span>: <span class="ident">cause</span>.<span class="ident">map</span>(<span class="ident">Into</span>::<span class="ident">into</span>),
-        })
+    <span class="comment">//TODO(error): should there be these kinds of inspection methods?</span>
+    <span class="comment">//</span>
+    <span class="comment">// - is_io()</span>
+    <span class="comment">// - is_connect()</span>
+    <span class="comment">// - is_closed()</span>
+    <span class="comment">// - etc?</span>
+
+    <span class="doccomment">/// Returns true if this was an HTTP parse error.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_parse</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        }
+    }
+
+    <span class="doccomment">/// Returns true if this error was caused by user code.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_user</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">BodyUser</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">NewService</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">Service</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">Closed</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">UnsupportedVersion</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">UnsupportedRequestMethod</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">UnsupportedStatusCode</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">AbsoluteUriRequired</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">NoUpgrade</span> <span class="op">|</span>
+            <span class="ident">Kind</span>::<span class="ident">Execute</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        }
+    }
+
+    <span class="doccomment">/// Returns true if this was about a `Request` that was canceled.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_canceled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">Kind</span>::<span class="ident">Canceled</span>
+    }
+
+    <span class="doccomment">/// Returns true if a sender&#39;s channel is closed.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_closed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> <span class="op">==</span> <span class="ident">Kind</span>::<span class="ident">Closed</span>
+    }
+
+    <span class="doccomment">/// Returns the error&#39;s cause.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is identical to `Error::cause` except that it provides extra</span>
+    <span class="doccomment">/// bounds required to be able to downcast the error.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">cause2</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>(<span class="ident">StdError</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span>)<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">cause</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">e</span>)
+    }
+
+    <span class="doccomment">/// Consumes the error, returning its cause.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_cause</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">StdError</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;&gt;</span> {
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">cause</span>
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">kind</span>: <span class="ident">Kind</span>, <span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span> {
+            <span class="ident">inner</span>: <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">ErrorImpl</span> {
+                <span class="ident">kind</span>,
+                <span class="ident">cause</span>,
+            }),
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">kind</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Kind</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span>
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_canceled</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Canceled</span>, <span class="ident">cause</span>.<span class="ident">map</span>(<span class="ident">Into</span>::<span class="ident">into</span>))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_incomplete</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Incomplete</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_too_large</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">TooLarge</span>), <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_header</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">Header</span>), <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_version_h2</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">VersionH2</span>), <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_mismatched_response</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">MismatchedResponse</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_io</span>(<span class="ident">cause</span>: <span class="ident">io</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Io</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime&quot;</span>)]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_listen</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Listen</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_accept</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Accept</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_connect</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Connect</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_closed</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Closed</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_body</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Body</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_body_write</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">BodyWrite</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_unsupported_version</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">UnsupportedVersion</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_unsupported_request_method</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">UnsupportedRequestMethod</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_unsupported_status_code</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">UnsupportedStatusCode</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_absolute_uri_required</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">AbsoluteUriRequired</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_no_upgrade</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">NoUpgrade</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_manual_upgrade</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">ManualUpgrade</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_new_service</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">NewService</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_service</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Service</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_user_body</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cause</span><span class="op">&gt;&gt;</span>(<span class="ident">cause</span>: <span class="ident">E</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">BodyUser</span>, <span class="prelude-val">Some</span>(<span class="ident">cause</span>.<span class="ident">into</span>()))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_shutdown</span>(<span class="ident">cause</span>: <span class="ident">io</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Shutdown</span>, <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">cause</span>)))
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_execute</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Execute</span>, <span class="prelude-val">None</span>)
+    }
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new_h2</span>(<span class="ident">cause</span>: ::<span class="ident">h2</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Http2</span>, <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">cause</span>)))
     }
 }
 
-<span class="doccomment">/// A pending item was dropped before ever being processed.</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// For example, a `Request` could be queued in the `Client`, *just*</span>
-<span class="doccomment">/// as the related connection gets closed by the remote. In that case,</span>
-<span class="doccomment">/// when the connection drops, the pending response future will be</span>
-<span class="doccomment">/// fulfilled with this error, signaling the `Request` was never started.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Canceled</span> {
-    <span class="ident">cause</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="ident">StdError</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Canceled</span> {
-    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="string">&quot;an operation was canceled internally before starting&quot;</span>
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Canceled</span> {
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Error</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">pad</span>(<span class="self">self</span>.<span class="ident">description</span>())
-    }
-}
-
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Void</span>(());
-
-<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Void</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">unreachable</span><span class="macro">!</span>()
+        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Error&quot;</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;kind&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span>)
+            .<span class="ident">field</span>(<span class="string">&quot;cause&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">cause</span>)
+            .<span class="ident">finish</span>()
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Uri</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
-            <span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
-            <span class="ident">Utf8</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">e</span>, <span class="ident">f</span>),
-            <span class="kw-2">ref</span> <span class="ident">e</span> <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="ident">e</span>.<span class="ident">description</span>()),
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">cause</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">cause</span> {
+            <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}: {}&quot;</span>, <span class="self">self</span>.<span class="ident">description</span>(), <span class="ident">cause</span>)
+        } <span class="kw">else</span> {
+            <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="self">self</span>.<span class="ident">description</span>())
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">StdError</span> <span class="kw">for</span> <span class="ident">Error</span> {
     <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Method</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid Method specified&quot;</span>,
-            <span class="ident">Version</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid HTTP version specified&quot;</span>,
-            <span class="ident">Header</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid Header provided&quot;</span>,
-            <span class="ident">TooLarge</span> <span class="op">=&gt;</span> <span class="string">&quot;message head is too large&quot;</span>,
-            <span class="ident">Status</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid Status provided&quot;</span>,
-            <span class="ident">Incomplete</span> <span class="op">=&gt;</span> <span class="string">&quot;message is incomplete&quot;</span>,
-            <span class="ident">Timeout</span> <span class="op">=&gt;</span> <span class="string">&quot;timeout&quot;</span>,
-            <span class="ident">Upgrade</span> <span class="op">=&gt;</span> <span class="string">&quot;unsupported protocol upgrade&quot;</span>,
-            <span class="ident">Closed</span> <span class="op">=&gt;</span> <span class="string">&quot;connection is closed&quot;</span>,
-            <span class="ident">Cancel</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
-            <span class="ident">Uri</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
-            <span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
-            <span class="ident">Utf8</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">description</span>(),
-            <span class="ident">Error</span>::<span class="ident">__Nonexhaustive</span>(..) <span class="op">=&gt;</span>  <span class="macro">unreachable</span><span class="macro">!</span>(),
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">Method</span>) <span class="op">=&gt;</span> <span class="string">&quot;invalid Method specified&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">Version</span>) <span class="op">=&gt;</span> <span class="string">&quot;invalid HTTP version specified&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">VersionH2</span>) <span class="op">=&gt;</span> <span class="string">&quot;invalid HTTP version specified (Http2)&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">Uri</span>) <span class="op">=&gt;</span> <span class="string">&quot;invalid URI&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">Header</span>) <span class="op">=&gt;</span> <span class="string">&quot;invalid Header provided&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">TooLarge</span>) <span class="op">=&gt;</span> <span class="string">&quot;message head is too large&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">Parse</span>::<span class="ident">Status</span>) <span class="op">=&gt;</span> <span class="string">&quot;invalid Status provided&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Incomplete</span> <span class="op">=&gt;</span> <span class="string">&quot;parsed HTTP message from remote is incomplete&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">MismatchedResponse</span> <span class="op">=&gt;</span> <span class="string">&quot;response received without matching request&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Closed</span> <span class="op">=&gt;</span> <span class="string">&quot;connection closed&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Connect</span> <span class="op">=&gt;</span> <span class="string">&quot;an error occurred trying to connect&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Canceled</span> <span class="op">=&gt;</span> <span class="string">&quot;an operation was canceled internally before starting&quot;</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;runtime&quot;</span>)]</span>
+            <span class="ident">Kind</span>::<span class="ident">Listen</span> <span class="op">=&gt;</span> <span class="string">&quot;error creating server listener&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Accept</span> <span class="op">=&gt;</span> <span class="string">&quot;error accepting connection&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">NewService</span> <span class="op">=&gt;</span> <span class="string">&quot;calling user&#39;s new_service failed&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Service</span> <span class="op">=&gt;</span> <span class="string">&quot;error from user&#39;s server service&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Body</span> <span class="op">=&gt;</span> <span class="string">&quot;error reading a body from connection&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">BodyWrite</span> <span class="op">=&gt;</span> <span class="string">&quot;error writing a body to connection&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">BodyUser</span> <span class="op">=&gt;</span> <span class="string">&quot;error from user&#39;s Payload stream&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Shutdown</span> <span class="op">=&gt;</span> <span class="string">&quot;error shutting down connection&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Http2</span> <span class="op">=&gt;</span> <span class="string">&quot;http2 general error&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">UnsupportedVersion</span> <span class="op">=&gt;</span> <span class="string">&quot;request has unsupported HTTP version&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">UnsupportedRequestMethod</span> <span class="op">=&gt;</span> <span class="string">&quot;request has unsupported HTTP method&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">UnsupportedStatusCode</span> <span class="op">=&gt;</span> <span class="string">&quot;response has 1xx status code, not supported by server&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">AbsoluteUriRequired</span> <span class="op">=&gt;</span> <span class="string">&quot;client requires absolute-form URIs&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">NoUpgrade</span> <span class="op">=&gt;</span> <span class="string">&quot;no upgrade available&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">ManualUpgrade</span> <span class="op">=&gt;</span> <span class="string">&quot;upgrade expected but low level API in use&quot;</span>,
+            <span class="ident">Kind</span>::<span class="ident">Execute</span> <span class="op">=&gt;</span> <span class="string">&quot;executor failed to spawn task&quot;</span>,
+
+            <span class="ident">Kind</span>::<span class="ident">Io</span> <span class="op">=&gt;</span> <span class="string">&quot;an IO error occurred&quot;</span>,
         }
     }
 
     <span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">StdError</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">error</span>),
-            <span class="ident">Uri</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">error</span>),
-            <span class="ident">Utf8</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">error</span>),
-            <span class="ident">Cancel</span>(<span class="kw-2">ref</span> <span class="ident">e</span>) <span class="op">=&gt;</span> <span class="ident">e</span>.<span class="ident">cause</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">e</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">StdError</span>),
-            <span class="ident">Error</span>::<span class="ident">__Nonexhaustive</span>(..) <span class="op">=&gt;</span>  <span class="macro">unreachable</span><span class="macro">!</span>(),
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-        }
+        <span class="self">self</span>
+            .<span class="ident">inner</span>
+            .<span class="ident">cause</span>
+            .<span class="ident">as_ref</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">cause</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">cause</span> <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="ident">StdError</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">UriError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">UriError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-        <span class="ident">Uri</span>(<span class="ident">err</span>)
+<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Parse</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Parse</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Parse</span>(<span class="ident">err</span>), <span class="prelude-val">None</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">IoError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">IoError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-        <span class="ident">Io</span>(<span class="ident">err</span>)
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Utf8Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Utf8Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-        <span class="ident">Utf8</span>(<span class="ident">err</span>)
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FromUtf8Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">FromUtf8Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-        <span class="ident">Utf8</span>(<span class="ident">err</span>.<span class="ident">utf8_error</span>())
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">httparse</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">httparse</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">httparse</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Parse</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">httparse</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Parse</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
             <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">HeaderName</span> <span class="op">|</span>
             <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">HeaderValue</span> <span class="op">|</span>
             <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">NewLine</span> <span class="op">|</span>
-            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Token</span> <span class="op">=&gt;</span> <span class="ident">Header</span>,
-            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Status</span> <span class="op">=&gt;</span> <span class="ident">Status</span>,
-            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">TooManyHeaders</span> <span class="op">=&gt;</span> <span class="ident">TooLarge</span>,
-            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Version</span> <span class="op">=&gt;</span> <span class="ident">Version</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Token</span> <span class="op">=&gt;</span> <span class="ident">Parse</span>::<span class="ident">Header</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Status</span> <span class="op">=&gt;</span> <span class="ident">Parse</span>::<span class="ident">Status</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">TooManyHeaders</span> <span class="op">=&gt;</span> <span class="ident">Parse</span>::<span class="ident">TooLarge</span>,
+            <span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Version</span> <span class="op">=&gt;</span> <span class="ident">Parse</span>::<span class="ident">Version</span>,
         }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http</span>::<span class="ident">method</span>::<span class="ident">InvalidMethod</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Parse</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">http</span>::<span class="ident">method</span>::<span class="ident">InvalidMethod</span>) <span class="op">-&gt;</span> <span class="ident">Parse</span> {
+        <span class="ident">Parse</span>::<span class="ident">Method</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http</span>::<span class="ident">status</span>::<span class="ident">InvalidStatusCode</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Parse</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">http</span>::<span class="ident">status</span>::<span class="ident">InvalidStatusCode</span>) <span class="op">-&gt;</span> <span class="ident">Parse</span> {
+        <span class="ident">Parse</span>::<span class="ident">Status</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http</span>::<span class="ident">uri</span>::<span class="ident">InvalidUri</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Parse</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">http</span>::<span class="ident">uri</span>::<span class="ident">InvalidUri</span>) <span class="op">-&gt;</span> <span class="ident">Parse</span> {
+        <span class="ident">Parse</span>::<span class="ident">Uri</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">http</span>::<span class="ident">uri</span>::<span class="ident">InvalidUriParts</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Parse</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">http</span>::<span class="ident">uri</span>::<span class="ident">InvalidUriParts</span>) <span class="op">-&gt;</span> <span class="ident">Parse</span> {
+        <span class="ident">Parse</span>::<span class="ident">Uri</span>
     }
 }
 
@@ -436,58 +772,6 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">StdError</span>;
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
-    <span class="kw">use</span> <span class="ident">httparse</span>;
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Error</span>;
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">Error</span>::<span class="kw-2">*</span>;
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_cause</span>() {
-        <span class="kw">let</span> <span class="ident">orig</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="string">&quot;other&quot;</span>);
-        <span class="kw">let</span> <span class="ident">desc</span> <span class="op">=</span> <span class="ident">orig</span>.<span class="ident">description</span>().<span class="ident">to_owned</span>();
-        <span class="kw">let</span> <span class="ident">e</span> <span class="op">=</span> <span class="ident">Io</span>(<span class="ident">orig</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">e</span>.<span class="ident">cause</span>().<span class="ident">unwrap</span>().<span class="ident">description</span>(), <span class="ident">desc</span>);
-    }
-
-    <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">from</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span>:<span class="ident">expr</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span>:<span class="ident">pat</span>) <span class="op">=&gt;</span> {
-            <span class="kw">match</span> <span class="ident">Error</span>::<span class="ident">from</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span>) {
-                <span class="ident">e</span> @ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span> <span class="op">=&gt;</span> {
-                    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">e</span>.<span class="ident">description</span>().<span class="ident">len</span>() <span class="op">&gt;=</span> <span class="number">5</span>);
-                } ,
-                <span class="ident">e</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">e</span>)
-            }
-        }
-    }
-
-    <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">from_and_cause</span> {
-        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span>:<span class="ident">expr</span> <span class="op">=&gt;</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span>:<span class="ident">pat</span>) <span class="op">=&gt;</span> {
-            <span class="kw">match</span> <span class="ident">Error</span>::<span class="ident">from</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span>) {
-                <span class="ident">e</span> @ <span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span> <span class="op">=&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">desc</span> <span class="op">=</span> <span class="ident">e</span>.<span class="ident">cause</span>().<span class="ident">unwrap</span>().<span class="ident">description</span>();
-                    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">desc</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span>.<span class="ident">description</span>().<span class="ident">to_owned</span>());
-                    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">desc</span>, <span class="ident">e</span>.<span class="ident">description</span>());
-                },
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">from</span>)
-            }
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">test_from</span>() {
-
-        <span class="macro">from_and_cause</span><span class="macro">!</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="string">&quot;other&quot;</span>) <span class="op">=&gt;</span> <span class="ident">Io</span>(..));
-
-        <span class="macro">from</span><span class="macro">!</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">HeaderName</span> <span class="op">=&gt;</span> <span class="ident">Header</span>);
-        <span class="macro">from</span><span class="macro">!</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">HeaderName</span> <span class="op">=&gt;</span> <span class="ident">Header</span>);
-        <span class="macro">from</span><span class="macro">!</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">HeaderValue</span> <span class="op">=&gt;</span> <span class="ident">Header</span>);
-        <span class="macro">from</span><span class="macro">!</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">NewLine</span> <span class="op">=&gt;</span> <span class="ident">Header</span>);
-        <span class="macro">from</span><span class="macro">!</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Status</span> <span class="op">=&gt;</span> <span class="ident">Status</span>);
-        <span class="macro">from</span><span class="macro">!</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Token</span> <span class="op">=&gt;</span> <span class="ident">Header</span>);
-        <span class="macro">from</span><span class="macro">!</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">TooManyHeaders</span> <span class="op">=&gt;</span> <span class="ident">TooLarge</span>);
-        <span class="macro">from</span><span class="macro">!</span>(<span class="ident">httparse</span>::<span class="ident">Error</span>::<span class="ident">Version</span> <span class="op">=&gt;</span> <span class="ident">Version</span>);
-    }
 }
 </pre>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "hyper";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

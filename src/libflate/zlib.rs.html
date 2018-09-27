@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/libflate-0.1.15/src/zlib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>zlib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/libflate-0.1.18/src/zlib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>zlib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -740,6 +740,35 @@
 <span id="740">740</span>
 <span id="741">741</span>
 <span id="742">742</span>
+<span id="743">743</span>
+<span id="744">744</span>
+<span id="745">745</span>
+<span id="746">746</span>
+<span id="747">747</span>
+<span id="748">748</span>
+<span id="749">749</span>
+<span id="750">750</span>
+<span id="751">751</span>
+<span id="752">752</span>
+<span id="753">753</span>
+<span id="754">754</span>
+<span id="755">755</span>
+<span id="756">756</span>
+<span id="757">757</span>
+<span id="758">758</span>
+<span id="759">759</span>
+<span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
+<span id="769">769</span>
+<span id="770">770</span>
+<span id="771">771</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! The encoder and decoder of the ZLIB format.</span>
 <span class="doccomment">//!</span>
@@ -982,8 +1011,8 @@
         }
         <span class="kw">let</span> <span class="ident">compression_level</span> <span class="op">=</span> <span class="ident">CompressionLevel</span>::<span class="ident">from_u2</span>(<span class="ident">flg</span> <span class="op">&gt;&gt;</span> <span class="number">6</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">Header</span> {
-            <span class="ident">window_size</span>: <span class="ident">window_size</span>,
-            <span class="ident">compression_level</span>: <span class="ident">compression_level</span>,
+            <span class="ident">window_size</span>,
+            <span class="ident">compression_level</span>,
         })
     }
     <span class="kw">fn</span> <span class="ident">write_to</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">writer</span>: <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
@@ -1035,7 +1064,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">inner</span>: <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">Header</span>::<span class="ident">read_from</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">inner</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Decoder</span> {
-            <span class="ident">header</span>: <span class="ident">header</span>,
+            <span class="ident">header</span>,
             <span class="ident">reader</span>: <span class="ident">deflate</span>::<span class="ident">Decoder</span>::<span class="ident">new</span>(<span class="ident">inner</span>),
             <span class="ident">adler32</span>: <span class="ident">checksum</span>::<span class="ident">Adler32</span>::<span class="ident">new</span>(),
             <span class="ident">eos</span>: <span class="bool-val">false</span>,
@@ -1098,7 +1127,10 @@
             <span class="kw">if</span> <span class="ident">read_size</span> <span class="op">==</span> <span class="number">0</span> {
                 <span class="self">self</span>.<span class="ident">eos</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 <span class="kw">let</span> <span class="ident">adler32</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">as_inner_mut</span>().<span class="ident">read_u32</span>::<span class="op">&lt;</span><span class="ident">BigEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-                <span class="kw">if</span> <span class="ident">adler32</span> <span class="op">!=</span> <span class="self">self</span>.<span class="ident">adler32</span>.<span class="ident">value</span>() {
+                <span class="comment">// checksum verification is skipped during fuzzing</span>
+                <span class="comment">// so that random data from fuzzer can reach actually interesting code</span>
+                <span class="comment">// Compilation flag &#39;fuzzing&#39; is automatically set by all 3 Rust fuzzers.</span>
+                <span class="kw">if</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">not</span>(<span class="ident">fuzzing</span>)) <span class="op">&amp;&amp;</span> <span class="ident">adler32</span> <span class="op">!=</span> <span class="self">self</span>.<span class="ident">adler32</span>.<span class="ident">value</span>() {
                     <span class="prelude-val">Err</span>(<span class="macro">invalid_data_error</span><span class="macro">!</span>(
                         <span class="string">&quot;Adler32 checksum mismatched: value={}, expected={}&quot;</span>,
                         <span class="self">self</span>.<span class="ident">adler32</span>.<span class="ident">value</span>(),
@@ -1481,6 +1513,32 @@
             <span class="number">88</span>, <span class="number">202</span>, <span class="number">64</span>, <span class="number">12</span>, <span class="number">125</span>, <span class="number">108</span>, <span class="number">153</span>, <span class="number">49</span>, <span class="number">164</span>, <span class="number">250</span>, <span class="number">71</span>, <span class="number">19</span>, <span class="number">4</span>, <span class="number">108</span>, <span class="number">111</span>, <span class="number">108</span>, <span class="number">237</span>, <span class="number">205</span>, <span class="number">208</span>,
             <span class="number">77</span>, <span class="number">217</span>, <span class="number">100</span>, <span class="number">118</span>, <span class="number">49</span>, <span class="number">10</span>, <span class="number">64</span>, <span class="number">12</span>, <span class="number">125</span>, <span class="number">51</span>, <span class="number">202</span>, <span class="number">69</span>, <span class="number">67</span>, <span class="number">181</span>, <span class="number">146</span>, <span class="number">86</span>,
         ]);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_issues_16</span>() {
+        <span class="comment">// See: https://github.com/sile/libflate/issues/16</span>
+
+        <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span>
+            <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;../data/issues_16/crash-1bb6d408475a5bd57247ee40f290830adfe2086e&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">decode_all</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>[..]).<span class="ident">err</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>()),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;The value of HDIST is too big: max=30, actual=32&quot;</span>.<span class="ident">to_owned</span>())
+        );
+
+        <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span>
+            <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;../data/issues_16/crash-369e8509a0e76356f4549c292ceedee429cfe125&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">decode_all</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>[..]).<span class="ident">err</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>()),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;The value of HDIST is too big: max=30, actual=32&quot;</span>.<span class="ident">to_owned</span>())
+        );
+
+        <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span>
+            <span class="macro">include_bytes</span><span class="macro">!</span>(<span class="string">&quot;../data/issues_16/crash-e75959d935650306881140df7f6d1d73e33425cb&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">decode_all</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>[..]).<span class="ident">err</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">to_string</span>()),
+            <span class="prelude-val">Some</span>(<span class="string">&quot;The value of HDIST is too big: max=30, actual=32&quot;</span>.<span class="ident">to_owned</span>())
+        );
     }
 }
 </pre>

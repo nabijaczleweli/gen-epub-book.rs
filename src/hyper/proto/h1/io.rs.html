@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.27/src/proto/h1/io.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>io.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.12.10/src/proto/h1/io.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>io.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -719,15 +719,6 @@
 <span id="719">719</span>
 <span id="720">720</span>
 <span id="721">721</span>
-<span id="722">722</span>
-<span id="723">723</span>
-<span id="724">724</span>
-<span id="725">725</span>
-<span id="726">726</span>
-<span id="727">727</span>
-<span id="728">728</span>
-<span id="729">729</span>
-<span id="730">730</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">Cell</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
@@ -739,10 +730,24 @@
 <span class="kw">use</span> <span class="ident">iovec</span>::<span class="ident">IoVec</span>;
 <span class="kw">use</span> <span class="ident">tokio_io</span>::{<span class="ident">AsyncRead</span>, <span class="ident">AsyncWrite</span>};
 
-<span class="kw">use</span> <span class="ident">proto</span>::{<span class="ident">Http1Transaction</span>, <span class="ident">MessageHead</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Http1Transaction</span>, <span class="ident">ParseContext</span>, <span class="ident">ParsedMessage</span>};
 
-<span class="kw">const</span> <span class="ident">INIT_BUFFER_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8192</span>;
-<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DEFAULT_MAX_BUFFER_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8192</span> <span class="op">+</span> <span class="number">4096</span> <span class="op">*</span> <span class="number">100</span>;
+<span class="doccomment">/// The initial buffer size allocated before trying to read from IO.</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">INIT_BUFFER_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8192</span>;
+
+<span class="doccomment">/// The minimum value that can be set to max buffer size.</span>
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MINIMUM_MAX_BUFFER_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">INIT_BUFFER_SIZE</span>;
+
+<span class="doccomment">/// The default maximum read buffer size. If the buffer gets this big and</span>
+<span class="doccomment">/// a message is still not complete, a `TooLarge` error is triggered.</span>
+<span class="comment">// Note: if this changes, update server::conn::Http::max_buf_size docs.</span>
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const</span> <span class="ident">DEFAULT_MAX_BUFFER_SIZE</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8192</span> <span class="op">+</span> <span class="number">4096</span> <span class="op">*</span> <span class="number">100</span>;
+
+<span class="doccomment">/// The maximum number of distinct `Buf`s to hold in a list before requiring</span>
+<span class="doccomment">/// a flush. Only affects when the buffer strategy is to queue buffers.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Note that a flush can happen before reaching the maximum. This simply</span>
+<span class="doccomment">/// forces a flush if the queue gets this big.</span>
 <span class="kw">const</span> <span class="ident">MAX_BUF_LIST_BUFFERS</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">16</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Buffered</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">B</span><span class="op">&gt;</span> {
@@ -783,15 +788,18 @@
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_flush_pipeline</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">enabled</span>: <span class="ident">bool</span>) {
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">has_remaining</span>());
         <span class="self">self</span>.<span class="ident">flush_pipeline</span> <span class="op">=</span> <span class="ident">enabled</span>;
-        <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">set_strategy</span>(<span class="kw">if</span> <span class="ident">enabled</span> {
-            <span class="ident">Strategy</span>::<span class="ident">Flatten</span>
-        } <span class="kw">else</span> {
-            <span class="ident">Strategy</span>::<span class="ident">Auto</span>
-        });
+        <span class="kw">if</span> <span class="ident">enabled</span> {
+            <span class="self">self</span>.<span class="ident">set_write_strategy_flatten</span>();
+        }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_max_buf_size</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">max</span>: <span class="ident">usize</span>) {
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">max</span> <span class="op">&gt;=</span> <span class="ident">MINIMUM_MAX_BUFFER_SIZE</span>,
+            <span class="string">&quot;The max_buf_size cannot be smaller than the initial buffer size.&quot;</span>
+        );
         <span class="self">self</span>.<span class="ident">max_buf_size</span> <span class="op">=</span> <span class="ident">max</span>;
         <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">max_buf_size</span> <span class="op">=</span> <span class="ident">max</span>;
     }
@@ -799,7 +807,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_write_strategy_flatten</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="comment">// this should always be called only at construction time,</span>
         <span class="comment">// so this assert is here to catch myself</span>
-        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">is_empty</span>());
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">is_empty</span>());
         <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">set_strategy</span>(<span class="ident">Strategy</span>::<span class="ident">Flatten</span>);
     }
 
@@ -807,18 +815,22 @@
         <span class="self">self</span>.<span class="ident">read_buf</span>.<span class="ident">as_ref</span>()
     }
 
-    <span class="comment">//TODO(perf): don&#39;t return a `&amp;mut Vec&lt;u8&gt;`, but a wrapper</span>
-    <span class="comment">//that protects the Vec when growing. Specifically, if this</span>
-    <span class="comment">//Vec couldn&#39;t be reset, as it&#39;s position isn&#39;t at the end,</span>
-    <span class="comment">//any new reserves will copy the bytes before the position,</span>
-    <span class="comment">//which is unnecessary.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">write_buf_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">head_mut</span>();
-        <span class="ident">buf</span>.<span class="ident">maybe_reset</span>();
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>)]</span>
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">read_buf_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BytesMut</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">read_buf</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers_buf</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">headers_mut</span>();
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>.<span class="ident">bytes</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buffer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="ident">B</span>) {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">write_buf</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WriteBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">write_buf</span>
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buffer</span><span class="op">&lt;</span><span class="ident">BB</span>: <span class="ident">Buf</span> <span class="op">+</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="ident">BB</span>) {
         <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">buffer</span>(<span class="ident">buf</span>)
     }
 
@@ -839,24 +851,28 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Http1Transaction</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">MessageHead</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="ident">Incoming</span><span class="op">&gt;</span>, ::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">parse</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ctx</span>: <span class="ident">ParseContext</span>)
+        <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">ParsedMessage</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="ident">Incoming</span><span class="op">&gt;</span>, ::<span class="ident">Error</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="ident">S</span>: <span class="ident">Http1Transaction</span>,
+    {
         <span class="kw">loop</span> {
-            <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">S</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">read_buf</span>)) {
-                <span class="prelude-val">Some</span>((<span class="ident">head</span>, <span class="ident">len</span>)) <span class="op">=&gt;</span> {
-                    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;parsed {} headers ({} bytes)&quot;</span>, <span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">len</span>(), <span class="ident">len</span>);
-                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="ident">head</span>))
+            <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">S</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">read_buf</span>, <span class="ident">ParseContext</span> { <span class="ident">cached_headers</span>: <span class="ident">ctx</span>.<span class="ident">cached_headers</span>, <span class="ident">req_method</span>: <span class="ident">ctx</span>.<span class="ident">req_method</span>, })) {
+                <span class="prelude-val">Some</span>(<span class="ident">msg</span>) <span class="op">=&gt;</span> {
+                    <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;parsed {} headers&quot;</span>, <span class="ident">msg</span>.<span class="ident">head</span>.<span class="ident">headers</span>.<span class="ident">len</span>());
+                    <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="ident">msg</span>))
                 },
                 <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">read_buf</span>.<span class="ident">capacity</span>() <span class="op">&gt;=</span> <span class="self">self</span>.<span class="ident">max_buf_size</span> {
                         <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;max_buf_size ({}) reached, closing&quot;</span>, <span class="self">self</span>.<span class="ident">max_buf_size</span>);
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">TooLarge</span>);
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">new_too_large</span>());
                     }
                 },
             }
-            <span class="kw">match</span> <span class="macro">try_ready</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">read_from_io</span>()) {
+            <span class="kw">match</span> <span class="macro">try_ready</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">read_from_io</span>().<span class="ident">map_err</span>(::<span class="ident">Error</span>::<span class="ident">new_io</span>)) {
                 <span class="number">0</span> <span class="op">=&gt;</span> {
                     <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;parse eof&quot;</span>);
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">Incomplete</span>);
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(::<span class="ident">Error</span>::<span class="ident">new_incomplete</span>());
                 }
                 <span class="kw">_</span> <span class="op">=&gt;</span> {},
             }
@@ -901,6 +917,10 @@
         } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">remaining</span>() <span class="op">==</span> <span class="number">0</span> {
             <span class="macro">try_nb</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">io</span>.<span class="ident">flush</span>());
         } <span class="kw">else</span> {
+            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">strategy</span> {
+                <span class="ident">Strategy</span>::<span class="ident">Flatten</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="self">self</span>.<span class="ident">flush_flattened</span>(),
+                <span class="kw">_</span> <span class="op">=&gt;</span> (),
+            }
             <span class="kw">loop</span> {
                 <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="macro">try_ready</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">io</span>.<span class="ident">write_buf</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">auto</span>()));
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;flushed {} bytes&quot;</span>, <span class="ident">n</span>);
@@ -913,6 +933,27 @@
             }
             <span class="macro">try_nb</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">io</span>.<span class="ident">flush</span>())
         }
+        <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(()))
+    }
+
+    <span class="doccomment">/// Specialized version of `flush` when strategy is Flatten.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Since all buffered bytes are flattened into the single headers buffer,</span>
+    <span class="doccomment">/// that skips some bookkeeping around using multiple buffers.</span>
+    <span class="kw">fn</span> <span class="ident">flush_flattened</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">loop</span> {
+            <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="macro">try_nb</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">io</span>.<span class="ident">write</span>(<span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">headers</span>.<span class="ident">bytes</span>()));
+            <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;flushed {} bytes&quot;</span>, <span class="ident">n</span>);
+            <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">headers</span>.<span class="ident">advance</span>(<span class="ident">n</span>);
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">headers</span>.<span class="ident">remaining</span>() <span class="op">==</span> <span class="number">0</span> {
+                <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">headers</span>.<span class="ident">reset</span>();
+                <span class="kw">break</span>;
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">n</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;write returned zero, but {} bytes remaining&quot;</span>, <span class="self">self</span>.<span class="ident">write_buf</span>.<span class="ident">remaining</span>());
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">WriteZero</span>.<span class="ident">into</span>())
+            }
+        }
+        <span class="macro">try_nb</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">io</span>.<span class="ident">flush</span>());
         <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(()))
     }
 }
@@ -944,32 +985,19 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;&gt;</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">bytes</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">bytes</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">Cursor</span> {
             <span class="ident">bytes</span>: <span class="ident">bytes</span>,
             <span class="ident">pos</span>: <span class="number">0</span>,
         }
     }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">buf</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">bytes</span>.<span class="ident">as_ref</span>()[<span class="self">self</span>.<span class="ident">pos</span>..]
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">consume</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">num</span>: <span class="ident">usize</span>) {
-        <span class="self">self</span>.<span class="ident">pos</span> <span class="op">+=</span> <span class="ident">num</span>;
-    }
 }
 
 <span class="kw">impl</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">maybe_reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">pos</span> <span class="op">!=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">remaining</span>() <span class="op">==</span> <span class="number">0</span> {
-            <span class="self">self</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="number">0</span>;
-            <span class="kw">unsafe</span> {
-                <span class="self">self</span>.<span class="ident">bytes</span>.<span class="ident">set_len</span>(<span class="number">0</span>);
-            }
-        }
+    <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="self">self</span>.<span class="ident">bytes</span>.<span class="ident">clear</span>();
     }
 }
 
@@ -990,27 +1018,32 @@
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
-        <span class="self">self</span>.<span class="ident">buf</span>()
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">bytes</span>.<span class="ident">as_ref</span>()[<span class="self">self</span>.<span class="ident">pos</span>..]
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cnt</span>: <span class="ident">usize</span>) {
-        <span class="self">self</span>.<span class="ident">consume</span>(<span class="ident">cnt</span>)
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">pos</span> <span class="op">+</span> <span class="ident">cnt</span> <span class="op">&lt;=</span> <span class="self">self</span>.<span class="ident">bytes</span>.<span class="ident">as_ref</span>().<span class="ident">len</span>());
+        <span class="self">self</span>.<span class="ident">pos</span> <span class="op">+=</span> <span class="ident">cnt</span>;
     }
 }
 
 <span class="comment">// an internal buffer to collect writes before flushes</span>
-<span class="kw">struct</span> <span class="ident">WriteBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="ident">buf</span>: <span class="ident">BufDeque</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+<span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">struct</span> <span class="ident">WriteBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Re-usable buffer that holds message headers</span>
+    <span class="ident">headers</span>: <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>,
     <span class="ident">max_buf_size</span>: <span class="ident">usize</span>,
+    <span class="doccomment">/// Deque of user buffers if strategy is Queue</span>
+    <span class="ident">queue</span>: <span class="ident">BufDeque</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="ident">strategy</span>: <span class="ident">Strategy</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="ident">WriteBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">WriteBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
         <span class="ident">WriteBuf</span> {
-            <span class="ident">buf</span>: <span class="ident">BufDeque</span>::<span class="ident">new</span>(),
+            <span class="ident">headers</span>: <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">INIT_BUFFER_SIZE</span>)),
             <span class="ident">max_buf_size</span>: <span class="ident">DEFAULT_MAX_BUFFER_SIZE</span>,
+            <span class="ident">queue</span>: <span class="ident">BufDeque</span>::<span class="ident">new</span>(),
             <span class="ident">strategy</span>: <span class="ident">Strategy</span>::<span class="ident">Auto</span>,
         }
     }
@@ -1030,15 +1063,27 @@
         <span class="ident">WriteBufAuto</span>::<span class="ident">new</span>(<span class="self">self</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">buffer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="ident">B</span>) {
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">buffer</span><span class="op">&lt;</span><span class="ident">BB</span>: <span class="ident">Buf</span> <span class="op">+</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">buf</span>: <span class="ident">BB</span>) {
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">buf</span>.<span class="ident">has_remaining</span>());
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">strategy</span> {
             <span class="ident">Strategy</span>::<span class="ident">Flatten</span> <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">head</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">head_mut</span>();
-                <span class="ident">head</span>.<span class="ident">maybe_reset</span>();
-                <span class="ident">head</span>.<span class="ident">bytes</span>.<span class="ident">put</span>(<span class="ident">buf</span>);
+                <span class="kw">let</span> <span class="ident">head</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers_mut</span>();
+                <span class="comment">//perf: This is a little faster than &lt;Vec as BufMut&gt;&gt;::put,</span>
+                <span class="comment">//but accomplishes the same result.</span>
+                <span class="kw">loop</span> {
+                    <span class="kw">let</span> <span class="ident">adv</span> <span class="op">=</span> {
+                        <span class="kw">let</span> <span class="ident">slice</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">bytes</span>();
+                        <span class="kw">if</span> <span class="ident">slice</span>.<span class="ident">is_empty</span>() {
+                            <span class="kw">return</span>;
+                        }
+                        <span class="ident">head</span>.<span class="ident">bytes</span>.<span class="ident">extend_from_slice</span>(<span class="ident">slice</span>);
+                        <span class="ident">slice</span>.<span class="ident">len</span>()
+                    };
+                    <span class="ident">buf</span>.<span class="ident">advance</span>(<span class="ident">adv</span>);
+                }
             },
             <span class="ident">Strategy</span>::<span class="ident">Auto</span> <span class="op">|</span> <span class="ident">Strategy</span>::<span class="ident">Queue</span> <span class="op">=&gt;</span> {
-                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">push_back</span>(<span class="ident">VecOrBuf</span>::<span class="ident">Buf</span>(<span class="ident">buf</span>));
+                <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">push_back</span>(<span class="ident">buf</span>.<span class="ident">into</span>());
             },
         }
     }
@@ -1049,30 +1094,15 @@
                 <span class="self">self</span>.<span class="ident">remaining</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">max_buf_size</span>
             },
             <span class="ident">Strategy</span>::<span class="ident">Auto</span> <span class="op">|</span> <span class="ident">Strategy</span>::<span class="ident">Queue</span> <span class="op">=&gt;</span> {
-                <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">MAX_BUF_LIST_BUFFERS</span>
+                <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">len</span>() <span class="op">&lt;</span> <span class="ident">MAX_BUF_LIST_BUFFERS</span>
                     <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">remaining</span>() <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">max_buf_size</span>
             },
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">head_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
-        <span class="comment">// this dance is brought to you, The Borrow Checker!</span>
-
-        <span class="kw">let</span> <span class="ident">reuse_back</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="kw">_</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">back</span>() {
-            <span class="bool-val">true</span>
-        } <span class="kw">else</span> {
-            <span class="bool-val">false</span>
-        };
-
-        <span class="kw">if</span> <span class="op">!</span><span class="ident">reuse_back</span> {
-            <span class="kw">let</span> <span class="ident">head_buf</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">INIT_BUFFER_SIZE</span>));
-            <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">push_back</span>(<span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="ident">head_buf</span>));
-        }
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">back_mut</span>() {
-            <span class="ident">v</span>
-        } <span class="kw">else</span> {
-            <span class="macro">unreachable</span><span class="macro">!</span>(<span class="string">&quot;head_buf just pushed on back&quot;</span>);
-        }
+    <span class="kw">fn</span> <span class="ident">headers_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">has_remaining</span>());
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">headers</span>
     }
 }
 
@@ -1088,22 +1118,37 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buf</span><span class="op">&gt;</span> <span class="ident">Buf</span> <span class="kw">for</span> <span class="ident">WriteBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">remaining</span>()
+        <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">remaining</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">remaining</span>()
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
-        <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">bytes</span>()
+        <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">bytes</span>();
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">headers</span>.<span class="ident">is_empty</span>() {
+            <span class="ident">headers</span>
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">bytes</span>()
+        }
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cnt</span>: <span class="ident">usize</span>) {
-        <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">advance</span>(<span class="ident">cnt</span>)
+        <span class="kw">let</span> <span class="ident">hrem</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">remaining</span>();
+        <span class="kw">if</span> <span class="ident">hrem</span> <span class="op">==</span> <span class="ident">cnt</span> {
+            <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">reset</span>();
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">hrem</span> <span class="op">&gt;</span> <span class="ident">cnt</span> {
+            <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">advance</span>(<span class="ident">cnt</span>);
+        } <span class="kw">else</span> {
+            <span class="kw">let</span> <span class="ident">qcnt</span> <span class="op">=</span> <span class="ident">cnt</span> <span class="op">-</span> <span class="ident">hrem</span>;
+            <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">reset</span>();
+            <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">advance</span>(<span class="ident">qcnt</span>);
+        }
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">bytes_vec</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="self">self</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">IoVec</span>]) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">bytes_vec</span>(<span class="ident">dst</span>)
+        <span class="kw">let</span> <span class="ident">n</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">bytes_vec</span>(<span class="ident">dst</span>);
+        <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">bytes_vec</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dst</span>[<span class="ident">n</span>..]) <span class="op">+</span> <span class="ident">n</span>
     }
 }
 
@@ -1157,9 +1202,7 @@
             } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">bytes_called</span>.<span class="ident">get</span>() {
                 <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;detected no usage of vectored write, flattening&quot;</span>);
                 <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">strategy</span> <span class="op">=</span> <span class="ident">Strategy</span>::<span class="ident">Flatten</span>;
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">vec</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-                <span class="ident">vec</span>.<span class="ident">put</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">buf</span>);
-                <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">push_back</span>(<span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">vec</span>)));
+                <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">headers</span>.<span class="ident">bytes</span>.<span class="ident">put</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">queue</span>);
             }
         }
     }
@@ -1173,59 +1216,8 @@
     <span class="ident">Queue</span>,
 }
 
-<span class="kw">enum</span> <span class="ident">VecOrBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="ident">Vec</span>(<span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>),
-    <span class="ident">Buf</span>(<span class="ident">B</span>),
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buf</span><span class="op">&gt;</span> <span class="ident">Buf</span> <span class="kw">for</span> <span class="ident">VecOrBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">remaining</span>(),
-            <span class="ident">VecOrBuf</span>::<span class="ident">Buf</span>(<span class="kw-2">ref</span> <span class="ident">b</span>) <span class="op">=&gt;</span> <span class="ident">b</span>.<span class="ident">remaining</span>(),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">bytes</span>(),
-            <span class="ident">VecOrBuf</span>::<span class="ident">Buf</span>(<span class="kw-2">ref</span> <span class="ident">b</span>) <span class="op">=&gt;</span> <span class="ident">b</span>.<span class="ident">bytes</span>(),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cnt</span>: <span class="ident">usize</span>) {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">v</span>) <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">advance</span>(<span class="ident">cnt</span>),
-            <span class="ident">VecOrBuf</span>::<span class="ident">Buf</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">b</span>) <span class="op">=&gt;</span> <span class="ident">b</span>.<span class="ident">advance</span>(<span class="ident">cnt</span>),
-        }
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">bytes_vec</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="self">self</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">IoVec</span>]) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
-                <span class="kw">if</span> <span class="ident">v</span>.<span class="ident">has_remaining</span>() {
-                    <span class="ident">v</span>.<span class="ident">bytes_vec</span>(<span class="ident">dst</span>)
-                } <span class="kw">else</span> {
-                    <span class="number">0</span>
-                }
-            },
-            <span class="ident">VecOrBuf</span>::<span class="ident">Buf</span>(<span class="kw-2">ref</span> <span class="ident">b</span>) <span class="op">=&gt;</span> {
-                <span class="kw">if</span> <span class="ident">b</span>.<span class="ident">has_remaining</span>() {
-                    <span class="ident">b</span>.<span class="ident">bytes_vec</span>(<span class="ident">dst</span>)
-                } <span class="kw">else</span> {
-                    <span class="number">0</span>
-                }
-            },
-        }
-    }
-}
-
 <span class="kw">struct</span> <span class="ident">BufDeque</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
-    <span class="ident">bufs</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">VecOrBuf</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">bufs</span>: <span class="ident">VecDeque</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
 }
 
 
@@ -1248,16 +1240,13 @@
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
         <span class="kw">for</span> <span class="ident">buf</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">bufs</span> {
-            <span class="kw">if</span> <span class="ident">buf</span>.<span class="ident">has_remaining</span>() {
-                <span class="kw">return</span> <span class="ident">buf</span>.<span class="ident">bytes</span>();
-            }
+            <span class="kw">return</span> <span class="ident">buf</span>.<span class="ident">bytes</span>();
         }
         <span class="kw-2">&amp;</span>[]
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">cnt</span>: <span class="ident">usize</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">maybe_reclaim</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">while</span> <span class="ident">cnt</span> <span class="op">&gt;</span> <span class="number">0</span> {
             {
                 <span class="kw">let</span> <span class="ident">front</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">bufs</span>[<span class="number">0</span>];
@@ -1270,12 +1259,7 @@
                     <span class="ident">cnt</span> <span class="op">-=</span> <span class="ident">rem</span>;
                 }
             }
-            <span class="ident">maybe_reclaim</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">bufs</span>.<span class="ident">pop_front</span>();
-        }
-
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="ident">v</span>)) <span class="op">=</span> <span class="ident">maybe_reclaim</span> {
-            <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;reclaiming write buf Vec&quot;</span>);
-            <span class="self">self</span>.<span class="ident">bufs</span>.<span class="ident">push_back</span>(<span class="ident">VecOrBuf</span>::<span class="ident">Vec</span>(<span class="ident">v</span>));
+            <span class="self">self</span>.<span class="ident">bufs</span>.<span class="ident">pop_front</span>();
         }
     }
 
@@ -1300,6 +1284,9 @@
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
     <span class="kw">use</span> <span class="ident">mock</span>::<span class="ident">AsyncIo</span>;
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>)]</span>
+    <span class="kw">use</span> <span class="ident">test</span>::<span class="ident">Bencher</span>;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
     <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">MemRead</span> <span class="kw">for</span> ::<span class="ident">mock</span>::<span class="ident">AsyncIo</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
@@ -1330,20 +1317,21 @@
 
         <span class="kw">let</span> <span class="ident">mock</span> <span class="op">=</span> <span class="ident">AsyncIo</span>::<span class="ident">new_buf</span>(<span class="ident">raw</span>, <span class="ident">raw</span>.<span class="ident">len</span>());
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffered</span> <span class="op">=</span> <span class="ident">Buffered</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">mock</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">parse</span>::<span class="op">&lt;</span>::<span class="ident">proto</span>::<span class="ident">ClientTransaction</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>(), <span class="ident">Async</span>::<span class="ident">NotReady</span>);
+        <span class="kw">let</span> <span class="ident">ctx</span> <span class="op">=</span> <span class="ident">ParseContext</span> {
+            <span class="ident">cached_headers</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-val">None</span>,
+            <span class="ident">req_method</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-val">None</span>,
+        };
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">parse</span>::<span class="op">&lt;</span>::<span class="ident">proto</span>::<span class="ident">h1</span>::<span class="ident">ClientTransaction</span><span class="op">&gt;</span>(<span class="ident">ctx</span>).<span class="ident">unwrap</span>().<span class="ident">is_not_ready</span>());
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>.<span class="ident">blocked</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">write_buf_skips_empty_bufs</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">mock</span> <span class="op">=</span> <span class="ident">AsyncIo</span>::<span class="ident">new_buf</span>(<span class="macro">vec</span><span class="macro">!</span>[], <span class="number">1024</span>);
-        <span class="ident">mock</span>.<span class="ident">max_read_vecs</span>(<span class="number">0</span>); <span class="comment">// disable vectored IO</span>
+    <span class="attribute">#[<span class="ident">should_panic</span>]</span>
+    <span class="kw">fn</span> <span class="ident">write_buf_requires_non_empty_bufs</span>() {
+        <span class="kw">let</span> <span class="ident">mock</span> <span class="op">=</span> <span class="ident">AsyncIo</span>::<span class="ident">new_buf</span>(<span class="macro">vec</span><span class="macro">!</span>[], <span class="number">1024</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffered</span> <span class="op">=</span> <span class="ident">Buffered</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">mock</span>);
 
         <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="ident">Vec</span>::<span class="ident">new</span>()));
-        <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;hello&quot;</span>.<span class="ident">to_vec</span>()));
-        <span class="ident">buffered</span>.<span class="ident">flush</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>, <span class="string">b&quot;hello&quot;</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1354,42 +1342,17 @@
         <span class="kw">let</span> <span class="ident">mock</span> <span class="op">=</span> <span class="ident">AsyncIo</span>::<span class="ident">new_buf</span>(<span class="macro">vec</span><span class="macro">!</span>[], <span class="number">1024</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffered</span> <span class="op">=</span> <span class="ident">Buffered</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">mock</span>);
 
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
+
+        <span class="ident">buffered</span>.<span class="ident">headers_buf</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
         <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;world, &quot;</span>.<span class="ident">to_vec</span>()));
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;it&#39;s &quot;</span>);
+        <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;it&#39;s &quot;</span>.<span class="ident">to_vec</span>()));
         <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;hyper!&quot;</span>.<span class="ident">to_vec</span>()));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">3</span>);
         <span class="ident">buffered</span>.<span class="ident">flush</span>().<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>, <span class="string">b&quot;hello world, it&#39;s hyper!&quot;</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>.<span class="ident">num_writes</span>(), <span class="number">1</span>);
-    }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">write_buf_reclaim_vec</span>() {
-        <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pretty_env_logger</span>;
-        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">pretty_env_logger</span>::<span class="ident">try_init</span>();
-
-        <span class="kw">let</span> <span class="ident">mock</span> <span class="op">=</span> <span class="ident">AsyncIo</span>::<span class="ident">new_buf</span>(<span class="macro">vec</span><span class="macro">!</span>[], <span class="number">1024</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffered</span> <span class="op">=</span> <span class="ident">Buffered</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">mock</span>);
-
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">1</span>);
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;world, &quot;</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">1</span>);
-
-        <span class="comment">// after flushing, reclaim the Vec</span>
-        <span class="ident">buffered</span>.<span class="ident">flush</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">remaining</span>(), <span class="number">0</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">1</span>);
-
-        <span class="comment">// add a user buf in the way</span>
-        <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;it&#39;s &quot;</span>.<span class="ident">to_vec</span>()));
-        <span class="comment">// and then add more hyper bytes</span>
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;hyper!&quot;</span>);
-        <span class="ident">buffered</span>.<span class="ident">flush</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">1</span>);
-
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>, <span class="string">b&quot;hello world, it&#39;s hyper!&quot;</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">0</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1401,17 +1364,16 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffered</span> <span class="op">=</span> <span class="ident">Buffered</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">Cursor</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">mock</span>);
         <span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">set_strategy</span>(<span class="ident">Strategy</span>::<span class="ident">Flatten</span>);
 
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
+        <span class="ident">buffered</span>.<span class="ident">headers_buf</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
         <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;world, &quot;</span>.<span class="ident">to_vec</span>()));
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;it&#39;s &quot;</span>);
+        <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;it&#39;s &quot;</span>.<span class="ident">to_vec</span>()));
         <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;hyper!&quot;</span>.<span class="ident">to_vec</span>()));
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">0</span>);
 
         <span class="ident">buffered</span>.<span class="ident">flush</span>().<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>, <span class="string">b&quot;hello world, it&#39;s hyper!&quot;</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>.<span class="ident">num_writes</span>(), <span class="number">1</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">1</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1426,19 +1388,20 @@
         <span class="comment">// we have 4 buffers, but hope to detect that vectored IO isn&#39;t</span>
         <span class="comment">// being used, and switch to flattening automatically,</span>
         <span class="comment">// resulting in only 2 writes</span>
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
+        <span class="ident">buffered</span>.<span class="ident">headers_buf</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
         <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;world, &quot;</span>.<span class="ident">to_vec</span>()));
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;it&#39;s hyper!&quot;</span>);
-        <span class="comment">//buffered.buffer(Cursor::new(b&quot;hyper!&quot;.to_vec()));</span>
+        <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;it&#39;s &quot;</span>.<span class="ident">to_vec</span>()));
+        <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;hyper!&quot;</span>.<span class="ident">to_vec</span>()));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">3</span>);
         <span class="ident">buffered</span>.<span class="ident">flush</span>().<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>, <span class="string">b&quot;hello world, it&#39;s hyper!&quot;</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>.<span class="ident">num_writes</span>(), <span class="number">2</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">buf</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">1</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">0</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">write_buf_queue_does_not_auto</span>() {
+    <span class="kw">fn</span> <span class="ident">write_buf_queue_disable_auto</span>() {
         <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">pretty_env_logger</span>;
         <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">pretty_env_logger</span>::<span class="ident">try_init</span>();
 
@@ -1449,14 +1412,33 @@
 
         <span class="comment">// we have 4 buffers, and vec IO disabled, but explicitly said</span>
         <span class="comment">// don&#39;t try to auto detect (via setting strategy above)</span>
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
+
+        <span class="ident">buffered</span>.<span class="ident">headers_buf</span>().<span class="ident">extend</span>(<span class="string">b&quot;hello &quot;</span>);
         <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;world, &quot;</span>.<span class="ident">to_vec</span>()));
-        <span class="ident">buffered</span>.<span class="ident">write_buf_mut</span>().<span class="ident">extend</span>(<span class="string">b&quot;it&#39;s &quot;</span>);
+        <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;it&#39;s &quot;</span>.<span class="ident">to_vec</span>()));
         <span class="ident">buffered</span>.<span class="ident">buffer</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">b&quot;hyper!&quot;</span>.<span class="ident">to_vec</span>()));
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">3</span>);
         <span class="ident">buffered</span>.<span class="ident">flush</span>().<span class="ident">unwrap</span>();
 
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>, <span class="string">b&quot;hello world, it&#39;s hyper!&quot;</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">io</span>.<span class="ident">num_writes</span>(), <span class="number">4</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buffered</span>.<span class="ident">write_buf</span>.<span class="ident">queue</span>.<span class="ident">bufs</span>.<span class="ident">len</span>(), <span class="number">0</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">bench</span>]</span>
+    <span class="kw">fn</span> <span class="ident">bench_write_buf_flatten_buffer_chunk</span>(<span class="ident">b</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Bencher</span>) {
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;Hello, World!&quot;</span>;
+        <span class="ident">b</span>.<span class="ident">bytes</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>;
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">write_buf</span> <span class="op">=</span> <span class="ident">WriteBuf</span>::<span class="op">&lt;</span>::<span class="ident">Chunk</span><span class="op">&gt;</span>::<span class="ident">new</span>();
+        <span class="ident">write_buf</span>.<span class="ident">set_strategy</span>(<span class="ident">Strategy</span>::<span class="ident">Flatten</span>);
+        <span class="ident">b</span>.<span class="ident">iter</span>(<span class="op">||</span> {
+            <span class="kw">let</span> <span class="ident">chunk</span> <span class="op">=</span> ::<span class="ident">Chunk</span>::<span class="ident">from</span>(<span class="ident">s</span>);
+            <span class="ident">write_buf</span>.<span class="ident">buffer</span>(<span class="ident">chunk</span>);
+            ::<span class="ident">test</span>::<span class="ident">black_box</span>(<span class="kw-2">&amp;</span><span class="ident">write_buf</span>);
+            <span class="ident">write_buf</span>.<span class="ident">headers</span>.<span class="ident">bytes</span>.<span class="ident">clear</span>();
+        })
     }
 }
 </pre>

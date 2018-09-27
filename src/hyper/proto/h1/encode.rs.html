@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.11.27/src/proto/h1/encode.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encode.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.12.10/src/proto/h1/encode.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>encode.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -345,16 +345,92 @@
 <span id="345">345</span>
 <span id="346">346</span>
 <span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
 </pre><pre class="rust ">
-<span class="comment">//use std::cmp;</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 
 <span class="kw">use</span> <span class="ident">bytes</span>::{<span class="ident">Buf</span>, <span class="ident">IntoBuf</span>};
 <span class="kw">use</span> <span class="ident">bytes</span>::<span class="ident">buf</span>::{<span class="ident">Chain</span>, <span class="ident">Take</span>};
 <span class="kw">use</span> <span class="ident">iovec</span>::<span class="ident">IoVec</span>;
 
+<span class="kw">use</span> <span class="ident">common</span>::<span class="ident">StaticBuf</span>;
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">io</span>::<span class="ident">WriteBuf</span>;
+
 <span class="doccomment">/// Encoders to handle different Transfer-Encodings.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Encoder</span> {
     <span class="ident">kind</span>: <span class="ident">Kind</span>,
     <span class="ident">is_last</span>: <span class="ident">bool</span>,
@@ -380,15 +456,15 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This is mostly only used with HTTP/1.0 with a length. This kind requires</span>
     <span class="doccomment">/// the connection to be closed when the body is finished.</span>
-    <span class="ident">Eof</span>
+    <span class="ident">CloseDelimited</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">enum</span> <span class="ident">BufKind</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="ident">Exact</span>(<span class="ident">B</span>),
     <span class="ident">Limited</span>(<span class="ident">Take</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>),
-    <span class="ident">Chunked</span>(<span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">ChunkSize</span>, <span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">B</span>, <span class="ident">CrLf</span><span class="op">&gt;&gt;</span>),
-    <span class="ident">ChunkedEnd</span>(<span class="ident">CrLf</span>),
+    <span class="ident">Chunked</span>(<span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">ChunkSize</span>, <span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">StaticBuf</span><span class="op">&gt;</span>),
+    <span class="ident">ChunkedEnd</span>(<span class="ident">StaticBuf</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">Encoder</span> {
@@ -406,8 +482,8 @@
         <span class="ident">Encoder</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Length</span>(<span class="ident">len</span>))
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">eof</span>() <span class="op">-&gt;</span> <span class="ident">Encoder</span> {
-        <span class="ident">Encoder</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">Eof</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">close_delimited</span>() <span class="op">-&gt;</span> <span class="ident">Encoder</span> {
+        <span class="ident">Encoder</span>::<span class="ident">new</span>(<span class="ident">Kind</span>::<span class="ident">CloseDelimited</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_eof</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
@@ -417,8 +493,9 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_last</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">is_last</span> <span class="op">=</span> <span class="bool-val">true</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_last</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">is_last</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">is_last</span> <span class="op">=</span> <span class="ident">is_last</span>;
+        <span class="self">self</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_last</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
@@ -429,7 +506,7 @@
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Length</span>(<span class="number">0</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
             <span class="ident">Kind</span>::<span class="ident">Chunked</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">EncodedBuf</span> {
-                <span class="ident">kind</span>: <span class="ident">BufKind</span>::<span class="ident">ChunkedEnd</span>(<span class="ident">CrLf</span>(<span class="string">b&quot;0\r\n\r\n&quot;</span>)),
+                <span class="ident">kind</span>: <span class="ident">BufKind</span>::<span class="ident">ChunkedEnd</span>(<span class="ident">StaticBuf</span>(<span class="string">b&quot;0\r\n\r\n&quot;</span>)),
             })),
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">NotEof</span>),
         }
@@ -441,13 +518,15 @@
     {
         <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">msg</span>.<span class="ident">into_buf</span>();
         <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">msg</span>.<span class="ident">remaining</span>();
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">len</span> <span class="op">&gt;</span> <span class="number">0</span>, <span class="string">&quot;encode() called with empty buf&quot;</span>);
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">len</span> <span class="op">&gt;</span> <span class="number">0</span>, <span class="string">&quot;encode() called with empty buf&quot;</span>);
 
-        <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+        <span class="kw">let</span> <span class="ident">kind</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
             <span class="ident">Kind</span>::<span class="ident">Chunked</span> <span class="op">=&gt;</span> {
                 <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;encoding chunked {}B&quot;</span>, <span class="ident">len</span>);
-                <span class="ident">BufKind</span>::<span class="ident">Chunked</span>(<span class="ident">ChunkSize</span>::<span class="ident">new</span>(<span class="ident">len</span>)
-                    .<span class="ident">chain</span>(<span class="ident">msg</span>.<span class="ident">chain</span>(<span class="ident">CrLf</span>(<span class="string">b&quot;\r\n&quot;</span>))))
+                <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">ChunkSize</span>::<span class="ident">new</span>(<span class="ident">len</span>)
+                    .<span class="ident">chain</span>(<span class="ident">msg</span>)
+                    .<span class="ident">chain</span>(<span class="ident">StaticBuf</span>(<span class="string">b&quot;\r\n&quot;</span>));
+                <span class="ident">BufKind</span>::<span class="ident">Chunked</span>(<span class="ident">buf</span>)
             },
             <span class="ident">Kind</span>::<span class="ident">Length</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">remaining</span>) <span class="op">=&gt;</span> {
                 <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;sized write, len = {}&quot;</span>, <span class="ident">len</span>);
@@ -460,13 +539,88 @@
                     <span class="ident">BufKind</span>::<span class="ident">Exact</span>(<span class="ident">msg</span>)
                 }
             },
-            <span class="ident">Kind</span>::<span class="ident">Eof</span> <span class="op">=&gt;</span> {
-                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;eof write {}B&quot;</span>, <span class="ident">len</span>);
+            <span class="ident">Kind</span>::<span class="ident">CloseDelimited</span> <span class="op">=&gt;</span> {
+                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;close delimited write {}B&quot;</span>, <span class="ident">len</span>);
                 <span class="ident">BufKind</span>::<span class="ident">Exact</span>(<span class="ident">msg</span>)
             }
         };
         <span class="ident">EncodedBuf</span> {
-            <span class="ident">kind</span>: <span class="ident">buf</span>,
+            <span class="ident">kind</span>,
+        }
+    }
+
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">encode_and_end</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">msg</span>: <span class="ident">B</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WriteBuf</span><span class="op">&lt;</span><span class="ident">EncodedBuf</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">Buf</span><span class="op">&gt;&gt;</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>
+    <span class="kw">where</span>
+        <span class="ident">B</span>: <span class="ident">IntoBuf</span>,
+    {
+        <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">msg</span>.<span class="ident">into_buf</span>();
+        <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">msg</span>.<span class="ident">remaining</span>();
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">len</span> <span class="op">&gt;</span> <span class="number">0</span>, <span class="string">&quot;encode() called with empty buf&quot;</span>);
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Chunked</span> <span class="op">=&gt;</span> {
+                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;encoding chunked {}B&quot;</span>, <span class="ident">len</span>);
+                <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">ChunkSize</span>::<span class="ident">new</span>(<span class="ident">len</span>)
+                    .<span class="ident">chain</span>(<span class="ident">msg</span>)
+                    .<span class="ident">chain</span>(<span class="ident">StaticBuf</span>(<span class="string">b&quot;\r\n0\r\n\r\n&quot;</span>));
+                <span class="ident">dst</span>.<span class="ident">buffer</span>(<span class="ident">buf</span>);
+                <span class="op">!</span><span class="self">self</span>.<span class="ident">is_last</span>
+            },
+            <span class="ident">Kind</span>::<span class="ident">Length</span>(<span class="ident">remaining</span>) <span class="op">=&gt;</span> {
+                <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Ordering</span>;
+
+                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;sized write, len = {}&quot;</span>, <span class="ident">len</span>);
+                <span class="kw">match</span> (<span class="ident">len</span> <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">remaining</span>) {
+                    <span class="ident">Ordering</span>::<span class="ident">Equal</span> <span class="op">=&gt;</span> {
+                        <span class="ident">dst</span>.<span class="ident">buffer</span>(<span class="ident">msg</span>);
+                        <span class="op">!</span><span class="self">self</span>.<span class="ident">is_last</span>
+                    },
+                    <span class="ident">Ordering</span>::<span class="ident">Greater</span> <span class="op">=&gt;</span> {
+                        <span class="ident">dst</span>.<span class="ident">buffer</span>(<span class="ident">msg</span>.<span class="ident">take</span>(<span class="ident">remaining</span> <span class="kw">as</span> <span class="ident">usize</span>));
+                        <span class="op">!</span><span class="self">self</span>.<span class="ident">is_last</span>
+                    },
+                    <span class="ident">Ordering</span>::<span class="ident">Less</span> <span class="op">=&gt;</span> {
+                        <span class="ident">dst</span>.<span class="ident">buffer</span>(<span class="ident">msg</span>);
+                        <span class="bool-val">false</span>
+                    }
+                }
+            },
+            <span class="ident">Kind</span>::<span class="ident">CloseDelimited</span> <span class="op">=&gt;</span> {
+                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;close delimited write {}B&quot;</span>, <span class="ident">len</span>);
+                <span class="ident">dst</span>.<span class="ident">buffer</span>(<span class="ident">msg</span>);
+                <span class="bool-val">false</span>
+            }
+        }
+    }
+
+    <span class="doccomment">/// Encodes the full body, without verifying the remaining length matches.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is used in conjunction with Payload::__hyper_full_data(), which</span>
+    <span class="doccomment">/// means we can trust that the buf has the correct size (the buf itself</span>
+    <span class="doccomment">/// was checked to make the headers).</span>
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">danger_full_buf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">msg</span>: <span class="ident">B</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WriteBuf</span><span class="op">&lt;</span><span class="ident">EncodedBuf</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">Buf</span><span class="op">&gt;&gt;</span>)
+    <span class="kw">where</span>
+        <span class="ident">B</span>: <span class="ident">IntoBuf</span>,
+    {
+        <span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">msg</span>.<span class="ident">into_buf</span>();
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">msg</span>.<span class="ident">remaining</span>() <span class="op">&gt;</span> <span class="number">0</span>, <span class="string">&quot;encode() called with empty buf&quot;</span>);
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Length</span>(<span class="ident">len</span>) <span class="op">=&gt;</span> <span class="ident">len</span> <span class="op">==</span> <span class="ident">msg</span>.<span class="ident">remaining</span>() <span class="kw">as</span> <span class="ident">u64</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+        }, <span class="string">&quot;danger_full_buf length mismatches&quot;</span>);
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">kind</span> {
+            <span class="ident">Kind</span>::<span class="ident">Chunked</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="ident">msg</span>.<span class="ident">remaining</span>();
+                <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;encoding chunked {}B&quot;</span>, <span class="ident">len</span>);
+                <span class="kw">let</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">ChunkSize</span>::<span class="ident">new</span>(<span class="ident">len</span>)
+                    .<span class="ident">chain</span>(<span class="ident">msg</span>)
+                    .<span class="ident">chain</span>(<span class="ident">StaticBuf</span>(<span class="string">b&quot;\r\n0\r\n\r\n&quot;</span>));
+                <span class="ident">dst</span>.<span class="ident">buffer</span>(<span class="ident">buf</span>);
+            },
+            <span class="kw">_</span> <span class="op">=&gt;</span> {
+                <span class="ident">dst</span>.<span class="ident">buffer</span>(<span class="ident">msg</span>);
+            },
         }
     }
 }
@@ -584,32 +738,26 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">CrLf</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>]);
-
-<span class="kw">impl</span> <span class="ident">Buf</span> <span class="kw">for</span> <span class="ident">CrLf</span> {
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">remaining</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">len</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buf</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">EncodedBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">buf</span>: <span class="ident">B</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">EncodedBuf</span> {
+            <span class="ident">kind</span>: <span class="ident">BufKind</span>::<span class="ident">Exact</span>(<span class="ident">buf</span>),
+        }
     }
+}
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
-        <span class="self">self</span>.<span class="number">0</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buf</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Take</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">EncodedBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">buf</span>: <span class="ident">Take</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">EncodedBuf</span> {
+            <span class="ident">kind</span>: <span class="ident">BufKind</span>::<span class="ident">Limited</span>(<span class="ident">buf</span>),
+        }
     }
+}
 
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">advance</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">cnt</span>: <span class="ident">usize</span>) {
-        <span class="self">self</span>.<span class="number">0</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>[<span class="ident">cnt</span>..];
-    }
-
-    <span class="attribute">#[<span class="ident">inline</span>]</span>
-    <span class="kw">fn</span> <span class="ident">bytes_vec</span><span class="op">&lt;</span><span class="lifetime">&#39;t</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="self">self</span>, <span class="ident">dst</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;t</span> <span class="ident">IoVec</span>]) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-        <span class="kw">if</span> <span class="ident">dst</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">return</span> <span class="number">0</span>;
-        } <span class="kw">else</span> {
-            <span class="ident">dst</span>[<span class="number">0</span>] <span class="op">=</span> <span class="self">self</span>.<span class="number">0</span>.<span class="ident">into</span>();
-            <span class="kw">return</span> <span class="number">1</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Buf</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">ChunkSize</span>, <span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">StaticBuf</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">EncodedBuf</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">buf</span>: <span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">Chain</span><span class="op">&lt;</span><span class="ident">ChunkSize</span>, <span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">StaticBuf</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">EncodedBuf</span> {
+            <span class="ident">kind</span>: <span class="ident">BufKind</span>::<span class="ident">Chunked</span>(<span class="ident">buf</span>),
         }
     }
 }
@@ -671,7 +819,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">eof</span>() {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoder</span> <span class="op">=</span> <span class="ident">Encoder</span>::<span class="ident">eof</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoder</span> <span class="op">=</span> <span class="ident">Encoder</span>::<span class="ident">close_delimited</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dst</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
 
 

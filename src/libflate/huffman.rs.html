@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/libflate-0.1.15/src/huffman.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>huffman.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/libflate-0.1.18/src/huffman.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>huffman.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -335,6 +335,12 @@
 <span id="335">335</span>
 <span id="336">336</span>
 <span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cmp</span>;
 <span class="doccomment">/// Length-limited Huffman Codes</span>
@@ -353,10 +359,7 @@
 <span class="kw">impl</span> <span class="ident">Code</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">width</span>: <span class="ident">u8</span>, <span class="ident">bits</span>: <span class="ident">u16</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">width</span> <span class="op">&lt;=</span> <span class="ident">MAX_BITWIDTH</span>);
-        <span class="ident">Code</span> {
-            <span class="ident">width</span>: <span class="ident">width</span>,
-            <span class="ident">bits</span>: <span class="ident">bits</span>,
-        }
+        <span class="ident">Code</span> { <span class="ident">width</span>, <span class="ident">bits</span> }
     }
     <span class="kw">fn</span> <span class="ident">inverse_endian</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">bits</span>;
@@ -372,9 +375,9 @@
 
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Builder</span>: <span class="ident">Sized</span> {
     <span class="kw">type</span> <span class="ident">Instance</span>;
-    <span class="kw">fn</span> <span class="ident">set_mapping</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">symbol</span>: <span class="ident">u16</span>, <span class="ident">code</span>: <span class="ident">Code</span>);
+    <span class="kw">fn</span> <span class="ident">set_mapping</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">symbol</span>: <span class="ident">u16</span>, <span class="ident">code</span>: <span class="ident">Code</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
     <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Instance</span>;
-    <span class="kw">fn</span> <span class="ident">restore_canonical_huffman_codes</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bitwidthes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Instance</span> {
+    <span class="kw">fn</span> <span class="ident">restore_canonical_huffman_codes</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">bitwidthes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Instance</span><span class="op">&gt;</span> {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">bitwidthes</span>.<span class="ident">is_empty</span>());
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">symbols</span> <span class="op">=</span> <span class="ident">bitwidthes</span>
@@ -389,11 +392,11 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_width</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">for</span> (<span class="ident">symbol</span>, <span class="ident">bitwidth</span>) <span class="kw">in</span> <span class="ident">symbols</span> {
             <span class="ident">code</span> <span class="op">&lt;&lt;=</span> <span class="ident">bitwidth</span> <span class="op">-</span> <span class="ident">prev_width</span>;
-            <span class="self">self</span>.<span class="ident">set_mapping</span>(<span class="ident">symbol</span>, <span class="ident">Code</span>::<span class="ident">new</span>(<span class="ident">bitwidth</span>, <span class="ident">code</span>));
+            <span class="self">self</span>.<span class="ident">set_mapping</span>(<span class="ident">symbol</span>, <span class="ident">Code</span>::<span class="ident">new</span>(<span class="ident">bitwidth</span>, <span class="ident">code</span>))<span class="question-mark">?</span>;
             <span class="ident">code</span> <span class="op">+=</span> <span class="number">1</span>;
             <span class="ident">prev_width</span> <span class="op">=</span> <span class="ident">bitwidth</span>;
         }
-        <span class="self">self</span>.<span class="ident">finish</span>()
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">finish</span>())
     }
 }
 
@@ -408,19 +411,19 @@
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">max_bitwidth</span> <span class="op">&lt;=</span> <span class="ident">MAX_BITWIDTH</span>);
         <span class="ident">DecoderBuilder</span> {
             <span class="ident">table</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">u16</span>::<span class="ident">from</span>(<span class="ident">MAX_BITWIDTH</span>) <span class="op">+</span> <span class="number">1</span>; <span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">max_bitwidth</span>],
-            <span class="ident">eob_symbol</span>: <span class="ident">eob_symbol</span>,
+            <span class="ident">eob_symbol</span>,
             <span class="ident">eob_bitwidth</span>: <span class="ident">max_bitwidth</span>,
-            <span class="ident">max_bitwidth</span>: <span class="ident">max_bitwidth</span>,
+            <span class="ident">max_bitwidth</span>,
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_bitwidthes</span>(<span class="ident">bitwidthes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">eob_symbol</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Decoder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_bitwidthes</span>(<span class="ident">bitwidthes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">eob_symbol</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Decoder</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">new</span>(<span class="ident">bitwidthes</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">max</span>().<span class="ident">unwrap_or</span>(<span class="number">0</span>), <span class="ident">eob_symbol</span>);
         <span class="ident">builder</span>.<span class="ident">restore_canonical_huffman_codes</span>(<span class="ident">bitwidthes</span>)
     }
 }
 <span class="kw">impl</span> <span class="ident">Builder</span> <span class="kw">for</span> <span class="ident">DecoderBuilder</span> {
     <span class="kw">type</span> <span class="ident">Instance</span> <span class="op">=</span> <span class="ident">Decoder</span>;
-    <span class="kw">fn</span> <span class="ident">set_mapping</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">symbol</span>: <span class="ident">u16</span>, <span class="ident">code</span>: <span class="ident">Code</span>) {
+    <span class="kw">fn</span> <span class="ident">set_mapping</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">symbol</span>: <span class="ident">u16</span>, <span class="ident">code</span>: <span class="ident">Code</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">code</span>.<span class="ident">width</span> <span class="op">&lt;=</span> <span class="self">self</span>.<span class="ident">max_bitwidth</span>);
         <span class="kw">if</span> <span class="prelude-val">Some</span>(<span class="ident">symbol</span>) <span class="op">==</span> <span class="self">self</span>.<span class="ident">eob_symbol</span> {
             <span class="self">self</span>.<span class="ident">eob_bitwidth</span> <span class="op">=</span> <span class="ident">code</span>.<span class="ident">width</span>;
@@ -433,11 +436,18 @@
         <span class="kw">let</span> <span class="ident">code_be</span> <span class="op">=</span> <span class="ident">code</span>.<span class="ident">inverse_endian</span>();
         <span class="kw">for</span> <span class="ident">padding</span> <span class="kw">in</span> <span class="number">0</span>..(<span class="number">1</span> <span class="op">&lt;&lt;</span> (<span class="self">self</span>.<span class="ident">max_bitwidth</span> <span class="op">-</span> <span class="ident">code</span>.<span class="ident">width</span>)) {
             <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> ((<span class="ident">padding</span> <span class="op">&lt;&lt;</span> <span class="ident">code</span>.<span class="ident">width</span>) <span class="op">|</span> <span class="ident">code_be</span>.<span class="ident">bits</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-            <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">table</span>[<span class="ident">i</span>], <span class="ident">u16</span>::<span class="ident">from</span>(<span class="ident">MAX_BITWIDTH</span>) <span class="op">+</span> <span class="number">1</span>);
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">table</span>[<span class="ident">i</span>] <span class="op">!=</span> <span class="ident">u16</span>::<span class="ident">from</span>(<span class="ident">MAX_BITWIDTH</span>) <span class="op">+</span> <span class="number">1</span> {
+                <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(
+                    <span class="string">&quot;Bit region conflict: i={}, old_value={}, new_value={}, symbol={}, code={:?}&quot;</span>,
+                    <span class="ident">i</span>, <span class="self">self</span>.<span class="ident">table</span>[<span class="ident">i</span>], <span class="ident">value</span>, <span class="ident">symbol</span>, <span class="ident">code</span>
+                );
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">InvalidData</span>, <span class="ident">message</span>));
+            }
             <span class="kw">unsafe</span> {
                 <span class="kw-2">*</span><span class="self">self</span>.<span class="ident">table</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">i</span>) <span class="op">=</span> <span class="ident">value</span>;
             }
         }
+        <span class="prelude-val">Ok</span>(())
     }
     <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Instance</span> {
         <span class="ident">Decoder</span> {
@@ -496,17 +506,18 @@
             <span class="ident">table</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Code</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>); <span class="ident">symbol_count</span>],
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_bitwidthes</span>(<span class="ident">bitwidthes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">Encoder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_bitwidthes</span>(<span class="ident">bitwidthes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Encoder</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">symbol_count</span> <span class="op">=</span> <span class="ident">bitwidthes</span>
             .<span class="ident">iter</span>()
             .<span class="ident">enumerate</span>()
             .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="kw-2">*</span><span class="ident">e</span>.<span class="number">1</span> <span class="op">&gt;</span> <span class="number">0</span>)
             .<span class="ident">last</span>()
-            .<span class="ident">map_or</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="number">0</span>) <span class="op">+</span> <span class="number">1</span>;
+            .<span class="ident">map_or</span>(<span class="number">0</span>, <span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="number">0</span>)
+            <span class="op">+</span> <span class="number">1</span>;
         <span class="kw">let</span> <span class="ident">builder</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">new</span>(<span class="ident">symbol_count</span>);
         <span class="ident">builder</span>.<span class="ident">restore_canonical_huffman_codes</span>(<span class="ident">bitwidthes</span>)
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_frequencies</span>(<span class="ident">symbol_frequencies</span>: <span class="kw-2">&amp;</span>[<span class="ident">usize</span>], <span class="ident">max_bitwidth</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">Encoder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_frequencies</span>(<span class="ident">symbol_frequencies</span>: <span class="kw-2">&amp;</span>[<span class="ident">usize</span>], <span class="ident">max_bitwidth</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Encoder</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">max_bitwidth</span> <span class="op">=</span> <span class="ident">cmp</span>::<span class="ident">min</span>(
             <span class="ident">max_bitwidth</span>,
             <span class="ident">ordinary_huffman_codes</span>::<span class="ident">calc_optimal_max_bitwidth</span>(<span class="ident">symbol_frequencies</span>),
@@ -517,9 +528,10 @@
 }
 <span class="kw">impl</span> <span class="ident">Builder</span> <span class="kw">for</span> <span class="ident">EncoderBuilder</span> {
     <span class="kw">type</span> <span class="ident">Instance</span> <span class="op">=</span> <span class="ident">Encoder</span>;
-    <span class="kw">fn</span> <span class="ident">set_mapping</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">symbol</span>: <span class="ident">u16</span>, <span class="ident">code</span>: <span class="ident">Code</span>) {
+    <span class="kw">fn</span> <span class="ident">set_mapping</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">symbol</span>: <span class="ident">u16</span>, <span class="ident">code</span>: <span class="ident">Code</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">table</span>[<span class="ident">symbol</span> <span class="kw">as</span> <span class="ident">usize</span>], <span class="ident">Code</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>));
         <span class="self">self</span>.<span class="ident">table</span>[<span class="ident">symbol</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">=</span> <span class="ident">code</span>.<span class="ident">inverse_endian</span>();
+        <span class="prelude-val">Ok</span>(())
     }
     <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span>::<span class="ident">Instance</span> {
         <span class="ident">Encoder</span> { <span class="ident">table</span>: <span class="self">self</span>.<span class="ident">table</span> }
@@ -597,7 +609,7 @@
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">single</span>(<span class="ident">symbol</span>: <span class="ident">u16</span>, <span class="ident">weight</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
             <span class="ident">Node</span> {
                 <span class="ident">symbols</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">symbol</span>],
-                <span class="ident">weight</span>: <span class="ident">weight</span>,
+                <span class="ident">weight</span>,
             }
         }
         <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">merge</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">other</span>: <span class="self">Self</span>) {

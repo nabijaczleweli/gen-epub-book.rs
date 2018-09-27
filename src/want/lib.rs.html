@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/want-0.0.4/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/want-0.0.6/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -491,8 +491,16 @@
 <span id="491">491</span>
 <span id="492">492</span>
 <span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
 </pre><pre class="rust ">
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/want/0.0.4&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/want/0.0.6&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">warnings</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_debug_implementations</span>)]</span>
@@ -521,7 +529,10 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::{<span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::<span class="ident">AtomicUsize</span>;
+<span class="comment">// SeqCst is the only ordering used to ensure accessing the state and</span>
+<span class="comment">// TryLock are never re-ordered.</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::<span class="ident">Ordering</span>::<span class="ident">SeqCst</span>;
 
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Poll</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">task</span>::{<span class="self">self</span>, <span class="ident">Task</span>};
@@ -620,7 +631,7 @@
     <span class="doccomment">/// calling [`give`](Giver::give).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll_want</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), <span class="ident">Closed</span><span class="op">&gt;</span> {
         <span class="kw">loop</span> {
-            <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">SeqCst</span>).<span class="ident">into</span>();
+            <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>).<span class="ident">into</span>();
             <span class="kw">match</span> <span class="ident">state</span> {
                 <span class="ident">State</span>::<span class="ident">Want</span> <span class="op">=&gt;</span> {
                     <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;poll_want: taker wants!&quot;</span>);
@@ -632,13 +643,13 @@
                 },
                 <span class="ident">State</span>::<span class="ident">Idle</span> <span class="op">|</span> <span class="ident">State</span>::<span class="ident">Give</span> <span class="op">=&gt;</span> {
                     <span class="comment">// Taker doesn&#39;t want anything yet, so park.</span>
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">locked</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">task</span>.<span class="ident">try_lock</span>() {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">locked</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">task</span>.<span class="ident">try_lock_order</span>(<span class="ident">SeqCst</span>, <span class="ident">SeqCst</span>) {
 
                         <span class="comment">// While we have the lock, try to set to GIVE.</span>
                         <span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">compare_and_swap</span>(
                             <span class="ident">state</span>.<span class="ident">into</span>(),
                             <span class="ident">State</span>::<span class="ident">Give</span>.<span class="ident">into</span>(),
-                            <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>,
+                            <span class="ident">SeqCst</span>,
                         );
                         <span class="comment">// If it&#39;s still the first state (Idle or Give), park current task.</span>
                         <span class="kw">if</span> <span class="ident">old</span> <span class="op">==</span> <span class="ident">state</span>.<span class="ident">into</span>() {
@@ -646,13 +657,14 @@
                                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="op">!</span><span class="ident">t</span>.<span class="ident">will_notify_current</span>())
                                 .<span class="ident">unwrap_or</span>(<span class="bool-val">true</span>);
                             <span class="kw">if</span> <span class="ident">park</span> {
-                                <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">locked</span>, <span class="prelude-val">Some</span>(<span class="ident">task</span>::<span class="ident">current</span>()))
-                                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">prev_task</span><span class="op">|</span> {
-                                        <span class="comment">// there was an old task parked here.</span>
-                                        <span class="comment">// it might be waiting to be notified,</span>
-                                        <span class="comment">// so poke it before dropping.</span>
-                                        <span class="ident">prev_task</span>.<span class="ident">notify</span>();
-                                    });
+                                <span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">locked</span>, <span class="prelude-val">Some</span>(<span class="ident">task</span>::<span class="ident">current</span>()));
+                                <span class="ident">drop</span>(<span class="ident">locked</span>);
+                                <span class="ident">old</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">prev_task</span><span class="op">|</span> {
+                                    <span class="comment">// there was an old task parked here.</span>
+                                    <span class="comment">// it might be waiting to be notified,</span>
+                                    <span class="comment">// so poke it before dropping.</span>
+                                    <span class="ident">prev_task</span>.<span class="ident">notify</span>();
+                                });
                             }
                             <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">NotReady</span>)
                         }
@@ -678,7 +690,7 @@
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">compare_and_swap</span>(
             <span class="ident">State</span>::<span class="ident">Want</span>.<span class="ident">into</span>(),
             <span class="ident">State</span>::<span class="ident">Idle</span>.<span class="ident">into</span>(),
-            <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>,
+            <span class="ident">SeqCst</span>,
         ) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Want</span>.<span class="ident">into</span>()
     }
 
@@ -688,14 +700,14 @@
     <span class="doccomment">/// means of being notified is left to the user.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_wanting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">SeqCst</span>) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Want</span>.<span class="ident">into</span>()
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Want</span>.<span class="ident">into</span>()
     }
 
 
     <span class="doccomment">/// Check if the `Taker` has canceled interest without parking a task.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_canceled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">SeqCst</span>) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Closed</span>.<span class="ident">into</span>()
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Closed</span>.<span class="ident">into</span>()
     }
 
     <span class="doccomment">/// Converts this into a `SharedGiver`.</span>
@@ -724,14 +736,14 @@
     <span class="doccomment">/// means of being notified is left to the user.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_wanting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">SeqCst</span>) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Want</span>.<span class="ident">into</span>()
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Want</span>.<span class="ident">into</span>()
     }
 
 
     <span class="doccomment">/// Check if the `Taker` has canceled interest without parking a task.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_canceled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">SeqCst</span>) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Closed</span>.<span class="ident">into</span>()
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>) <span class="op">==</span> <span class="ident">State</span>::<span class="ident">Closed</span>.<span class="ident">into</span>()
     }
 }
 
@@ -759,19 +771,24 @@
     <span class="doccomment">/// Signal to the `Giver` that a value is wanted.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">want</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="macro">debug_assert</span><span class="macro">!</span>(
+            <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>) <span class="op">!=</span> <span class="ident">State</span>::<span class="ident">Closed</span>.<span class="ident">into</span>(),
+            <span class="string">&quot;want called after cancel&quot;</span>
+        );
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;signal: {:?}&quot;</span>, <span class="ident">State</span>::<span class="ident">Want</span>);
         <span class="self">self</span>.<span class="ident">signal</span>(<span class="ident">State</span>::<span class="ident">Want</span>)
     }
 
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">signal</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">state</span>: <span class="ident">State</span>) {
-        <span class="kw">let</span> <span class="ident">old_state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">swap</span>(<span class="ident">state</span>.<span class="ident">into</span>(), <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>).<span class="ident">into</span>();
+        <span class="kw">let</span> <span class="ident">old_state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">state</span>.<span class="ident">swap</span>(<span class="ident">state</span>.<span class="ident">into</span>(), <span class="ident">SeqCst</span>).<span class="ident">into</span>();
         <span class="kw">match</span> <span class="ident">old_state</span> {
             <span class="ident">State</span>::<span class="ident">Idle</span> <span class="op">|</span> <span class="ident">State</span>::<span class="ident">Want</span> <span class="op">|</span> <span class="ident">State</span>::<span class="ident">Closed</span> <span class="op">=&gt;</span> (),
             <span class="ident">State</span>::<span class="ident">Give</span> <span class="op">=&gt;</span> {
                 <span class="kw">loop</span> {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">locked</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">task</span>.<span class="ident">try_lock</span>() {
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">locked</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">task</span>.<span class="ident">try_lock_order</span>(<span class="ident">SeqCst</span>, <span class="ident">SeqCst</span>) {
                         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">task</span>) <span class="op">=</span> <span class="ident">locked</span>.<span class="ident">take</span>() {
+                            <span class="ident">drop</span>(<span class="ident">locked</span>);
                             <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;signal found waiting giver, notifying&quot;</span>);
                             <span class="ident">task</span>.<span class="ident">notify</span>();
                         }
@@ -817,7 +834,7 @@
 <span class="kw">impl</span> <span class="ident">Inner</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">state</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">State</span> {
-        <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">Ordering</span>::<span class="ident">SeqCst</span>).<span class="ident">into</span>()
+        <span class="self">self</span>.<span class="ident">state</span>.<span class="ident">load</span>(<span class="ident">SeqCst</span>).<span class="ident">into</span>()
     }
 }
 
@@ -861,7 +878,6 @@
         <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">gv</span>.<span class="ident">give</span>(), <span class="string">&quot;give is false if not wanting&quot;</span>);
 
         <span class="ident">tx</span>.<span class="ident">send</span>(()).<span class="ident">expect</span>(<span class="string">&quot;tx&quot;</span>);
-        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;boom&quot;</span>);
     }
 
     <span class="doccomment">/// This tests that if the Giver moves tasks after parking,</span>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/libflate-0.1.15/src/gzip.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>gzip.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/libflate-0.1.18/src/gzip.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>gzip.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1161,6 +1161,34 @@
 <span id="1161">1161</span>
 <span id="1162">1162</span>
 <span id="1163">1163</span>
+<span id="1164">1164</span>
+<span id="1165">1165</span>
+<span id="1166">1166</span>
+<span id="1167">1167</span>
+<span id="1168">1168</span>
+<span id="1169">1169</span>
+<span id="1170">1170</span>
+<span id="1171">1171</span>
+<span id="1172">1172</span>
+<span id="1173">1173</span>
+<span id="1174">1174</span>
+<span id="1175">1175</span>
+<span id="1176">1176</span>
+<span id="1177">1177</span>
+<span id="1178">1178</span>
+<span id="1179">1179</span>
+<span id="1180">1180</span>
+<span id="1181">1181</span>
+<span id="1182">1182</span>
+<span id="1183">1183</span>
+<span id="1184">1184</span>
+<span id="1185">1185</span>
+<span id="1186">1186</span>
+<span id="1187">1187</span>
+<span id="1188">1188</span>
+<span id="1189">1189</span>
+<span id="1190">1190</span>
+<span id="1191">1191</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! The encoder and decoder of the GZIP format.</span>
 <span class="doccomment">//!</span>
@@ -1314,7 +1342,7 @@
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">d</span><span class="op">|</span> <span class="ident">d</span>.<span class="ident">as_secs</span>() <span class="kw">as</span> <span class="ident">u32</span>)
             .<span class="ident">unwrap_or</span>(<span class="number">0</span>);
         <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">Header</span> {
-            <span class="ident">modification_time</span>: <span class="ident">modification_time</span>,
+            <span class="ident">modification_time</span>,
             <span class="ident">compression_level</span>: <span class="ident">CompressionLevel</span>::<span class="ident">Unknown</span>,
             <span class="ident">os</span>: <span class="ident">Os</span>::<span class="ident">Unix</span>,
             <span class="ident">is_text</span>: <span class="bool-val">false</span>,
@@ -1323,7 +1351,7 @@
             <span class="ident">filename</span>: <span class="prelude-val">None</span>,
             <span class="ident">comment</span>: <span class="prelude-val">None</span>,
         };
-        <span class="ident">HeaderBuilder</span> { <span class="ident">header</span>: <span class="ident">header</span> }
+        <span class="ident">HeaderBuilder</span> { <span class="ident">header</span> }
     }
 
     <span class="doccomment">/// Sets the modification time (UNIX timestamp).</span>
@@ -1497,7 +1525,8 @@
             (<span class="ident">F_EXTRA</span>, <span class="self">self</span>.<span class="ident">extra_field</span>.<span class="ident">is_some</span>()),
             (<span class="ident">F_NAME</span>, <span class="self">self</span>.<span class="ident">filename</span>.<span class="ident">is_some</span>()),
             (<span class="ident">F_COMMENT</span>, <span class="self">self</span>.<span class="ident">comment</span>.<span class="ident">is_some</span>()),
-        ].<span class="ident">iter</span>()
+        ]
+            .<span class="ident">iter</span>()
             .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="number">1</span>)
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="number">0</span>)
             .<span class="ident">sum</span>()
@@ -1509,7 +1538,7 @@
             <span class="ident">is_verified</span>: <span class="bool-val">false</span>,
             ..<span class="self">self</span>.<span class="ident">clone</span>()
         }.<span class="ident">write_to</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>)
-            .<span class="ident">unwrap</span>();
+        .<span class="ident">unwrap</span>();
         <span class="ident">crc</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">buf</span>);
         <span class="ident">crc</span>.<span class="ident">value</span>() <span class="kw">as</span> <span class="ident">u16</span>
     }
@@ -1573,7 +1602,10 @@
         <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">F_COMMENT</span> <span class="op">!=</span> <span class="number">0</span> {
             <span class="ident">this</span>.<span class="ident">comment</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">read_cstring</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">reader</span>)<span class="question-mark">?</span>);
         }
-        <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">F_HCRC</span> <span class="op">!=</span> <span class="number">0</span> {
+        <span class="comment">// Checksum verification is skipped during fuzzing</span>
+        <span class="comment">// so that random data from fuzzer can reach actually interesting code.</span>
+        <span class="comment">// Compilation flag &#39;fuzzing&#39; is automatically set by all 3 Rust fuzzers.</span>
+        <span class="kw">if</span> <span class="ident">flags</span> <span class="op">&amp;</span> <span class="ident">F_HCRC</span> <span class="op">!=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">not</span>(<span class="ident">fuzzing</span>)) {
             <span class="kw">let</span> <span class="ident">crc</span> <span class="op">=</span> <span class="ident">reader</span>.<span class="ident">read_u16</span>::<span class="op">&lt;</span><span class="ident">LittleEndian</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="ident">this</span>.<span class="ident">crc16</span>();
             <span class="kw">if</span> <span class="ident">crc</span> <span class="op">!=</span> <span class="ident">expected</span> {
@@ -1791,7 +1823,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">HeaderBuilder</span>::<span class="ident">new</span>().<span class="ident">finish</span>();
         <span class="ident">header</span>.<span class="ident">compression_level</span> <span class="op">=</span> <span class="ident">From</span>::<span class="ident">from</span>(<span class="ident">lz77</span>.<span class="ident">compression_level</span>());
         <span class="ident">EncodeOptions</span> {
-            <span class="ident">header</span>: <span class="ident">header</span>,
+            <span class="ident">header</span>,
             <span class="ident">options</span>: <span class="ident">deflate</span>::<span class="ident">EncodeOptions</span>::<span class="ident">with_lz77</span>(<span class="ident">lz77</span>),
         }
     }
@@ -2115,7 +2147,10 @@
             <span class="kw">if</span> <span class="ident">read_size</span> <span class="op">==</span> <span class="number">0</span> {
                 <span class="self">self</span>.<span class="ident">eos</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 <span class="kw">let</span> <span class="ident">trailer</span> <span class="op">=</span> <span class="ident">Trailer</span>::<span class="ident">read_from</span>(<span class="self">self</span>.<span class="ident">reader</span>.<span class="ident">as_inner_mut</span>())<span class="question-mark">?</span>;
-                <span class="kw">if</span> <span class="ident">trailer</span>.<span class="ident">crc32</span> <span class="op">!=</span> <span class="self">self</span>.<span class="ident">crc32</span>.<span class="ident">value</span>() {
+                <span class="comment">// checksum verification is skipped during fuzzing</span>
+                <span class="comment">// so that random data from fuzzer can reach actually interesting code</span>
+                <span class="comment">// Compilation flag &#39;fuzzing&#39; is automatically set by all 3 Rust fuzzers.</span>
+                <span class="kw">if</span> <span class="macro">cfg</span><span class="macro">!</span>(<span class="ident">not</span>(<span class="ident">fuzzing</span>)) <span class="op">&amp;&amp;</span> <span class="ident">trailer</span>.<span class="ident">crc32</span> <span class="op">!=</span> <span class="self">self</span>.<span class="ident">crc32</span>.<span class="ident">value</span>() {
                     <span class="prelude-val">Err</span>(<span class="macro">invalid_data_error</span><span class="macro">!</span>(
                         <span class="string">&quot;CRC32 mismatched: value={}, expected={}&quot;</span>,
                         <span class="self">self</span>.<span class="ident">crc32</span>.<span class="ident">value</span>(),
@@ -2323,6 +2358,27 @@
             .<span class="ident">collect</span>();
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>).<span class="ident">unwrap</span>(), <span class="string">b&quot;Hello World!&quot;</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">decode_multi</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>).<span class="ident">unwrap</span>(), <span class="string">b&quot;Hello World!Hello World!&quot;</span>);
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="doccomment">/// See: https://github.com/sile/libflate/issues/15 and https://github.com/RazrFalcon/usvg/issues/20</span>
+    <span class="kw">fn</span> <span class="ident">issue_15_1</span>() {
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="string">b&quot;\x1F\x8B\x08\xC1\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x7B\x80\x80\x80\x80\x7B\x7B\x7B\x7B\x7B\x7B\x97\x7B\x7B\x7B\x86\x27\xEB\x60\xA7\xA8\x46\x6E\x1F\x33\x51\x5C\x34\xE0\xD2\x2E\xE8\x0C\x19\x1D\x3D\x3C\xFD\x3B\x6A\xFA\x63\xDF\x28\x87\x86\xF2\xA6\xAC\x87\x86\xF2\xA6\xAC\xD5&quot;</span>;
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]).<span class="ident">is_err</span>());
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="doccomment">/// See: https://github.com/sile/libflate/issues/15 and https://github.com/RazrFalcon/usvg/issues/21</span>
+    <span class="kw">fn</span> <span class="ident">issue_15_2</span>() {
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="string">b&quot;\x1F\x8B\x08\xC1\x7B\x7B\x7B\x7B\x7B\xFC\x5D\x2D\xDC\x08\xC1\x7B\x7B\x7B\x7B\x7B\xFC\x5D\x2D\xDC\x08\xC1\x7B\x7F\x7B\x7B\x7B\xFC\x5D\x2D\xDC\x69\x32\x48\x22\x5A\x81\x81\x42\x42\x81\x7E\x81\x81\x81\x81\xF2\x17&quot;</span>;
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]).<span class="ident">is_err</span>());
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="doccomment">/// See: https://github.com/sile/libflate/issues/15 and https://github.com/RazrFalcon/usvg/issues/22</span>
+    <span class="kw">fn</span> <span class="ident">issue_15_3</span>() {
+        <span class="kw">let</span> <span class="ident">data</span> <span class="op">=</span> <span class="string">b&quot;\x1F\x8B\x08\xC1\x91\x28\x71\xDC\xF2\x2D\x34\x35\x31\x35\x34\x30\x70\x6E\x60\x35\x31\x32\x32\x33\x32\x33\x37\x32\x36\x38\xDD\x1C\xE5\x2A\xDD\xDD\xDD\x22\xDD\xDD\xDD\xDC\x88\x13\xC9\x40\x60\xA7&quot;</span>;
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[..]).<span class="ident">is_err</span>());
     }
 }
 </pre>

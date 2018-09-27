@@ -1,843 +1,920 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `header` mod in crate `reqwest`."><meta name="keywords" content="rust, rustlang, rust-lang, header"><title>reqwest::header - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Module header</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>reqwest</a></p><script>window.sidebarCurrent = {name: 'header', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>reqwest</a>::<wbr><a class="mod" href=''>header</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/hyper/lib.rs.html#79' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>Headers container, and common header fields.</p>
-<p>hyper has the opinion that Headers should be strongly-typed, because that's
-why we're using Rust in the first place. To set or get any header, an object
-must implement the <code>Header</code> trait from this module. Several common headers
-are already provided, such as <code>Host</code>, <code>ContentType</code>, <code>UserAgent</code>, and others.</p>
-<h1 id="why-typed" class="section-header"><a href="#why-typed">Why Typed?</a></h1>
-<p>Or, why not stringly-typed? Types give the following advantages:</p>
-<ul>
-<li>More difficult to typo, since typos in types should be caught by the compiler</li>
-<li>Parsing to a proper type by default</li>
-</ul>
-<h1 id="defining-custom-headers" class="section-header"><a href="#defining-custom-headers">Defining Custom Headers</a></h1>
-<p>Hyper provides many of the most commonly used headers in HTTP. If
-you need to define a custom header, it's easy to do while still taking
-advantage of the type system. Hyper includes a <code>header!</code> macro for defining
-many wrapper-style headers.</p>
-
-<pre class="rust rust-example-rendered">
-<span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">hyper</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::<span class="ident">Headers</span>;
-<span class="macro">header</span><span class="macro">!</span> { (<span class="ident">XRequestGuid</span>, <span class="string">&quot;X-Request-Guid&quot;</span>) <span class="op">=&gt;</span> [<span class="ident">String</span>] }
-
-<span class="kw">fn</span> <span class="ident">main</span> () {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
-
-    <span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">XRequestGuid</span>(<span class="string">&quot;a proper guid&quot;</span>.<span class="ident">to_owned</span>()))
-}</pre>
-<p>This works well for simple &quot;string&quot; headers.  If you need more control,
-you can implement the trait directly.</p>
-<h2 id="implementing-the-header-trait" class="section-header"><a href="#implementing-the-header-trait">Implementing the <code>Header</code> trait</a></h2>
-<p>Consider a Do Not Track header. It can be true or false, but it represents
-that via the numerals <code>1</code> and <code>0</code>.</p>
-
-<pre class="rust rust-example-rendered">
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
-<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="self">self</span>, <span class="ident">Header</span>, <span class="ident">Raw</span>};
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Dnt</span>(<span class="ident">bool</span>);
-
-<span class="kw">impl</span> <span class="ident">Header</span> <span class="kw">for</span> <span class="ident">Dnt</span> {
-    <span class="kw">fn</span> <span class="ident">header_name</span>() <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
-        <span class="string">&quot;DNT&quot;</span>
-    }
-
-    <span class="kw">fn</span> <span class="ident">parse_header</span>(<span class="ident">raw</span>: <span class="kw-2">&amp;</span><span class="ident">Raw</span>) <span class="op">-&gt;</span> <span class="ident">hyper</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Dnt</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="ident">raw</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-            <span class="kw">let</span> <span class="ident">line</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">raw</span>[<span class="number">0</span>];
-            <span class="kw">if</span> <span class="ident">line</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
-                <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="ident">line</span>[<span class="number">0</span>];
-                <span class="kw">match</span> <span class="ident">byte</span> {
-                    <span class="string">b&#39;0&#39;</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Dnt</span>(<span class="bool-val">true</span>)),
-                    <span class="string">b&#39;1&#39;</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Dnt</span>(<span class="bool-val">false</span>)),
-                    <span class="kw">_</span> <span class="op">=&gt;</span> ()
-                }
-            }
-        }
-        <span class="prelude-val">Err</span>(<span class="ident">hyper</span>::<span class="ident">Error</span>::<span class="ident">Header</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">fmt_header</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">header</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="number">0</span> {
-            <span class="string">&quot;1&quot;</span>
-        } <span class="kw">else</span> {
-            <span class="string">&quot;0&quot;</span>
-        };
-        <span class="ident">f</span>.<span class="ident">fmt_line</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>)
-    }
-}</pre>
-</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `header` mod in crate `reqwest`."><meta name="keywords" content="rust, rustlang, rust-lang, header"><title>reqwest::header - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Module header</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#constants">Constants</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'><a href='../index.html'>reqwest</a></p><script>window.sidebarCurrent = {name: 'header', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='in-band'>Module <a href='../index.html'>reqwest</a>::<wbr><a class="mod" href=''>header</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/http/lib.rs.html#166' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>HTTP header types</p>
+<p>The module provides <a href="struct.HeaderName.html"><code>HeaderName</code></a>, <a href="struct.HeaderMap.html"><code>HeaderMap</code></a>, and a number of types
+used for interacting with <code>HeaderMap</code>. These types allow representing both
+HTTP/1 and HTTP/2 headers.</p>
+<h1 id="headername" class="section-header"><a href="#headername"><code>HeaderName</code></a></h1>
+<p>The <code>HeaderName</code> type represents both standard header names as well as
+custom header names. The type handles the case insensitive nature of header
+names and is used as the key portion of <code>HeaderMap</code>. Header names are
+normalized to lower case. In other words, when creating a <code>HeaderName</code> with
+a string, even if upper case characters are included, when getting a string
+representation of the <code>HeaderName</code>, it will be all lower case. This allows
+for faster <code>HeaderMap</code> comparison operations.</p>
+<p>The internal representation is optimized to efficiently handle the cases
+most commonly encountered when working with HTTP. Standard header names are
+special cased and are represented internally as an enum. Short custom
+headers will be stored directly in the <code>HeaderName</code> struct and will not
+incur any allocation overhead, however longer strings will require an
+allocation for storage.</p>
+<h2 id="limitations" class="section-header"><a href="#limitations">Limitations</a></h2>
+<p><code>HeaderName</code> has a max length of 32,768 for header names. Attempting to
+parse longer names will result in a panic.</p>
+<h1 id="headermap" class="section-header"><a href="#headermap"><code>HeaderMap</code></a></h1>
+<p><code>HeaderMap</code> is a map structure of header names highly optimized for use
+cases common with HTTP. It is a <a href="https://en.wikipedia.org/wiki/Multimap">multimap</a> structure, where each header name
+may have multiple associated header values. Given this, some of the APIs
+diverge from <a href="https://doc.rust-lang.org/std/collections/struct.HashMap.html"><code>HashMap</code></a>.</p>
+<h2 id="overview" class="section-header"><a href="#overview">Overview</a></h2>
+<p>Just like <code>HashMap</code> in Rust's stdlib, <code>HeaderMap</code> is based on <a href="https://en.wikipedia.org/wiki/Hash_table#Robin_Hood_hashing">Robin Hood
+hashing</a>. This algorithm tends to reduce the worst case search times in the
+table and enables high load factors without seriously affecting performance.
+Internally, keys and values are stored in vectors. As such, each insertion
+will not incur allocation overhead. However, once the underlying vector
+storage is full, a larger vector must be allocated and all values copied.</p>
+<h2 id="deterministic-ordering" class="section-header"><a href="#deterministic-ordering">Deterministic ordering</a></h2>
+<p>Unlike Rust's <code>HashMap</code>, values in <code>HeaderMap</code> are deterministically
+ordered. Roughly, values are ordered by insertion. This means that a
+function that deterministically operates on a header map can rely on the
+iteration order to remain consistent across processes and platforms.</p>
+<h2 id="adaptive-hashing" class="section-header"><a href="#adaptive-hashing">Adaptive hashing</a></h2>
+<p><code>HeaderMap</code> uses an adaptive hashing strategy in order to efficiently handle
+most common cases. All standard headers have statically computed hash values
+which removes the need to perform any hashing of these headers at runtime.
+The default hash function emphasizes performance over robustness. However,
+<code>HeaderMap</code> detects high collision rates and switches to a secure hash
+function in those events. The threshold is set such that only denial of
+service attacks should trigger it.</p>
+<h2 id="limitations-1" class="section-header"><a href="#limitations-1">Limitations</a></h2>
+<p><code>HeaderMap</code> can store a maximum of 32,768 headers (header name / value
+pairs). Attempting to insert more will result in a panic.</p>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class="mod" href="parsing/index.html"
-                                  title='mod reqwest::header::parsing'>parsing</a></td>
+                           <td><a class="struct" href="struct.Drain.html"
+                                  title='struct reqwest::header::Drain'>Drain</a></td>
                            <td class='docblock-short'>
-                                <p>Utility functions for Header implementations.</p>
-
-                           </td>
-                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Accept.html"
-                                  title='struct reqwest::header::Accept'>Accept</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Accept</code> header, defined in <a href="http://tools.ietf.org/html/rfc7231#section-5.3.2">RFC7231</a></p>
+                                <p>A drain iterator for <code>HeaderMap</code>.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AcceptCharset.html"
-                                  title='struct reqwest::header::AcceptCharset'>AcceptCharset</a></td>
+                           <td><a class="struct" href="struct.GetAll.html"
+                                  title='struct reqwest::header::GetAll'>GetAll</a></td>
                            <td class='docblock-short'>
-                                <p><code>Accept-Charset</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7231#section-5.3.3">RFC7231</a></p>
+                                <p>A view to all values stored in a single entry.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AcceptEncoding.html"
-                                  title='struct reqwest::header::AcceptEncoding'>AcceptEncoding</a></td>
+                           <td><a class="struct" href="struct.HeaderMap.html"
+                                  title='struct reqwest::header::HeaderMap'>HeaderMap</a></td>
                            <td class='docblock-short'>
-                                <p><code>Accept-Encoding</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7231#section-5.3.4">RFC7231</a></p>
+                                <p>A set of HTTP headers</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AcceptLanguage.html"
-                                  title='struct reqwest::header::AcceptLanguage'>AcceptLanguage</a></td>
+                           <td><a class="struct" href="struct.HeaderName.html"
+                                  title='struct reqwest::header::HeaderName'>HeaderName</a></td>
                            <td class='docblock-short'>
-                                <p><code>Accept-Language</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7231#section-5.3.5">RFC7231</a></p>
+                                <p>Represents an HTTP header field name</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AcceptRanges.html"
-                                  title='struct reqwest::header::AcceptRanges'>AcceptRanges</a></td>
+                           <td><a class="struct" href="struct.HeaderValue.html"
+                                  title='struct reqwest::header::HeaderValue'>HeaderValue</a></td>
                            <td class='docblock-short'>
-                                <p><code>Accept-Ranges</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7233#section-2.3">RFC7233</a></p>
+                                <p>Represents an HTTP header field value.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AccessControlAllowCredentials.html"
-                                  title='struct reqwest::header::AccessControlAllowCredentials'>AccessControlAllowCredentials</a></td>
+                           <td><a class="struct" href="struct.IntoIter.html"
+                                  title='struct reqwest::header::IntoIter'>IntoIter</a></td>
                            <td class='docblock-short'>
-                                <p><code>Access-Control-Allow-Credentials</code> header, part of
-<a href="http://www.w3.org/TR/cors/#access-control-allow-headers-response-header">CORS</a></p>
+                                <p>An owning iterator over the entries of a <code>HeaderMap</code>.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AccessControlAllowHeaders.html"
-                                  title='struct reqwest::header::AccessControlAllowHeaders'>AccessControlAllowHeaders</a></td>
+                           <td><a class="struct" href="struct.InvalidHeaderName.html"
+                                  title='struct reqwest::header::InvalidHeaderName'>InvalidHeaderName</a></td>
                            <td class='docblock-short'>
-                                <p><code>Access-Control-Allow-Headers</code> header, part of
-<a href="http://www.w3.org/TR/cors/#access-control-allow-headers-response-header">CORS</a></p>
+                                <p>A possible error when converting a <code>HeaderName</code> from another type.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AccessControlAllowMethods.html"
-                                  title='struct reqwest::header::AccessControlAllowMethods'>AccessControlAllowMethods</a></td>
+                           <td><a class="struct" href="struct.InvalidHeaderNameBytes.html"
+                                  title='struct reqwest::header::InvalidHeaderNameBytes'>InvalidHeaderNameBytes</a></td>
                            <td class='docblock-short'>
-                                <p><code>Access-Control-Allow-Methods</code> header, part of
-<a href="http://www.w3.org/TR/cors/#access-control-allow-methods-response-header">CORS</a></p>
+                                <p>A possible error when converting a <code>HeaderName</code> from another type.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AccessControlExposeHeaders.html"
-                                  title='struct reqwest::header::AccessControlExposeHeaders'>AccessControlExposeHeaders</a></td>
+                           <td><a class="struct" href="struct.InvalidHeaderValue.html"
+                                  title='struct reqwest::header::InvalidHeaderValue'>InvalidHeaderValue</a></td>
                            <td class='docblock-short'>
-                                <p><code>Access-Control-Expose-Headers</code> header, part of
-<a href="http://www.w3.org/TR/cors/#access-control-expose-headers-response-header">CORS</a></p>
+                                <p>A possible error when converting a <code>HeaderValue</code> from a string or byte
+slice.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AccessControlMaxAge.html"
-                                  title='struct reqwest::header::AccessControlMaxAge'>AccessControlMaxAge</a></td>
+                           <td><a class="struct" href="struct.InvalidHeaderValueBytes.html"
+                                  title='struct reqwest::header::InvalidHeaderValueBytes'>InvalidHeaderValueBytes</a></td>
                            <td class='docblock-short'>
-                                <p><code>Access-Control-Max-Age</code> header, part of
-<a href="http://www.w3.org/TR/cors/#access-control-max-age-response-header">CORS</a></p>
+                                <p>A possible error when converting a <code>HeaderValue</code> from a string or byte
+slice.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AccessControlRequestHeaders.html"
-                                  title='struct reqwest::header::AccessControlRequestHeaders'>AccessControlRequestHeaders</a></td>
+                           <td><a class="struct" href="struct.Iter.html"
+                                  title='struct reqwest::header::Iter'>Iter</a></td>
                            <td class='docblock-short'>
-                                <p><code>Access-Control-Request-Headers</code> header, part of
-<a href="http://www.w3.org/TR/cors/#access-control-request-headers-request-header">CORS</a></p>
+                                <p><code>HeaderMap</code> entry iterator.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.AccessControlRequestMethod.html"
-                                  title='struct reqwest::header::AccessControlRequestMethod'>AccessControlRequestMethod</a></td>
+                           <td><a class="struct" href="struct.Keys.html"
+                                  title='struct reqwest::header::Keys'>Keys</a></td>
                            <td class='docblock-short'>
-                                <p><code>Access-Control-Request-Method</code> header, part of
-<a href="http://www.w3.org/TR/cors/#access-control-request-method-request-header">CORS</a></p>
+                                <p>An iterator over <code>HeaderMap</code> keys.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Allow.html"
-                                  title='struct reqwest::header::Allow'>Allow</a></td>
+                           <td><a class="struct" href="struct.OccupiedEntry.html"
+                                  title='struct reqwest::header::OccupiedEntry'>OccupiedEntry</a></td>
                            <td class='docblock-short'>
-                                <p><code>Allow</code> header, defined in <a href="http://tools.ietf.org/html/rfc7231#section-7.4.1">RFC7231</a></p>
+                                <p>A view into a single occupied location in a <code>HeaderMap</code>.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Authorization.html"
-                                  title='struct reqwest::header::Authorization'>Authorization</a></td>
+                           <td><a class="struct" href="struct.ToStrError.html"
+                                  title='struct reqwest::header::ToStrError'>ToStrError</a></td>
                            <td class='docblock-short'>
-                                <p><code>Authorization</code> header, defined in <a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC7235</a></p>
+                                <p>A possible error when converting a <code>HeaderValue</code> to a string representation.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Basic.html"
-                                  title='struct reqwest::header::Basic'>Basic</a></td>
+                           <td><a class="struct" href="struct.VacantEntry.html"
+                                  title='struct reqwest::header::VacantEntry'>VacantEntry</a></td>
                            <td class='docblock-short'>
-                                <p>Credential holder for Basic Authentication</p>
+                                <p>A view into a single empty location in a <code>HeaderMap</code>.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Bearer.html"
-                                  title='struct reqwest::header::Bearer'>Bearer</a></td>
+                           <td><a class="struct" href="struct.ValueDrain.html"
+                                  title='struct reqwest::header::ValueDrain'>ValueDrain</a></td>
                            <td class='docblock-short'>
-                                <p>Token holder for Bearer Authentication, most often seen with oauth</p>
+                                <p>An drain iterator of all values associated with a single header name.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.CacheControl.html"
-                                  title='struct reqwest::header::CacheControl'>CacheControl</a></td>
+                           <td><a class="struct" href="struct.ValueIter.html"
+                                  title='struct reqwest::header::ValueIter'>ValueIter</a></td>
                            <td class='docblock-short'>
-                                <p><code>Cache-Control</code> header, defined in <a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC7234</a></p>
+                                <p>An iterator of all values associated with a single header name.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Connection.html"
-                                  title='struct reqwest::header::Connection'>Connection</a></td>
+                           <td><a class="struct" href="struct.ValueIterMut.html"
+                                  title='struct reqwest::header::ValueIterMut'>ValueIterMut</a></td>
                            <td class='docblock-short'>
-                                <p><code>Connection</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7230#section-6.1">RFC7230</a></p>
+                                <p>A mutable iterator of all values associated with a single header name.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ContentDisposition.html"
-                                  title='struct reqwest::header::ContentDisposition'>ContentDisposition</a></td>
+                           <td><a class="struct" href="struct.Values.html"
+                                  title='struct reqwest::header::Values'>Values</a></td>
                            <td class='docblock-short'>
-                                <p>A <code>Content-Disposition</code> header, (re)defined in <a href="https://tools.ietf.org/html/rfc6266">RFC6266</a>.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ContentEncoding.html"
-                                  title='struct reqwest::header::ContentEncoding'>ContentEncoding</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Content-Encoding</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ContentLanguage.html"
-                                  title='struct reqwest::header::ContentLanguage'>ContentLanguage</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Content-Language</code> header, defined in
-<a href="https://tools.ietf.org/html/rfc7231#section-3.1.3.2">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ContentLength.html"
-                                  title='struct reqwest::header::ContentLength'>ContentLength</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Content-Length</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7230#section-3.3.2">RFC7230</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ContentLocation.html"
-                                  title='struct reqwest::header::ContentLocation'>ContentLocation</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Content-Location</code> header, defined in
-<a href="https://tools.ietf.org/html/rfc7231#section-3.1.4.2">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ContentRange.html"
-                                  title='struct reqwest::header::ContentRange'>ContentRange</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Content-Range</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7233#section-4.2">RFC7233</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ContentType.html"
-                                  title='struct reqwest::header::ContentType'>ContentType</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Content-Type</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Cookie.html"
-                                  title='struct reqwest::header::Cookie'>Cookie</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Cookie</code> header, defined in <a href="http://tools.ietf.org/html/rfc6265#section-5.4">RFC6265</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.CookieIter.html"
-                                  title='struct reqwest::header::CookieIter'>CookieIter</a></td>
-                           <td class='docblock-short'>
-                                <p>Iterator for cookie.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Date.html"
-                                  title='struct reqwest::header::Date'>Date</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Date</code> header, defined in <a href="http://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ETag.html"
-                                  title='struct reqwest::header::ETag'>ETag</a></td>
-                           <td class='docblock-short'>
-                                <p><code>ETag</code> header, defined in <a href="http://tools.ietf.org/html/rfc7232#section-2.3">RFC7232</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.EntityTag.html"
-                                  title='struct reqwest::header::EntityTag'>EntityTag</a></td>
-                           <td class='docblock-short'>
-                                <p>An entity tag, defined in <a href="https://tools.ietf.org/html/rfc7232#section-2.3">RFC7232</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Expires.html"
-                                  title='struct reqwest::header::Expires'>Expires</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Expires</code> header, defined in <a href="http://tools.ietf.org/html/rfc7234#section-5.3">RFC7234</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Formatter.html"
-                                  title='struct reqwest::header::Formatter'>Formatter</a></td>
-                           <td class='docblock-short'>
-                                <p>A formatter used to serialize headers to an output stream.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.From.html"
-                                  title='struct reqwest::header::From'>From</a></td>
-                           <td class='docblock-short'>
-                                <p><code>From</code> header, defined in <a href="http://tools.ietf.org/html/rfc7231#section-5.5.1">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.HeaderView.html"
-                                  title='struct reqwest::header::HeaderView'>HeaderView</a></td>
-                           <td class='docblock-short'>
-                                <p>Returned with the <code>HeadersItems</code> iterator.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Headers.html"
-                                  title='struct reqwest::header::Headers'>Headers</a></td>
-                           <td class='docblock-short'>
-                                <p>A map of header fields on requests and responses.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.HeadersItems.html"
-                                  title='struct reqwest::header::HeadersItems'>HeadersItems</a></td>
-                           <td class='docblock-short'>
-                                <p>An <code>Iterator</code> over the fields in a <code>Headers</code> map.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Host.html"
-                                  title='struct reqwest::header::Host'>Host</a></td>
-                           <td class='docblock-short'>
-                                <p>The <code>Host</code> header.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.HttpDate.html"
-                                  title='struct reqwest::header::HttpDate'>HttpDate</a></td>
-                           <td class='docblock-short'>
-                                <p>A timestamp with HTTP formatting and parsing</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.IfModifiedSince.html"
-                                  title='struct reqwest::header::IfModifiedSince'>IfModifiedSince</a></td>
-                           <td class='docblock-short'>
-                                <p><code>If-Modified-Since</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7232#section-3.3">RFC7232</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.IfUnmodifiedSince.html"
-                                  title='struct reqwest::header::IfUnmodifiedSince'>IfUnmodifiedSince</a></td>
-                           <td class='docblock-short'>
-                                <p><code>If-Unmodified-Since</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7232#section-3.4">RFC7232</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.LanguageTag.html"
-                                  title='struct reqwest::header::LanguageTag'>LanguageTag</a></td>
-                           <td class='docblock-short'>
-                                <p>A language tag as described in <a href="http://tools.ietf.org/html/bcp47">BCP47</a>.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.LastEventId.html"
-                                  title='struct reqwest::header::LastEventId'>LastEventId</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Last-Event-ID</code> header, defined in
-<a href="https://html.spec.whatwg.org/multipage/references.html#refsRFC3864">RFC3864</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.LastModified.html"
-                                  title='struct reqwest::header::LastModified'>LastModified</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Last-Modified</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7232#section-2.2">RFC7232</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Link.html"
-                                  title='struct reqwest::header::Link'>Link</a></td>
-                           <td class='docblock-short'>
-                                <p>The <code>Link</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc5988#section-5">RFC5988</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.LinkValue.html"
-                                  title='struct reqwest::header::LinkValue'>LinkValue</a></td>
-                           <td class='docblock-short'>
-                                <p>A single <code>link-value</code> of a <code>Link</code> header, based on:
-<a href="http://tools.ietf.org/html/rfc5988#section-5">RFC5988</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Location.html"
-                                  title='struct reqwest::header::Location'>Location</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Location</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7231#section-7.1.2">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Origin.html"
-                                  title='struct reqwest::header::Origin'>Origin</a></td>
-                           <td class='docblock-short'>
-                                <p>The <code>Origin</code> header.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Prefer.html"
-                                  title='struct reqwest::header::Prefer'>Prefer</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Prefer</code> header, defined in <a href="http://tools.ietf.org/html/rfc7240">RFC7240</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.PreferenceApplied.html"
-                                  title='struct reqwest::header::PreferenceApplied'>PreferenceApplied</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Preference-Applied</code> header, defined in <a href="http://tools.ietf.org/html/rfc7240">RFC7240</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Protocol.html"
-                                  title='struct reqwest::header::Protocol'>Protocol</a></td>
-                           <td class='docblock-short'>
-                                <p>Protocols that appear in the <code>Upgrade</code> header field</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.ProxyAuthorization.html"
-                                  title='struct reqwest::header::ProxyAuthorization'>ProxyAuthorization</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Proxy-Authorization</code> header, defined in <a href="https://tools.ietf.org/html/rfc7235#section-4.4">RFC7235</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Quality.html"
-                                  title='struct reqwest::header::Quality'>Quality</a></td>
-                           <td class='docblock-short'>
-                                <p>Represents a quality used in quality values.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.QualityItem.html"
-                                  title='struct reqwest::header::QualityItem'>QualityItem</a></td>
-                           <td class='docblock-short'>
-                                <p>Represents an item with a quality value as defined in
-<a href="https://tools.ietf.org/html/rfc7231#section-5.3.1">RFC7231</a>.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Raw.html"
-                                  title='struct reqwest::header::Raw'>Raw</a></td>
-                           <td class='docblock-short'>
-                                <p>A raw header value.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Referer.html"
-                                  title='struct reqwest::header::Referer'>Referer</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Referer</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7231#section-5.5.2">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Server.html"
-                                  title='struct reqwest::header::Server'>Server</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Server</code> header, defined in <a href="http://tools.ietf.org/html/rfc7231#section-7.4.2">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.SetCookie.html"
-                                  title='struct reqwest::header::SetCookie'>SetCookie</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Set-Cookie</code> header, defined <a href="http://tools.ietf.org/html/rfc6265#section-4.1">RFC6265</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.StrictTransportSecurity.html"
-                                  title='struct reqwest::header::StrictTransportSecurity'>StrictTransportSecurity</a></td>
-                           <td class='docblock-short'>
-                                <p><code>StrictTransportSecurity</code> header, defined in <a href="https://tools.ietf.org/html/rfc6797">RFC6797</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Te.html"
-                                  title='struct reqwest::header::Te'>Te</a></td>
-                           <td class='docblock-short'>
-                                <p><code>TE</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7230#section-4.3">RFC7230</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.TransferEncoding.html"
-                                  title='struct reqwest::header::TransferEncoding'>TransferEncoding</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Transfer-Encoding</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7230#section-3.3.1">RFC7230</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Upgrade.html"
-                                  title='struct reqwest::header::Upgrade'>Upgrade</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Upgrade</code> header, defined in <a href="http://tools.ietf.org/html/rfc7230#section-6.7">RFC7230</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.UserAgent.html"
-                                  title='struct reqwest::header::UserAgent'>UserAgent</a></td>
-                           <td class='docblock-short'>
-                                <p><code>User-Agent</code> header, defined in
-<a href="http://tools.ietf.org/html/rfc7231#section-5.5.3">RFC7231</a></p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="struct" href="struct.Warning.html"
-                                  title='struct reqwest::header::Warning'>Warning</a></td>
-                           <td class='docblock-short'>
-                                <p><code>Warning</code> header, defined in <a href="https://tools.ietf.org/html/rfc7234#section-5.5">RFC7234</a></p>
+                                <p><code>HeaderMap</code> value iterator.</p>
 
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.AccessControlAllowOrigin.html"
-                                  title='enum reqwest::header::AccessControlAllowOrigin'>AccessControlAllowOrigin</a></td>
+                           <td><a class="enum" href="enum.Entry.html"
+                                  title='enum reqwest::header::Entry'>Entry</a></td>
                            <td class='docblock-short'>
-                                <p>The <code>Access-Control-Allow-Origin</code> response header,
-part of <a href="http://www.w3.org/TR/cors/#access-control-allow-origin-response-header">CORS</a></p>
+                                <p>A view into a single location in a <code>HeaderMap</code>, which may be vacant or occupied.</p>
+
+                           </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.ACCEPT.html"
+                                  title='constant reqwest::header::ACCEPT'>ACCEPT</a></td>
+                           <td class='docblock-short'>
+                                <p>Advertises which content types the client is able to understand.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.ByteRangeSpec.html"
-                                  title='enum reqwest::header::ByteRangeSpec'>ByteRangeSpec</a></td>
+                           <td><a class="constant" href="constant.ACCEPT_CHARSET.html"
+                                  title='constant reqwest::header::ACCEPT_CHARSET'>ACCEPT_CHARSET</a></td>
                            <td class='docblock-short'>
-                                <p>Each <code>Range::Bytes</code> header can contain one or more <code>ByteRangeSpecs</code>.
-Each <code>ByteRangeSpec</code> defines a range of bytes to fetch</p>
+                                <p>Advertises which character set the client is able to understand.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.CacheDirective.html"
-                                  title='enum reqwest::header::CacheDirective'>CacheDirective</a></td>
+                           <td><a class="constant" href="constant.ACCEPT_ENCODING.html"
+                                  title='constant reqwest::header::ACCEPT_ENCODING'>ACCEPT_ENCODING</a></td>
                            <td class='docblock-short'>
-                                <p><code>CacheControl</code> contains a list of these directives.</p>
+                                <p>Advertises which content encoding the client is able to understand.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Charset.html"
-                                  title='enum reqwest::header::Charset'>Charset</a></td>
+                           <td><a class="constant" href="constant.ACCEPT_LANGUAGE.html"
+                                  title='constant reqwest::header::ACCEPT_LANGUAGE'>ACCEPT_LANGUAGE</a></td>
                            <td class='docblock-short'>
-                                <p>A Mime charset.</p>
+                                <p>Advertises which languages the client is able to understand.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.ConnectionOption.html"
-                                  title='enum reqwest::header::ConnectionOption'>ConnectionOption</a></td>
+                           <td><a class="constant" href="constant.ACCEPT_RANGES.html"
+                                  title='constant reqwest::header::ACCEPT_RANGES'>ACCEPT_RANGES</a></td>
                            <td class='docblock-short'>
-                                <p>Values that can be in the <code>Connection</code> header.</p>
+                                <p>Marker used by the server to advertise partial request support.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.ContentRangeSpec.html"
-                                  title='enum reqwest::header::ContentRangeSpec'>ContentRangeSpec</a></td>
+                           <td><a class="constant" href="constant.ACCESS_CONTROL_ALLOW_CREDENTIALS.html"
+                                  title='constant reqwest::header::ACCESS_CONTROL_ALLOW_CREDENTIALS'>ACCESS_CONTROL_ALLOW_CREDENTIALS</a></td>
                            <td class='docblock-short'>
-                                <p>Content-Range, described in <a href="https://tools.ietf.org/html/rfc7233#section-4.2">RFC7233</a></p>
+                                <p>Preflight response indicating if the response to the request can be
+exposed to the page.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.DispositionParam.html"
-                                  title='enum reqwest::header::DispositionParam'>DispositionParam</a></td>
+                           <td><a class="constant" href="constant.ACCESS_CONTROL_ALLOW_HEADERS.html"
+                                  title='constant reqwest::header::ACCESS_CONTROL_ALLOW_HEADERS'>ACCESS_CONTROL_ALLOW_HEADERS</a></td>
                            <td class='docblock-short'>
-                                <p>A parameter to the disposition type.</p>
+                                <p>Preflight response indicating permitted HTTP headers.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.DispositionType.html"
-                                  title='enum reqwest::header::DispositionType'>DispositionType</a></td>
+                           <td><a class="constant" href="constant.ACCESS_CONTROL_ALLOW_METHODS.html"
+                                  title='constant reqwest::header::ACCESS_CONTROL_ALLOW_METHODS'>ACCESS_CONTROL_ALLOW_METHODS</a></td>
                            <td class='docblock-short'>
-                                <p>The implied disposition of the content of the HTTP body.</p>
+                                <p>Preflight header response indicating permitted access methods.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Encoding.html"
-                                  title='enum reqwest::header::Encoding'>Encoding</a></td>
+                           <td><a class="constant" href="constant.ACCESS_CONTROL_ALLOW_ORIGIN.html"
+                                  title='constant reqwest::header::ACCESS_CONTROL_ALLOW_ORIGIN'>ACCESS_CONTROL_ALLOW_ORIGIN</a></td>
                            <td class='docblock-short'>
-                                <p>A value to represent an encoding used in <code>Transfer-Encoding</code>
-or <code>Accept-Encoding</code> header.</p>
+                                <p>Indicates whether the response can be shared with resources with the
+given origin.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Expect.html"
-                                  title='enum reqwest::header::Expect'>Expect</a></td>
+                           <td><a class="constant" href="constant.ACCESS_CONTROL_EXPOSE_HEADERS.html"
+                                  title='constant reqwest::header::ACCESS_CONTROL_EXPOSE_HEADERS'>ACCESS_CONTROL_EXPOSE_HEADERS</a></td>
                            <td class='docblock-short'>
-                                <p>The <code>Expect</code> header.</p>
+                                <p>Indicates which headers can be exposed as part of the response by
+listing their names.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.IfMatch.html"
-                                  title='enum reqwest::header::IfMatch'>IfMatch</a></td>
+                           <td><a class="constant" href="constant.ACCESS_CONTROL_MAX_AGE.html"
+                                  title='constant reqwest::header::ACCESS_CONTROL_MAX_AGE'>ACCESS_CONTROL_MAX_AGE</a></td>
                            <td class='docblock-short'>
-                                <p><code>If-Match</code> header, defined in
-<a href="https://tools.ietf.org/html/rfc7232#section-3.1">RFC7232</a></p>
+                                <p>Indicates how long the results of a preflight request can be cached.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.IfNoneMatch.html"
-                                  title='enum reqwest::header::IfNoneMatch'>IfNoneMatch</a></td>
+                           <td><a class="constant" href="constant.ACCESS_CONTROL_REQUEST_HEADERS.html"
+                                  title='constant reqwest::header::ACCESS_CONTROL_REQUEST_HEADERS'>ACCESS_CONTROL_REQUEST_HEADERS</a></td>
                            <td class='docblock-short'>
-                                <p><code>If-None-Match</code> header, defined in
-<a href="https://tools.ietf.org/html/rfc7232#section-3.2">RFC7232</a></p>
+                                <p>Informs the server which HTTP headers will be used when an actual
+request is made.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.IfRange.html"
-                                  title='enum reqwest::header::IfRange'>IfRange</a></td>
+                           <td><a class="constant" href="constant.ACCESS_CONTROL_REQUEST_METHOD.html"
+                                  title='constant reqwest::header::ACCESS_CONTROL_REQUEST_METHOD'>ACCESS_CONTROL_REQUEST_METHOD</a></td>
                            <td class='docblock-short'>
-                                <p><code>If-Range</code> header, defined in <a href="http://tools.ietf.org/html/rfc7233#section-3.2">RFC7233</a></p>
+                                <p>Informs the server know which HTTP method will be used when the actual
+request is made.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.MediaDesc.html"
-                                  title='enum reqwest::header::MediaDesc'>MediaDesc</a></td>
+                           <td><a class="constant" href="constant.AGE.html"
+                                  title='constant reqwest::header::AGE'>AGE</a></td>
                            <td class='docblock-short'>
-                                <p>A Media Descriptors Enum based on:
-<a href="https://www.w3.org/TR/html401/types.html#h-6.13">https://www.w3.org/TR/html401/types.html#h-6.13</a></p>
+                                <p>Indicates the time in seconds the object has been in a proxy cache.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Pragma.html"
-                                  title='enum reqwest::header::Pragma'>Pragma</a></td>
+                           <td><a class="constant" href="constant.ALLOW.html"
+                                  title='constant reqwest::header::ALLOW'>ALLOW</a></td>
                            <td class='docblock-short'>
-                                <p>The <code>Pragma</code> header defined by HTTP/1.0.</p>
+                                <p>Lists the set of methods support by a resource.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Preference.html"
-                                  title='enum reqwest::header::Preference'>Preference</a></td>
+                           <td><a class="constant" href="constant.ALT_SVC.html"
+                                  title='constant reqwest::header::ALT_SVC'>ALT_SVC</a></td>
                            <td class='docblock-short'>
-                                <p>Prefer contains a list of these preferences.</p>
+                                <p>Advertises the availability of alternate services to clients.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.ProtocolName.html"
-                                  title='enum reqwest::header::ProtocolName'>ProtocolName</a></td>
+                           <td><a class="constant" href="constant.AUTHORIZATION.html"
+                                  title='constant reqwest::header::AUTHORIZATION'>AUTHORIZATION</a></td>
                            <td class='docblock-short'>
-                                <p>A protocol name used to identify a specific protocol. Names are case-sensitive
-except for the <code>WebSocket</code> value.</p>
+                                <p>Contains the credentials to authenticate a user agent with a server.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Range.html"
-                                  title='enum reqwest::header::Range'>Range</a></td>
+                           <td><a class="constant" href="constant.CACHE_CONTROL.html"
+                                  title='constant reqwest::header::CACHE_CONTROL'>CACHE_CONTROL</a></td>
                            <td class='docblock-short'>
-                                <p><code>Range</code> header, defined in <a href="https://tools.ietf.org/html/rfc7233#section-3.1">RFC7233</a></p>
+                                <p>Specifies directives for caching mechanisms in both requests and
+responses.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.RangeUnit.html"
-                                  title='enum reqwest::header::RangeUnit'>RangeUnit</a></td>
+                           <td><a class="constant" href="constant.CONNECTION.html"
+                                  title='constant reqwest::header::CONNECTION'>CONNECTION</a></td>
                            <td class='docblock-short'>
-                                <p>Range Units, described in <a href="http://tools.ietf.org/html/rfc7233#section-2">RFC7233</a></p>
+                                <p>Controls whether or not the network connection stays open after the
+current transaction finishes.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.ReferrerPolicy.html"
-                                  title='enum reqwest::header::ReferrerPolicy'>ReferrerPolicy</a></td>
+                           <td><a class="constant" href="constant.CONTENT_DISPOSITION.html"
+                                  title='constant reqwest::header::CONTENT_DISPOSITION'>CONTENT_DISPOSITION</a></td>
                            <td class='docblock-short'>
-                                <p><code>Referrer-Policy</code> header, part of
-<a href="https://www.w3.org/TR/referrer-policy/#referrer-policy-header">Referrer Policy</a></p>
+                                <p>Indicates if the content is expected to be displayed inline.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.RelationType.html"
-                                  title='enum reqwest::header::RelationType'>RelationType</a></td>
+                           <td><a class="constant" href="constant.CONTENT_ENCODING.html"
+                                  title='constant reqwest::header::CONTENT_ENCODING'>CONTENT_ENCODING</a></td>
                            <td class='docblock-short'>
-                                <p>A Link Relation Type Enum based on:
-<a href="https://tools.ietf.org/html/rfc5988#section-6.2.2">RFC5988</a></p>
+                                <p>Used to compress the media-type.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.RetryAfter.html"
-                                  title='enum reqwest::header::RetryAfter'>RetryAfter</a></td>
+                           <td><a class="constant" href="constant.CONTENT_LANGUAGE.html"
+                                  title='constant reqwest::header::CONTENT_LANGUAGE'>CONTENT_LANGUAGE</a></td>
                            <td class='docblock-short'>
-                                <p>The <code>Retry-After</code> header.</p>
+                                <p>Used to describe the languages intended for the audience.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="enum" href="enum.Vary.html"
-                                  title='enum reqwest::header::Vary'>Vary</a></td>
+                           <td><a class="constant" href="constant.CONTENT_LENGTH.html"
+                                  title='constant reqwest::header::CONTENT_LENGTH'>CONTENT_LENGTH</a></td>
                            <td class='docblock-short'>
-                                <p><code>Vary</code> header, defined in <a href="https://tools.ietf.org/html/rfc7231#section-7.1.4">RFC7231</a></p>
+                                <p>Indicates the size fo the entity-body.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.CONTENT_LOCATION.html"
+                                  title='constant reqwest::header::CONTENT_LOCATION'>CONTENT_LOCATION</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates an alternate location for the returned data.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.CONTENT_RANGE.html"
+                                  title='constant reqwest::header::CONTENT_RANGE'>CONTENT_RANGE</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates where in a full body message a partial message belongs.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.CONTENT_SECURITY_POLICY.html"
+                                  title='constant reqwest::header::CONTENT_SECURITY_POLICY'>CONTENT_SECURITY_POLICY</a></td>
+                           <td class='docblock-short'>
+                                <p>Allows controlling resources the user agent is allowed to load for a
+given page.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.CONTENT_SECURITY_POLICY_REPORT_ONLY.html"
+                                  title='constant reqwest::header::CONTENT_SECURITY_POLICY_REPORT_ONLY'>CONTENT_SECURITY_POLICY_REPORT_ONLY</a></td>
+                           <td class='docblock-short'>
+                                <p>Allows experimenting with policies by monitoring their effects.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.CONTENT_TYPE.html"
+                                  title='constant reqwest::header::CONTENT_TYPE'>CONTENT_TYPE</a></td>
+                           <td class='docblock-short'>
+                                <p>Used to indicate the media type of the resource.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.COOKIE.html"
+                                  title='constant reqwest::header::COOKIE'>COOKIE</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains stored HTTP cookies previously sent by the server with the
+Set-Cookie header.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.DATE.html"
+                                  title='constant reqwest::header::DATE'>DATE</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains the date and time at which the message was originated.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.DNT.html"
+                                  title='constant reqwest::header::DNT'>DNT</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates the client's tracking preference.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.ETAG.html"
+                                  title='constant reqwest::header::ETAG'>ETAG</a></td>
+                           <td class='docblock-short'>
+                                <p>Identifier for a specific version of a resource.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.EXPECT.html"
+                                  title='constant reqwest::header::EXPECT'>EXPECT</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates expectations that need to be fulfilled by the server in order
+to properly handle the request.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.EXPIRES.html"
+                                  title='constant reqwest::header::EXPIRES'>EXPIRES</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains the date/time after which the response is considered stale.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.FORWARDED.html"
+                                  title='constant reqwest::header::FORWARDED'>FORWARDED</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains information from the client-facing side of proxy servers that
+is altered or lost when a proxy is involved in the path of the request.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.FROM.html"
+                                  title='constant reqwest::header::FROM'>FROM</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains an Internet email address for a human user who controls the
+requesting user agent.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.HOST.html"
+                                  title='constant reqwest::header::HOST'>HOST</a></td>
+                           <td class='docblock-short'>
+                                <p>Specifies the domain name of the server and (optionally) the TCP port
+number on which the server is listening.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.IF_MATCH.html"
+                                  title='constant reqwest::header::IF_MATCH'>IF_MATCH</a></td>
+                           <td class='docblock-short'>
+                                <p>Makes a request conditional based on the E-Tag.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.IF_MODIFIED_SINCE.html"
+                                  title='constant reqwest::header::IF_MODIFIED_SINCE'>IF_MODIFIED_SINCE</a></td>
+                           <td class='docblock-short'>
+                                <p>Makes a request conditional based on the modification date.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.IF_NONE_MATCH.html"
+                                  title='constant reqwest::header::IF_NONE_MATCH'>IF_NONE_MATCH</a></td>
+                           <td class='docblock-short'>
+                                <p>Makes a request conditional based on the E-Tag.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.IF_RANGE.html"
+                                  title='constant reqwest::header::IF_RANGE'>IF_RANGE</a></td>
+                           <td class='docblock-short'>
+                                <p>Makes a request conditional based on range.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.IF_UNMODIFIED_SINCE.html"
+                                  title='constant reqwest::header::IF_UNMODIFIED_SINCE'>IF_UNMODIFIED_SINCE</a></td>
+                           <td class='docblock-short'>
+                                <p>Makes the request conditional based on the last modification date.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.LAST_MODIFIED.html"
+                                  title='constant reqwest::header::LAST_MODIFIED'>LAST_MODIFIED</a></td>
+                           <td class='docblock-short'>
+                                <p>Content-Types that are acceptable for the response.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.LINK.html"
+                                  title='constant reqwest::header::LINK'>LINK</a></td>
+                           <td class='docblock-short'>
+                                <p>Allows the server to point an interested client to another resource
+containing metadata about the requested resource.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.LOCATION.html"
+                                  title='constant reqwest::header::LOCATION'>LOCATION</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates the URL to redirect a page to.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.MAX_FORWARDS.html"
+                                  title='constant reqwest::header::MAX_FORWARDS'>MAX_FORWARDS</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates the max number of intermediaries the request should be sent
+through.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.ORIGIN.html"
+                                  title='constant reqwest::header::ORIGIN'>ORIGIN</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates where a fetch originates from.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PRAGMA.html"
+                                  title='constant reqwest::header::PRAGMA'>PRAGMA</a></td>
+                           <td class='docblock-short'>
+                                <p>HTTP/1.0 header usually used for backwards compatibility.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PROXY_AUTHENTICATE.html"
+                                  title='constant reqwest::header::PROXY_AUTHENTICATE'>PROXY_AUTHENTICATE</a></td>
+                           <td class='docblock-short'>
+                                <p>Defines the authentication method that should be used to gain access to
+a proxy.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PROXY_AUTHORIZATION.html"
+                                  title='constant reqwest::header::PROXY_AUTHORIZATION'>PROXY_AUTHORIZATION</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains the credentials to authenticate a user agent to a proxy server.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PUBLIC_KEY_PINS.html"
+                                  title='constant reqwest::header::PUBLIC_KEY_PINS'>PUBLIC_KEY_PINS</a></td>
+                           <td class='docblock-short'>
+                                <p>Associates a specific cryptographic public key with a certain server.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.PUBLIC_KEY_PINS_REPORT_ONLY.html"
+                                  title='constant reqwest::header::PUBLIC_KEY_PINS_REPORT_ONLY'>PUBLIC_KEY_PINS_REPORT_ONLY</a></td>
+                           <td class='docblock-short'>
+                                <p>Sends reports of pinning violation to the report-uri specified in the
+header.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.RANGE.html"
+                                  title='constant reqwest::header::RANGE'>RANGE</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates the part of a document that the server should return.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.REFERER.html"
+                                  title='constant reqwest::header::REFERER'>REFERER</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains the address of the previous web page from which a link to the
+currently requested page was followed.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.REFERRER_POLICY.html"
+                                  title='constant reqwest::header::REFERRER_POLICY'>REFERRER_POLICY</a></td>
+                           <td class='docblock-short'>
+                                <p>Governs which referrer information should be included with requests
+made.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.REFRESH.html"
+                                  title='constant reqwest::header::REFRESH'>REFRESH</a></td>
+                           <td class='docblock-short'>
+                                <p>Informs the web browser that the current page or frame should be
+refreshed.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.RETRY_AFTER.html"
+                                  title='constant reqwest::header::RETRY_AFTER'>RETRY_AFTER</a></td>
+                           <td class='docblock-short'>
+                                <p>The Retry-After response HTTP header indicates how long the user agent
+should wait before making a follow-up request. There are two main cases
+this header is used:</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SEC_WEBSOCKET_ACCEPT.html"
+                                  title='constant reqwest::header::SEC_WEBSOCKET_ACCEPT'>SEC_WEBSOCKET_ACCEPT</a></td>
+                           <td class='docblock-short'>
+                                <p>The |Sec-WebSocket-Accept| header field is used in the WebSocket
+opening handshake. It is sent from the server to the client to
+confirm that the server is willing to initiate the WebSocket
+connection.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SEC_WEBSOCKET_EXTENSIONS.html"
+                                  title='constant reqwest::header::SEC_WEBSOCKET_EXTENSIONS'>SEC_WEBSOCKET_EXTENSIONS</a></td>
+                           <td class='docblock-short'>
+                                <p>The |Sec-WebSocket-Extensions| header field is used in the WebSocket
+opening handshake. It is initially sent from the client to the
+server, and then subsequently sent from the server to the client, to
+agree on a set of protocol-level extensions to use for the duration
+of the connection.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SEC_WEBSOCKET_KEY.html"
+                                  title='constant reqwest::header::SEC_WEBSOCKET_KEY'>SEC_WEBSOCKET_KEY</a></td>
+                           <td class='docblock-short'>
+                                <p>The |Sec-WebSocket-Key| header field is used in the WebSocket opening
+handshake. It is sent from the client to the server to provide part
+of the information used by the server to prove that it received a
+valid WebSocket opening handshake. This helps ensure that the server
+does not accept connections from non-WebSocket clients (e.g., HTTP
+clients) that are being abused to send data to unsuspecting WebSocket
+servers.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SEC_WEBSOCKET_PROTOCOL.html"
+                                  title='constant reqwest::header::SEC_WEBSOCKET_PROTOCOL'>SEC_WEBSOCKET_PROTOCOL</a></td>
+                           <td class='docblock-short'>
+                                <p>The |Sec-WebSocket-Protocol| header field is used in the WebSocket
+opening handshake. It is sent from the client to the server and back
+from the server to the client to confirm the subprotocol of the
+connection.  This enables scripts to both select a subprotocol and be
+sure that the server agreed to serve that subprotocol.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SEC_WEBSOCKET_VERSION.html"
+                                  title='constant reqwest::header::SEC_WEBSOCKET_VERSION'>SEC_WEBSOCKET_VERSION</a></td>
+                           <td class='docblock-short'>
+                                <p>The |Sec-WebSocket-Version| header field is used in the WebSocket
+opening handshake.  It is sent from the client to the server to
+indicate the protocol version of the connection.  This enables
+servers to correctly interpret the opening handshake and subsequent
+data being sent from the data, and close the connection if the server
+cannot interpret that data in a safe manner.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SERVER.html"
+                                  title='constant reqwest::header::SERVER'>SERVER</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains information about the software used by the origin server to
+handle the request.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.SET_COOKIE.html"
+                                  title='constant reqwest::header::SET_COOKIE'>SET_COOKIE</a></td>
+                           <td class='docblock-short'>
+                                <p>Used to send cookies from the server to the user agent.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.STRICT_TRANSPORT_SECURITY.html"
+                                  title='constant reqwest::header::STRICT_TRANSPORT_SECURITY'>STRICT_TRANSPORT_SECURITY</a></td>
+                           <td class='docblock-short'>
+                                <p>Tells the client to communicate with HTTPS instead of using HTTP.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.TE.html"
+                                  title='constant reqwest::header::TE'>TE</a></td>
+                           <td class='docblock-short'>
+                                <p>Informs the server of transfer encodings willing to be accepted as part
+of the response.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.TRAILER.html"
+                                  title='constant reqwest::header::TRAILER'>TRAILER</a></td>
+                           <td class='docblock-short'>
+                                <p>Allows the sender to include additional fields at the end of chunked
+messages.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.TRANSFER_ENCODING.html"
+                                  title='constant reqwest::header::TRANSFER_ENCODING'>TRANSFER_ENCODING</a></td>
+                           <td class='docblock-short'>
+                                <p>Specifies the form of encoding used to safely transfer the entity to the
+client.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UPGRADE.html"
+                                  title='constant reqwest::header::UPGRADE'>UPGRADE</a></td>
+                           <td class='docblock-short'>
+                                <p>Used as part of the exchange to upgrade the protocol.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.UPGRADE_INSECURE_REQUESTS.html"
+                                  title='constant reqwest::header::UPGRADE_INSECURE_REQUESTS'>UPGRADE_INSECURE_REQUESTS</a></td>
+                           <td class='docblock-short'>
+                                <p>Sends a signal to the server expressing the client’s preference for an
+encrypted and authenticated response.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.USER_AGENT.html"
+                                  title='constant reqwest::header::USER_AGENT'>USER_AGENT</a></td>
+                           <td class='docblock-short'>
+                                <p>Contains a string that allows identifying the requesting client's
+software.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.VARY.html"
+                                  title='constant reqwest::header::VARY'>VARY</a></td>
+                           <td class='docblock-short'>
+                                <p>Determines how to match future requests with cached responses.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.VIA.html"
+                                  title='constant reqwest::header::VIA'>VIA</a></td>
+                           <td class='docblock-short'>
+                                <p>Added by proxies to track routing.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.WARNING.html"
+                                  title='constant reqwest::header::WARNING'>WARNING</a></td>
+                           <td class='docblock-short'>
+                                <p>General HTTP header contains information about possible problems with
+the status of the message.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.WWW_AUTHENTICATE.html"
+                                  title='constant reqwest::header::WWW_AUTHENTICATE'>WWW_AUTHENTICATE</a></td>
+                           <td class='docblock-short'>
+                                <p>Defines the authentication method that should be used to gain access to
+a resource.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.X_CONTENT_TYPE_OPTIONS.html"
+                                  title='constant reqwest::header::X_CONTENT_TYPE_OPTIONS'>X_CONTENT_TYPE_OPTIONS</a></td>
+                           <td class='docblock-short'>
+                                <p>Marker used by the server to indicate that the MIME types advertised in
+the <code>content-type</code> headers should not be changed and be followed.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.X_DNS_PREFETCH_CONTROL.html"
+                                  title='constant reqwest::header::X_DNS_PREFETCH_CONTROL'>X_DNS_PREFETCH_CONTROL</a></td>
+                           <td class='docblock-short'>
+                                <p>Controls DNS prefetching.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.X_FRAME_OPTIONS.html"
+                                  title='constant reqwest::header::X_FRAME_OPTIONS'>X_FRAME_OPTIONS</a></td>
+                           <td class='docblock-short'>
+                                <p>Indicates whether or not a browser should be allowed to render a page in
+a frame.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.X_XSS_PROTECTION.html"
+                                  title='constant reqwest::header::X_XSS_PROTECTION'>X_XSS_PROTECTION</a></td>
+                           <td class='docblock-short'>
+                                <p>Stop pages from loading when an XSS attack is detected.</p>
 
                            </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class="trait" href="trait.Header.html"
-                                  title='trait reqwest::header::Header'>Header</a></td>
+                           <td><a class="trait" href="trait.AsHeaderName.html"
+                                  title='trait reqwest::header::AsHeaderName'>AsHeaderName</a></td>
                            <td class='docblock-short'>
-                                <p>A trait for any object that will represent a header field and value.</p>
+                                <p>A marker trait used to identify values that can be used as search keys
+to a <code>HeaderMap</code>.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="trait" href="trait.Scheme.html"
-                                  title='trait reqwest::header::Scheme'>Scheme</a></td>
+                           <td><a class="trait" href="trait.IntoHeaderName.html"
+                                  title='trait reqwest::header::IntoHeaderName'>IntoHeaderName</a></td>
                            <td class='docblock-short'>
-                                <p>An Authorization scheme to be used in the header.</p>
-
-                           </td>
-                       </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
-<table>
-                       <tr class=' module-item'>
-                           <td><a class="fn" href="fn.q.html"
-                                  title='fn reqwest::header::q'>q</a></td>
-                           <td class='docblock-short'>
-                                <p>Convenience function to create a <code>Quality</code> from a float or integer.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="fn" href="fn.qitem.html"
-                                  title='fn reqwest::header::qitem'>qitem</a></td>
-                           <td class='docblock-short'>
-                                <p>Convenience function to wrap a value in a <code>QualityItem</code>
-Sets <code>q</code> to the default 1.0</p>
+                                <p>A marker trait used to identify values that can be used as insert keys
+to a <code>HeaderMap</code>.</p>
 
                            </td>
                        </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "reqwest";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
