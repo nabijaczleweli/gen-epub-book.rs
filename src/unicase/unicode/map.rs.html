@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/unicase-2.1.0/src/unicode/map.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>map.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/unicase-2.2.0/src/unicode/map.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>map.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1410,10 +1410,87 @@
 <span id="1410">1410</span>
 <span id="1411">1411</span>
 <span id="1412">1412</span>
+<span id="1413">1413</span>
+<span id="1414">1414</span>
+<span id="1415">1415</span>
+<span id="1416">1416</span>
+<span id="1417">1417</span>
+<span id="1418">1418</span>
+<span id="1419">1419</span>
+<span id="1420">1420</span>
+<span id="1421">1421</span>
+<span id="1422">1422</span>
+<span id="1423">1423</span>
+<span id="1424">1424</span>
+<span id="1425">1425</span>
+<span id="1426">1426</span>
+<span id="1427">1427</span>
+<span id="1428">1428</span>
+<span id="1429">1429</span>
+<span id="1430">1430</span>
+<span id="1431">1431</span>
+<span id="1432">1432</span>
+<span id="1433">1433</span>
+<span id="1434">1434</span>
+<span id="1435">1435</span>
+<span id="1436">1436</span>
+<span id="1437">1437</span>
+<span id="1438">1438</span>
+<span id="1439">1439</span>
+<span id="1440">1440</span>
+<span id="1441">1441</span>
+<span id="1442">1442</span>
+<span id="1443">1443</span>
+<span id="1444">1444</span>
+<span id="1445">1445</span>
+<span id="1446">1446</span>
+<span id="1447">1447</span>
+<span id="1448">1448</span>
+<span id="1449">1449</span>
+<span id="1450">1450</span>
+<span id="1451">1451</span>
+<span id="1452">1452</span>
+<span id="1453">1453</span>
+<span id="1454">1454</span>
+<span id="1455">1455</span>
+<span id="1456">1456</span>
+<span id="1457">1457</span>
+<span id="1458">1458</span>
+<span id="1459">1459</span>
+<span id="1460">1460</span>
+<span id="1461">1461</span>
+<span id="1462">1462</span>
+<span id="1463">1463</span>
+<span id="1464">1464</span>
+<span id="1465">1465</span>
+<span id="1466">1466</span>
+<span id="1467">1467</span>
+<span id="1468">1468</span>
+<span id="1469">1469</span>
+<span id="1470">1470</span>
+<span id="1471">1471</span>
+<span id="1472">1472</span>
+<span id="1473">1473</span>
+<span id="1474">1474</span>
+<span id="1475">1475</span>
+<span id="1476">1476</span>
+<span id="1477">1477</span>
+<span id="1478">1478</span>
+<span id="1479">1479</span>
+<span id="1480">1480</span>
+<span id="1481">1481</span>
+<span id="1482">1482</span>
+<span id="1483">1483</span>
+<span id="1484">1484</span>
+<span id="1485">1485</span>
+<span id="1486">1486</span>
+<span id="1487">1487</span>
+<span id="1488">1488</span>
+<span id="1489">1489</span>
+<span id="1490">1490</span>
 </pre><pre class="rust ">
 <span class="comment">// Generated by scripts/mapgen.py</span>
-<span class="comment">// CaseFolding-10.0.0.txt</span>
-<span class="comment">// 2017-06-21</span>
+<span class="comment">// 2018-10-05</span>
 
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">fold</span>::<span class="ident">Fold</span>;
 
@@ -1960,6 +2037,52 @@
         <span class="number">0x1C86</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{044A}&#39;</span>,),
         <span class="number">0x1C87</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{0463}&#39;</span>,),
         <span class="number">0x1C88</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{A64B}&#39;</span>,),
+        <span class="number">0x1C90</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D0}&#39;</span>,),
+        <span class="number">0x1C91</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D1}&#39;</span>,),
+        <span class="number">0x1C92</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D2}&#39;</span>,),
+        <span class="number">0x1C93</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D3}&#39;</span>,),
+        <span class="number">0x1C94</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D4}&#39;</span>,),
+        <span class="number">0x1C95</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D5}&#39;</span>,),
+        <span class="number">0x1C96</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D6}&#39;</span>,),
+        <span class="number">0x1C97</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D7}&#39;</span>,),
+        <span class="number">0x1C98</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D8}&#39;</span>,),
+        <span class="number">0x1C99</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10D9}&#39;</span>,),
+        <span class="number">0x1C9A</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10DA}&#39;</span>,),
+        <span class="number">0x1C9B</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10DB}&#39;</span>,),
+        <span class="number">0x1C9C</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10DC}&#39;</span>,),
+        <span class="number">0x1C9D</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10DD}&#39;</span>,),
+        <span class="number">0x1C9E</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10DE}&#39;</span>,),
+        <span class="number">0x1C9F</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10DF}&#39;</span>,),
+        <span class="number">0x1CA0</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E0}&#39;</span>,),
+        <span class="number">0x1CA1</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E1}&#39;</span>,),
+        <span class="number">0x1CA2</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E2}&#39;</span>,),
+        <span class="number">0x1CA3</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E3}&#39;</span>,),
+        <span class="number">0x1CA4</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E4}&#39;</span>,),
+        <span class="number">0x1CA5</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E5}&#39;</span>,),
+        <span class="number">0x1CA6</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E6}&#39;</span>,),
+        <span class="number">0x1CA7</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E7}&#39;</span>,),
+        <span class="number">0x1CA8</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E8}&#39;</span>,),
+        <span class="number">0x1CA9</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10E9}&#39;</span>,),
+        <span class="number">0x1CAA</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10EA}&#39;</span>,),
+        <span class="number">0x1CAB</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10EB}&#39;</span>,),
+        <span class="number">0x1CAC</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10EC}&#39;</span>,),
+        <span class="number">0x1CAD</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10ED}&#39;</span>,),
+        <span class="number">0x1CAE</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10EE}&#39;</span>,),
+        <span class="number">0x1CAF</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10EF}&#39;</span>,),
+        <span class="number">0x1CB0</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F0}&#39;</span>,),
+        <span class="number">0x1CB1</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F1}&#39;</span>,),
+        <span class="number">0x1CB2</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F2}&#39;</span>,),
+        <span class="number">0x1CB3</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F3}&#39;</span>,),
+        <span class="number">0x1CB4</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F4}&#39;</span>,),
+        <span class="number">0x1CB5</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F5}&#39;</span>,),
+        <span class="number">0x1CB6</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F6}&#39;</span>,),
+        <span class="number">0x1CB7</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F7}&#39;</span>,),
+        <span class="number">0x1CB8</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F8}&#39;</span>,),
+        <span class="number">0x1CB9</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10F9}&#39;</span>,),
+        <span class="number">0x1CBA</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10FA}&#39;</span>,),
+        <span class="number">0x1CBD</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10FD}&#39;</span>,),
+        <span class="number">0x1CBE</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10FE}&#39;</span>,),
+        <span class="number">0x1CBF</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{10FF}&#39;</span>,),
         <span class="number">0x1E00</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{1E01}&#39;</span>,),
         <span class="number">0x1E02</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{1E03}&#39;</span>,),
         <span class="number">0x1E04</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{1E05}&#39;</span>,),
@@ -2509,6 +2632,7 @@
         <span class="number">0xA7B3</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{AB53}&#39;</span>,),
         <span class="number">0xA7B4</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{A7B5}&#39;</span>,),
         <span class="number">0xA7B6</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{A7B7}&#39;</span>,),
+        <span class="number">0xA7B8</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{A7B9}&#39;</span>,),
         <span class="number">0xAB70</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{13A0}&#39;</span>,),
         <span class="number">0xAB71</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{13A1}&#39;</span>,),
         <span class="number">0xAB72</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{13A2}&#39;</span>,),
@@ -2786,6 +2910,38 @@
         <span class="number">0x118BD</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{118DD}&#39;</span>,),
         <span class="number">0x118BE</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{118DE}&#39;</span>,),
         <span class="number">0x118BF</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{118DF}&#39;</span>,),
+        <span class="number">0x16E40</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E60}&#39;</span>,),
+        <span class="number">0x16E41</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E61}&#39;</span>,),
+        <span class="number">0x16E42</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E62}&#39;</span>,),
+        <span class="number">0x16E43</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E63}&#39;</span>,),
+        <span class="number">0x16E44</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E64}&#39;</span>,),
+        <span class="number">0x16E45</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E65}&#39;</span>,),
+        <span class="number">0x16E46</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E66}&#39;</span>,),
+        <span class="number">0x16E47</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E67}&#39;</span>,),
+        <span class="number">0x16E48</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E68}&#39;</span>,),
+        <span class="number">0x16E49</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E69}&#39;</span>,),
+        <span class="number">0x16E4A</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E6A}&#39;</span>,),
+        <span class="number">0x16E4B</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E6B}&#39;</span>,),
+        <span class="number">0x16E4C</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E6C}&#39;</span>,),
+        <span class="number">0x16E4D</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E6D}&#39;</span>,),
+        <span class="number">0x16E4E</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E6E}&#39;</span>,),
+        <span class="number">0x16E4F</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E6F}&#39;</span>,),
+        <span class="number">0x16E50</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E70}&#39;</span>,),
+        <span class="number">0x16E51</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E71}&#39;</span>,),
+        <span class="number">0x16E52</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E72}&#39;</span>,),
+        <span class="number">0x16E53</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E73}&#39;</span>,),
+        <span class="number">0x16E54</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E74}&#39;</span>,),
+        <span class="number">0x16E55</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E75}&#39;</span>,),
+        <span class="number">0x16E56</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E76}&#39;</span>,),
+        <span class="number">0x16E57</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E77}&#39;</span>,),
+        <span class="number">0x16E58</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E78}&#39;</span>,),
+        <span class="number">0x16E59</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E79}&#39;</span>,),
+        <span class="number">0x16E5A</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E7A}&#39;</span>,),
+        <span class="number">0x16E5B</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E7B}&#39;</span>,),
+        <span class="number">0x16E5C</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E7C}&#39;</span>,),
+        <span class="number">0x16E5D</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E7D}&#39;</span>,),
+        <span class="number">0x16E5E</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E7E}&#39;</span>,),
+        <span class="number">0x16E5F</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{16E7F}&#39;</span>,),
         <span class="number">0x1E900</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{1E922}&#39;</span>,),
         <span class="number">0x1E901</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{1E923}&#39;</span>,),
         <span class="number">0x1E902</span> <span class="op">=&gt;</span> <span class="ident">Fold</span>::<span class="ident">One</span>(<span class="string">&#39;\u{1E924}&#39;</span>,),

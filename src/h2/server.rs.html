@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/h2-0.1.12/src/server.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>server.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/h2-0.1.14/src/server.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>server.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1316,10 +1316,6 @@
 <span id="1316">1316</span>
 <span id="1317">1317</span>
 <span id="1318">1318</span>
-<span id="1319">1319</span>
-<span id="1320">1320</span>
-<span id="1321">1321</span>
-<span id="1322">1322</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Server implementation of the HTTP/2.0 protocol.</span>
 <span class="doccomment">//!</span>
@@ -1390,27 +1386,23 @@
 <span class="doccomment">//! extern crate futures;</span>
 <span class="doccomment">//! extern crate h2;</span>
 <span class="doccomment">//! extern crate http;</span>
-<span class="doccomment">//! extern crate tokio_core;</span>
+<span class="doccomment">//! extern crate tokio;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! use futures::{Future, Stream};</span>
 <span class="doccomment">//! # use futures::future::ok;</span>
 <span class="doccomment">//! use h2::server;</span>
 <span class="doccomment">//! use http::{Response, StatusCode};</span>
-<span class="doccomment">//! use tokio_core::reactor;</span>
-<span class="doccomment">//! use tokio_core::net::TcpListener;</span>
+<span class="doccomment">//! use tokio::net::TcpListener;</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! pub fn main () {</span>
-<span class="doccomment">//!     let mut core = reactor::Core::new().unwrap();</span>
-<span class="doccomment">//!     let handle = core.handle();</span>
-<span class="doccomment">//!</span>
 <span class="doccomment">//!     let addr = &quot;127.0.0.1:5928&quot;.parse().unwrap();</span>
-<span class="doccomment">//!     let listener = TcpListener::bind(&amp;addr, &amp;handle).unwrap();</span>
+<span class="doccomment">//!     let listener = TcpListener::bind(&amp;addr,).unwrap();</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//!     core.run({</span>
+<span class="doccomment">//!     tokio::run({</span>
 <span class="doccomment">//!         // Accept all incoming TCP connections.</span>
-<span class="doccomment">//!         listener.incoming().for_each(move |(socket, _)| {</span>
+<span class="doccomment">//!         listener.incoming().for_each(move |socket| {</span>
 <span class="doccomment">//!             // Spawn a new task to process each connection.</span>
-<span class="doccomment">//!             handle.spawn({</span>
+<span class="doccomment">//!             tokio::spawn({</span>
 <span class="doccomment">//!                 // Start the HTTP/2.0 connection handshake</span>
 <span class="doccomment">//!                 server::handshake(socket)</span>
 <span class="doccomment">//!                     .and_then(|h2| {</span>
@@ -1437,8 +1429,9 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//!             Ok(())</span>
 <span class="doccomment">//!         })</span>
-<span class="doccomment">//!         # .select(ok(()))</span>
-<span class="doccomment">//!     }).ok().expect(&quot;failed to run HTTP/2.0 server&quot;);</span>
+<span class="doccomment">//!         .map_err(|e| panic!(&quot;failed to run HTTP/2.0 server: {:?}&quot;, e))</span>
+<span class="doccomment">//!  #      .select(ok(())).map(|_|()).map_err(|_|())</span>
+<span class="doccomment">//!     });</span>
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
@@ -1457,12 +1450,12 @@
 
 <span class="kw">use</span> {<span class="ident">SendStream</span>, <span class="ident">RecvStream</span>, <span class="ident">ReleaseCapacity</span>};
 <span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Codec</span>, <span class="ident">RecvError</span>};
-<span class="kw">use</span> <span class="ident">frame</span>::{<span class="self">self</span>, <span class="ident">Reason</span>, <span class="ident">Settings</span>, <span class="ident">StreamId</span>};
+<span class="kw">use</span> <span class="ident">frame</span>::{<span class="self">self</span>, <span class="ident">Pseudo</span>, <span class="ident">Reason</span>, <span class="ident">Settings</span>, <span class="ident">StreamId</span>};
 <span class="kw">use</span> <span class="ident">proto</span>::{<span class="self">self</span>, <span class="ident">Config</span>, <span class="ident">Prioritized</span>};
 
 <span class="kw">use</span> <span class="ident">bytes</span>::{<span class="ident">Buf</span>, <span class="ident">Bytes</span>, <span class="ident">IntoBuf</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="self">self</span>, <span class="ident">Async</span>, <span class="ident">Future</span>, <span class="ident">Poll</span>};
-<span class="kw">use</span> <span class="ident">http</span>::{<span class="ident">Request</span>, <span class="ident">Response</span>};
+<span class="kw">use</span> <span class="ident">http</span>::{<span class="ident">HeaderMap</span>, <span class="ident">Request</span>, <span class="ident">Response</span>};
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">convert</span>, <span class="ident">fmt</span>, <span class="ident">io</span>, <span class="ident">mem</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 <span class="kw">use</span> <span class="ident">tokio_io</span>::{<span class="ident">AsyncRead</span>, <span class="ident">AsyncWrite</span>};
@@ -2494,7 +2487,7 @@
 
         <span class="comment">// Build the set pseudo header set. All requests will include `method`</span>
         <span class="comment">// and `path`.</span>
-        <span class="kw">let</span> <span class="ident">pseudo</span> <span class="op">=</span> <span class="ident">frame</span>::<span class="ident">Pseudo</span>::<span class="ident">response</span>(<span class="ident">status</span>);
+        <span class="kw">let</span> <span class="ident">pseudo</span> <span class="op">=</span> <span class="ident">Pseudo</span>::<span class="ident">response</span>(<span class="ident">status</span>);
 
         <span class="comment">// Create the HEADERS frame</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">frame</span> <span class="op">=</span> <span class="ident">frame</span>::<span class="ident">Headers</span>::<span class="ident">new</span>(<span class="ident">id</span>, <span class="ident">pseudo</span>, <span class="ident">headers</span>);
@@ -2518,13 +2511,12 @@
         <span class="ident">proto</span>::<span class="ident">DynPeer</span>::<span class="ident">Server</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">convert_poll_message</span>(<span class="ident">headers</span>: <span class="ident">frame</span>::<span class="ident">Headers</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Poll</span>, <span class="ident">RecvError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">convert_poll_message</span>(
+        <span class="ident">pseudo</span>: <span class="ident">Pseudo</span>, <span class="ident">fields</span>: <span class="ident">HeaderMap</span>, <span class="ident">stream_id</span>: <span class="ident">StreamId</span>
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Poll</span>, <span class="ident">RecvError</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">http</span>::{<span class="ident">uri</span>, <span class="ident">Version</span>};
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">Request</span>::<span class="ident">builder</span>();
-
-        <span class="kw">let</span> <span class="ident">stream_id</span> <span class="op">=</span> <span class="ident">headers</span>.<span class="ident">stream_id</span>();
-        <span class="kw">let</span> (<span class="ident">pseudo</span>, <span class="ident">fields</span>) <span class="op">=</span> <span class="ident">headers</span>.<span class="ident">into_parts</span>();
 
         <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">malformed</span> {
             ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">arg</span>:<span class="ident">tt</span>)<span class="kw-2">*</span>) <span class="op">=&gt;</span> {{

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/tokio-threadpool-0.1.7/src/pool/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/tokio-threadpool-0.1.9/src/pool/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -512,35 +512,6 @@
 <span id="512">512</span>
 <span id="513">513</span>
 <span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
 </pre><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">backup</span>;
 <span class="kw">mod</span> <span class="ident">backup_stack</span>;
@@ -558,18 +529,17 @@
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">backup_stack</span>::<span class="ident">BackupStack</span>;
 
 <span class="kw">use</span> <span class="ident">config</span>::<span class="ident">Config</span>;
-<span class="kw">use</span> <span class="ident">shutdown_task</span>::<span class="ident">ShutdownTask</span>;
+<span class="kw">use</span> <span class="ident">shutdown</span>::<span class="ident">ShutdownTrigger</span>;
 <span class="kw">use</span> <span class="ident">task</span>::{<span class="ident">Task</span>, <span class="ident">Blocking</span>};
 <span class="kw">use</span> <span class="ident">worker</span>::{<span class="self">self</span>, <span class="ident">Worker</span>, <span class="ident">WorkerId</span>};
 
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">Poll</span>;
-<span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">task</span>::<span class="ident">AtomicTask</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="ident">Cell</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">num</span>::<span class="ident">Wrapping</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::<span class="ident">Ordering</span>::{<span class="ident">Acquire</span>, <span class="ident">AcqRel</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::<span class="ident">AtomicUsize</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">Weak</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">thread</span>;
 
 <span class="kw">use</span> <span class="ident">crossbeam_utils</span>::<span class="ident">CachePadded</span>;
@@ -601,8 +571,14 @@
     <span class="comment">// A worker is a thread that is processing the work queue and polling</span>
     <span class="comment">// futures.</span>
     <span class="comment">//</span>
-    <span class="comment">// This will *usually* be a small number.</span>
-    <span class="kw">pub</span> <span class="ident">workers</span>: <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">worker</span>::<span class="ident">Entry</span>]<span class="op">&gt;</span>,
+    <span class="comment">// The number of workers will *usually* be small.</span>
+    <span class="kw">pub</span> <span class="ident">workers</span>: <span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">worker</span>::<span class="ident">Entry</span>]<span class="op">&gt;</span>,
+
+    <span class="comment">// Completes the shutdown process when the `ThreadPool` and all `Worker`s get dropped.</span>
+    <span class="comment">//</span>
+    <span class="comment">// When spawning a new `Worker`, this weak reference is upgraded and handed out to the new</span>
+    <span class="comment">// thread.</span>
+    <span class="kw">pub</span> <span class="ident">trigger</span>: <span class="ident">Weak</span><span class="op">&lt;</span><span class="ident">ShutdownTrigger</span><span class="op">&gt;</span>,
 
     <span class="comment">// Backup thread state</span>
     <span class="comment">//</span>
@@ -618,18 +594,18 @@
     <span class="comment">// are pending blocking capacity.</span>
     <span class="ident">blocking</span>: <span class="ident">Blocking</span>,
 
-    <span class="comment">// Task notified when the worker shuts down</span>
-    <span class="kw">pub</span> <span class="ident">shutdown_task</span>: <span class="ident">ShutdownTask</span>,
-
     <span class="comment">// Configuration</span>
     <span class="kw">pub</span> <span class="ident">config</span>: <span class="ident">Config</span>,
 }
 
-<span class="kw">const</span> <span class="ident">TERMINATED</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1</span>;
-
 <span class="kw">impl</span> <span class="ident">Pool</span> {
     <span class="doccomment">/// Create a new `Pool`</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">workers</span>: <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">worker</span>::<span class="ident">Entry</span>]<span class="op">&gt;</span>, <span class="ident">max_blocking</span>: <span class="ident">usize</span>, <span class="ident">config</span>: <span class="ident">Config</span>) <span class="op">-&gt;</span> <span class="ident">Pool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
+        <span class="ident">workers</span>: <span class="ident">Arc</span><span class="op">&lt;</span>[<span class="ident">worker</span>::<span class="ident">Entry</span>]<span class="op">&gt;</span>,
+        <span class="ident">trigger</span>: <span class="ident">Weak</span><span class="op">&lt;</span><span class="ident">ShutdownTrigger</span><span class="op">&gt;</span>,
+        <span class="ident">max_blocking</span>: <span class="ident">usize</span>,
+        <span class="ident">config</span>: <span class="ident">Config</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">Pool</span> {
         <span class="kw">let</span> <span class="ident">pool_size</span> <span class="op">=</span> <span class="ident">workers</span>.<span class="ident">len</span>();
         <span class="kw">let</span> <span class="ident">total_size</span> <span class="op">=</span> <span class="ident">max_blocking</span> <span class="op">+</span> <span class="ident">pool_size</span>;
 
@@ -656,12 +632,10 @@
             <span class="ident">sleep_stack</span>: <span class="ident">CachePadded</span>::<span class="ident">new</span>(<span class="ident">worker</span>::<span class="ident">Stack</span>::<span class="ident">new</span>()),
             <span class="ident">num_workers</span>: <span class="ident">AtomicUsize</span>::<span class="ident">new</span>(<span class="number">0</span>),
             <span class="ident">workers</span>,
+            <span class="ident">trigger</span>,
             <span class="ident">backup</span>,
             <span class="ident">backup_stack</span>,
             <span class="ident">blocking</span>,
-            <span class="ident">shutdown_task</span>: <span class="ident">ShutdownTask</span> {
-                <span class="ident">task</span>: <span class="ident">AtomicTask</span>::<span class="ident">new</span>(),
-            },
             <span class="ident">config</span>,
         };
 
@@ -735,10 +709,6 @@
         <span class="self">self</span>.<span class="ident">terminate_sleeping_workers</span>();
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">num_workers</span>.<span class="ident">load</span>(<span class="ident">Acquire</span>) <span class="op">==</span> <span class="ident">TERMINATED</span>
-    }
-
     <span class="doccomment">/// Called by `Worker` as it tries to enter a sleeping state. Before it</span>
     <span class="doccomment">/// sleeps, it must push itself onto the sleep stack. This enables other</span>
     <span class="doccomment">/// threads to see it when signaling work.</span>
@@ -748,12 +718,6 @@
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">terminate_sleeping_workers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
         <span class="kw">use</span> <span class="ident">worker</span>::<span class="ident">Lifecycle</span>::<span class="ident">Signaled</span>;
-
-        <span class="comment">// First, set the TERMINATED flag on `num_workers`. This signals that</span>
-        <span class="comment">// whichever thread transitions the count to zero must notify the</span>
-        <span class="comment">// shutdown task.</span>
-        <span class="kw">let</span> <span class="ident">prev</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">num_workers</span>.<span class="ident">fetch_or</span>(<span class="ident">TERMINATED</span>, <span class="ident">AcqRel</span>);
-        <span class="kw">let</span> <span class="ident">notify</span> <span class="op">=</span> <span class="ident">prev</span> <span class="op">==</span> <span class="number">0</span>;
 
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;  -&gt; shutting down workers&quot;</span>);
         <span class="comment">// Wakeup all sleeping workers. They will wake up, see the state</span>
@@ -770,40 +734,6 @@
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">backup_id</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">backup_stack</span>.<span class="ident">pop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">backup</span>, <span class="bool-val">true</span>) {
             <span class="self">self</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">signal_stop</span>();
         }
-
-        <span class="kw">if</span> <span class="ident">notify</span> {
-            <span class="self">self</span>.<span class="ident">shutdown_task</span>.<span class="ident">notify</span>();
-        }
-    }
-
-    <span class="doccomment">/// Track that a worker thread has started</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If `Err` is returned, then the thread is not permitted to started.</span>
-    <span class="kw">fn</span> <span class="ident">thread_started</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), ()<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">curr</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">num_workers</span>.<span class="ident">load</span>(<span class="ident">Acquire</span>);
-
-        <span class="kw">loop</span> {
-            <span class="kw">if</span> <span class="ident">curr</span> <span class="op">&amp;</span> <span class="ident">TERMINATED</span> <span class="op">==</span> <span class="ident">TERMINATED</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(());
-            }
-
-            <span class="kw">let</span> <span class="ident">actual</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">num_workers</span>.<span class="ident">compare_and_swap</span>(
-                <span class="ident">curr</span>, <span class="ident">curr</span> <span class="op">+</span> <span class="number">2</span>, <span class="ident">AcqRel</span>);
-
-            <span class="kw">if</span> <span class="ident">curr</span> <span class="op">==</span> <span class="ident">actual</span> {
-                <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
-            }
-
-            <span class="ident">curr</span> <span class="op">=</span> <span class="ident">actual</span>;
-        }
-    }
-
-    <span class="kw">fn</span> <span class="ident">thread_stopped</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">prev</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">num_workers</span>.<span class="ident">fetch_sub</span>(<span class="number">2</span>, <span class="ident">AcqRel</span>);
-
-        <span class="kw">if</span> <span class="ident">prev</span> <span class="op">==</span> <span class="ident">TERMINATED</span> <span class="op">|</span> <span class="number">2</span> {
-            <span class="self">self</span>.<span class="ident">shutdown_task</span>.<span class="ident">notify</span>();
-        }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll_blocking_capacity</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">task</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Task</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span>(), ::<span class="ident">BlockingError</span><span class="op">&gt;</span> {
@@ -814,8 +744,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Called from either inside or outside of the scheduler. If currently on</span>
     <span class="doccomment">/// the scheduler, then a fast path is taken.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">task</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Task</span><span class="op">&gt;</span>, <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
-        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">inner</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">task</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Task</span><span class="op">&gt;</span>, <span class="ident">pool</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">pool</span>);
 
         <span class="ident">Worker</span>::<span class="ident">with_current</span>(<span class="op">|</span><span class="ident">worker</span><span class="op">|</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">worker</span>) <span class="op">=</span> <span class="ident">worker</span> {
@@ -827,18 +757,18 @@
                 <span class="comment">// The second check handles the case where the current thread is</span>
                 <span class="comment">// part of a different threadpool than the one being submitted</span>
                 <span class="comment">// to.</span>
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">worker</span>.<span class="ident">is_blocking</span>() <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">worker</span>.<span class="ident">inner</span> {
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">worker</span>.<span class="ident">is_blocking</span>() <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="self">self</span> <span class="op">==</span> <span class="kw-2">*</span><span class="ident">worker</span>.<span class="ident">pool</span> {
                     <span class="kw">let</span> <span class="ident">idx</span> <span class="op">=</span> <span class="ident">worker</span>.<span class="ident">id</span>.<span class="number">0</span>;
 
                     <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;    -&gt; submit internal; idx={}&quot;</span>, <span class="ident">idx</span>);
 
-                    <span class="ident">worker</span>.<span class="ident">inner</span>.<span class="ident">workers</span>[<span class="ident">idx</span>].<span class="ident">submit_internal</span>(<span class="ident">task</span>);
-                    <span class="ident">worker</span>.<span class="ident">inner</span>.<span class="ident">signal_work</span>(<span class="ident">inner</span>);
+                    <span class="ident">worker</span>.<span class="ident">pool</span>.<span class="ident">workers</span>[<span class="ident">idx</span>].<span class="ident">submit_internal</span>(<span class="ident">task</span>);
+                    <span class="ident">worker</span>.<span class="ident">pool</span>.<span class="ident">signal_work</span>(<span class="ident">pool</span>);
                     <span class="kw">return</span>;
                 }
             }
 
-            <span class="self">self</span>.<span class="ident">submit_external</span>(<span class="ident">task</span>, <span class="ident">inner</span>);
+            <span class="self">self</span>.<span class="ident">submit_external</span>(<span class="ident">task</span>, <span class="ident">pool</span>);
         });
     }
 
@@ -846,8 +776,8 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Called from outside of the scheduler, this function is how new tasks</span>
     <span class="doccomment">/// enter the system.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submit_external</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">task</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Task</span><span class="op">&gt;</span>, <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
-        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">inner</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submit_external</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">task</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Task</span><span class="op">&gt;</span>, <span class="ident">pool</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">pool</span>);
 
         <span class="kw">use</span> <span class="ident">worker</span>::<span class="ident">Lifecycle</span>::<span class="ident">Notified</span>;
 
@@ -855,33 +785,43 @@
         <span class="comment">// sleeping tasks get woken up</span>
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">idx</span>, <span class="ident">worker_state</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">sleep_stack</span>.<span class="ident">pop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">workers</span>, <span class="ident">Notified</span>, <span class="bool-val">false</span>) {
             <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;submit to existing worker; idx={}; state={:?}&quot;</span>, <span class="ident">idx</span>, <span class="ident">worker_state</span>);
-            <span class="self">self</span>.<span class="ident">submit_to_external</span>(<span class="ident">idx</span>, <span class="ident">task</span>, <span class="ident">worker_state</span>, <span class="ident">inner</span>);
+            <span class="self">self</span>.<span class="ident">submit_to_external</span>(<span class="ident">idx</span>, <span class="ident">task</span>, <span class="ident">worker_state</span>, <span class="ident">pool</span>);
             <span class="kw">return</span>;
         }
 
         <span class="comment">// All workers are active, so pick a random worker and submit the</span>
         <span class="comment">// task to it.</span>
+        <span class="self">self</span>.<span class="ident">submit_to_random</span>(<span class="ident">task</span>, <span class="ident">pool</span>);
+    }
+
+    <span class="doccomment">/// Submit a task to a random worker</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Called from outside of the scheduler, this function is how new tasks</span>
+    <span class="doccomment">/// enter the system.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">submit_to_random</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">task</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Task</span><span class="op">&gt;</span>, <span class="ident">pool</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">pool</span>);
+
         <span class="kw">let</span> <span class="ident">len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">workers</span>.<span class="ident">len</span>();
         <span class="kw">let</span> <span class="ident">idx</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">rand_usize</span>() <span class="op">%</span> <span class="ident">len</span>;
 
         <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;  -&gt; submitting to random; idx={}&quot;</span>, <span class="ident">idx</span>);
 
         <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">workers</span>[<span class="ident">idx</span>].<span class="ident">load_state</span>();
-        <span class="self">self</span>.<span class="ident">submit_to_external</span>(<span class="ident">idx</span>, <span class="ident">task</span>, <span class="ident">state</span>, <span class="ident">inner</span>);
+        <span class="self">self</span>.<span class="ident">submit_to_external</span>(<span class="ident">idx</span>, <span class="ident">task</span>, <span class="ident">state</span>, <span class="ident">pool</span>);
     }
 
     <span class="kw">fn</span> <span class="ident">submit_to_external</span>(<span class="kw-2">&amp;</span><span class="self">self</span>,
                           <span class="ident">idx</span>: <span class="ident">usize</span>,
                           <span class="ident">task</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Task</span><span class="op">&gt;</span>,
                           <span class="ident">state</span>: <span class="ident">worker</span>::<span class="ident">State</span>,
-                          <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>)
+                          <span class="ident">pool</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>)
     {
-        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">inner</span>);
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">pool</span>);
 
         <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">workers</span>[<span class="ident">idx</span>];
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">entry</span>.<span class="ident">submit_external</span>(<span class="ident">task</span>, <span class="ident">state</span>) {
-            <span class="self">self</span>.<span class="ident">spawn_thread</span>(<span class="ident">WorkerId</span>::<span class="ident">new</span>(<span class="ident">idx</span>), <span class="ident">inner</span>);
+            <span class="self">self</span>.<span class="ident">spawn_thread</span>(<span class="ident">WorkerId</span>::<span class="ident">new</span>(<span class="ident">idx</span>), <span class="ident">pool</span>);
         }
     }
 
@@ -894,14 +834,14 @@
         <span class="self">self</span>.<span class="ident">backup_stack</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">backup</span>, <span class="ident">backup_id</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">notify_blocking_task</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
-        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">inner</span>);
-        <span class="self">self</span>.<span class="ident">blocking</span>.<span class="ident">notify_task</span>(<span class="kw-2">&amp;</span><span class="ident">inner</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">notify_blocking_task</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pool</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">pool</span>);
+        <span class="self">self</span>.<span class="ident">blocking</span>.<span class="ident">notify_task</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>);
     }
 
     <span class="doccomment">/// Provision a thread to run a worker</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spawn_thread</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">WorkerId</span>, <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
-        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">inner</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spawn_thread</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">WorkerId</span>, <span class="ident">pool</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">pool</span>);
 
         <span class="kw">let</span> <span class="ident">backup_id</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">backup_stack</span>.<span class="ident">pop</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">backup</span>, <span class="bool-val">false</span>) {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">backup_id</span>)) <span class="op">=&gt;</span> <span class="ident">backup_id</span>,
@@ -919,38 +859,42 @@
             <span class="kw">return</span>;
         }
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">thread_started</span>().<span class="ident">is_err</span>() {
+        <span class="kw">let</span> <span class="ident">trigger</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">trigger</span>.<span class="ident">upgrade</span>() {
             <span class="comment">// The pool is shutting down.</span>
-            <span class="kw">return</span>;
-        }
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> {
+                <span class="comment">// The pool is shutting down.</span>
+                <span class="kw">return</span>;
+            }
+            <span class="prelude-val">Some</span>(<span class="ident">t</span>) <span class="op">=&gt;</span> <span class="ident">t</span>,
+        };
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">th</span> <span class="op">=</span> <span class="ident">thread</span>::<span class="ident">Builder</span>::<span class="ident">new</span>();
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">prefix</span>) <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">config</span>.<span class="ident">name_prefix</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">prefix</span>) <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">config</span>.<span class="ident">name_prefix</span> {
             <span class="ident">th</span> <span class="op">=</span> <span class="ident">th</span>.<span class="ident">name</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">prefix</span>, <span class="ident">backup_id</span>.<span class="number">0</span>));
         }
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stack</span>) <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">config</span>.<span class="ident">stack_size</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stack</span>) <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">config</span>.<span class="ident">stack_size</span> {
             <span class="ident">th</span> <span class="op">=</span> <span class="ident">th</span>.<span class="ident">stack_size</span>(<span class="ident">stack</span>);
         }
 
-        <span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">clone</span>();
+        <span class="kw">let</span> <span class="ident">pool</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">clone</span>();
 
         <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">th</span>.<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">||</span> {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">config</span>.<span class="ident">after_start</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">config</span>.<span class="ident">after_start</span> {
                 <span class="ident">f</span>();
             }
 
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">worker_id</span> <span class="op">=</span> <span class="ident">id</span>;
 
-            <span class="ident">inner</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="ident">worker_id</span>);
+            <span class="ident">pool</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">start</span>(<span class="kw-2">&amp;</span><span class="ident">worker_id</span>);
 
             <span class="kw">loop</span> {
                 <span class="comment">// The backup token should be in the running state.</span>
-                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">inner</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">is_running</span>());
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">pool</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">is_running</span>());
 
                 <span class="comment">// TODO: Avoid always cloning</span>
-                <span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">Worker</span>::<span class="ident">new</span>(<span class="ident">worker_id</span>, <span class="ident">backup_id</span>, <span class="ident">inner</span>.<span class="ident">clone</span>());
+                <span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">Worker</span>::<span class="ident">new</span>(<span class="ident">worker_id</span>, <span class="ident">backup_id</span>, <span class="ident">pool</span>.<span class="ident">clone</span>(), <span class="ident">trigger</span>.<span class="ident">clone</span>());
 
                 <span class="comment">// Run the worker. If the worker transitioned to a &quot;blocking&quot;</span>
                 <span class="comment">// state, then `is_blocking` will be true.</span>
@@ -959,14 +903,14 @@
                     <span class="kw">break</span>;
                 }
 
-                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">inner</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">is_pushed</span>());
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">pool</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">is_pushed</span>());
 
                 <span class="comment">// Push the thread back onto the backup stack. This makes it</span>
                 <span class="comment">// available for future handoffs.</span>
                 <span class="comment">//</span>
                 <span class="comment">// This **must** happen before notifying the task.</span>
-                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">backup_stack</span>
-                    .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">inner</span>.<span class="ident">backup</span>, <span class="ident">backup_id</span>);
+                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">backup_stack</span>
+                    .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>.<span class="ident">backup</span>, <span class="ident">backup_id</span>);
 
                 <span class="kw">if</span> <span class="ident">res</span>.<span class="ident">is_err</span>() {
                     <span class="comment">// The pool is being shutdown.</span>
@@ -975,17 +919,17 @@
 
                 <span class="comment">// The task switched the current thread to blocking mode.</span>
                 <span class="comment">// Now that the blocking task completed, any tasks</span>
-                <span class="ident">inner</span>.<span class="ident">notify_blocking_task</span>(<span class="kw-2">&amp;</span><span class="ident">inner</span>);
+                <span class="ident">pool</span>.<span class="ident">notify_blocking_task</span>(<span class="kw-2">&amp;</span><span class="ident">pool</span>);
 
-                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">inner</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">is_running</span>());
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">pool</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">is_running</span>());
 
                 <span class="comment">// Wait for a handoff</span>
-                <span class="kw">let</span> <span class="ident">handoff</span> <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>]
-                    .<span class="ident">wait_for_handoff</span>(<span class="ident">inner</span>.<span class="ident">config</span>.<span class="ident">keep_alive</span>);
+                <span class="kw">let</span> <span class="ident">handoff</span> <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>]
+                    .<span class="ident">wait_for_handoff</span>(<span class="ident">pool</span>.<span class="ident">config</span>.<span class="ident">keep_alive</span>);
 
                 <span class="kw">match</span> <span class="ident">handoff</span> {
                     <span class="ident">Handoff</span>::<span class="ident">Worker</span>(<span class="ident">id</span>) <span class="op">=&gt;</span> {
-                        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">inner</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">is_running</span>());
+                        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">pool</span>.<span class="ident">backup</span>[<span class="ident">backup_id</span>.<span class="number">0</span>].<span class="ident">is_running</span>());
                         <span class="ident">worker_id</span> <span class="op">=</span> <span class="ident">id</span>;
                     }
                     <span class="ident">Handoff</span>::<span class="ident">Idle</span> <span class="op">|</span> <span class="ident">Handoff</span>::<span class="ident">Terminated</span> <span class="op">=&gt;</span> {
@@ -994,11 +938,9 @@
                 }
             }
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">inner</span>.<span class="ident">config</span>.<span class="ident">before_stop</span> {
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">f</span>) <span class="op">=</span> <span class="ident">pool</span>.<span class="ident">config</span>.<span class="ident">before_stop</span> {
                 <span class="ident">f</span>();
             }
-
-            <span class="ident">inner</span>.<span class="ident">thread_stopped</span>();
         });
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=</span> <span class="ident">res</span> {
@@ -1008,8 +950,8 @@
 
     <span class="doccomment">/// If there are any other workers currently relaxing, signal them that work</span>
     <span class="doccomment">/// is available so that they can try to find more work to process.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">signal_work</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">inner</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
-        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">inner</span>);
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">signal_work</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">pool</span>: <span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Pool</span><span class="op">&gt;</span>) {
+        <span class="macro">debug_assert_eq</span><span class="macro">!</span>(<span class="kw-2">*</span><span class="self">self</span>, <span class="kw-2">*</span><span class="kw-2">*</span><span class="ident">pool</span>);
 
         <span class="kw">use</span> <span class="ident">worker</span>::<span class="ident">Lifecycle</span>::<span class="kw-2">*</span>;
 
@@ -1043,7 +985,7 @@
                 }
                 <span class="ident">Shutdown</span> <span class="op">=&gt;</span> {
                     <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;signal_work -- spawn; idx={}&quot;</span>, <span class="ident">idx</span>);
-                    <span class="self">self</span>.<span class="ident">spawn_thread</span>(<span class="ident">WorkerId</span>(<span class="ident">idx</span>), <span class="ident">inner</span>);
+                    <span class="self">self</span>.<span class="ident">spawn_thread</span>(<span class="ident">WorkerId</span>(<span class="ident">idx</span>), <span class="ident">pool</span>);
                 }
                 <span class="ident">Running</span> <span class="op">|</span> <span class="ident">Notified</span> <span class="op">|</span> <span class="ident">Signaled</span> <span class="op">=&gt;</span> {
                     <span class="comment">// The workers are already active. No need to wake them up.</span>

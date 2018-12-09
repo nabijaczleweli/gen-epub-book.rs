@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/http-0.1.13/src/uri/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/http-0.1.14/src/uri/mod.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>mod.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1067,6 +1067,44 @@
 <span id="1067">1067</span>
 <span id="1068">1068</span>
 <span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! URI component of request and response lines</span>
 <span class="doccomment">//!</span>
@@ -1108,11 +1146,15 @@
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">scheme</span>::<span class="ident">Scheme2</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">authority</span>::<span class="ident">Authority</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">builder</span>::<span class="ident">Builder</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">path</span>::<span class="ident">PathAndQuery</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">scheme</span>::<span class="ident">Scheme</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">port</span>::<span class="ident">Port</span>;
 
 <span class="kw">mod</span> <span class="ident">authority</span>;
+<span class="kw">mod</span> <span class="ident">builder</span>;
 <span class="kw">mod</span> <span class="ident">path</span>;
+<span class="kw">mod</span> <span class="ident">port</span>;
 <span class="kw">mod</span> <span class="ident">scheme</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span>;
@@ -1203,6 +1245,7 @@
     <span class="ident">InvalidUriChar</span>,
     <span class="ident">InvalidScheme</span>,
     <span class="ident">InvalidAuthority</span>,
+    <span class="ident">InvalidPort</span>,
     <span class="ident">InvalidFormat</span>,
     <span class="ident">SchemeMissing</span>,
     <span class="ident">AuthorityMissing</span>,
@@ -1246,6 +1289,27 @@
 ];
 
 <span class="kw">impl</span> <span class="ident">Uri</span> {
+    <span class="doccomment">/// Creates a new builder-style object to manufacture a `Uri`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method returns an instance of `Builder` which can be usd to</span>
+    <span class="doccomment">/// create a `Uri`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use http::Uri;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let uri = Uri::builder()</span>
+    <span class="doccomment">///     .scheme(&quot;https&quot;)</span>
+    <span class="doccomment">///     .authority(&quot;hyper.rs&quot;)</span>
+    <span class="doccomment">///     .path_and_query(&quot;/&quot;)</span>
+    <span class="doccomment">///     .build()</span>
+    <span class="doccomment">///     .unwrap();</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>() <span class="op">-&gt;</span> <span class="ident">Builder</span> {
+        <span class="ident">Builder</span>::<span class="ident">new</span>()
+    }
+
     <span class="doccomment">/// Attempt to convert a `Uri` from `Parts`</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_parts</span>(<span class="ident">src</span>: <span class="ident">Parts</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Uri</span>, <span class="ident">InvalidUriParts</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">src</span>.<span class="ident">scheme</span>.<span class="ident">is_some</span>() {
@@ -1613,12 +1677,18 @@
         <span class="self">self</span>.<span class="ident">authority_part</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">host</span>())
     }
 
-    <span class="doccomment">/// Get the port of this `Uri`.</span>
+    <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span><span class="op">=</span><span class="string">&quot;0.1.14&quot;</span>, <span class="ident">note</span><span class="op">=</span><span class="string">&quot;use `port_part` instead&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">port</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">port_part</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">p</span><span class="op">|</span> <span class="prelude-val">Some</span>(<span class="ident">p</span>.<span class="ident">as_u16</span>()))
+    }
+
+    <span class="doccomment">/// Get the port part of this `Uri`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The port subcomponent of authority is designated by an optional port</span>
-    <span class="doccomment">/// number in decimal following the host and delimited from it by a single</span>
-    <span class="doccomment">/// colon (&quot;:&quot;) character. A value is only returned if one is specified in</span>
-    <span class="doccomment">/// the URI string, i.e., default port values are **not** returned.</span>
+    <span class="doccomment">/// number following the host and delimited from it by a single colon (&quot;:&quot;)</span>
+    <span class="doccomment">/// character. It can be turned into a decimal port number with the `as_u16`</span>
+    <span class="doccomment">/// method or as a `str` with the `as_str` method.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```notrust</span>
     <span class="doccomment">/// abc://username:password@example.com:123/path/data?key=value&amp;key2=value2#fragid1</span>
@@ -1632,10 +1702,11 @@
     <span class="doccomment">/// Absolute URI with port</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use http::Uri;</span>
+    <span class="doccomment">/// # use http::{Uri, uri::Port};</span>
     <span class="doccomment">/// let uri: Uri = &quot;http://example.org:80/hello/world&quot;.parse().unwrap();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// assert_eq!(uri.port(), Some(80));</span>
+    <span class="doccomment">/// let port = uri.port_part().unwrap();</span>
+    <span class="doccomment">/// assert_eq!(port.as_u16(), 80);</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Absolute URI without port</span>
@@ -1644,7 +1715,7 @@
     <span class="doccomment">/// # use http::Uri;</span>
     <span class="doccomment">/// let uri: Uri = &quot;http://example.org/hello/world&quot;.parse().unwrap();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// assert!(uri.port().is_none());</span>
+    <span class="doccomment">/// assert!(uri.port_part().is_none());</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Relative URI</span>
@@ -1653,11 +1724,11 @@
     <span class="doccomment">/// # use http::Uri;</span>
     <span class="doccomment">/// let uri: Uri = &quot;/hello/world&quot;.parse().unwrap();</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// assert!(uri.port().is_none());</span>
+    <span class="doccomment">/// assert!(uri.port_part().is_none());</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">port</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">port_part</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Port</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;&gt;</span> {
         <span class="self">self</span>.<span class="ident">authority_part</span>()
-            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">port</span>())
+            .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">port_part</span>())
     }
 
     <span class="doccomment">/// Get the query string of this `Uri`, starting after the `?`.</span>
@@ -1974,6 +2045,10 @@
         }
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">query</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">query</span>() {
+            <span class="kw">if</span> <span class="ident">other</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+                <span class="kw">return</span> <span class="ident">query</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span>;
+            }
+
             <span class="kw">if</span> <span class="ident">other</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;?&#39;</span> {
                 <span class="kw">return</span> <span class="bool-val">false</span>;
             }
@@ -2083,6 +2158,7 @@
             <span class="ident">ErrorKind</span>::<span class="ident">InvalidUriChar</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid uri character&quot;</span>,
             <span class="ident">ErrorKind</span>::<span class="ident">InvalidScheme</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid scheme&quot;</span>,
             <span class="ident">ErrorKind</span>::<span class="ident">InvalidAuthority</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid authority&quot;</span>,
+            <span class="ident">ErrorKind</span>::<span class="ident">InvalidPort</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid port&quot;</span>,
             <span class="ident">ErrorKind</span>::<span class="ident">InvalidFormat</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid format&quot;</span>,
             <span class="ident">ErrorKind</span>::<span class="ident">SchemeMissing</span> <span class="op">=&gt;</span> <span class="string">&quot;scheme missing&quot;</span>,
             <span class="ident">ErrorKind</span>::<span class="ident">AuthorityMissing</span> <span class="op">=&gt;</span> <span class="string">&quot;authority missing&quot;</span>,

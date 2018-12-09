@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.2/src/async_impl/body.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>body.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.5/src/async_impl/body.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>body.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -183,8 +183,19 @@
 <span id="183">183</span>
 <span id="184">184</span>
 <span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
 </pre><pre class="rust ">
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">fmt</span>, <span class="ident">mem</span>};
 
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Stream</span>, <span class="ident">Poll</span>, <span class="ident">Async</span>};
 <span class="kw">use</span> <span class="ident">bytes</span>::{<span class="ident">Buf</span>, <span class="ident">Bytes</span>};
@@ -203,7 +214,19 @@
 <span class="kw">impl</span> <span class="ident">Body</span> {
     <span class="kw">fn</span> <span class="ident">poll_inner</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ::<span class="ident">hyper</span>::<span class="ident">Body</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
-            <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">body</span>) <span class="op">=&gt;</span> <span class="ident">body</span>,
+            <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">body</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">body</span>,
+            <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> (),
+        }
+
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">inner</span>, <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="ident">Bytes</span>::<span class="ident">new</span>())) {
+            <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="ident">bytes</span>) <span class="op">=&gt;</span> <span class="ident">bytes</span>,
+            <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+        };
+
+        <span class="self">self</span>.<span class="ident">inner</span> <span class="op">=</span> <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="ident">bytes</span>.<span class="ident">into</span>());
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">body</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">body</span>,
             <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
         }
     }
@@ -212,6 +235,35 @@
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
             <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="kw-2">ref</span> <span class="ident">bytes</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">bytes</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span>),
             <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="ident">body</span>) <span class="op">=&gt;</span> <span class="ident">body</span>.<span class="ident">content_length</span>(),
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">wrap</span>(<span class="ident">body</span>: ::<span class="ident">hyper</span>::<span class="ident">Body</span>) <span class="op">-&gt;</span> <span class="ident">Body</span> {
+        <span class="ident">Body</span> {
+            <span class="ident">inner</span>: <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="ident">body</span>),
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">empty</span>() <span class="op">-&gt;</span> <span class="ident">Body</span> {
+        <span class="ident">Body</span> {
+            <span class="ident">inner</span>: <span class="ident">Inner</span>::<span class="ident">Hyper</span>(::<span class="ident">hyper</span>::<span class="ident">Body</span>::<span class="ident">empty</span>()),
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">reusable</span>(<span class="ident">chunk</span>: <span class="ident">Bytes</span>) <span class="op">-&gt;</span> <span class="ident">Body</span> {
+        <span class="ident">Body</span> {
+            <span class="ident">inner</span>: <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="ident">chunk</span>),
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">into_hyper</span>(<span class="self">self</span>) <span class="op">-&gt;</span> (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Bytes</span><span class="op">&gt;</span>, ::<span class="ident">hyper</span>::<span class="ident">Body</span>) {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span> {
+            <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="ident">chunk</span>) <span class="op">=&gt;</span> (<span class="prelude-val">Some</span>(<span class="ident">chunk</span>.<span class="ident">clone</span>()), <span class="ident">chunk</span>.<span class="ident">into</span>()),
+            <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="ident">b</span>) <span class="op">=&gt;</span> (<span class="prelude-val">None</span>, <span class="ident">b</span>),
         }
     }
 }
@@ -234,28 +286,28 @@
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Bytes</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Body</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">bytes</span>: <span class="ident">Bytes</span>) <span class="op">-&gt;</span> <span class="ident">Body</span> {
-        <span class="ident">reusable</span>(<span class="ident">bytes</span>)
+        <span class="ident">Body</span>::<span class="ident">reusable</span>(<span class="ident">bytes</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span> <span class="kw">for</span> <span class="ident">Body</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">vec</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Body</span> {
-        <span class="ident">reusable</span>(<span class="ident">vec</span>.<span class="ident">into</span>())
+        <span class="ident">Body</span>::<span class="ident">reusable</span>(<span class="ident">vec</span>.<span class="ident">into</span>())
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Body</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">Body</span> {
-        <span class="ident">reusable</span>(<span class="ident">Bytes</span>::<span class="ident">from_static</span>(<span class="ident">s</span>))
+        <span class="ident">Body</span>::<span class="ident">reusable</span>(<span class="ident">Bytes</span>::<span class="ident">from_static</span>(<span class="ident">s</span>))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Body</span> {
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">s</span>: <span class="ident">String</span>) <span class="op">-&gt;</span> <span class="ident">Body</span> {
-        <span class="ident">reusable</span>(<span class="ident">s</span>.<span class="ident">into</span>())
+        <span class="ident">Body</span>::<span class="ident">reusable</span>(<span class="ident">s</span>.<span class="ident">into</span>())
     }
 }
 
@@ -274,6 +326,14 @@
     <span class="ident">inner</span>: ::<span class="ident">hyper</span>::<span class="ident">Chunk</span>,
 }
 
+<span class="kw">impl</span> <span class="ident">Chunk</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_chunk</span>(<span class="ident">chunk</span>: <span class="ident">Bytes</span>) <span class="op">-&gt;</span> <span class="ident">Chunk</span> {
+        <span class="ident">Chunk</span> {
+            <span class="ident">inner</span>: ::<span class="ident">hyper</span>::<span class="ident">Chunk</span>::<span class="ident">from</span>(<span class="ident">chunk</span>)
+        }
+    }
+}
 <span class="kw">impl</span> <span class="ident">Buf</span> <span class="kw">for</span> <span class="ident">Chunk</span> {
     <span class="kw">fn</span> <span class="ident">bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
         <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">bytes</span>()
@@ -329,44 +389,6 @@
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Chunk</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="ident">fmt</span>::<span class="ident">Debug</span>::<span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">inner</span>, <span class="ident">f</span>)
-    }
-}
-
-<span class="comment">// pub(crate)</span>
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">wrap</span>(<span class="ident">body</span>: ::<span class="ident">hyper</span>::<span class="ident">Body</span>) <span class="op">-&gt;</span> <span class="ident">Body</span> {
-    <span class="ident">Body</span> {
-        <span class="ident">inner</span>: <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="ident">body</span>),
-    }
-}
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">empty</span>() <span class="op">-&gt;</span> <span class="ident">Body</span> {
-    <span class="ident">Body</span> {
-        <span class="ident">inner</span>: <span class="ident">Inner</span>::<span class="ident">Hyper</span>(::<span class="ident">hyper</span>::<span class="ident">Body</span>::<span class="ident">empty</span>()),
-    }
-}
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">chunk</span>(<span class="ident">chunk</span>: <span class="ident">Bytes</span>) <span class="op">-&gt;</span> <span class="ident">Chunk</span> {
-    <span class="ident">Chunk</span> {
-        <span class="ident">inner</span>: ::<span class="ident">hyper</span>::<span class="ident">Chunk</span>::<span class="ident">from</span>(<span class="ident">chunk</span>)
-    }
-}
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reusable</span>(<span class="ident">chunk</span>: <span class="ident">Bytes</span>) <span class="op">-&gt;</span> <span class="ident">Body</span> {
-    <span class="ident">Body</span> {
-        <span class="ident">inner</span>: <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="ident">chunk</span>),
-    }
-}
-
-<span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_hyper</span>(<span class="ident">body</span>: <span class="ident">Body</span>) <span class="op">-&gt;</span> (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Bytes</span><span class="op">&gt;</span>, ::<span class="ident">hyper</span>::<span class="ident">Body</span>) {
-    <span class="kw">match</span> <span class="ident">body</span>.<span class="ident">inner</span> {
-        <span class="ident">Inner</span>::<span class="ident">Reusable</span>(<span class="ident">chunk</span>) <span class="op">=&gt;</span> (<span class="prelude-val">Some</span>(<span class="ident">chunk</span>.<span class="ident">clone</span>()), <span class="ident">chunk</span>.<span class="ident">into</span>()),
-        <span class="ident">Inner</span>::<span class="ident">Hyper</span>(<span class="ident">b</span>) <span class="op">=&gt;</span> (<span class="prelude-val">None</span>, <span class="ident">b</span>),
     }
 }
 </pre>

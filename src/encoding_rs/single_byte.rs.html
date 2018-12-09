@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.8.7/src/single_byte.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>single_byte.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/encoding_rs-0.8.13/src/single_byte.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>single_byte.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -665,6 +665,28 @@
 <span id="665">665</span>
 <span id="666">666</span>
 <span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
+<span id="676">676</span>
+<span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2015-2016 Mozilla Foundation. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution.</span>
@@ -677,6 +699,7 @@
 
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">ascii</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">data</span>::<span class="ident">position</span>;
 <span class="kw">use</span> <span class="ident">handles</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">variant</span>::<span class="kw-2">*</span>;
 
@@ -822,8 +845,8 @@
         <span class="lifetime">&#39;outermost</span>: <span class="kw">loop</span> {
             <span class="kw">match</span> <span class="kw">unsafe</span> {
                 <span class="ident">ascii_to_basic_latin</span>(
-                    <span class="ident">src</span>.<span class="ident">as_ptr</span>().<span class="ident">offset</span>(<span class="ident">converted</span> <span class="kw">as</span> <span class="ident">isize</span>),
-                    <span class="ident">dst</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">offset</span>(<span class="ident">converted</span> <span class="kw">as</span> <span class="ident">isize</span>),
+                    <span class="ident">src</span>.<span class="ident">as_ptr</span>().<span class="ident">add</span>(<span class="ident">converted</span>),
+                    <span class="ident">dst</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">add</span>(<span class="ident">converted</span>),
                     <span class="ident">length</span> <span class="op">-</span> <span class="ident">converted</span>,
                 )
             } {
@@ -875,7 +898,7 @@
                             <span class="comment">// byte unconditionally instead of trying to unread it</span>
                             <span class="comment">// to make it part of the next SIMD stride.</span>
                             <span class="kw">unsafe</span> {
-                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">converted</span>)) <span class="op">=</span> <span class="ident">b</span> <span class="kw">as</span> <span class="ident">u16</span>;
+                                <span class="kw-2">*</span>(<span class="ident">dst</span>.<span class="ident">get_unchecked_mut</span>(<span class="ident">converted</span>)) <span class="op">=</span> <span class="ident">u16</span>::<span class="ident">from</span>(<span class="ident">b</span>);
                             }
                             <span class="ident">converted</span> <span class="op">+=</span> <span class="number">1</span>;
                             <span class="kw">if</span> <span class="ident">b</span> <span class="op">&lt;</span> <span class="number">60</span> {
@@ -898,13 +921,27 @@
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SingleByteEncoder</span> {
     <span class="ident">table</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u16</span>; <span class="number">128</span>],
+    <span class="ident">run_bmp_offset</span>: <span class="ident">usize</span>,
+    <span class="ident">run_byte_offset</span>: <span class="ident">usize</span>,
+    <span class="ident">run_length</span>: <span class="ident">usize</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">SingleByteEncoder</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">encoding</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Encoding</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u16</span>; <span class="number">128</span>]) <span class="op">-&gt;</span> <span class="ident">Encoder</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
+        <span class="ident">encoding</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">Encoding</span>,
+        <span class="ident">data</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u16</span>; <span class="number">128</span>],
+        <span class="ident">run_bmp_offset</span>: <span class="ident">u16</span>,
+        <span class="ident">run_byte_offset</span>: <span class="ident">u8</span>,
+        <span class="ident">run_length</span>: <span class="ident">u8</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">Encoder</span> {
         <span class="ident">Encoder</span>::<span class="ident">new</span>(
             <span class="ident">encoding</span>,
-            <span class="ident">VariantEncoder</span>::<span class="ident">SingleByte</span>(<span class="ident">SingleByteEncoder</span> { <span class="ident">table</span>: <span class="ident">data</span> }),
+            <span class="ident">VariantEncoder</span>::<span class="ident">SingleByte</span>(<span class="ident">SingleByteEncoder</span> {
+                <span class="ident">table</span>: <span class="ident">data</span>,
+                <span class="ident">run_bmp_offset</span>: <span class="ident">run_bmp_offset</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                <span class="ident">run_byte_offset</span>: <span class="ident">run_byte_offset</span> <span class="kw">as</span> <span class="ident">usize</span>,
+                <span class="ident">run_length</span>: <span class="ident">run_length</span> <span class="kw">as</span> <span class="ident">usize</span>,
+            }),
         )
     }
 
@@ -922,54 +959,64 @@
         <span class="prelude-val">Some</span>(<span class="ident">byte_length</span>)
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
     <span class="kw">fn</span> <span class="ident">encode_u16</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">code_unit</span>: <span class="ident">u16</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="comment">// We search the quadrants in reverse order, but we search forward</span>
-        <span class="comment">// within each quadrant. For Windows and ISO encodings, this is</span>
-        <span class="comment">// generally faster than just searching the whole table backwards.</span>
-        <span class="comment">// (Exceptions: English, German, Czech.) This order is also OK for</span>
-        <span class="comment">// KOI encodings. For IBM and Mac encodings, this order is bad,</span>
-        <span class="comment">// but we don&#39;t really need to optimize for those encodings anyway.</span>
+        <span class="comment">// First, we see if the code unit falls into a run of consecutive</span>
+        <span class="comment">// code units that can be mapped by offset. This is very efficient</span>
+        <span class="comment">// for most non-Latin encodings as well as Latin1-ish encodings.</span>
+        <span class="comment">//</span>
+        <span class="comment">// For encodings that don&#39;t fit this pattern, the run (which may</span>
+        <span class="comment">// have the length of just one) just establishes the starting point</span>
+        <span class="comment">// for the next rule.</span>
+        <span class="comment">//</span>
+        <span class="comment">// Next, we do a forward linear search in the part of the index</span>
+        <span class="comment">// after the run. Even in non-Latin1-ish Latin encodings (except</span>
+        <span class="comment">// macintosh), the lower case letters are here.</span>
+        <span class="comment">//</span>
+        <span class="comment">// Next, we search the third quadrant up to the start of the run</span>
+        <span class="comment">// (upper case letters in Latin encodings except macintosh, in</span>
+        <span class="comment">// Greek and in KOI encodings) and then the second quadrant,</span>
+        <span class="comment">// except if the run stared before the third quadrant, we search</span>
+        <span class="comment">// the second quadrant up to the run.</span>
+        <span class="comment">//</span>
+        <span class="comment">// Last, we search the first quadrant, which has unused controls</span>
+        <span class="comment">// or punctuation in most encodings. This is bad for macintosh</span>
+        <span class="comment">// and IBM866, but those are rare.</span>
 
-        <span class="comment">// In Windows and ISO encodings, the fourth quadrant holds most of the</span>
-        <span class="comment">// lower-case letters for bicameral scripts as well as the Hebrew</span>
-        <span class="comment">// letters. There are some Thai letters and combining marks as well as</span>
-        <span class="comment">// Thai numerals here. (In KOI8-R, the upper-case letters are here.)</span>
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">96</span>..<span class="number">128</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">table</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="ident">code_unit</span> {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">i</span> <span class="op">+</span> <span class="number">128</span>) <span class="kw">as</span> <span class="ident">u8</span>);
-            }
+        <span class="comment">// Run of consecutive units</span>
+        <span class="kw">let</span> <span class="ident">unit_as_usize</span> <span class="op">=</span> <span class="ident">code_unit</span> <span class="kw">as</span> <span class="ident">usize</span>;
+        <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="ident">unit_as_usize</span>.<span class="ident">wrapping_sub</span>(<span class="self">self</span>.<span class="ident">run_bmp_offset</span>);
+        <span class="kw">if</span> <span class="ident">offset</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">run_length</span> {
+            <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="number">128</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">run_byte_offset</span> <span class="op">+</span> <span class="ident">offset</span>) <span class="kw">as</span> <span class="ident">u8</span>);
         }
 
-        <span class="comment">// In Windows and ISO encodings, the third quadrant holds most of the</span>
-        <span class="comment">// upper-case letters for bicameral scripts as well as most of the</span>
-        <span class="comment">// Arabic letters. Searching this quadrant first would be better for</span>
-        <span class="comment">// Arabic. There are a number of Thai letters and combining marks here.</span>
-        <span class="comment">// (In KOI8-R, the lower-case letters are here.)</span>
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">64</span>..<span class="number">96</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">table</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="ident">code_unit</span> {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">i</span> <span class="op">+</span> <span class="number">128</span>) <span class="kw">as</span> <span class="ident">u8</span>);
-            }
+        <span class="comment">// Search after the run</span>
+        <span class="kw">let</span> <span class="ident">tail_start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">run_byte_offset</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">run_length</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pos</span>) <span class="op">=</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">table</span>[<span class="ident">tail_start</span>..], <span class="ident">code_unit</span>) {
+            <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="number">128</span> <span class="op">+</span> <span class="ident">tail_start</span> <span class="op">+</span> <span class="ident">pos</span>) <span class="kw">as</span> <span class="ident">u8</span>);
         }
 
-        <span class="comment">// In Windows and ISO encodings, the second quadrant hold most of the</span>
-        <span class="comment">// Thai letters. In other scripts, there tends to be symbols here.</span>
-        <span class="comment">// Even though the two quadrants above are relevant for Thai, for Thai</span>
-        <span class="comment">// it would likely be optimal to search this quadrant first. :-(</span>
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">32</span>..<span class="number">64</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">table</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="ident">code_unit</span> {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">i</span> <span class="op">+</span> <span class="number">128</span>) <span class="kw">as</span> <span class="ident">u8</span>);
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">run_byte_offset</span> <span class="op">&gt;=</span> <span class="number">64</span> {
+            <span class="comment">// Search third quadrant before the run</span>
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pos</span>) <span class="op">=</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">table</span>[<span class="number">64</span>..<span class="self">self</span>.<span class="ident">run_byte_offset</span>], <span class="ident">code_unit</span>) {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(((<span class="number">128</span> <span class="op">+</span> <span class="number">64</span>) <span class="op">+</span> <span class="ident">pos</span>) <span class="kw">as</span> <span class="ident">u8</span>);
             }
+
+            <span class="comment">// Search second quadrant</span>
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pos</span>) <span class="op">=</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">table</span>[<span class="number">32</span>..<span class="number">64</span>], <span class="ident">code_unit</span>) {
+                <span class="kw">return</span> <span class="prelude-val">Some</span>(((<span class="number">128</span> <span class="op">+</span> <span class="number">32</span>) <span class="op">+</span> <span class="ident">pos</span>) <span class="kw">as</span> <span class="ident">u8</span>);
+            }
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pos</span>) <span class="op">=</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">table</span>[<span class="number">32</span>..<span class="self">self</span>.<span class="ident">run_byte_offset</span>], <span class="ident">code_unit</span>) {
+            <span class="comment">// windows-1252, windows-874, ISO-8859-15 and ISO-8859-5</span>
+            <span class="comment">// Search second quadrant before the run</span>
+            <span class="kw">return</span> <span class="prelude-val">Some</span>(((<span class="number">128</span> <span class="op">+</span> <span class="number">32</span>) <span class="op">+</span> <span class="ident">pos</span>) <span class="kw">as</span> <span class="ident">u8</span>);
         }
 
-        <span class="comment">// The first quadrant is useless in ISO encodings. In Windows encodings,</span>
-        <span class="comment">// there is useful punctuation here that might warrant searching</span>
-        <span class="comment">// before the symbols in the second quadrant, but the second quadrant</span>
-        <span class="comment">// is searched before this one for the benefit of Thai.</span>
-        <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">32</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">table</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="ident">code_unit</span> {
-                <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="ident">i</span> <span class="op">+</span> <span class="number">128</span>) <span class="kw">as</span> <span class="ident">u8</span>);
-            }
+        <span class="comment">// Search first quadrant</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">pos</span>) <span class="op">=</span> <span class="ident">position</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">table</span>[..<span class="number">32</span>], <span class="ident">code_unit</span>) {
+            <span class="kw">return</span> <span class="prelude-val">Some</span>((<span class="number">128</span> <span class="op">+</span> <span class="ident">pos</span>) <span class="kw">as</span> <span class="ident">u8</span>);
         }
+
         <span class="prelude-val">None</span>
     }
 
@@ -1013,8 +1060,8 @@
         <span class="lifetime">&#39;outermost</span>: <span class="kw">loop</span> {
             <span class="kw">match</span> <span class="kw">unsafe</span> {
                 <span class="ident">basic_latin_to_ascii</span>(
-                    <span class="ident">src</span>.<span class="ident">as_ptr</span>().<span class="ident">offset</span>(<span class="ident">converted</span> <span class="kw">as</span> <span class="ident">isize</span>),
-                    <span class="ident">dst</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">offset</span>(<span class="ident">converted</span> <span class="kw">as</span> <span class="ident">isize</span>),
+                    <span class="ident">src</span>.<span class="ident">as_ptr</span>().<span class="ident">add</span>(<span class="ident">converted</span>),
+                    <span class="ident">dst</span>.<span class="ident">as_mut_ptr</span>().<span class="ident">add</span>(<span class="ident">converted</span>),
                     <span class="ident">length</span> <span class="op">-</span> <span class="ident">converted</span>,
                 )
             } {
@@ -1047,7 +1094,7 @@
                                         );
                                     }
                                     <span class="kw">let</span> <span class="ident">second</span> <span class="op">=</span>
-                                        <span class="kw">unsafe</span> { <span class="kw-2">*</span><span class="ident">src</span>.<span class="ident">get_unchecked</span>(<span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>) } <span class="kw">as</span> <span class="ident">u32</span>;
+                                        <span class="ident">u32</span>::<span class="ident">from</span>(<span class="kw">unsafe</span> { <span class="kw-2">*</span><span class="ident">src</span>.<span class="ident">get_unchecked</span>(<span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>) });
                                     <span class="kw">if</span> <span class="ident">second</span> <span class="op">&amp;</span> <span class="number">0xFC00u32</span> <span class="op">!=</span> <span class="number">0xDC00u32</span> {
                                         <span class="kw">return</span> (
                                             <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="string">&#39;\u{FFFD}&#39;</span>),
@@ -1057,9 +1104,9 @@
                                     }
                                     <span class="comment">// The next code unit is a low surrogate.</span>
                                     <span class="kw">let</span> <span class="ident">astral</span>: <span class="ident">char</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-                                        ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>(
-                                            ((<span class="ident">non_ascii</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">+</span> <span class="ident">second</span>
-                                                <span class="op">-</span> (((<span class="number">0xD800u32</span> <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">-</span> <span class="number">0x10000u32</span>) <span class="op">+</span> <span class="number">0xDC00u32</span>),
+                                        ::<span class="ident">std</span>::<span class="ident">char</span>::<span class="ident">from_u32_unchecked</span>(
+                                            (<span class="ident">u32</span>::<span class="ident">from</span>(<span class="ident">non_ascii</span>) <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">+</span> <span class="ident">second</span>
+                                                <span class="op">-</span> (((<span class="number">0xD800u32</span> <span class="op">&lt;&lt;</span> <span class="number">10</span>) <span class="op">-</span> <span class="number">0x1_0000u32</span>) <span class="op">+</span> <span class="number">0xDC00u32</span>),
                                         )
                                     };
                                     <span class="kw">return</span> (
@@ -1076,10 +1123,8 @@
                                         <span class="ident">converted</span>,
                                     );
                                 }
-                                <span class="kw">let</span> <span class="ident">thirty_two</span> <span class="op">=</span> <span class="ident">non_ascii</span> <span class="kw">as</span> <span class="ident">u32</span>;
-                                <span class="kw">let</span> <span class="ident">bmp</span>: <span class="ident">char</span> <span class="op">=</span> <span class="kw">unsafe</span> { ::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="ident">thirty_two</span>) };
                                 <span class="kw">return</span> (
-                                    <span class="ident">EncoderResult</span>::<span class="ident">Unmappable</span>(<span class="ident">bmp</span>),
+                                    <span class="ident">EncoderResult</span>::<span class="ident">unmappable_from_bmp</span>(<span class="ident">non_ascii</span>),
                                     <span class="ident">converted</span> <span class="op">+</span> <span class="number">1</span>, <span class="comment">// +1 `for non_ascii`</span>
                                     <span class="ident">converted</span>,
                                 );
@@ -1132,7 +1177,6 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">data</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">testing</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="kw-2">*</span>;
 
@@ -1271,64 +1315,64 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_single_byte_decode</span>() {
-        <span class="ident">decode_single_byte</span>(<span class="ident">IBM866</span>, <span class="ident">IBM866_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_10</span>, <span class="ident">ISO_8859_10_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_13</span>, <span class="ident">ISO_8859_13_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_14</span>, <span class="ident">ISO_8859_14_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_15</span>, <span class="ident">ISO_8859_15_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_16</span>, <span class="ident">ISO_8859_16_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_2</span>, <span class="ident">ISO_8859_2_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_3</span>, <span class="ident">ISO_8859_3_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_4</span>, <span class="ident">ISO_8859_4_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_5</span>, <span class="ident">ISO_8859_5_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_6</span>, <span class="ident">ISO_8859_6_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_7</span>, <span class="ident">ISO_8859_7_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_8</span>, <span class="ident">ISO_8859_8_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">KOI8_R</span>, <span class="ident">KOI8_R_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">KOI8_U</span>, <span class="ident">KOI8_U_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">MACINTOSH</span>, <span class="ident">MACINTOSH_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1250</span>, <span class="ident">WINDOWS_1250_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1251</span>, <span class="ident">WINDOWS_1251_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1252</span>, <span class="ident">WINDOWS_1252_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1253</span>, <span class="ident">WINDOWS_1253_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1254</span>, <span class="ident">WINDOWS_1254_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1255</span>, <span class="ident">WINDOWS_1255_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1256</span>, <span class="ident">WINDOWS_1256_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1257</span>, <span class="ident">WINDOWS_1257_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1258</span>, <span class="ident">WINDOWS_1258_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_874</span>, <span class="ident">WINDOWS_874_DATA</span>);
-        <span class="ident">decode_single_byte</span>(<span class="ident">X_MAC_CYRILLIC</span>, <span class="ident">X_MAC_CYRILLIC_DATA</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">IBM866</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">ibm866</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_10</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_10</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_13</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_13</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_14</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_14</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_15</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_15</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_16</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_16</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_2</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_2</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_3</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_3</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_4</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_4</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_5</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_5</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_6</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_6</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_7</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_7</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">ISO_8859_8</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_8</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">KOI8_R</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">koi8_r</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">KOI8_U</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">koi8_u</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">MACINTOSH</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">macintosh</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1250</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1250</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1251</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1251</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1252</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1252</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1253</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1253</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1254</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1254</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1255</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1255</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1256</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1256</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1257</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1257</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_1258</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1258</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">WINDOWS_874</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_874</span>);
+        <span class="ident">decode_single_byte</span>(<span class="ident">X_MAC_CYRILLIC</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">x_mac_cyrillic</span>);
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_single_byte_encode</span>() {
-        <span class="ident">encode_single_byte</span>(<span class="ident">IBM866</span>, <span class="ident">IBM866_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_10</span>, <span class="ident">ISO_8859_10_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_13</span>, <span class="ident">ISO_8859_13_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_14</span>, <span class="ident">ISO_8859_14_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_15</span>, <span class="ident">ISO_8859_15_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_16</span>, <span class="ident">ISO_8859_16_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_2</span>, <span class="ident">ISO_8859_2_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_3</span>, <span class="ident">ISO_8859_3_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_4</span>, <span class="ident">ISO_8859_4_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_5</span>, <span class="ident">ISO_8859_5_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_6</span>, <span class="ident">ISO_8859_6_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_7</span>, <span class="ident">ISO_8859_7_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_8</span>, <span class="ident">ISO_8859_8_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">KOI8_R</span>, <span class="ident">KOI8_R_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">KOI8_U</span>, <span class="ident">KOI8_U_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">MACINTOSH</span>, <span class="ident">MACINTOSH_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1250</span>, <span class="ident">WINDOWS_1250_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1251</span>, <span class="ident">WINDOWS_1251_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1252</span>, <span class="ident">WINDOWS_1252_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1253</span>, <span class="ident">WINDOWS_1253_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1254</span>, <span class="ident">WINDOWS_1254_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1255</span>, <span class="ident">WINDOWS_1255_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1256</span>, <span class="ident">WINDOWS_1256_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1257</span>, <span class="ident">WINDOWS_1257_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1258</span>, <span class="ident">WINDOWS_1258_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_874</span>, <span class="ident">WINDOWS_874_DATA</span>);
-        <span class="ident">encode_single_byte</span>(<span class="ident">X_MAC_CYRILLIC</span>, <span class="ident">X_MAC_CYRILLIC_DATA</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">IBM866</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">ibm866</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_10</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_10</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_13</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_13</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_14</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_14</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_15</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_15</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_16</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_16</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_2</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_2</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_3</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_3</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_4</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_4</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_5</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_5</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_6</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_6</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_7</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_7</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">ISO_8859_8</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">iso_8859_8</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">KOI8_R</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">koi8_r</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">KOI8_U</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">koi8_u</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">MACINTOSH</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">macintosh</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1250</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1250</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1251</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1251</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1252</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1252</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1253</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1253</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1254</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1254</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1255</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1255</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1256</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1256</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1257</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1257</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_1258</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_1258</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">WINDOWS_874</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">windows_874</span>);
+        <span class="ident">encode_single_byte</span>(<span class="ident">X_MAC_CYRILLIC</span>, <span class="kw-2">&amp;</span><span class="ident">data</span>::<span class="ident">SINGLE_BYTE_DATA</span>.<span class="ident">x_mac_cyrillic</span>);
     }
     <span class="comment">// END GENERATED CODE</span>
 

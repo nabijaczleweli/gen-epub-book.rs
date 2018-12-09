@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-deque-0.6.1/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/crossbeam-deque-0.6.2/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -857,6 +857,16 @@
 <span id="857">857</span>
 <span id="858">858</span>
 <span id="859">859</span>
+<span id="860">860</span>
+<span id="861">861</span>
+<span id="862">862</span>
+<span id="863">863</span>
+<span id="864">864</span>
+<span id="865">865</span>
+<span id="866">866</span>
+<span id="867">867</span>
+<span id="868">868</span>
+<span id="869">869</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! A concurrent work-stealing deque.</span>
 <span class="doccomment">//!</span>
@@ -920,6 +930,9 @@
 <span class="doccomment">//! [`fifo`]: fn.fifo.html</span>
 <span class="doccomment">//! [`lifo`]: fn.lifo.html</span>
 
+<span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_docs</span>)]</span>
+<span class="attribute">#![<span class="ident">warn</span>(<span class="ident">missing_debug_implementations</span>)]</span>
+
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">crossbeam_epoch</span> <span class="kw">as</span> <span class="ident">epoch</span>;
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">crossbeam_utils</span> <span class="kw">as</span> <span class="ident">utils</span>;
 
@@ -929,8 +942,8 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">mem</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ptr</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">atomic</span>::{<span class="self">self</span>, <span class="ident">AtomicIsize</span>, <span class="ident">Ordering</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 
 <span class="kw">use</span> <span class="ident">epoch</span>::{<span class="ident">Atomic</span>, <span class="ident">Owned</span>};
 <span class="kw">use</span> <span class="ident">utils</span>::<span class="ident">CachePadded</span>;
@@ -1217,12 +1230,13 @@
         <span class="kw">let</span> <span class="ident">guard</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">epoch</span>::<span class="ident">pin</span>();
 
         <span class="comment">// Replace the old buffer with the new one.</span>
-        <span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>
-            .<span class="ident">buffer</span>
-            .<span class="ident">swap</span>(<span class="ident">Owned</span>::<span class="ident">new</span>(<span class="ident">new</span>).<span class="ident">into_shared</span>(<span class="ident">guard</span>), <span class="ident">Ordering</span>::<span class="ident">Release</span>, <span class="ident">guard</span>);
+        <span class="kw">let</span> <span class="ident">old</span> <span class="op">=</span>
+            <span class="self">self</span>.<span class="ident">inner</span>
+                .<span class="ident">buffer</span>
+                .<span class="ident">swap</span>(<span class="ident">Owned</span>::<span class="ident">new</span>(<span class="ident">new</span>).<span class="ident">into_shared</span>(<span class="ident">guard</span>), <span class="ident">Ordering</span>::<span class="ident">Release</span>, <span class="ident">guard</span>);
 
         <span class="comment">// Destroy the old buffer later.</span>
-        <span class="ident">guard</span>.<span class="ident">defer</span>(<span class="kw">move</span> <span class="op">||</span> <span class="ident">old</span>.<span class="ident">into_owned</span>().<span class="ident">into_box</span>().<span class="ident">dealloc</span>());
+        <span class="ident">guard</span>.<span class="ident">defer_unchecked</span>(<span class="kw">move</span> <span class="op">||</span> <span class="ident">old</span>.<span class="ident">into_owned</span>().<span class="ident">into_box</span>().<span class="ident">dealloc</span>());
 
         <span class="comment">// If the buffer is very large, then flush the thread-local garbage in order to deallocate</span>
         <span class="comment">// it as soon as possible.</span>
@@ -1355,7 +1369,8 @@
             <span class="comment">// Pop from the front of the deque.</span>
             <span class="ident">Flavor</span>::<span class="ident">Fifo</span> <span class="op">=&gt;</span> {
                 <span class="comment">// Try incrementing the front index to pop the value.</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inner</span>
+                <span class="kw">if</span> <span class="self">self</span>
+                    .<span class="ident">inner</span>
                     .<span class="ident">front</span>
                     .<span class="ident">compare_exchange</span>(<span class="ident">f</span>, <span class="ident">f</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>), <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>, <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>)
                     .<span class="ident">is_ok</span>()
@@ -1403,15 +1418,15 @@
                     <span class="comment">// Are we popping the last element from the deque?</span>
                     <span class="kw">if</span> <span class="ident">len</span> <span class="op">==</span> <span class="number">0</span> {
                         <span class="comment">// Try incrementing the front index.</span>
-                        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inner</span>
+                        <span class="kw">if</span> <span class="self">self</span>
+                            .<span class="ident">inner</span>
                             .<span class="ident">front</span>
                             .<span class="ident">compare_exchange</span>(
                                 <span class="ident">f</span>,
                                 <span class="ident">f</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>),
                                 <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>,
                                 <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>,
-                            )
-                            .<span class="ident">is_err</span>()
+                            ).<span class="ident">is_err</span>()
                         {
                             <span class="comment">// Failed. We didn&#39;t pop anything.</span>
                             <span class="ident">mem</span>::<span class="ident">forget</span>(<span class="ident">value</span>.<span class="ident">take</span>());
@@ -1521,7 +1536,8 @@
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">buffer</span>.<span class="ident">deref</span>().<span class="ident">read</span>(<span class="ident">f</span>) };
 
         <span class="comment">// Try incrementing the front index to steal the value.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inner</span>
+        <span class="kw">if</span> <span class="self">self</span>
+            .<span class="ident">inner</span>
             .<span class="ident">front</span>
             .<span class="ident">compare_exchange</span>(<span class="ident">f</span>, <span class="ident">f</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>), <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>, <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>)
             .<span class="ident">is_err</span>()
@@ -1607,15 +1623,15 @@
                 }
 
                 <span class="comment">// Try incrementing the front index to steal the batch.</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inner</span>
+                <span class="kw">if</span> <span class="self">self</span>
+                    .<span class="ident">inner</span>
                     .<span class="ident">front</span>
                     .<span class="ident">compare_exchange</span>(
                         <span class="ident">f</span>,
                         <span class="ident">f</span>.<span class="ident">wrapping_add</span>(<span class="ident">additional</span> <span class="op">+</span> <span class="number">1</span>),
                         <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>,
                         <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>,
-                    )
-                    .<span class="ident">is_err</span>()
+                    ).<span class="ident">is_err</span>()
                 {
                     <span class="comment">// We didn&#39;t steal this value, forget it.</span>
                     <span class="ident">mem</span>::<span class="ident">forget</span>(<span class="ident">value</span>);
@@ -1628,7 +1644,9 @@
                 <span class="comment">//</span>
                 <span class="comment">// This ordering could be `Relaxed`, but then thread sanitizer would falsely report</span>
                 <span class="comment">// data races because it doesn&#39;t understand fences.</span>
-                <span class="ident">dest</span>.<span class="ident">inner</span>.<span class="ident">back</span>.<span class="ident">store</span>(<span class="ident">dest_b</span>.<span class="ident">wrapping_add</span>(<span class="ident">additional</span>), <span class="ident">Ordering</span>::<span class="ident">Release</span>);
+                <span class="ident">dest</span>.<span class="ident">inner</span>
+                    .<span class="ident">back</span>
+                    .<span class="ident">store</span>(<span class="ident">dest_b</span>.<span class="ident">wrapping_add</span>(<span class="ident">additional</span>), <span class="ident">Ordering</span>::<span class="ident">Release</span>);
 
                 <span class="comment">// Return the first stolen value.</span>
                 <span class="ident">Steal</span>::<span class="ident">Data</span>(<span class="ident">value</span>)
@@ -1637,7 +1655,8 @@
             <span class="comment">// Steal a batch of elements from the front one by one.</span>
             <span class="ident">Flavor</span>::<span class="ident">Lifo</span> <span class="op">=&gt;</span> {
                 <span class="comment">// Try incrementing the front index to steal the value.</span>
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inner</span>
+                <span class="kw">if</span> <span class="self">self</span>
+                    .<span class="ident">inner</span>
                     .<span class="ident">front</span>
                     .<span class="ident">compare_exchange</span>(<span class="ident">f</span>, <span class="ident">f</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>), <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>, <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>)
                     .<span class="ident">is_err</span>()
@@ -1668,7 +1687,8 @@
                     <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="kw">unsafe</span> { <span class="ident">buffer</span>.<span class="ident">deref</span>().<span class="ident">read</span>(<span class="ident">f</span>) };
 
                     <span class="comment">// Try incrementing the front index to steal the value.</span>
-                    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">inner</span>
+                    <span class="kw">if</span> <span class="self">self</span>
+                        .<span class="ident">inner</span>
                         .<span class="ident">front</span>
                         .<span class="ident">compare_exchange</span>(<span class="ident">f</span>, <span class="ident">f</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>), <span class="ident">Ordering</span>::<span class="ident">SeqCst</span>, <span class="ident">Ordering</span>::<span class="ident">Relaxed</span>)
                         .<span class="ident">is_err</span>()

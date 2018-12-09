@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `encoding_rs` crate."><meta name="keywords" content="rust, rustlang, rust-lang, encoding_rs"><title>encoding_rs - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate encoding_rs</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#statics">Statics</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'encoding_rs', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>encoding_rs</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/encoding_rs/lib.rs.html#10-5638' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>encoding_rs is a Gecko-oriented Free Software / Open Source implementation
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `encoding_rs` crate."><meta name="keywords" content="rust, rustlang, rust-lang, encoding_rs"><title>encoding_rs - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate encoding_rs</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all encoding_rs's items</p></a><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#statics">Statics</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'encoding_rs', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/encoding_rs/lib.rs.html#10-5692' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>encoding_rs</a></span></h1><div class='docblock'><p>encoding_rs is a Gecko-oriented Free Software / Open Source implementation
 of the <a href="https://encoding.spec.whatwg.org/">Encoding Standard</a> in Rust.
 Gecko-oriented means that converting to and from UTF-16 is supported in
 addition to converting to and from UTF-8, that the performance and
@@ -60,10 +60,7 @@ the <a href="https://docs.rs/encoding_rs_io/"><code>encoding_rs_io</code></a> cr
 <span class="comment">// Very short output buffer to demonstrate the output buffer getting full.</span>
 <span class="comment">// Normally, you&#39;d use something like `[0u8; 2048]`.</span>
 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer_bytes</span> <span class="op">=</span> [<span class="number">0u8</span>; <span class="number">8</span>];
-<span class="comment">// Rust doesn&#39;t allow us to stack-allocate a `mut str` without `unsafe`.</span>
-<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">str</span> <span class="op">=</span> <span class="kw">unsafe</span> {
-    <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">transmute</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer_bytes</span>[..])
-};
+<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">str</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buffer_bytes</span>[..]).<span class="ident">unwrap</span>();
 
 <span class="comment">// How many bytes in the buffer currently hold significant data.</span>
 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes_in_buffer</span> <span class="op">=</span> <span class="number">0usize</span>;
@@ -193,16 +190,16 @@ multiplication operations.</p>
 ISO-2022-JP encoding, which are rarely used on the Web. Instead of
 performance, the decoder for ISO-2022-JP optimizes for ease/clarity
 of implementation.</p>
-<p>Despite the focus on the Web, encoding_rs may well be useful for decoding
-email, although you'll need to implement UTF-7 decoding and label handling
-by other means. (Due to the Web focus, patches to add UTF-7 are unwelcome
-in encoding_rs itself.) Also, despite the browser focus, the hope is that
-non-browser applications that wish to consume Web content or submit Web
-forms in a Web-compatible way will find encoding_rs useful. While
-encoding_rs does not try to match Windows behavior, many of the encodings
-are close enough to legacy encodings implemented by Windows that
-applications that need to consume data in legacy Windows encodins may
-find encoding_rs useful.</p>
+<p>Despite the browser focus, the hope is that non-browser applications
+that wish to consume Web content or submit Web forms in a Web-compatible
+way will find encoding_rs useful. While encoding_rs does not try to match
+Windows behavior, many of the encodings are close enough to legacy
+encodings implemented by Windows that applications that need to consume
+data in legacy Windows encodins may find encoding_rs useful.</p>
+<p>For decoding email, UTF-7 support is needed (unfortunately) in additition
+to the encodings defined in the Encoding Standard. The
+<a href="https://crates.io/crates/charset">charset</a> wraps encoding_rs and adds
+UTF-7 decoding for email purposes.</p>
 <h1 id="streaming--non-streaming-rust--cc" class="section-header"><a href="#streaming--non-streaming-rust--cc">Streaming &amp; Non-Streaming; Rust &amp; C/C++</a></h1>
 <p>The API in Rust has two modes of operation: streaming and non-streaming.
 The streaming API is the foundation of the implementation and should be
@@ -627,18 +624,18 @@ replacement.</p>
                        </tr></table><h2 id='statics' class='section-header'><a href="#statics">Statics</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.BIG5.html"
-                                  title='static encoding_rs::BIG5'>BIG5</a></td>
-                           <td class='docblock-short'>
-                                <p>The Big5 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
                            <td><a class="static" href="static.BIG5_INIT.html"
                                   title='static encoding_rs::BIG5_INIT'>BIG5_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.BIG5.html">Big5</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.BIG5.html"
+                                  title='static encoding_rs::BIG5'>BIG5</a></td>
+                           <td class='docblock-short'>
+                                <p>The Big5 encoding.</p>
 
                            </td>
                        </tr>
@@ -675,18 +672,18 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.GB18030.html"
-                                  title='static encoding_rs::GB18030'>GB18030</a></td>
-                           <td class='docblock-short'>
-                                <p>The gb18030 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
                            <td><a class="static" href="static.GB18030_INIT.html"
                                   title='static encoding_rs::GB18030_INIT'>GB18030_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.GB18030.html">gb18030</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.GB18030.html"
+                                  title='static encoding_rs::GB18030'>GB18030</a></td>
+                           <td class='docblock-short'>
+                                <p>The gb18030 encoding.</p>
 
                            </td>
                        </tr>
@@ -707,14 +704,6 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.IBM866.html"
-                                  title='static encoding_rs::IBM866'>IBM866</a></td>
-                           <td class='docblock-short'>
-                                <p>The IBM866 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
                            <td><a class="static" href="static.IBM866_INIT.html"
                                   title='static encoding_rs::IBM866_INIT'>IBM866_INIT</a></td>
                            <td class='docblock-short'>
@@ -723,10 +712,10 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_2022_JP.html"
-                                  title='static encoding_rs::ISO_2022_JP'>ISO_2022_JP</a></td>
+                           <td><a class="static" href="static.IBM866.html"
+                                  title='static encoding_rs::IBM866'>IBM866</a></td>
                            <td class='docblock-short'>
-                                <p>The ISO-2022-JP encoding.</p>
+                                <p>The IBM866 encoding.</p>
 
                            </td>
                        </tr>
@@ -739,138 +728,10 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_2.html"
-                                  title='static encoding_rs::ISO_8859_2'>ISO_8859_2</a></td>
+                           <td><a class="static" href="static.ISO_2022_JP.html"
+                                  title='static encoding_rs::ISO_2022_JP'>ISO_2022_JP</a></td>
                            <td class='docblock-short'>
-                                <p>The ISO-8859-2 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_3.html"
-                                  title='static encoding_rs::ISO_8859_3'>ISO_8859_3</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-3 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_4.html"
-                                  title='static encoding_rs::ISO_8859_4'>ISO_8859_4</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-4 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_5.html"
-                                  title='static encoding_rs::ISO_8859_5'>ISO_8859_5</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-5 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_6.html"
-                                  title='static encoding_rs::ISO_8859_6'>ISO_8859_6</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-6 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_7.html"
-                                  title='static encoding_rs::ISO_8859_7'>ISO_8859_7</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-7 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_8.html"
-                                  title='static encoding_rs::ISO_8859_8'>ISO_8859_8</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-8 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_10.html"
-                                  title='static encoding_rs::ISO_8859_10'>ISO_8859_10</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-10 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_13.html"
-                                  title='static encoding_rs::ISO_8859_13'>ISO_8859_13</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-13 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_14.html"
-                                  title='static encoding_rs::ISO_8859_14'>ISO_8859_14</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-14 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_15.html"
-                                  title='static encoding_rs::ISO_8859_15'>ISO_8859_15</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-15 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_16.html"
-                                  title='static encoding_rs::ISO_8859_16'>ISO_8859_16</a></td>
-                           <td class='docblock-short'>
-                                <p>The ISO-8859-16 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_10_INIT.html"
-                                  title='static encoding_rs::ISO_8859_10_INIT'>ISO_8859_10_INIT</a></td>
-                           <td class='docblock-short'>
-                                <p>The initializer for the <a href="static.ISO_8859_10.html">ISO-8859-10</a> encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_13_INIT.html"
-                                  title='static encoding_rs::ISO_8859_13_INIT'>ISO_8859_13_INIT</a></td>
-                           <td class='docblock-short'>
-                                <p>The initializer for the <a href="static.ISO_8859_13.html">ISO-8859-13</a> encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_14_INIT.html"
-                                  title='static encoding_rs::ISO_8859_14_INIT'>ISO_8859_14_INIT</a></td>
-                           <td class='docblock-short'>
-                                <p>The initializer for the <a href="static.ISO_8859_14.html">ISO-8859-14</a> encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_15_INIT.html"
-                                  title='static encoding_rs::ISO_8859_15_INIT'>ISO_8859_15_INIT</a></td>
-                           <td class='docblock-short'>
-                                <p>The initializer for the <a href="static.ISO_8859_15.html">ISO-8859-15</a> encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_16_INIT.html"
-                                  title='static encoding_rs::ISO_8859_16_INIT'>ISO_8859_16_INIT</a></td>
-                           <td class='docblock-short'>
-                                <p>The initializer for the <a href="static.ISO_8859_16.html">ISO-8859-16</a> encoding.</p>
+                                <p>The ISO-2022-JP encoding.</p>
 
                            </td>
                        </tr>
@@ -883,10 +744,26 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_2.html"
+                                  title='static encoding_rs::ISO_8859_2'>ISO_8859_2</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-2 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="static" href="static.ISO_8859_3_INIT.html"
                                   title='static encoding_rs::ISO_8859_3_INIT'>ISO_8859_3_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.ISO_8859_3.html">ISO-8859-3</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_3.html"
+                                  title='static encoding_rs::ISO_8859_3'>ISO_8859_3</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-3 encoding.</p>
 
                            </td>
                        </tr>
@@ -899,10 +776,26 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_4.html"
+                                  title='static encoding_rs::ISO_8859_4'>ISO_8859_4</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-4 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="static" href="static.ISO_8859_5_INIT.html"
                                   title='static encoding_rs::ISO_8859_5_INIT'>ISO_8859_5_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.ISO_8859_5.html">ISO-8859-5</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_5.html"
+                                  title='static encoding_rs::ISO_8859_5'>ISO_8859_5</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-5 encoding.</p>
 
                            </td>
                        </tr>
@@ -915,6 +808,14 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_6.html"
+                                  title='static encoding_rs::ISO_8859_6'>ISO_8859_6</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-6 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="static" href="static.ISO_8859_7_INIT.html"
                                   title='static encoding_rs::ISO_8859_7_INIT'>ISO_8859_7_INIT</a></td>
                            <td class='docblock-short'>
@@ -923,10 +824,10 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.ISO_8859_8_I.html"
-                                  title='static encoding_rs::ISO_8859_8_I'>ISO_8859_8_I</a></td>
+                           <td><a class="static" href="static.ISO_8859_7.html"
+                                  title='static encoding_rs::ISO_8859_7'>ISO_8859_7</a></td>
                            <td class='docblock-short'>
-                                <p>The ISO-8859-8-I encoding.</p>
+                                <p>The ISO-8859-7 encoding.</p>
 
                            </td>
                        </tr>
@@ -939,6 +840,14 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_8.html"
+                                  title='static encoding_rs::ISO_8859_8'>ISO_8859_8</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-8 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="static" href="static.ISO_8859_8_I_INIT.html"
                                   title='static encoding_rs::ISO_8859_8_I_INIT'>ISO_8859_8_I_INIT</a></td>
                            <td class='docblock-short'>
@@ -947,10 +856,90 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.KOI8_R.html"
-                                  title='static encoding_rs::KOI8_R'>KOI8_R</a></td>
+                           <td><a class="static" href="static.ISO_8859_8_I.html"
+                                  title='static encoding_rs::ISO_8859_8_I'>ISO_8859_8_I</a></td>
                            <td class='docblock-short'>
-                                <p>The KOI8-R encoding.</p>
+                                <p>The ISO-8859-8-I encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_10_INIT.html"
+                                  title='static encoding_rs::ISO_8859_10_INIT'>ISO_8859_10_INIT</a></td>
+                           <td class='docblock-short'>
+                                <p>The initializer for the <a href="static.ISO_8859_10.html">ISO-8859-10</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_10.html"
+                                  title='static encoding_rs::ISO_8859_10'>ISO_8859_10</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-10 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_13_INIT.html"
+                                  title='static encoding_rs::ISO_8859_13_INIT'>ISO_8859_13_INIT</a></td>
+                           <td class='docblock-short'>
+                                <p>The initializer for the <a href="static.ISO_8859_13.html">ISO-8859-13</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_13.html"
+                                  title='static encoding_rs::ISO_8859_13'>ISO_8859_13</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-13 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_14_INIT.html"
+                                  title='static encoding_rs::ISO_8859_14_INIT'>ISO_8859_14_INIT</a></td>
+                           <td class='docblock-short'>
+                                <p>The initializer for the <a href="static.ISO_8859_14.html">ISO-8859-14</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_14.html"
+                                  title='static encoding_rs::ISO_8859_14'>ISO_8859_14</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-14 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_15_INIT.html"
+                                  title='static encoding_rs::ISO_8859_15_INIT'>ISO_8859_15_INIT</a></td>
+                           <td class='docblock-short'>
+                                <p>The initializer for the <a href="static.ISO_8859_15.html">ISO-8859-15</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_15.html"
+                                  title='static encoding_rs::ISO_8859_15'>ISO_8859_15</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-15 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_16_INIT.html"
+                                  title='static encoding_rs::ISO_8859_16_INIT'>ISO_8859_16_INIT</a></td>
+                           <td class='docblock-short'>
+                                <p>The initializer for the <a href="static.ISO_8859_16.html">ISO-8859-16</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.ISO_8859_16.html"
+                                  title='static encoding_rs::ISO_8859_16'>ISO_8859_16</a></td>
+                           <td class='docblock-short'>
+                                <p>The ISO-8859-16 encoding.</p>
 
                            </td>
                        </tr>
@@ -963,10 +952,10 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.KOI8_U.html"
-                                  title='static encoding_rs::KOI8_U'>KOI8_U</a></td>
+                           <td><a class="static" href="static.KOI8_R.html"
+                                  title='static encoding_rs::KOI8_R'>KOI8_R</a></td>
                            <td class='docblock-short'>
-                                <p>The KOI8-U encoding.</p>
+                                <p>The KOI8-R encoding.</p>
 
                            </td>
                        </tr>
@@ -975,6 +964,14 @@ replacement.</p>
                                   title='static encoding_rs::KOI8_U_INIT'>KOI8_U_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.KOI8_U.html">KOI8-U</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.KOI8_U.html"
+                                  title='static encoding_rs::KOI8_U'>KOI8_U</a></td>
+                           <td class='docblock-short'>
+                                <p>The KOI8-U encoding.</p>
 
                            </td>
                        </tr>
@@ -1027,18 +1024,18 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.UTF_8.html"
-                                  title='static encoding_rs::UTF_8'>UTF_8</a></td>
+                           <td><a class="static" href="static.UTF_8_INIT.html"
+                                  title='static encoding_rs::UTF_8_INIT'>UTF_8_INIT</a></td>
                            <td class='docblock-short'>
-                                <p>The UTF-8 encoding.</p>
+                                <p>The initializer for the <a href="static.UTF_8.html">UTF-8</a> encoding.</p>
 
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.UTF_16BE.html"
-                                  title='static encoding_rs::UTF_16BE'>UTF_16BE</a></td>
+                           <td><a class="static" href="static.UTF_8.html"
+                                  title='static encoding_rs::UTF_8'>UTF_8</a></td>
                            <td class='docblock-short'>
-                                <p>The UTF-16BE encoding.</p>
+                                <p>The UTF-8 encoding.</p>
 
                            </td>
                        </tr>
@@ -1051,10 +1048,10 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.UTF_16LE.html"
-                                  title='static encoding_rs::UTF_16LE'>UTF_16LE</a></td>
+                           <td><a class="static" href="static.UTF_16BE.html"
+                                  title='static encoding_rs::UTF_16BE'>UTF_16BE</a></td>
                            <td class='docblock-short'>
-                                <p>The UTF-16LE encoding.</p>
+                                <p>The UTF-16BE encoding.</p>
 
                            </td>
                        </tr>
@@ -1067,10 +1064,18 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.UTF_8_INIT.html"
-                                  title='static encoding_rs::UTF_8_INIT'>UTF_8_INIT</a></td>
+                           <td><a class="static" href="static.UTF_16LE.html"
+                                  title='static encoding_rs::UTF_16LE'>UTF_16LE</a></td>
                            <td class='docblock-short'>
-                                <p>The initializer for the <a href="static.UTF_8.html">UTF-8</a> encoding.</p>
+                                <p>The UTF-16LE encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_874_INIT.html"
+                                  title='static encoding_rs::WINDOWS_874_INIT'>WINDOWS_874_INIT</a></td>
+                           <td class='docblock-short'>
+                                <p>The initializer for the <a href="static.WINDOWS_874.html">windows-874</a> encoding.</p>
 
                            </td>
                        </tr>
@@ -1083,82 +1088,18 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1250.html"
-                                  title='static encoding_rs::WINDOWS_1250'>WINDOWS_1250</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1250 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1251.html"
-                                  title='static encoding_rs::WINDOWS_1251'>WINDOWS_1251</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1251 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1252.html"
-                                  title='static encoding_rs::WINDOWS_1252'>WINDOWS_1252</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1252 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1253.html"
-                                  title='static encoding_rs::WINDOWS_1253'>WINDOWS_1253</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1253 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1254.html"
-                                  title='static encoding_rs::WINDOWS_1254'>WINDOWS_1254</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1254 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1255.html"
-                                  title='static encoding_rs::WINDOWS_1255'>WINDOWS_1255</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1255 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1256.html"
-                                  title='static encoding_rs::WINDOWS_1256'>WINDOWS_1256</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1256 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1257.html"
-                                  title='static encoding_rs::WINDOWS_1257'>WINDOWS_1257</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1257 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_1258.html"
-                                  title='static encoding_rs::WINDOWS_1258'>WINDOWS_1258</a></td>
-                           <td class='docblock-short'>
-                                <p>The windows-1258 encoding.</p>
-
-                           </td>
-                       </tr>
-                       <tr class=' module-item'>
                            <td><a class="static" href="static.WINDOWS_1250_INIT.html"
                                   title='static encoding_rs::WINDOWS_1250_INIT'>WINDOWS_1250_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.WINDOWS_1250.html">windows-1250</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_1250.html"
+                                  title='static encoding_rs::WINDOWS_1250'>WINDOWS_1250</a></td>
+                           <td class='docblock-short'>
+                                <p>The windows-1250 encoding.</p>
 
                            </td>
                        </tr>
@@ -1171,10 +1112,26 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_1251.html"
+                                  title='static encoding_rs::WINDOWS_1251'>WINDOWS_1251</a></td>
+                           <td class='docblock-short'>
+                                <p>The windows-1251 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="static" href="static.WINDOWS_1252_INIT.html"
                                   title='static encoding_rs::WINDOWS_1252_INIT'>WINDOWS_1252_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.WINDOWS_1252.html">windows-1252</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_1252.html"
+                                  title='static encoding_rs::WINDOWS_1252'>WINDOWS_1252</a></td>
+                           <td class='docblock-short'>
+                                <p>The windows-1252 encoding.</p>
 
                            </td>
                        </tr>
@@ -1187,10 +1144,26 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_1253.html"
+                                  title='static encoding_rs::WINDOWS_1253'>WINDOWS_1253</a></td>
+                           <td class='docblock-short'>
+                                <p>The windows-1253 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="static" href="static.WINDOWS_1254_INIT.html"
                                   title='static encoding_rs::WINDOWS_1254_INIT'>WINDOWS_1254_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.WINDOWS_1254.html">windows-1254</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_1254.html"
+                                  title='static encoding_rs::WINDOWS_1254'>WINDOWS_1254</a></td>
+                           <td class='docblock-short'>
+                                <p>The windows-1254 encoding.</p>
 
                            </td>
                        </tr>
@@ -1203,10 +1176,26 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_1255.html"
+                                  title='static encoding_rs::WINDOWS_1255'>WINDOWS_1255</a></td>
+                           <td class='docblock-short'>
+                                <p>The windows-1255 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="static" href="static.WINDOWS_1256_INIT.html"
                                   title='static encoding_rs::WINDOWS_1256_INIT'>WINDOWS_1256_INIT</a></td>
                            <td class='docblock-short'>
                                 <p>The initializer for the <a href="static.WINDOWS_1256.html">windows-1256</a> encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_1256.html"
+                                  title='static encoding_rs::WINDOWS_1256'>WINDOWS_1256</a></td>
+                           <td class='docblock-short'>
+                                <p>The windows-1256 encoding.</p>
 
                            </td>
                        </tr>
@@ -1219,6 +1208,14 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="static" href="static.WINDOWS_1257.html"
+                                  title='static encoding_rs::WINDOWS_1257'>WINDOWS_1257</a></td>
+                           <td class='docblock-short'>
+                                <p>The windows-1257 encoding.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="static" href="static.WINDOWS_1258_INIT.html"
                                   title='static encoding_rs::WINDOWS_1258_INIT'>WINDOWS_1258_INIT</a></td>
                            <td class='docblock-short'>
@@ -1227,10 +1224,10 @@ replacement.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class="static" href="static.WINDOWS_874_INIT.html"
-                                  title='static encoding_rs::WINDOWS_874_INIT'>WINDOWS_874_INIT</a></td>
+                           <td><a class="static" href="static.WINDOWS_1258.html"
+                                  title='static encoding_rs::WINDOWS_1258'>WINDOWS_1258</a></td>
                            <td class='docblock-short'>
-                                <p>The initializer for the <a href="static.WINDOWS_874.html">windows-874</a> encoding.</p>
+                                <p>The windows-1258 encoding.</p>
 
                            </td>
                        </tr>

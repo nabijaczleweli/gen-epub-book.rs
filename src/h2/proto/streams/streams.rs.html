@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/h2-0.1.12/src/proto/streams/streams.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>streams.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/h2-0.1.14/src/proto/streams/streams.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>streams.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../light.css" id="themeStyle"><script src="../../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../../settings.html"><img src="../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1180,6 +1180,32 @@
 <span id="1180">1180</span>
 <span id="1181">1181</span>
 <span id="1182">1182</span>
+<span id="1183">1183</span>
+<span id="1184">1184</span>
+<span id="1185">1185</span>
+<span id="1186">1186</span>
+<span id="1187">1187</span>
+<span id="1188">1188</span>
+<span id="1189">1189</span>
+<span id="1190">1190</span>
+<span id="1191">1191</span>
+<span id="1192">1192</span>
+<span id="1193">1193</span>
+<span id="1194">1194</span>
+<span id="1195">1195</span>
+<span id="1196">1196</span>
+<span id="1197">1197</span>
+<span id="1198">1198</span>
+<span id="1199">1199</span>
+<span id="1200">1200</span>
+<span id="1201">1201</span>
+<span id="1202">1202</span>
+<span id="1203">1203</span>
+<span id="1204">1204</span>
+<span id="1205">1205</span>
+<span id="1206">1206</span>
+<span id="1207">1207</span>
+<span id="1208">1208</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> {<span class="ident">client</span>, <span class="ident">proto</span>, <span class="ident">server</span>};
 <span class="kw">use</span> <span class="ident">codec</span>::{<span class="ident">Codec</span>, <span class="ident">RecvError</span>, <span class="ident">SendError</span>, <span class="ident">UserError</span>};
@@ -1428,7 +1454,6 @@
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">RecvError</span>::<span class="ident">Stream</span> { .. }) <span class="op">=</span> <span class="ident">res</span> {
                 <span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">release_connection_capacity</span>(<span class="ident">sz</span> <span class="kw">as</span> <span class="ident">WindowSize</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="prelude-val">None</span>);
             }
-
             <span class="ident">actions</span>.<span class="ident">reset_on_recv_stream_err</span>(<span class="ident">send_buffer</span>, <span class="ident">stream</span>, <span class="ident">counts</span>, <span class="ident">res</span>)
         })
     }
@@ -1467,9 +1492,9 @@
 
         <span class="kw">let</span> <span class="ident">actions</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">actions</span>;
 
-        <span class="ident">me</span>.<span class="ident">counts</span>.<span class="ident">transition</span>(<span class="ident">stream</span>, <span class="op">|</span><span class="kw">_</span>, <span class="ident">stream</span><span class="op">|</span> {
+        <span class="ident">me</span>.<span class="ident">counts</span>.<span class="ident">transition</span>(<span class="ident">stream</span>, <span class="op">|</span><span class="ident">counts</span>, <span class="ident">stream</span><span class="op">|</span> {
             <span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">recv_reset</span>(<span class="ident">frame</span>, <span class="ident">stream</span>);
-            <span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">recv_reset</span>(<span class="ident">send_buffer</span>, <span class="ident">stream</span>);
+            <span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">recv_err</span>(<span class="ident">send_buffer</span>, <span class="ident">stream</span>, <span class="ident">counts</span>);
             <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">stream</span>.<span class="ident">state</span>.<span class="ident">is_closed</span>());
             <span class="prelude-val">Ok</span>(())
         })
@@ -1577,8 +1602,7 @@
                 );
             } <span class="kw">else</span> {
                 <span class="ident">me</span>.<span class="ident">actions</span>
-                    .<span class="ident">recv</span>
-                    .<span class="ident">ensure_not_idle</span>(<span class="ident">id</span>)
+                    .<span class="ident">ensure_not_idle</span>(<span class="ident">me</span>.<span class="ident">counts</span>.<span class="ident">peer</span>(), <span class="ident">id</span>)
                     .<span class="ident">map_err</span>(<span class="ident">RecvError</span>::<span class="ident">Connection</span>)<span class="question-mark">?</span>;
             }
         }
@@ -1610,6 +1634,10 @@
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">RecvError</span>::<span class="ident">Connection</span>(<span class="ident">Reason</span>::<span class="ident">PROTOCOL_ERROR</span>)),
         };
 
+        <span class="comment">// TODO: Streams in the reserved states do not count towards the concurrency</span>
+        <span class="comment">// limit. However, it seems like there should be a cap otherwise this</span>
+        <span class="comment">// could grow in memory indefinitely.</span>
+
         <span class="comment">// Ensure that we can reserve streams</span>
         <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">ensure_can_reserve</span>()<span class="question-mark">?</span>;
 
@@ -1621,8 +1649,9 @@
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         }
 
-        <span class="comment">// Create a scope</span>
-        <span class="kw">let</span> <span class="ident">child_key</span> <span class="op">=</span> {
+        <span class="comment">// Try to handle the frame and create a corresponding key for the pushed stream</span>
+        <span class="comment">// this requires a bit of indirection to make the borrow checker happy.</span>
+        <span class="kw">let</span> <span class="ident">child_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">store</span>::<span class="ident">Key</span><span class="op">&gt;</span> <span class="op">=</span> {
             <span class="comment">// Create state for the stream</span>
             <span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">insert</span>(<span class="ident">promised_id</span>, {
                 <span class="ident">Stream</span>::<span class="ident">new</span>(
@@ -1634,52 +1663,43 @@
             <span class="kw">let</span> <span class="ident">actions</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">actions</span>;
 
             <span class="ident">me</span>.<span class="ident">counts</span>.<span class="ident">transition</span>(<span class="ident">stream</span>, <span class="op">|</span><span class="ident">counts</span>, <span class="ident">stream</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">recv_push_promise</span>(<span class="ident">frame</span>, <span class="ident">stream</span>);
+                <span class="kw">let</span> <span class="ident">stream_valid</span> <span class="op">=</span>
+                    <span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">recv_push_promise</span>(<span class="ident">frame</span>, <span class="ident">stream</span>);
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">send_buffer</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">send_buffer</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-                <span class="ident">actions</span>.<span class="ident">reset_on_recv_stream_err</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">send_buffer</span>, <span class="ident">stream</span>, <span class="ident">counts</span>, <span class="ident">res</span>)
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">stream</span>.<span class="ident">key</span>())
+                <span class="kw">match</span> <span class="ident">stream_valid</span> {
+                    <span class="prelude-val">Ok</span>(()) <span class="op">=&gt;</span>
+                        <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">stream</span>.<span class="ident">key</span>())),
+                    <span class="kw">_</span> <span class="op">=&gt;</span> {
+                        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">send_buffer</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">send_buffer</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+                        <span class="ident">actions</span>.<span class="ident">reset_on_recv_stream_err</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">send_buffer</span>, <span class="ident">stream</span>, <span class="ident">counts</span>, <span class="ident">stream_valid</span>)
+                            .<span class="ident">map</span>(<span class="op">|</span>()<span class="op">|</span> <span class="prelude-val">None</span>)
+                    }
+                }
             })<span class="question-mark">?</span>
         };
+        <span class="comment">// If we&#39;re successful, push the headers and stream...</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">child</span>) <span class="op">=</span> <span class="ident">child_key</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ppp</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">store</span>[<span class="ident">parent_key</span>].<span class="ident">pending_push_promises</span>.<span class="ident">take</span>();
+            <span class="ident">ppp</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="ident">child</span>));
 
-        <span class="comment">// Push the stream... this requires a bit of indirection to make</span>
-        <span class="comment">// the borrow checker happy.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ppp</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">store</span>[<span class="ident">parent_key</span>].<span class="ident">pending_push_promises</span>.<span class="ident">take</span>();
-        <span class="ident">ppp</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="ident">child_key</span>));
-
-        <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">store</span>[<span class="ident">parent_key</span>];
-
-        <span class="ident">parent</span>.<span class="ident">pending_push_promises</span> <span class="op">=</span> <span class="ident">ppp</span>;
-        <span class="ident">parent</span>.<span class="ident">notify_recv</span>();
+            <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="ident">parent_key</span>);
+            <span class="ident">parent</span>.<span class="ident">pending_push_promises</span> <span class="op">=</span> <span class="ident">ppp</span>;
+            <span class="ident">parent</span>.<span class="ident">notify_recv</span>();
+        };
 
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_incoming</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">StreamRef</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;&gt;</span> {
-        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">me</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">me</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">me</span>;
-
-            <span class="kw">match</span> <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">next_incoming</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">store</span>) {
-                <span class="prelude-val">Some</span>(<span class="ident">key</span>) <span class="op">=&gt;</span> {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="ident">key</span>);
-                    <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;next_incoming; id={:?}, state={:?}&quot;</span>, <span class="ident">stream</span>.<span class="ident">id</span>, <span class="ident">stream</span>.<span class="ident">state</span>);
-                    <span class="comment">// Increment the ref count</span>
-                    <span class="ident">stream</span>.<span class="ident">ref_inc</span>();
-
-                    <span class="comment">// Return the key</span>
-                    <span class="prelude-val">Some</span>(<span class="ident">key</span>)
-                },
-                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-            }
-        };
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">me</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">me</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">me</span>;
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">next_incoming</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">store</span>);
 
         <span class="ident">key</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="ident">key</span>);
+            <span class="macro">trace</span><span class="macro">!</span>(<span class="string">&quot;next_incoming; id={:?}, state={:?}&quot;</span>, <span class="ident">stream</span>.<span class="ident">id</span>, <span class="ident">stream</span>.<span class="ident">state</span>);
             <span class="ident">StreamRef</span> {
-                <span class="ident">opaque</span>: <span class="ident">OpaqueStreamRef</span> {
-                    <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>(),
-                    <span class="ident">key</span>,
-                },
+                <span class="ident">opaque</span>: <span class="ident">OpaqueStreamRef</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>(), <span class="ident">stream</span>),
                 <span class="ident">send_buffer</span>: <span class="self">self</span>.<span class="ident">send_buffer</span>.<span class="ident">clone</span>(),
             }
         })
@@ -1760,82 +1780,75 @@
         <span class="comment">// implicitly closes the earlier stream IDs.</span>
         <span class="comment">//</span>
         <span class="comment">// See: carllerche/h2#11</span>
-        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">me</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">me</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">me</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">me</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">me</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">me</span>;
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">send_buffer</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">send_buffer</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">send_buffer</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">send_buffer</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">send_buffer</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">send_buffer</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">send_buffer</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">send_buffer</span>;
 
-            <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">ensure_no_conn_error</span>()<span class="question-mark">?</span>;
-            <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">ensure_next_stream_id</span>()<span class="question-mark">?</span>;
+        <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">ensure_no_conn_error</span>()<span class="question-mark">?</span>;
+        <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">ensure_next_stream_id</span>()<span class="question-mark">?</span>;
 
-            <span class="comment">// The `pending` argument is provided by the `Client`, and holds</span>
-            <span class="comment">// a store `Key` of a `Stream` that may have been not been opened</span>
-            <span class="comment">// yet.</span>
-            <span class="comment">//</span>
-            <span class="comment">// If that stream is still pending, the Client isn&#39;t allowed to</span>
-            <span class="comment">// queue up another pending stream. They should use `poll_ready`.</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stream</span>) <span class="op">=</span> <span class="ident">pending</span> {
-                <span class="kw">if</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="ident">stream</span>.<span class="ident">key</span>).<span class="ident">is_pending_open</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">UserError</span>::<span class="ident">Rejected</span>.<span class="ident">into</span>());
-                }
+        <span class="comment">// The `pending` argument is provided by the `Client`, and holds</span>
+        <span class="comment">// a store `Key` of a `Stream` that may have been not been opened</span>
+        <span class="comment">// yet.</span>
+        <span class="comment">//</span>
+        <span class="comment">// If that stream is still pending, the Client isn&#39;t allowed to</span>
+        <span class="comment">// queue up another pending stream. They should use `poll_ready`.</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stream</span>) <span class="op">=</span> <span class="ident">pending</span> {
+            <span class="kw">if</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="ident">stream</span>.<span class="ident">key</span>).<span class="ident">is_pending_open</span> {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">UserError</span>::<span class="ident">Rejected</span>.<span class="ident">into</span>());
             }
+        }
 
-            <span class="kw">if</span> <span class="ident">me</span>.<span class="ident">counts</span>.<span class="ident">peer</span>().<span class="ident">is_server</span>() {
-                <span class="comment">// Servers cannot open streams. PushPromise must first be reserved.</span>
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">UserError</span>::<span class="ident">UnexpectedFrameType</span>.<span class="ident">into</span>());
-            }
+        <span class="kw">if</span> <span class="ident">me</span>.<span class="ident">counts</span>.<span class="ident">peer</span>().<span class="ident">is_server</span>() {
+            <span class="comment">// Servers cannot open streams. PushPromise must first be reserved.</span>
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">UserError</span>::<span class="ident">UnexpectedFrameType</span>.<span class="ident">into</span>());
+        }
 
-            <span class="kw">let</span> <span class="ident">stream_id</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">open</span>()<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">stream_id</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">open</span>()<span class="question-mark">?</span>;
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">Stream</span>::<span class="ident">new</span>(
-                <span class="ident">stream_id</span>,
-                <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">init_window_sz</span>(),
-                <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">init_window_sz</span>(),
-            );
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">Stream</span>::<span class="ident">new</span>(
+            <span class="ident">stream_id</span>,
+            <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">init_window_sz</span>(),
+            <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">init_window_sz</span>(),
+        );
 
-            <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">request</span>.<span class="ident">method</span>() <span class="op">==</span> <span class="ident">Method</span>::<span class="ident">HEAD</span> {
-                <span class="ident">stream</span>.<span class="ident">content_length</span> <span class="op">=</span> <span class="ident">ContentLength</span>::<span class="ident">Head</span>;
-            }
+        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">request</span>.<span class="ident">method</span>() <span class="op">==</span> <span class="ident">Method</span>::<span class="ident">HEAD</span> {
+            <span class="ident">stream</span>.<span class="ident">content_length</span> <span class="op">=</span> <span class="ident">ContentLength</span>::<span class="ident">Head</span>;
+        }
 
-            <span class="comment">// Convert the message</span>
-            <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">Peer</span>::<span class="ident">convert_send_message</span>(
-                <span class="ident">stream_id</span>, <span class="ident">request</span>, <span class="ident">end_of_stream</span>)<span class="question-mark">?</span>;
+        <span class="comment">// Convert the message</span>
+        <span class="kw">let</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">client</span>::<span class="ident">Peer</span>::<span class="ident">convert_send_message</span>(
+            <span class="ident">stream_id</span>, <span class="ident">request</span>, <span class="ident">end_of_stream</span>)<span class="question-mark">?</span>;
 
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">insert</span>(<span class="ident">stream</span>.<span class="ident">id</span>, <span class="ident">stream</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">insert</span>(<span class="ident">stream</span>.<span class="ident">id</span>, <span class="ident">stream</span>);
 
-            <span class="kw">let</span> <span class="ident">sent</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">send_headers</span>(
-                <span class="ident">headers</span>,
-                <span class="ident">send_buffer</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stream</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">counts</span>,
-                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">task</span>,
-            );
+        <span class="kw">let</span> <span class="ident">sent</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">send</span>.<span class="ident">send_headers</span>(
+            <span class="ident">headers</span>,
+            <span class="ident">send_buffer</span>,
+            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stream</span>,
+            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">counts</span>,
+            <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">task</span>,
+        );
 
-            <span class="comment">// send_headers can return a UserError, if it does,</span>
-            <span class="comment">// we should forget about this stream.</span>
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">sent</span> {
-                <span class="ident">stream</span>.<span class="ident">unlink</span>();
-                <span class="ident">stream</span>.<span class="ident">remove</span>();
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>.<span class="ident">into</span>());
-            }
+        <span class="comment">// send_headers can return a UserError, if it does,</span>
+        <span class="comment">// we should forget about this stream.</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">sent</span> {
+            <span class="ident">stream</span>.<span class="ident">unlink</span>();
+            <span class="ident">stream</span>.<span class="ident">remove</span>();
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>.<span class="ident">into</span>());
+        }
 
-            <span class="comment">// Given that the stream has been initialized, it should not be in the</span>
-            <span class="comment">// closed state.</span>
-            <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">stream</span>.<span class="ident">state</span>.<span class="ident">is_closed</span>());
-
-            <span class="comment">// Increment the stream ref count as we will be returning a handle.</span>
-            <span class="ident">stream</span>.<span class="ident">ref_inc</span>();
-
-            <span class="ident">stream</span>.<span class="ident">key</span>()
-        };
+        <span class="comment">// Given that the stream has been initialized, it should not be in the</span>
+        <span class="comment">// closed state.</span>
+        <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">stream</span>.<span class="ident">state</span>.<span class="ident">is_closed</span>());
 
         <span class="prelude-val">Ok</span>(<span class="ident">StreamRef</span> {
-            <span class="ident">opaque</span>: <span class="ident">OpaqueStreamRef</span> {
-                <span class="ident">inner</span>: <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>(),
-                <span class="ident">key</span>: <span class="ident">key</span>,
-            },
+            <span class="ident">opaque</span>: <span class="ident">OpaqueStreamRef</span>::<span class="ident">new</span>(
+                <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>(),
+                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stream</span>,
+            ),
             <span class="ident">send_buffer</span>: <span class="self">self</span>.<span class="ident">send_buffer</span>.<span class="ident">clone</span>(),
         })
     }
@@ -2147,6 +2160,12 @@
 <span class="comment">// ===== impl OpaqueStreamRef =====</span>
 
 <span class="kw">impl</span> <span class="ident">OpaqueStreamRef</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">inner</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">Inner</span><span class="op">&gt;&gt;</span>, <span class="ident">stream</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">store</span>::<span class="ident">Ptr</span>) <span class="op">-&gt;</span> <span class="ident">OpaqueStreamRef</span> {
+        <span class="ident">stream</span>.<span class="ident">ref_inc</span>();
+        <span class="ident">OpaqueStreamRef</span> {
+            <span class="ident">inner</span>, <span class="ident">key</span>: <span class="ident">stream</span>.<span class="ident">key</span>()
+        }
+    }
     <span class="doccomment">/// Called by a client to check for a received response.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll_response</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, <span class="ident">proto</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">me</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
@@ -2155,6 +2174,23 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="self">self</span>.<span class="ident">key</span>);
 
         <span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">poll_response</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stream</span>)
+    }
+    <span class="doccomment">/// Called by a client to check for a pushed request.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">poll_pushed</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>
+    ) <span class="op">-&gt;</span> <span class="ident">Poll</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Request</span><span class="op">&lt;</span>()<span class="op">&gt;</span>, <span class="ident">OpaqueStreamRef</span>)<span class="op">&gt;</span>, <span class="ident">proto</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">me</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
+        <span class="kw">let</span> <span class="ident">me</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">me</span>;
+
+        <span class="kw">let</span> <span class="ident">res</span> <span class="op">=</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="self">self</span>.<span class="ident">key</span>);
+            <span class="macro">try_ready</span><span class="macro">!</span>(<span class="ident">me</span>.<span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">poll_pushed</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stream</span>))
+        };
+        <span class="prelude-val">Ok</span>(<span class="ident">Async</span>::<span class="ident">Ready</span>(<span class="ident">res</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">h</span>, <span class="ident">key</span>)<span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">opaque_ref</span> <span class="op">=</span>
+                <span class="ident">OpaqueStreamRef</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">me</span>.<span class="ident">store</span>.<span class="ident">resolve</span>(<span class="ident">key</span>));
+            (<span class="ident">h</span>, <span class="ident">opaque_ref</span>)
+        })))
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">body_is_empty</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
@@ -2216,7 +2252,9 @@
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">OpaqueStreamRef</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">lock</span>() {
+        <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">TryLockError</span>::<span class="kw-2">*</span>;
+
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">try_lock</span>() {
             <span class="prelude-val">Ok</span>(<span class="ident">me</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">me</span>.<span class="ident">store</span>[<span class="self">self</span>.<span class="ident">key</span>];
                 <span class="ident">fmt</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;OpaqueStreamRef&quot;</span>)
@@ -2224,9 +2262,16 @@
                     .<span class="ident">field</span>(<span class="string">&quot;ref_count&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">stream</span>.<span class="ident">ref_count</span>)
                     .<span class="ident">finish</span>()
             },
-            <span class="prelude-val">Err</span>(<span class="ident">_poisoned</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;OpaqueStreamRef&quot;</span>)
-                .<span class="ident">field</span>(<span class="string">&quot;inner&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;&lt;Poisoned&gt;&quot;</span>)
-                .<span class="ident">finish</span>(),
+            <span class="prelude-val">Err</span>(<span class="ident">Poisoned</span>(<span class="kw">_</span>)) <span class="op">=&gt;</span> {
+                <span class="ident">fmt</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;OpaqueStreamRef&quot;</span>)
+                    .<span class="ident">field</span>(<span class="string">&quot;inner&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;&lt;Poisoned&gt;&quot;</span>)
+                    .<span class="ident">finish</span>()
+            }
+            <span class="prelude-val">Err</span>(<span class="ident">WouldBlock</span>) <span class="op">=&gt;</span> {
+                <span class="ident">fmt</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;OpaqueStreamRef&quot;</span>)
+                    .<span class="ident">field</span>(<span class="string">&quot;inner&quot;</span>, <span class="kw-2">&amp;</span><span class="string">&quot;&lt;Locked&gt;&quot;</span>)
+                    .<span class="ident">finish</span>()
+            }
         }
     }
 }
@@ -2282,10 +2327,17 @@
         }
     }
 
+
     <span class="ident">me</span>.<span class="ident">counts</span>.<span class="ident">transition</span>(<span class="ident">stream</span>, <span class="op">|</span><span class="ident">counts</span>, <span class="ident">stream</span><span class="op">|</span> {
         <span class="ident">maybe_cancel</span>(<span class="ident">stream</span>, <span class="ident">actions</span>, <span class="ident">counts</span>);
 
         <span class="kw">if</span> <span class="ident">stream</span>.<span class="ident">ref_count</span> <span class="op">==</span> <span class="number">0</span> {
+
+            <span class="comment">// Release any recv window back to connection, no one can access</span>
+            <span class="comment">// it anymore.</span>
+            <span class="ident">actions</span>.<span class="ident">recv</span>.<span class="ident">release_closed_capacity</span>(<span class="ident">stream</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">actions</span>.<span class="ident">task</span>);
+
+            <span class="comment">// We won&#39;t be able to reach our push promises anymore</span>
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ppp</span> <span class="op">=</span> <span class="ident">stream</span>.<span class="ident">pending_push_promises</span>.<span class="ident">take</span>();
             <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">promise</span>) <span class="op">=</span> <span class="ident">ppp</span>.<span class="ident">pop</span>(<span class="ident">stream</span>.<span class="ident">store_mut</span>()) {
                 <span class="ident">counts</span>.<span class="ident">transition</span>(<span class="ident">promise</span>, <span class="op">|</span><span class="ident">counts</span>, <span class="ident">stream</span><span class="op">|</span> {

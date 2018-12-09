@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/http-0.1.13/src/uri/path.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>path.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/http-0.1.14/src/uri/path.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>path.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -517,40 +517,6 @@
 <span id="517">517</span>
 <span id="518">518</span>
 <span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp</span>, <span class="ident">fmt</span>, <span class="ident">str</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">FromStr</span>;
@@ -558,6 +524,7 @@
 <span class="kw">use</span> <span class="ident">bytes</span>::<span class="ident">Bytes</span>;
 
 <span class="kw">use</span> <span class="ident">byte_str</span>::<span class="ident">ByteStr</span>;
+<span class="kw">use</span> <span class="ident">convert</span>::<span class="ident">HttpTryFrom</span>;
 <span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">ErrorKind</span>, <span class="ident">InvalidUri</span>, <span class="ident">InvalidUriBytes</span>, <span class="ident">URI_CHARS</span>};
 
 <span class="doccomment">/// Represents the path component of a URI</span>
@@ -601,43 +568,22 @@
             <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">src</span>[<span class="ident">i</span>];
 
             <span class="kw">match</span> <span class="ident">URI_CHARS</span>[<span class="ident">b</span> <span class="kw">as</span> <span class="ident">usize</span>] {
-                <span class="number">0</span> <span class="op">=&gt;</span> {
-                    <span class="kw">if</span> <span class="ident">b</span> <span class="op">==</span> <span class="string">b&#39;%&#39;</span> {
-                        <span class="comment">// Check if next character is not %</span>
-                        <span class="kw">if</span> <span class="ident">i</span> <span class="op">+</span> <span class="number">2</span> <span class="op">&lt;=</span> <span class="ident">src</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="string">b&#39;%&#39;</span> <span class="op">==</span> <span class="ident">src</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>] {
-                            <span class="kw">break</span>;
-                        }
-
-                        <span class="comment">// Check that there are enough chars for a percent</span>
-                        <span class="comment">// encoded char</span>
-                        <span class="kw">let</span> <span class="ident">perc_encoded</span> <span class="op">=</span>
-                            <span class="ident">i</span> <span class="op">+</span> <span class="number">3</span> <span class="op">&lt;=</span> <span class="ident">src</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="comment">// enough capacity</span>
-                            <span class="ident">HEX_DIGIT</span>[<span class="ident">src</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>] <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">!=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span>
-                            <span class="ident">HEX_DIGIT</span>[<span class="ident">src</span>[<span class="ident">i</span> <span class="op">+</span> <span class="number">2</span>] <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">!=</span> <span class="number">0</span>;
-
-                        <span class="kw">if</span> <span class="op">!</span><span class="ident">perc_encoded</span> {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ErrorKind</span>::<span class="ident">InvalidUriChar</span>.<span class="ident">into</span>());
-                        }
-
-                        <span class="ident">i</span> <span class="op">+=</span> <span class="number">3</span>;
-                        <span class="kw">continue</span>;
-                    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">query</span> <span class="op">!=</span> <span class="ident">NONE</span> {
-                        <span class="comment">// While queries *should* be percent-encoded, most</span>
-                        <span class="comment">// bytes are actually allowed...</span>
-                        <span class="comment">// See https://url.spec.whatwg.org/#query-state</span>
-                        <span class="comment">//</span>
-                        <span class="comment">// Allowed: 0x21 / 0x24 - 0x3B / 0x3D / 0x3F - 0x7E</span>
-                        <span class="kw">match</span> <span class="ident">b</span> {
-                            <span class="number">0x21</span> <span class="op">|</span>
-                            <span class="number">0x24</span>...<span class="number">0x3B</span> <span class="op">|</span>
-                            <span class="number">0x3D</span> <span class="op">|</span>
-                            <span class="number">0x3F</span>...<span class="number">0x7E</span> <span class="op">=&gt;</span> (),
-                            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ErrorKind</span>::<span class="ident">InvalidUriChar</span>.<span class="ident">into</span>()),
-                        }
-                    } <span class="kw">else</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ErrorKind</span>::<span class="ident">InvalidUriChar</span>.<span class="ident">into</span>());
+                <span class="number">0</span> <span class="kw">if</span> <span class="ident">b</span> <span class="op">==</span> <span class="string">b&#39;%&#39;</span> <span class="op">=&gt;</span> {}
+                <span class="number">0</span> <span class="kw">if</span> <span class="ident">query</span> <span class="op">!=</span> <span class="ident">NONE</span> <span class="op">=&gt;</span> {
+                    <span class="comment">// While queries *should* be percent-encoded, most</span>
+                    <span class="comment">// bytes are actually allowed...</span>
+                    <span class="comment">// See https://url.spec.whatwg.org/#query-state</span>
+                    <span class="comment">//</span>
+                    <span class="comment">// Allowed: 0x21 / 0x24 - 0x3B / 0x3D / 0x3F - 0x7E</span>
+                    <span class="kw">match</span> <span class="ident">b</span> {
+                        <span class="number">0x21</span> <span class="op">|</span>
+                        <span class="number">0x24</span>...<span class="number">0x3B</span> <span class="op">|</span>
+                        <span class="number">0x3D</span> <span class="op">|</span>
+                        <span class="number">0x3F</span>...<span class="number">0x7E</span> <span class="op">=&gt;</span> {},
+                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ErrorKind</span>::<span class="ident">InvalidUriChar</span>.<span class="ident">into</span>()),
                     }
                 }
+                <span class="number">0</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ErrorKind</span>::<span class="ident">InvalidUriChar</span>.<span class="ident">into</span>()),
                 <span class="string">b&#39;?&#39;</span> <span class="op">=&gt;</span> {
                     <span class="kw">if</span> <span class="ident">query</span> <span class="op">==</span> <span class="ident">NONE</span> {
                         <span class="ident">query</span> <span class="op">=</span> <span class="ident">i</span> <span class="kw">as</span> <span class="ident">u16</span>;
@@ -825,11 +771,35 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">HttpTryFrom</span><span class="op">&lt;</span><span class="ident">Bytes</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PathAndQuery</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">InvalidUriBytes</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">bytes</span>: <span class="ident">Bytes</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">PathAndQuery</span>::<span class="ident">from_shared</span>(<span class="ident">bytes</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">HttpTryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]<span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PathAndQuery</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">InvalidUri</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">PathAndQuery</span>::<span class="ident">from_shared</span>(<span class="ident">s</span>.<span class="ident">into</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="number">0</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">HttpTryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">PathAndQuery</span> {
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">InvalidUri</span>;
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">HttpTryFrom</span>::<span class="ident">try_from</span>(<span class="ident">s</span>.<span class="ident">as_bytes</span>())
+    }
+}
+
 <span class="kw">impl</span> <span class="ident">FromStr</span> <span class="kw">for</span> <span class="ident">PathAndQuery</span> {
     <span class="kw">type</span> <span class="prelude-val">Err</span> <span class="op">=</span> <span class="ident">InvalidUri</span>;
-
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">from_str</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">InvalidUri</span><span class="op">&gt;</span> {
-        <span class="ident">PathAndQuery</span>::<span class="ident">from_shared</span>(<span class="ident">s</span>.<span class="ident">into</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="number">0</span>)
+        <span class="ident">HttpTryFrom</span>::<span class="ident">try_from</span>(<span class="ident">s</span>)
     }
 }
 
@@ -960,36 +930,6 @@
     }
 }
 
-<span class="kw">const</span> <span class="ident">HEX_DIGIT</span>: [<span class="ident">u8</span>; <span class="number">256</span>] <span class="op">=</span> [
-    <span class="comment">//  0      1      2      3      4      5      6      7      8      9</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">//   x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">//  1x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">//  2x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">//  3x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,  <span class="string">b&#39;0&#39;</span>,  <span class="string">b&#39;1&#39;</span>, <span class="comment">//  4x</span>
-     <span class="string">b&#39;2&#39;</span>,  <span class="string">b&#39;3&#39;</span>,  <span class="string">b&#39;4&#39;</span>,  <span class="string">b&#39;5&#39;</span>,  <span class="string">b&#39;6&#39;</span>,  <span class="string">b&#39;7&#39;</span>,  <span class="string">b&#39;8&#39;</span>,  <span class="string">b&#39;9&#39;</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">//  5x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,  <span class="string">b&#39;A&#39;</span>,  <span class="string">b&#39;B&#39;</span>,  <span class="string">b&#39;C&#39;</span>,  <span class="string">b&#39;D&#39;</span>,  <span class="string">b&#39;E&#39;</span>, <span class="comment">//  6x</span>
-     <span class="string">b&#39;F&#39;</span>,  <span class="string">b&#39;G&#39;</span>,  <span class="string">b&#39;H&#39;</span>,  <span class="string">b&#39;I&#39;</span>,  <span class="string">b&#39;J&#39;</span>,  <span class="string">b&#39;K&#39;</span>,  <span class="string">b&#39;L&#39;</span>,  <span class="string">b&#39;M&#39;</span>,  <span class="string">b&#39;N&#39;</span>,  <span class="string">b&#39;O&#39;</span>, <span class="comment">//  7x</span>
-     <span class="string">b&#39;P&#39;</span>,  <span class="string">b&#39;Q&#39;</span>,  <span class="string">b&#39;R&#39;</span>,  <span class="string">b&#39;S&#39;</span>,  <span class="string">b&#39;T&#39;</span>,  <span class="string">b&#39;U&#39;</span>,  <span class="string">b&#39;V&#39;</span>,  <span class="string">b&#39;W&#39;</span>,  <span class="string">b&#39;X&#39;</span>,  <span class="string">b&#39;Y&#39;</span>, <span class="comment">//  8x</span>
-     <span class="string">b&#39;Z&#39;</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,  <span class="string">b&#39;a&#39;</span>,  <span class="string">b&#39;b&#39;</span>,  <span class="string">b&#39;c&#39;</span>, <span class="comment">//  9x</span>
-     <span class="string">b&#39;d&#39;</span>,  <span class="string">b&#39;e&#39;</span>,  <span class="string">b&#39;f&#39;</span>,  <span class="string">b&#39;g&#39;</span>,  <span class="string">b&#39;h&#39;</span>,  <span class="string">b&#39;i&#39;</span>,  <span class="string">b&#39;j&#39;</span>,  <span class="string">b&#39;k&#39;</span>,  <span class="string">b&#39;l&#39;</span>,  <span class="string">b&#39;m&#39;</span>, <span class="comment">// 10x</span>
-     <span class="string">b&#39;n&#39;</span>,  <span class="string">b&#39;o&#39;</span>,  <span class="string">b&#39;p&#39;</span>,  <span class="string">b&#39;q&#39;</span>,  <span class="string">b&#39;r&#39;</span>,  <span class="string">b&#39;s&#39;</span>,  <span class="string">b&#39;t&#39;</span>,  <span class="string">b&#39;u&#39;</span>,  <span class="string">b&#39;v&#39;</span>,  <span class="string">b&#39;w&#39;</span>, <span class="comment">// 11x</span>
-     <span class="string">b&#39;x&#39;</span>,  <span class="string">b&#39;y&#39;</span>,  <span class="string">b&#39;z&#39;</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,  <span class="string">b&#39;~&#39;</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 12x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 13x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 14x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 15x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 16x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 17x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 18x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 19x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 20x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 21x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 22x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 23x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>, <span class="comment">// 24x</span>
-        <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>,     <span class="number">0</span>                              <span class="comment">// 25x</span>
-];
-
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
@@ -1078,31 +1018,23 @@
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">double_percent_path</span>() {
-        <span class="kw">let</span> <span class="ident">double_percent_path</span> <span class="op">=</span> <span class="string">&quot;/your.js?bn=%%val&quot;</span>;
-
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">double_percent_path</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">PathAndQuery</span><span class="op">&gt;</span>().<span class="ident">is_ok</span>());
-
-        <span class="kw">let</span> <span class="ident">path</span>: <span class="ident">PathAndQuery</span> <span class="op">=</span> <span class="ident">double_percent_path</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">path</span>, <span class="ident">double_percent_path</span>);
-
-        <span class="kw">let</span> <span class="ident">double_percent_path</span> <span class="op">=</span> <span class="string">&quot;/path%%&quot;</span>;
-
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">double_percent_path</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">PathAndQuery</span><span class="op">&gt;</span>().<span class="ident">is_ok</span>());
+    <span class="kw">fn</span> <span class="ident">ignores_valid_percent_encodings</span>() {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;/a%20b&quot;</span>, <span class="ident">pq</span>(<span class="string">&quot;/a%20b?r=1&quot;</span>).<span class="ident">path</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;qr=%31&quot;</span>, <span class="ident">pq</span>(<span class="string">&quot;/a/b?qr=%31&quot;</span>).<span class="ident">query</span>().<span class="ident">unwrap</span>());
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">path_ends_with_question_mark</span>() {
-        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;/path?%&quot;</span>;
-
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">path</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">PathAndQuery</span><span class="op">&gt;</span>().<span class="ident">is_err</span>());
+    <span class="kw">fn</span> <span class="ident">ignores_invalid_percent_encodings</span>() {
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;/a%%b&quot;</span>, <span class="ident">pq</span>(<span class="string">&quot;/a%%b?r=1&quot;</span>).<span class="ident">path</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;/aaa%&quot;</span>, <span class="ident">pq</span>(<span class="string">&quot;/aaa%&quot;</span>).<span class="ident">path</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;/aaa%&quot;</span>, <span class="ident">pq</span>(<span class="string">&quot;/aaa%?r=1&quot;</span>).<span class="ident">path</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;/aa%2&quot;</span>, <span class="ident">pq</span>(<span class="string">&quot;/aa%2&quot;</span>).<span class="ident">path</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;/aa%2&quot;</span>, <span class="ident">pq</span>(<span class="string">&quot;/aa%2?r=1&quot;</span>).<span class="ident">path</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="string">&quot;qr=%3&quot;</span>, <span class="ident">pq</span>(<span class="string">&quot;/a/b?qr=%3&quot;</span>).<span class="ident">query</span>().<span class="ident">unwrap</span>());
     }
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">path_ends_with_fragment_percent</span>() {
-        <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="string">&quot;/path#%&quot;</span>;
-
-        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">path</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">PathAndQuery</span><span class="op">&gt;</span>().<span class="ident">is_ok</span>());
+    <span class="kw">fn</span> <span class="ident">pq</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">PathAndQuery</span> {
+        <span class="ident">s</span>.<span class="ident">parse</span>().<span class="ident">expect</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;parsing {}&quot;</span>, <span class="ident">s</span>))
     }
 }
 </pre>
