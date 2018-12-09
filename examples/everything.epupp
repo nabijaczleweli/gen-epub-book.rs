@@ -3,7 +3,7 @@ Name: Everything we got, in one thing
 Content: simple/ctnt.html
 String-Content: <strong>SEIZE THE MEANS OF PRODUCTION!</strong>
 Image-Content: simple/chapter_image.png
-Network-Image-Content: https://cdn.rawgit.com/nabijaczleweli/nabijaczleweli.github.io/dev/src/writing_prompts/slim_shady.png
+Network-Image-Content: https://cdn.jsdelivr.net/gh/nabijaczleweli/nabijaczleweli.github.io@dev/src/writing_prompts/slim_shady.png
 
 Network-Cover: http://i.imgur.com/ViQ2WED.jpg
 
