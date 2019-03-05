@@ -202,6 +202,7 @@ The supported formats therewith are therefore:
 ## AUTHOR
 
 Written by nabijaczleweli &lt;<nabijaczleweli@gmail.com>&gt;
+       and nicohman &lt;<nicohman@demenses.net>&gt;
 
 ## REPORTING BUGS
 

@@ -8,9 +8,10 @@ keywords = ["generate", "ePub", "ebook", "e-book", "book"]
 categories = ["encoding", "text-processing"]
 license = "MIT"
 # Remember to also update in appveyor.yml
-version = "2.3.1"
+version = "2.3.2"
 # Remember to also update in gen-epub-book.md
-authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
+authors = ["nabijaczleweli <nabijaczleweli@gmail.com>",
+           "nicohman <nicohman@demenses.net>"]
 
 [dependencies]
 lazy_static = "1.1"
