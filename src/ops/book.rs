@@ -346,13 +346,12 @@ impl EPubBook {
     /// ```
     pub fn write_zip_ext<W: Write + Seek, V: Write>(&self, string_toc: bool, to: &mut W, verbose: bool, verb_out: &mut V) -> Result<(), Error> {
         let mut w = ZipWriter::new(to);
+
         try!(w.start_file("mimetype", FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "container file")));
+        try!(w.write_all(MIME_TYPE.as_bytes()).map_err(|_| EPubBook::zip_error("write", "container file")));
 
         try!(w.start_file("META-INF/container.xml", FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "container file")));
-
         try!(w.write_all(CONTAINER.as_bytes()).map_err(|_| EPubBook::zip_error("write", "container file")));
-
-        try!(w.write_all(MIME_TYPE.as_bytes()).map_err(|_| EPubBook::zip_error("write", "container file")));
 
         try!(w.start_file("content.opf", FileOptions::default()).map_err(|_| EPubBook::zip_error("create", "content table")));
         try!(self.content_table(&mut w, verbose, verb_out));
