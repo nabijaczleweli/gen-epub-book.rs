@@ -1,20 +1,5 @@
 (function() {var implementors = {};
-implementors["bytes"] = [];
-implementors["chrono"] = [];
-implementors["flate2"] = [];
-implementors["hyper"] = [];
-implementors["libc"] = [];
-implementors["mime_guess"] = [];
-implementors["mio"] = [];
-implementors["num"] = [];
-implementors["openssl"] = [];
-implementors["phf"] = [];
-implementors["regex_syntax"] = [];
-implementors["reqwest"] = [];
-implementors["serde"] = [];
-implementors["serde_urlencoded"] = [];
-implementors["thread_local"] = [];
-implementors["tokio_core"] = [];
+implementors["crossbeam_utils"] = [{text:"impl&lt;T:&nbsp;?<a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html\" title=\"trait core::marker::Sized\">Sized</a>&gt; <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/std/panic/trait.RefUnwindSafe.html\" title=\"trait std::panic::RefUnwindSafe\">RefUnwindSafe</a> for <a class=\"struct\" href=\"crossbeam_utils/sync/struct.ShardedLock.html\" title=\"struct crossbeam_utils::sync::ShardedLock\">ShardedLock</a>&lt;T&gt;",synthetic:false,types:["crossbeam_utils::sync::sharded_lock::ShardedLock"]},];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

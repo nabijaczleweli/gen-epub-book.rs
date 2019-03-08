@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.12.17/src/client/conn.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>conn.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/hyper-0.12.25/src/client/conn.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>conn.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -603,7 +603,54 @@
 <span id="603">603</span>
 <span id="604">604</span>
 <span id="605">605</span>
-</pre><pre class="rust ">
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Lower-level client connection API.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! The types in this module are to provide a lower-level API based around a</span>
@@ -621,6 +668,7 @@
 <span class="kw">use</span> <span class="ident">bytes</span>::<span class="ident">Bytes</span>;
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Future</span>, <span class="ident">Poll</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">future</span>::{<span class="self">self</span>, <span class="ident">Either</span>, <span class="ident">Executor</span>};
+<span class="kw">use</span> <span class="ident">h2</span>;
 <span class="kw">use</span> <span class="ident">tokio_io</span>::{<span class="ident">AsyncRead</span>, <span class="ident">AsyncWrite</span>};
 
 <span class="kw">use</span> <span class="ident">body</span>::<span class="ident">Payload</span>;
@@ -681,7 +729,9 @@
     <span class="ident">h1_writev</span>: <span class="ident">bool</span>,
     <span class="ident">h1_title_case_headers</span>: <span class="ident">bool</span>,
     <span class="ident">h1_read_buf_exact_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="ident">h1_max_buf_size</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
     <span class="ident">http2</span>: <span class="ident">bool</span>,
+    <span class="ident">h2_builder</span>: <span class="ident">h2</span>::<span class="ident">client</span>::<span class="ident">Builder</span>,
 }
 
 <span class="doccomment">/// A future setting up HTTP over an IO object.</span>
@@ -1036,12 +1086,17 @@ impl&lt;T, B&gt; Service for SendRequest&lt;T, B&gt; {
     <span class="doccomment">/// Creates a new connection builder.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Builder</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h2_builder</span> <span class="op">=</span> <span class="ident">h2</span>::<span class="ident">client</span>::<span class="ident">Builder</span>::<span class="ident">default</span>();
+        <span class="ident">h2_builder</span>.<span class="ident">enable_push</span>(<span class="bool-val">false</span>);
+
         <span class="ident">Builder</span> {
             <span class="ident">exec</span>: <span class="ident">Exec</span>::<span class="ident">Default</span>,
             <span class="ident">h1_writev</span>: <span class="bool-val">true</span>,
             <span class="ident">h1_read_buf_exact_size</span>: <span class="prelude-val">None</span>,
             <span class="ident">h1_title_case_headers</span>: <span class="bool-val">false</span>,
+            <span class="ident">h1_max_buf_size</span>: <span class="prelude-val">None</span>,
             <span class="ident">http2</span>: <span class="bool-val">false</span>,
+            <span class="ident">h2_builder</span>,
         }
     }
 
@@ -1066,13 +1121,49 @@ impl&lt;T, B&gt; Service for SendRequest&lt;T, B&gt; {
 
     <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">h1_read_buf_exact_size</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sz</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Builder</span> {
         <span class="self">self</span>.<span class="ident">h1_read_buf_exact_size</span> <span class="op">=</span> <span class="ident">sz</span>;
+        <span class="self">self</span>.<span class="ident">h1_max_buf_size</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="self">self</span>
     }
+
+    <span class="kw">pub</span>(<span class="kw">super</span>) <span class="kw">fn</span> <span class="ident">h1_max_buf_size</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">max</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="macro">assert</span><span class="macro">!</span>(
+            <span class="ident">max</span> <span class="op">&gt;=</span> <span class="ident">proto</span>::<span class="ident">h1</span>::<span class="ident">MINIMUM_MAX_BUFFER_SIZE</span>,
+            <span class="string">&quot;the max_buf_size cannot be smaller than the minimum that h1 specifies.&quot;</span>
+        );
+
+        <span class="self">self</span>.<span class="ident">h1_max_buf_size</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">max</span>);
+        <span class="self">self</span>.<span class="ident">h1_read_buf_exact_size</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="self">self</span>
+    }
+
     <span class="doccomment">/// Sets whether HTTP2 is required.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default is false.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http2_only</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">enabled</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Builder</span> {
         <span class="self">self</span>.<span class="ident">http2</span> <span class="op">=</span> <span class="ident">enabled</span>;
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the [`SETTINGS_INITIAL_WINDOW_SIZE`][spec] option for HTTP2</span>
+    <span class="doccomment">/// stream-level flow control.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default is 65,535</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [spec]: https://http2.github.io/http2-spec/#SETTINGS_INITIAL_WINDOW_SIZE</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http2_initial_stream_window_size</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sz</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sz</span>) <span class="op">=</span> <span class="ident">sz</span>.<span class="ident">into</span>() {
+            <span class="self">self</span>.<span class="ident">h2_builder</span>.<span class="ident">initial_window_size</span>(<span class="ident">sz</span>);
+        }
+        <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Sets the max connection-level flow control for HTTP2</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default is 65,535</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http2_initial_connection_window_size</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">sz</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sz</span>) <span class="op">=</span> <span class="ident">sz</span>.<span class="ident">into</span>() {
+            <span class="self">self</span>.<span class="ident">h2_builder</span>.<span class="ident">initial_connection_window_size</span>(<span class="ident">sz</span>);
+        }
         <span class="self">self</span>
     }
 
@@ -1116,11 +1207,14 @@ impl&lt;T, B&gt; Service for SendRequest&lt;T, B&gt; {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sz</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">h1_read_buf_exact_size</span> {
                 <span class="ident">conn</span>.<span class="ident">set_read_buf_exact_size</span>(<span class="ident">sz</span>);
             }
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">max</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">h1_max_buf_size</span> {
+                <span class="ident">conn</span>.<span class="ident">set_max_buf_size</span>(<span class="ident">max</span>);
+            }
             <span class="kw">let</span> <span class="ident">cd</span> <span class="op">=</span> <span class="ident">proto</span>::<span class="ident">h1</span>::<span class="ident">dispatch</span>::<span class="ident">Client</span>::<span class="ident">new</span>(<span class="ident">rx</span>);
             <span class="kw">let</span> <span class="ident">dispatch</span> <span class="op">=</span> <span class="ident">proto</span>::<span class="ident">h1</span>::<span class="ident">Dispatcher</span>::<span class="ident">new</span>(<span class="ident">cd</span>, <span class="ident">conn</span>);
             <span class="ident">Either</span>::<span class="ident">A</span>(<span class="ident">dispatch</span>)
         } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">h2</span> <span class="op">=</span> <span class="ident">proto</span>::<span class="ident">h2</span>::<span class="ident">Client</span>::<span class="ident">new</span>(<span class="ident">io</span>, <span class="ident">rx</span>, <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">exec</span>.<span class="ident">clone</span>());
+            <span class="kw">let</span> <span class="ident">h2</span> <span class="op">=</span> <span class="ident">proto</span>::<span class="ident">h2</span>::<span class="ident">Client</span>::<span class="ident">new</span>(<span class="ident">io</span>, <span class="ident">rx</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">h2_builder</span>, <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">exec</span>.<span class="ident">clone</span>());
             <span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">h2</span>)
         };
 
@@ -1209,5 +1303,5 @@ impl&lt;T, B&gt; Service for SendRequest&lt;T, B&gt; {
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">impl</span> <span class="ident">AssertSend</span> <span class="kw">for</span> <span class="ident">ResponseFuture</span> {}
 
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "hyper";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "hyper";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script src="../../../source-script.js"></script><script src="../../../source-files.js"></script><script defer src="../../../search-index.js"></script></body></html>

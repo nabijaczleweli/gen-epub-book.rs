@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.5/src/multipart.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>multipart.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.11/src/multipart.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>multipart.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -477,78 +477,45 @@
 <span id="477">477</span>
 <span id="478">478</span>
 <span id="479">479</span>
-<span id="480">480</span>
-<span id="481">481</span>
-<span id="482">482</span>
-<span id="483">483</span>
-<span id="484">484</span>
-<span id="485">485</span>
-<span id="486">486</span>
-<span id="487">487</span>
-<span id="488">488</span>
-<span id="489">489</span>
-<span id="490">490</span>
-<span id="491">491</span>
-<span id="492">492</span>
-<span id="493">493</span>
-<span id="494">494</span>
-<span id="495">495</span>
-<span id="496">496</span>
-<span id="497">497</span>
-<span id="498">498</span>
-<span id="499">499</span>
-<span id="500">500</span>
-<span id="501">501</span>
-<span id="502">502</span>
-<span id="503">503</span>
-<span id="504">504</span>
-<span id="505">505</span>
-<span id="506">506</span>
-<span id="507">507</span>
-<span id="508">508</span>
-<span id="509">509</span>
-<span id="510">510</span>
-<span id="511">511</span>
-<span id="512">512</span>
-<span id="513">513</span>
-<span id="514">514</span>
-<span id="515">515</span>
-<span id="516">516</span>
-<span id="517">517</span>
-<span id="518">518</span>
-<span id="519">519</span>
-<span id="520">520</span>
-<span id="521">521</span>
-<span id="522">522</span>
-<span id="523">523</span>
-<span id="524">524</span>
-<span id="525">525</span>
-<span id="526">526</span>
-<span id="527">527</span>
-<span id="528">528</span>
-<span id="529">529</span>
-<span id="530">530</span>
-<span id="531">531</span>
-<span id="532">532</span>
-<span id="533">533</span>
-<span id="534">534</span>
-<span id="535">535</span>
-<span id="536">536</span>
-<span id="537">537</span>
-<span id="538">538</span>
-<span id="539">539</span>
-<span id="540">540</span>
-<span id="541">541</span>
-<span id="542">542</span>
-<span id="543">543</span>
-<span id="544">544</span>
-<span id="545">545</span>
-<span id="546">546</span>
-<span id="547">547</span>
-<span id="548">548</span>
-<span id="549">549</span>
-</pre><pre class="rust ">
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! multipart/form-data</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! To send a `multipart/form-data` body, a [`Form`](Form) is built up, adding</span>
+<span class="doccomment">//! fields or customized [`Part`](Part)s, and then calling the</span>
+<span class="doccomment">//! [`multipart`][builder] method on the `RequestBuilder`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Example</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! use reqwest::multipart;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # fn run() -&gt; Result&lt;(), Box&lt;::std::error::Error&gt;&gt; {</span>
+<span class="doccomment">//! let form = multipart::Form::new()</span>
+<span class="doccomment">//!     // Adding just a simple text field...</span>
+<span class="doccomment">//!     .text(&quot;username&quot;, &quot;seanmonstar&quot;)</span>
+<span class="doccomment">//!     // And a file...</span>
+<span class="doccomment">//!     .file(&quot;photo&quot;, &quot;/path/to/photo.png&quot;)?;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Customize all the details of a Part if needed...</span>
+<span class="doccomment">//! let bio = multipart::Part::text(&quot;hallo peeps&quot;)</span>
+<span class="doccomment">//!     .file_name(&quot;bio.txt&quot;)</span>
+<span class="doccomment">//!     .mime_str(&quot;text/plain&quot;)?;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // Add the custom part to our form...</span>
+<span class="doccomment">//! let form = form.part(&quot;biography&quot;, bio);</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! // And finally, send the form</span>
+<span class="doccomment">//! let client = reqwest::Client::new();</span>
+<span class="doccomment">//! let resp = client</span>
+<span class="doccomment">//!     .post(&quot;http://localhost:8080/user&quot;)</span>
+<span class="doccomment">//!     .multipart(form)</span>
+<span class="doccomment">//!     .send()?;</span>
+<span class="doccomment">//! # Ok(())</span>
+<span class="doccomment">//! # }</span>
+<span class="doccomment">//! # fn main() {}</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [builder]: ../struct.RequestBuilder.html#method.multipart</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
@@ -556,40 +523,33 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 
 <span class="kw">use</span> <span class="ident">mime_guess</span>::{<span class="self">self</span>, <span class="ident">Mime</span>};
-<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">percent_encoding</span>::{<span class="self">self</span>, <span class="ident">EncodeSet</span>, <span class="ident">PATH_SEGMENT_ENCODE_SET</span>};
-<span class="kw">use</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span>;
-<span class="kw">use</span> <span class="ident">http</span>::<span class="ident">HeaderMap</span>;
 
+<span class="kw">use</span> <span class="ident">async_impl</span>::<span class="ident">multipart</span>::{<span class="ident">FormParts</span>, <span class="ident">PartMetadata</span>, <span class="ident">PartProps</span>};
 <span class="kw">use</span> {<span class="ident">Body</span>};
 
 <span class="doccomment">/// A multipart/form-data request.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Form</span> {
-    <span class="ident">boundary</span>: <span class="ident">String</span>,
-    <span class="ident">fields</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">Part</span>)<span class="op">&gt;</span>,
-    <span class="ident">headers</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>,
-    <span class="ident">percent_encoding</span>: <span class="ident">PercentEncoding</span>,
+    <span class="ident">inner</span>: <span class="ident">FormParts</span><span class="op">&lt;</span><span class="ident">Part</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">enum</span> <span class="ident">PercentEncoding</span> {
-    <span class="ident">PathSegment</span>,
-    <span class="ident">AttrChar</span>,
+<span class="doccomment">/// A field in a multipart form.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Part</span> {
+    <span class="ident">meta</span>: <span class="ident">PartMetadata</span>,
+    <span class="ident">value</span>: <span class="ident">Body</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Form</span> {
     <span class="doccomment">/// Creates a new Form without any content.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Form</span> {
         <span class="ident">Form</span> {
-            <span class="ident">boundary</span>: <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">Uuid</span>::<span class="ident">new_v4</span>().<span class="ident">to_simple</span>()),
-            <span class="ident">fields</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">headers</span>: <span class="ident">Vec</span>::<span class="ident">new</span>(),
-            <span class="ident">percent_encoding</span>: <span class="ident">PercentEncoding</span>::<span class="ident">PathSegment</span>,
+            <span class="ident">inner</span>: <span class="ident">FormParts</span>::<span class="ident">new</span>(),
         }
     }
 
     <span class="doccomment">/// Get the boundary that this form will use.</span>
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">boundary</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">boundary</span>
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">boundary</span>()
     }
 
     <span class="doccomment">/// Add a data field with supplied name and value.</span>
@@ -633,23 +593,26 @@
     }
 
     <span class="doccomment">/// Adds a customized Part.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">part</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="ident">T</span>, <span class="ident">part</span>: <span class="ident">Part</span>) <span class="op">-&gt;</span> <span class="ident">Form</span>
-    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">part</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="ident">T</span>, <span class="ident">part</span>: <span class="ident">Part</span>) <span class="op">-&gt;</span> <span class="ident">Form</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
     {
-        <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">push</span>((<span class="ident">name</span>.<span class="ident">into</span>(), <span class="ident">part</span>));
-        <span class="self">self</span>
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">part</span>(<span class="ident">name</span>, <span class="ident">part</span>))
     }
 
     <span class="doccomment">/// Configure this `Form` to percent-encode using the `path-segment` rules.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">percent_encode_path_segment</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Form</span> {
-        <span class="self">self</span>.<span class="ident">percent_encoding</span> <span class="op">=</span> <span class="ident">PercentEncoding</span>::<span class="ident">PathSegment</span>;
-        <span class="self">self</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">percent_encode_path_segment</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Form</span> {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">percent_encode_path_segment</span>())
     }
 
     <span class="doccomment">/// Configure this `Form` to percent-encode using the `attr-char` rules.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">percent_encode_attr_chars</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Form</span> {
-        <span class="self">self</span>.<span class="ident">percent_encoding</span> <span class="op">=</span> <span class="ident">PercentEncoding</span>::<span class="ident">AttrChar</span>;
-        <span class="self">self</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">percent_encode_attr_chars</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Form</span> {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">percent_encode_attr_chars</span>())
+    }
+
+    <span class="doccomment">/// Configure this `Form` to skip percent-encoding</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">percent_encode_noop</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Form</span> {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">percent_encode_noop</span>())
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">reader</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Reader</span> {
@@ -660,49 +623,25 @@
     <span class="comment">// The length should be preditable if only String and file fields have been added,</span>
     <span class="comment">// but not if a generic reader has been added;</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">compute_length</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">length</span> <span class="op">=</span> <span class="number">0u64</span>;
-        <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">name</span>, <span class="kw-2">ref</span> <span class="ident">field</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">iter</span>() {
-            <span class="kw">match</span> <span class="ident">field</span>.<span class="ident">value</span>.<span class="ident">len</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">value_length</span>) <span class="op">=&gt;</span> {
-                    <span class="comment">// We are constructing the header just to get its length. To not have to</span>
-                    <span class="comment">// construct it again when the request is sent we cache these headers.</span>
-                    <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">percent_encoding</span>.<span class="ident">encode_headers</span>(<span class="ident">name</span>, <span class="ident">field</span>);
-                    <span class="kw">let</span> <span class="ident">header_length</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">len</span>();
-                    <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">push</span>(<span class="ident">header</span>);
-                    <span class="comment">// The additions mimick the format string out of which the field is constructed</span>
-                    <span class="comment">// in Reader. Not the cleanest solution because if that format string is</span>
-                    <span class="comment">// ever changed then this formula needs to be changed too which is not an</span>
-                    <span class="comment">// obvious dependency in the code.</span>
-                    <span class="ident">length</span> <span class="op">+=</span> <span class="number">2</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">boundary</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span> <span class="op">+</span> <span class="number">2</span> <span class="op">+</span> <span class="ident">header_length</span> <span class="kw">as</span> <span class="ident">u64</span> <span class="op">+</span> <span class="number">4</span> <span class="op">+</span> <span class="ident">value_length</span> <span class="op">+</span> <span class="number">2</span>
-                }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
-            }
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">compute_length</span>()
+    }
+
+    <span class="kw">fn</span> <span class="ident">with_inner</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">func</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">FormParts</span><span class="op">&lt;</span><span class="ident">Part</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">FormParts</span><span class="op">&lt;</span><span class="ident">Part</span><span class="op">&gt;</span>,
+    {
+        <span class="ident">Form</span> {
+            <span class="ident">inner</span>: <span class="ident">func</span>(<span class="self">self</span>.<span class="ident">inner</span>),
         }
-        <span class="comment">// If there is a at least one field there is a special boundary for the very last field.</span>
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">fields</span>.<span class="ident">len</span>() <span class="op">!=</span> <span class="number">0</span> {
-            <span class="ident">length</span> <span class="op">+=</span> <span class="number">2</span> <span class="op">+</span> <span class="self">self</span>.<span class="ident">boundary</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u64</span> <span class="op">+</span> <span class="number">4</span>
-        }
-        <span class="prelude-val">Some</span>(<span class="ident">length</span>)
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Form</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Form&quot;</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;boundary&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">boundary</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;parts&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">fields</span>)
-            .<span class="ident">finish</span>()
+        <span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">fmt_fields</span>(<span class="string">&quot;Form&quot;</span>, <span class="ident">f</span>)
     }
 }
 
-
-<span class="doccomment">/// A field in a multipart form.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Part</span> {
-    <span class="ident">value</span>: <span class="ident">Body</span>,
-    <span class="ident">mime</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Mime</span><span class="op">&gt;</span>,
-    <span class="ident">file_name</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
-    <span class="ident">headers</span>: <span class="ident">HeaderMap</span>,
-}
 
 <span class="kw">impl</span> <span class="ident">Part</span> {
     <span class="doccomment">/// Makes a text parameter.</span>
@@ -716,7 +655,7 @@
         <span class="ident">Part</span>::<span class="ident">new</span>(<span class="ident">body</span>)
     }
 
-    <span class="doccomment">/// Makes a new parameter from arbitrary bytes</span>
+    <span class="doccomment">/// Makes a new parameter from arbitrary bytes.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bytes</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">value</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Part</span>
     <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, [<span class="ident">u8</span>]<span class="op">&gt;&gt;</span>
     {
@@ -749,66 +688,75 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">file</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">path</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Part</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">as_ref</span>();
         <span class="kw">let</span> <span class="ident">file_name</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">file_name</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">filename</span><span class="op">|</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">Cow</span>::<span class="ident">from</span>(<span class="ident">filename</span>.<span class="ident">to_string_lossy</span>().<span class="ident">into_owned</span>()))
+            <span class="prelude-val">Some</span>(<span class="ident">filename</span>.<span class="ident">to_string_lossy</span>().<span class="ident">into_owned</span>())
         });
         <span class="kw">let</span> <span class="ident">ext</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">extension</span>()
             .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">ext</span><span class="op">|</span> <span class="ident">ext</span>.<span class="ident">to_str</span>())
             .<span class="ident">unwrap_or</span>(<span class="string">&quot;&quot;</span>);
         <span class="kw">let</span> <span class="ident">mime</span> <span class="op">=</span> <span class="ident">mime_guess</span>::<span class="ident">get_mime_type</span>(<span class="ident">ext</span>);
         <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">File</span>::<span class="ident">open</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field</span> <span class="op">=</span> <span class="ident">Part</span>::<span class="ident">new</span>(<span class="ident">Body</span>::<span class="ident">from</span>(<span class="ident">file</span>));
-        <span class="ident">field</span>.<span class="ident">mime</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">mime</span>);
-        <span class="ident">field</span>.<span class="ident">file_name</span> <span class="op">=</span> <span class="ident">file_name</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">field</span>)
+        <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="ident">Part</span>::<span class="ident">new</span>(<span class="ident">Body</span>::<span class="ident">from</span>(<span class="ident">file</span>))
+            .<span class="ident">mime</span>(<span class="ident">mime</span>);
+
+        <span class="prelude-val">Ok</span>(<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">file_name</span>) <span class="op">=</span> <span class="ident">file_name</span> {
+            <span class="ident">field</span>.<span class="ident">file_name</span>(<span class="ident">file_name</span>)
+        } <span class="kw">else</span> {
+            <span class="ident">field</span>
+        })
     }
 
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="ident">Body</span>) <span class="op">-&gt;</span> <span class="ident">Part</span> {
         <span class="ident">Part</span> {
-            <span class="ident">value</span>: <span class="ident">value</span>,
-            <span class="ident">mime</span>: <span class="prelude-val">None</span>,
-            <span class="ident">file_name</span>: <span class="prelude-val">None</span>,
-            <span class="ident">headers</span>: <span class="ident">HeaderMap</span>::<span class="ident">default</span>()
+            <span class="ident">meta</span>: <span class="ident">PartMetadata</span>::<span class="ident">new</span>(),
+            <span class="ident">value</span>,
         }
     }
 
     <span class="doccomment">/// Tries to set the mime of this part.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mime_str</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">mime</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Part</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">mime</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="macro">try_</span><span class="macro">!</span>(<span class="ident">mime</span>.<span class="ident">parse</span>()));
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>)
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">mime_str</span>(<span class="self">self</span>, <span class="ident">mime</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Part</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">mime</span>(<span class="macro">try_</span><span class="macro">!</span>(<span class="ident">mime</span>.<span class="ident">parse</span>())))
     }
 
-    <span class="comment">// Re-enable when mime 0.4 is available, with split MediaType/MediaRange.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">mime</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">mime</span>: <span class="ident">Mime</span>) <span class="op">-&gt;</span> <span class="ident">Part</span> {
-        <span class="self">self</span>.<span class="ident">mime</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">mime</span>);
-        <span class="self">self</span>
+    <span class="comment">// Re-export when mime 0.4 is available, with split MediaType/MediaRange.</span>
+    <span class="kw">fn</span> <span class="ident">mime</span>(<span class="self">self</span>, <span class="ident">mime</span>: <span class="ident">Mime</span>) <span class="op">-&gt;</span> <span class="ident">Part</span> {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">mime</span>(<span class="ident">mime</span>))
     }
 
     <span class="doccomment">/// Sets the filename, builder style.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">file_name</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">filename</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Part</span> {
-        <span class="self">self</span>.<span class="ident">file_name</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">filename</span>.<span class="ident">into</span>());
-        <span class="self">self</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">file_name</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">filename</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Part</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
+    {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">file_name</span>(<span class="ident">filename</span>))
     }
 
-    <span class="doccomment">/// Returns a reference to the map with additional header fields</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">HeaderMap</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">headers</span>
-    }
-
-    <span class="doccomment">/// Returns a reference to the map with additional header fields</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">headers_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HeaderMap</span> {
-        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">headers</span>
+    <span class="kw">fn</span> <span class="ident">with_inner</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">func</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="self">Self</span>
+    <span class="kw">where</span>
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">PartMetadata</span>) <span class="op">-&gt;</span> <span class="ident">PartMetadata</span>,
+    {
+        <span class="ident">Part</span> {
+            <span class="ident">meta</span>: <span class="ident">func</span>(<span class="self">self</span>.<span class="ident">meta</span>),
+            <span class="ident">value</span>: <span class="self">self</span>.<span class="ident">value</span>,
+        }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Part</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Part&quot;</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;value&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;mime&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">mime</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;file_name&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">file_name</span>)
-            .<span class="ident">field</span>(<span class="string">&quot;headers&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">headers</span>)
-            .<span class="ident">finish</span>()
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dbg</span> <span class="op">=</span> <span class="ident">f</span>.<span class="ident">debug_struct</span>(<span class="string">&quot;Part&quot;</span>);
+        <span class="ident">dbg</span>.<span class="ident">field</span>(<span class="string">&quot;value&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>);
+        <span class="self">self</span>.<span class="ident">meta</span>.<span class="ident">fmt_fields</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">dbg</span>);
+        <span class="ident">dbg</span>.<span class="ident">finish</span>()
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">PartProps</span> <span class="kw">for</span> <span class="ident">Part</span> {
+    <span class="kw">fn</span> <span class="ident">value_len</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">value</span>.<span class="ident">len</span>()
+    }
+
+    <span class="kw">fn</span> <span class="ident">metadata</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">PartMetadata</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">meta</span>
     }
 }
 
@@ -836,16 +784,16 @@
     }
 
     <span class="kw">fn</span> <span class="ident">next_reader</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">active_reader</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">fields</span>.<span class="ident">len</span>() <span class="op">!=</span> <span class="number">0</span> {
+        <span class="self">self</span>.<span class="ident">active_reader</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">fields</span>.<span class="ident">len</span>() <span class="op">!=</span> <span class="number">0</span> {
             <span class="comment">// We need to move out of the vector here because we are consuming the field&#39;s reader</span>
-            <span class="kw">let</span> (<span class="ident">name</span>, <span class="ident">field</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">fields</span>.<span class="ident">remove</span>(<span class="number">0</span>);
-            <span class="kw">let</span> <span class="ident">boundary</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;--{}\r\n&quot;</span>, <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">boundary</span>));
+            <span class="kw">let</span> (<span class="ident">name</span>, <span class="ident">field</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">fields</span>.<span class="ident">remove</span>(<span class="number">0</span>);
+            <span class="kw">let</span> <span class="ident">boundary</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;--{}\r\n&quot;</span>, <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">boundary</span>()));
             <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">Cursor</span>::<span class="ident">new</span>({
                 <span class="comment">// Try to use cached headers created by compute_length</span>
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">headers</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> {
-                    <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">headers</span>.<span class="ident">remove</span>(<span class="number">0</span>)
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">h</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">computed_headers</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">0</span> {
+                    <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">computed_headers</span>.<span class="ident">remove</span>(<span class="number">0</span>)
                 } <span class="kw">else</span> {
-                    <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">percent_encoding</span>.<span class="ident">encode_headers</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">field</span>)
+                    <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">percent_encoding</span>.<span class="ident">encode_headers</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>, <span class="ident">field</span>.<span class="ident">metadata</span>())
                 };
                 <span class="ident">h</span>.<span class="ident">extend_from_slice</span>(<span class="string">b&quot;\r\n\r\n&quot;</span>);
                 <span class="ident">h</span>
@@ -856,11 +804,11 @@
                 .<span class="ident">chain</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(<span class="string">&quot;\r\n&quot;</span>));
             <span class="comment">// According to https://tools.ietf.org/html/rfc2046#section-5.1.1</span>
             <span class="comment">// the very last field has a special boundary</span>
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">fields</span>.<span class="ident">len</span>() <span class="op">!=</span> <span class="number">0</span> {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">fields</span>.<span class="ident">len</span>() <span class="op">!=</span> <span class="number">0</span> {
                 <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">reader</span>))
             } <span class="kw">else</span> {
                 <span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">reader</span>.<span class="ident">chain</span>(<span class="ident">Cursor</span>::<span class="ident">new</span>(
-                    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;--{}--\r\n&quot;</span>, <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">boundary</span>),
+                    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;--{}--\r\n&quot;</span>, <span class="self">self</span>.<span class="ident">form</span>.<span class="ident">boundary</span>()),
                 ))))
             }
         } <span class="kw">else</span> {
@@ -891,78 +839,6 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
-<span class="kw">struct</span> <span class="ident">AttrCharEncodeSet</span>;
-
-<span class="kw">impl</span> <span class="ident">EncodeSet</span> <span class="kw">for</span> <span class="ident">AttrCharEncodeSet</span> {
-    <span class="kw">fn</span> <span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ch</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="ident">ch</span> <span class="kw">as</span> <span class="ident">char</span> {
-             <span class="string">&#39;!&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;#&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;$&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;&amp;&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;+&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;-&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;.&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;^&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;_&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;`&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;|&#39;</span>  <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-             <span class="string">&#39;~&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-              <span class="kw">_</span> <span class="op">=&gt;</span> {
-                  <span class="kw">let</span> <span class="ident">is_alpha_numeric</span> <span class="op">=</span> <span class="ident">ch</span> <span class="op">&gt;=</span> <span class="number">0x41</span> <span class="op">&amp;&amp;</span> <span class="ident">ch</span> <span class="op">&lt;=</span> <span class="number">0x5a</span> <span class="op">||</span> <span class="ident">ch</span> <span class="op">&gt;=</span> <span class="number">0x61</span> <span class="op">&amp;&amp;</span> <span class="ident">ch</span> <span class="op">&lt;=</span> <span class="number">0x7a</span> <span class="op">||</span> <span class="ident">ch</span> <span class="op">&gt;=</span> <span class="number">0x30</span> <span class="op">&amp;&amp;</span> <span class="ident">ch</span> <span class="op">&lt;=</span> <span class="number">0x39</span>;
-                  <span class="op">!</span><span class="ident">is_alpha_numeric</span>
-              }
-        }
-    }
-
-}
-
-<span class="kw">impl</span> <span class="ident">PercentEncoding</span> {
-    <span class="kw">fn</span> <span class="ident">encode_headers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">field</span>: <span class="kw-2">&amp;</span><span class="ident">Part</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(
-            <span class="string">&quot;Content-Disposition: form-data; {}{}{}&quot;</span>,
-            <span class="self">self</span>.<span class="ident">format_parameter</span>(<span class="string">&quot;name&quot;</span>, <span class="ident">name</span>),
-            <span class="kw">match</span> <span class="ident">field</span>.<span class="ident">file_name</span> {
-                <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">file_name</span>) <span class="op">=&gt;</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;; {}&quot;</span>, <span class="self">self</span>.<span class="ident">format_parameter</span>(<span class="string">&quot;filename&quot;</span>, <span class="ident">file_name</span>)),
-                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">String</span>::<span class="ident">new</span>(),
-            },
-            <span class="kw">match</span> <span class="ident">field</span>.<span class="ident">mime</span> {
-                <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">mime</span>) <span class="op">=&gt;</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;\r\nContent-Type: {}&quot;</span>, <span class="ident">mime</span>),
-                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>(),
-            },
-        );
-        <span class="ident">field</span>.<span class="ident">headers</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">s</span>.<span class="ident">into_bytes</span>(), <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">header</span>, (<span class="ident">k</span>,<span class="ident">v</span>)<span class="op">|</span> {
-            <span class="ident">header</span>.<span class="ident">extend_from_slice</span>(<span class="string">b&quot;\r\n&quot;</span>);
-            <span class="ident">header</span>.<span class="ident">extend_from_slice</span>(<span class="ident">k</span>.<span class="ident">as_str</span>().<span class="ident">as_bytes</span>());
-            <span class="ident">header</span>.<span class="ident">extend_from_slice</span>(<span class="string">b&quot;: &quot;</span>);
-            <span class="ident">header</span>.<span class="ident">extend_from_slice</span>(<span class="ident">v</span>.<span class="ident">as_bytes</span>());
-            <span class="ident">header</span>
-        })
-    }
-
-    <span class="kw">fn</span> <span class="ident">format_parameter</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
-        <span class="kw">let</span> <span class="ident">legal_value</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">PercentEncoding</span>::<span class="ident">PathSegment</span> <span class="op">=&gt;</span> {
-                <span class="ident">percent_encoding</span>::<span class="ident">utf8_percent_encode</span>(<span class="ident">value</span>, <span class="ident">PATH_SEGMENT_ENCODE_SET</span>)
-                    .<span class="ident">to_string</span>()
-            },
-            <span class="ident">PercentEncoding</span>::<span class="ident">AttrChar</span> <span class="op">=&gt;</span> {
-                <span class="ident">percent_encoding</span>::<span class="ident">utf8_percent_encode</span>(<span class="ident">value</span>, <span class="ident">AttrCharEncodeSet</span>)
-                    .<span class="ident">to_string</span>()
-            },
-        };
-        <span class="kw">if</span> <span class="ident">value</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="ident">legal_value</span>.<span class="ident">len</span>() {
-            <span class="comment">// nothing has been percent encoded</span>
-            <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}=\&quot;{}\&quot;&quot;</span>, <span class="ident">name</span>, <span class="ident">value</span>)
-        } <span class="kw">else</span> {
-            <span class="comment">// something has been percent encoded</span>
-            <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}*=utf-8&#39;&#39;{}&quot;</span>, <span class="ident">name</span>, <span class="ident">legal_value</span>)
-        }
-    }
-}
-
-
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
@@ -992,7 +868,7 @@
                 <span class="string">&quot;key3&quot;</span>,
                 <span class="ident">Part</span>::<span class="ident">text</span>(<span class="string">&quot;value3&quot;</span>).<span class="ident">file_name</span>(<span class="string">&quot;filename&quot;</span>),
             );
-        <span class="ident">form</span>.<span class="ident">boundary</span> <span class="op">=</span> <span class="string">&quot;boundary&quot;</span>.<span class="ident">to_string</span>();
+        <span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">boundary</span> <span class="op">=</span> <span class="string">&quot;boundary&quot;</span>.<span class="ident">to_string</span>();
         <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">form</span>.<span class="ident">compute_length</span>();
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;--boundary\r\n\
                         Content-Disposition: form-data; name=\&quot;reader1\&quot;\r\n\r\n\
@@ -1034,7 +910,7 @@
                 <span class="string">&quot;key3&quot;</span>,
                 <span class="ident">Part</span>::<span class="ident">text</span>(<span class="string">&quot;value3&quot;</span>).<span class="ident">file_name</span>(<span class="string">&quot;filename&quot;</span>),
             );
-        <span class="ident">form</span>.<span class="ident">boundary</span> <span class="op">=</span> <span class="string">&quot;boundary&quot;</span>.<span class="ident">to_string</span>();
+        <span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">boundary</span> <span class="op">=</span> <span class="string">&quot;boundary&quot;</span>.<span class="ident">to_string</span>();
         <span class="kw">let</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">form</span>.<span class="ident">compute_length</span>();
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;--boundary\r\n\
                         Content-Disposition: form-data; name=\&quot;key1\&quot;\r\n\r\n\
@@ -1061,9 +937,9 @@
     <span class="kw">fn</span> <span class="ident">read_to_end_with_header</span>() {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">part</span> <span class="op">=</span> <span class="ident">Part</span>::<span class="ident">text</span>(<span class="string">&quot;value2&quot;</span>).<span class="ident">mime</span>(::<span class="ident">mime</span>::<span class="ident">IMAGE_BMP</span>);
-        <span class="ident">part</span>.<span class="ident">headers_mut</span>().<span class="ident">insert</span>(<span class="string">&quot;Hdr3&quot;</span>, <span class="string">&quot;/a/b/c&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>());
+        <span class="ident">part</span>.<span class="ident">meta</span>.<span class="ident">headers</span>.<span class="ident">insert</span>(<span class="string">&quot;Hdr3&quot;</span>, <span class="string">&quot;/a/b/c&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>());
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">form</span> <span class="op">=</span> <span class="ident">Form</span>::<span class="ident">new</span>().<span class="ident">part</span>(<span class="string">&quot;key2&quot;</span>, <span class="ident">part</span>);
-        <span class="ident">form</span>.<span class="ident">boundary</span> <span class="op">=</span> <span class="string">&quot;boundary&quot;</span>.<span class="ident">to_string</span>();
+        <span class="ident">form</span>.<span class="ident">inner</span>.<span class="ident">boundary</span> <span class="op">=</span> <span class="string">&quot;boundary&quot;</span>.<span class="ident">to_string</span>();
         <span class="kw">let</span> <span class="ident">expected</span> <span class="op">=</span> <span class="string">&quot;--boundary\r\n\
                         Content-Disposition: form-data; name=\&quot;key2\&quot;\r\n\
                         Content-Type: image/bmp\r\n\
@@ -1080,22 +956,6 @@
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;START EXPECTED\n{}\nEND EXPECTED&quot;</span>, <span class="ident">expected</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(::<span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">from_utf8</span>(<span class="kw-2">&amp;</span><span class="ident">output</span>).<span class="ident">unwrap</span>(), <span class="ident">expected</span>);
     }
-
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">header_percent_encoding</span>() {
-        <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="string">&quot;start%&#39;\&quot;\r\nßend&quot;</span>;
-        <span class="kw">let</span> <span class="ident">field</span> <span class="op">=</span> <span class="ident">Part</span>::<span class="ident">text</span>(<span class="string">&quot;&quot;</span>);
-
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">PercentEncoding</span>::<span class="ident">PathSegment</span>.<span class="ident">encode_headers</span>(<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">field</span>),
-            <span class="kw-2">&amp;</span><span class="string">b&quot;Content-Disposition: form-data; name*=utf-8&#39;&#39;start%25&#39;%22%0D%0A%C3%9Fend&quot;</span>[..]
-        );
-
-        <span class="macro">assert_eq</span><span class="macro">!</span>(
-            <span class="ident">PercentEncoding</span>::<span class="ident">AttrChar</span>.<span class="ident">encode_headers</span>(<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">field</span>),
-            <span class="kw-2">&amp;</span><span class="string">b&quot;Content-Disposition: form-data; name*=utf-8&#39;&#39;start%25%27%22%0D%0A%C3%9Fend&quot;</span>[..]
-        );
-    }
 }
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "reqwest";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "reqwest";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

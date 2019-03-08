@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.5/src/client.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>client.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/reqwest-0.9.11/src/client.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>client.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -564,11 +564,100 @@
 <span id="564">564</span>
 <span id="565">565</span>
 <span id="566">566</span>
-</pre><pre class="rust ">
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">time</span>::<span class="ident">Duration</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">thread</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">IpAddr</span>;
 
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Async</span>, <span class="ident">Future</span>, <span class="ident">Stream</span>};
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">future</span>::{<span class="self">self</span>, <span class="ident">Either</span>};
@@ -577,13 +666,14 @@
 <span class="kw">use</span> <span class="ident">request</span>::{<span class="ident">Request</span>, <span class="ident">RequestBuilder</span>};
 <span class="kw">use</span> <span class="ident">response</span>::<span class="ident">Response</span>;
 <span class="kw">use</span> {<span class="ident">async_impl</span>, <span class="ident">header</span>, <span class="ident">Method</span>, <span class="ident">IntoUrl</span>, <span class="ident">Proxy</span>, <span class="ident">RedirectPolicy</span>, <span class="ident">wait</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;default-tls&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tls&quot;</span>)]</span>
 <span class="kw">use</span> {<span class="ident">Certificate</span>, <span class="ident">Identity</span>};
 
 <span class="doccomment">/// A `Client` to make Requests with.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The Client has various configuration values to tweak, but the defaults</span>
-<span class="doccomment">/// are set to what is usually the most commonly desired value.</span>
+<span class="doccomment">/// are set to what is usually the most commonly desired value. To configure a</span>
+<span class="doccomment">/// `Client`, use `Client::builder()`.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// The `Client` holds a connection pool internally, so it is advised that</span>
 <span class="doccomment">/// you create one and **reuse** it.</span>
@@ -627,7 +717,9 @@
 }
 
 <span class="kw">impl</span> <span class="ident">ClientBuilder</span> {
-    <span class="doccomment">/// Constructs a new `ClientBuilder`</span>
+    <span class="doccomment">/// Constructs a new `ClientBuilder`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is the same as `Client::builder()`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
         <span class="ident">ClientBuilder</span> {
             <span class="ident">inner</span>: <span class="ident">async_impl</span>::<span class="ident">ClientBuilder</span>::<span class="ident">new</span>(),
@@ -639,17 +731,31 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method fails if native TLS backend cannot be initialized.</span>
+    <span class="doccomment">/// This method fails if TLS backend cannot be initialized, or the resolver</span>
+    <span class="doccomment">/// cannot load the system configuration.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="self">self</span>) <span class="op">-&gt;</span> ::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&gt;</span> {
         <span class="ident">ClientHandle</span>::<span class="ident">new</span>(<span class="self">self</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">handle</span><span class="op">|</span> <span class="ident">Client</span> {
             <span class="ident">inner</span>: <span class="ident">handle</span>,
         })
     }
 
+    <span class="doccomment">/// Use native TLS backend.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;default-tls&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">use_default_tls</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">use_default_tls</span>())
+    }
+
+    <span class="doccomment">/// Use rustls TLS backend.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;rustls-tls&quot;</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">use_rustls_tls</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">use_rustls_tls</span>())
+    }
+
     <span class="doccomment">/// Add a custom root certificate.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This can be used to connect to a server that has a self-signed</span>
-    <span class="doccomment">/// certificate for example.</span>
+    <span class="doccomment">/// This allows connecting to a server that has a self-signed</span>
+    <span class="doccomment">/// certificate for example. This **does not** replace the existing</span>
+    <span class="doccomment">/// trusted store.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Example</span>
     <span class="doccomment">/// ```</span>
@@ -675,7 +781,7 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This method fails if adding root certificate was unsuccessful.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;default-tls&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tls&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_root_certificate</span>(<span class="self">self</span>, <span class="ident">cert</span>: <span class="ident">Certificate</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
         <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">add_root_certificate</span>(<span class="ident">cert</span>))
     }
@@ -690,10 +796,18 @@
     <span class="doccomment">/// # fn build_client() -&gt; Result&lt;(), Box&lt;std::error::Error&gt;&gt; {</span>
     <span class="doccomment">/// // read a local PKCS12 bundle</span>
     <span class="doccomment">/// let mut buf = Vec::new();</span>
-    <span class="doccomment">/// File::open(&quot;my-ident.pfx&quot;)?.read_to_end(&amp;mut buf)?;</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// #[cfg(feature = &quot;default-tls&quot;)]</span>
+    <span class="doccomment">/// File::open(&quot;my-ident.pfx&quot;)?.read_to_end(&amp;mut buf)?;</span>
+    <span class="doccomment">/// #[cfg(feature = &quot;rustls-tls&quot;)]</span>
+    <span class="doccomment">/// File::open(&quot;my-ident.pem&quot;)?.read_to_end(&amp;mut buf)?;</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// #[cfg(feature = &quot;default-tls&quot;)]</span>
     <span class="doccomment">/// // create an Identity from the PKCS#12 archive</span>
     <span class="doccomment">/// let pkcs12 = reqwest::Identity::from_pkcs12_der(&amp;buf, &quot;my-privkey-password&quot;)?;</span>
+    <span class="doccomment">/// #[cfg(feature = &quot;rustls-tls&quot;)]</span>
+    <span class="doccomment">/// // create an Identity from the PEM file</span>
+    <span class="doccomment">/// let pkcs12 = reqwest::Identity::from_pem(&amp;buf)?;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// // get a client builder</span>
     <span class="doccomment">/// let client = reqwest::Client::builder()</span>
@@ -703,7 +817,7 @@
     <span class="doccomment">/// # Ok(())</span>
     <span class="doccomment">/// # }</span>
     <span class="doccomment">/// ```</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;default-tls&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tls&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">identity</span>(<span class="self">self</span>, <span class="ident">identity</span>: <span class="ident">Identity</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
         <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">identity</span>(<span class="ident">identity</span>))
     }
@@ -724,7 +838,6 @@
         <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">danger_accept_invalid_hostnames</span>(<span class="ident">accept_invalid_hostname</span>))
     }
 
-
     <span class="doccomment">/// Controls the use of certificate validation.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Defaults to `false`.</span>
@@ -736,7 +849,7 @@
     <span class="doccomment">/// will be trusted for use. This includes expired certificates. This</span>
     <span class="doccomment">/// introduces significant vulnerabilities, and should only be used</span>
     <span class="doccomment">/// as a last resort.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;default-tls&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tls&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">danger_accept_invalid_certs</span>(<span class="self">self</span>, <span class="ident">accept_invalid_certs</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
         <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">danger_accept_invalid_certs</span>(<span class="ident">accept_invalid_certs</span>))
     }
@@ -790,9 +903,9 @@
     <span class="doccomment">///   an `Accept-Encoding` **and** `Range` values, the `Accept-Encoding` header is set to `gzip`.</span>
     <span class="doccomment">///   The body is **not** automatically inflated.</span>
     <span class="doccomment">/// - When receiving a response, if it&#39;s headers contain a `Content-Encoding` value that</span>
-    <span class="doccomment">///   equals to `gzip`, both values `Content-Encoding` and `Content-Length` are removed from the </span>
+    <span class="doccomment">///   equals to `gzip`, both values `Content-Encoding` and `Content-Length` are removed from the</span>
     <span class="doccomment">///   headers&#39; set. The body is automatically deinflated.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Default is enabled.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">gzip</span>(<span class="self">self</span>, <span class="ident">enable</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
         <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">gzip</span>(<span class="ident">enable</span>))
@@ -823,10 +936,26 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Pass `None` to disable timeout.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">timeout</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span>
-    <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;&gt;</span>,
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;&gt;</span>,
     {
         <span class="self">self</span>.<span class="ident">timeout</span> <span class="op">=</span> <span class="ident">Timeout</span>(<span class="ident">timeout</span>.<span class="ident">into</span>());
         <span class="self">self</span>
+    }
+
+    <span class="doccomment">/// Set a timeout for only the connect phase of a `Client`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default is `None`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_timeout</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">timeout</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;&gt;</span>,
+    {
+        <span class="kw">let</span> <span class="ident">timeout</span> <span class="op">=</span> <span class="ident">timeout</span>.<span class="ident">into</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dur</span>) <span class="op">=</span> <span class="ident">timeout</span> {
+            <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">connect_timeout</span>(<span class="ident">dur</span>))
+        } <span class="kw">else</span> {
+            <span class="self">self</span>
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">with_inner</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">func</span>: <span class="ident">F</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span>
@@ -836,6 +965,50 @@
         <span class="self">self</span>.<span class="ident">inner</span> <span class="op">=</span> <span class="ident">func</span>(<span class="self">self</span>.<span class="ident">inner</span>);
         <span class="self">self</span>
     }
+
+    <span class="doccomment">/// Only use HTTP/2.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// let client = reqwest::Client::builder()</span>
+    <span class="doccomment">///     .h2_prior_knowledge()</span>
+    <span class="doccomment">///     .build().unwrap();</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">h2_prior_knowledge</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">h2_prior_knowledge</span>())
+    }
+
+    <span class="doccomment">/// Enable case sensitive headers.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// let client = reqwest::Client::builder()</span>
+    <span class="doccomment">///     .http1_title_case_headers()</span>
+    <span class="doccomment">///     .build().unwrap();</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">http1_title_case_headers</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">http1_title_case_headers</span>())
+    }
+
+    <span class="doccomment">/// Bind to a local IP Address</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Example</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// use std::net::IpAddr;</span>
+    <span class="doccomment">/// let local_addr = IpAddr::from([12, 4, 1, 8]);</span>
+    <span class="doccomment">/// let client = reqwest::Client::builder()</span>
+    <span class="doccomment">///     .local_address(local_addr)</span>
+    <span class="doccomment">///     .build().unwrap();</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">local_address</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">addr</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span>
+    <span class="kw">where</span>
+        <span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">IpAddr</span><span class="op">&gt;&gt;</span>,
+    {
+        <span class="self">self</span>.<span class="ident">with_inner</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">inner</span><span class="op">|</span> <span class="ident">inner</span>.<span class="ident">local_address</span>(<span class="ident">addr</span>))
+    }
 }
 
 
@@ -844,16 +1017,20 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Panic</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This method panics if native TLS backend cannot be created or</span>
-    <span class="doccomment">/// initialized. Use `Client::builder()` if you wish to handle the failure</span>
-    <span class="doccomment">/// as an `Error` instead of panicking.</span>
+    <span class="doccomment">/// This method panics if TLS backend cannot initialized, or the resolver</span>
+    <span class="doccomment">/// cannot load the system configuration.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Use `Client::builder()` if you wish to handle the failure as an `Error`</span>
+    <span class="doccomment">/// instead of panicking.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Client</span> {
         <span class="ident">ClientBuilder</span>::<span class="ident">new</span>()
             .<span class="ident">build</span>()
-            .<span class="ident">expect</span>(<span class="string">&quot;Client failed to initialize&quot;</span>)
+            .<span class="ident">expect</span>(<span class="string">&quot;Client::new()&quot;</span>)
     }
 
     <span class="doccomment">/// Creates a `ClientBuilder` to configure a `Client`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is the same as `ClientBuilder::new()`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">builder</span>() <span class="op">-&gt;</span> <span class="ident">ClientBuilder</span> {
         <span class="ident">ClientBuilder</span>::<span class="ident">new</span>()
     }
@@ -1010,14 +1187,6 @@
             };
 
             <span class="kw">let</span> <span class="ident">work</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">for_each</span>(<span class="kw">move</span> <span class="op">|</span>(<span class="ident">req</span>, <span class="ident">tx</span>)<span class="op">|</span> {
-                <span class="comment">/*
-                let tx: oneshot::Sender&lt;::Result&lt;async_impl::Response&gt;&gt; = tx;
-                let task = client.execute(req)
-                    .then(move |r| {
-                        trace!(&quot;result received: {:?}&quot;, r);
-                        tx.send(r).map_err(|_| ())
-                    });
-                    */</span>
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tx_opt</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">oneshot</span>::<span class="ident">Sender</span><span class="op">&lt;</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">async_impl</span>::<span class="ident">Response</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">tx</span>);
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res_fut</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">execute</span>(<span class="ident">req</span>);
 
@@ -1056,10 +1225,13 @@
                 .<span class="ident">expect</span>(<span class="string">&quot;runtime unexpected error&quot;</span>);
         }));
 
-        <span class="comment">// Wait up to 5 seconds for the background thread to be spawned.</span>
-        <span class="comment">// More than that and something bad is up!</span>
-        <span class="ident">wait</span>::<span class="ident">timeout</span>(<span class="ident">spawn_rx</span>, <span class="prelude-val">Some</span>(<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">5</span>)))
-            .<span class="ident">expect</span>(<span class="string">&quot;runtime thread cancelled&quot;</span>)<span class="question-mark">?</span>;
+        <span class="comment">// Wait for the runtime thread to start up...</span>
+        <span class="kw">match</span> <span class="ident">spawn_rx</span>.<span class="ident">wait</span>() {
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Ok</span>(())) <span class="op">=&gt;</span> (),
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">_canceled</span>) <span class="op">=&gt;</span> <span class="ident">event_loop_panicked</span>(),
+        }
+
 
         <span class="kw">let</span> <span class="ident">inner_handle</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">InnerClientHandle</span> {
             <span class="ident">tx</span>: <span class="prelude-val">Some</span>(<span class="ident">tx</span>),
@@ -1090,14 +1262,7 @@
             <span class="ident">Either</span>::<span class="ident">B</span>(<span class="ident">future</span>::<span class="ident">ok</span>(()))
         };
 
-        <span class="kw">let</span> <span class="ident">rx</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">_canceled</span><span class="op">|</span> {
-            <span class="comment">// The only possible reason there would be a Canceled error</span>
-            <span class="comment">// is if the thread running the event loop panicked. We could return</span>
-            <span class="comment">// an Err here, like a BrokenPipe, but the Client is not</span>
-            <span class="comment">// recoverable. Additionally, the panic in the other thread</span>
-            <span class="comment">// is not normal, and should likely be propagated.</span>
-            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;event loop thread panicked&quot;</span>);
-        });
+        <span class="kw">let</span> <span class="ident">rx</span> <span class="op">=</span> <span class="ident">rx</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">_canceled</span><span class="op">|</span> <span class="ident">event_loop_panicked</span>());
 
         <span class="kw">let</span> <span class="ident">fut</span> <span class="op">=</span> <span class="ident">write</span>.<span class="ident">join</span>(<span class="ident">rx</span>).<span class="ident">map</span>(<span class="op">|</span>((), <span class="ident">res</span>)<span class="op">|</span> <span class="ident">res</span>);
 
@@ -1131,5 +1296,16 @@
         <span class="ident">KeepCoreThreadAlive</span>(<span class="prelude-val">None</span>)
     }
 }
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "reqwest";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+
+<span class="attribute">#[<span class="ident">cold</span>]</span>
+<span class="attribute">#[<span class="ident">inline</span>(<span class="ident">never</span>)]</span>
+<span class="kw">fn</span> <span class="ident">event_loop_panicked</span>() <span class="op">-&gt;</span> <span class="op">!</span> {
+    <span class="comment">// The only possible reason there would be a Canceled error</span>
+    <span class="comment">// is if the thread running the event loop panicked. We could return</span>
+    <span class="comment">// an Err here, like a BrokenPipe, but the Client is not</span>
+    <span class="comment">// recoverable. Additionally, the panic in the other thread</span>
+    <span class="comment">// is not normal, and should likely be propagated.</span>
+    <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;event loop thread panicked&quot;</span>);
+}
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "reqwest";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

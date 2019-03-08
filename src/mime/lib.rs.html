@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mime-0.3.12/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/mime-0.3.13/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -869,7 +869,42 @@
 <span id="869">869</span>
 <span id="870">870</span>
 <span id="871">871</span>
-</pre><pre class="rust ">
+<span id="872">872</span>
+<span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! # Mime</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Mime is now Media Type, technically, but `Mime` is more immediately</span>
@@ -895,7 +930,7 @@
 <span class="doccomment">//! }</span>
 <span class="doccomment">//! ```</span>
 
-<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/mime/0.3.12&quot;</span>)]</span>
+<span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/mime/0.3.13&quot;</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">warnings</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_debug_implementations</span>)]</span>
@@ -1078,6 +1113,14 @@
         <span class="ident">Params</span>(<span class="ident">inner</span>)
     }
 
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">has_params</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">params</span> {
+            <span class="ident">ParamSource</span>::<span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+        }
+    }
+
     <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">semicolon</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">params</span> {
@@ -1135,9 +1178,15 @@
 
             <span class="comment">//name</span>
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">a_idx</span>) <span class="op">=</span> <span class="ident">a</span>.<span class="ident">find</span>(<span class="string">&#39;=&#39;</span>) {
-                <span class="kw">let</span> <span class="ident">a_name</span> <span class="op">=</span> <span class="ident">a</span>[..<span class="ident">a_idx</span>].<span class="ident">trim_left</span>();
+                <span class="kw">let</span> <span class="ident">a_name</span> <span class="op">=</span> {
+                    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+                    { <span class="ident">a</span>[..<span class="ident">a_idx</span>].<span class="ident">trim_left</span>() }
+                };
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">b_idx</span>) <span class="op">=</span> <span class="ident">b</span>.<span class="ident">find</span>(<span class="string">&#39;=&#39;</span>) {
-                    <span class="kw">let</span> <span class="ident">b_name</span> <span class="op">=</span> <span class="ident">b</span>[..<span class="ident">b_idx</span>].<span class="ident">trim_left</span>();
+                    <span class="kw">let</span> <span class="ident">b_name</span> <span class="op">=</span> {
+                        <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">deprecated</span>)]</span>
+                        { <span class="ident">b</span>[..<span class="ident">b_idx</span>].<span class="ident">trim_left</span>() }
+                    };
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">unicase</span>::<span class="ident">eq_ascii</span>(<span class="ident">a_name</span>, <span class="ident">b_name</span>) {
                         <span class="kw">return</span> <span class="bool-val">false</span>;
                     }
@@ -1661,8 +1710,11 @@
     <span class="kw">fn</span> <span class="ident">test_mime_from_str</span>() {
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">TEXT_PLAIN</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;TEXT/PLAIN&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">TEXT_PLAIN</span>);
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain; charset=utf-8&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">TEXT_PLAIN_UTF_8</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain;charset=utf-8&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">TEXT_PLAIN_UTF_8</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain;charset=\&quot;utf-8\&quot;&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">TEXT_PLAIN_UTF_8</span>);
+
+        <span class="comment">// spaces</span>
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain; charset=utf-8&quot;</span>).<span class="ident">unwrap</span>(), <span class="ident">TEXT_PLAIN_UTF_8</span>);
 
         <span class="comment">// quotes + semi colon</span>
         <span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain;charset=\&quot;utf-8\&quot;; foo=bar&quot;</span>).<span class="ident">unwrap</span>();
@@ -1694,6 +1746,24 @@
         <span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain;\r\ncharset=utf-8&quot;</span>).<span class="ident">unwrap_err</span>();
         <span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain; charset=\r\nutf-8&quot;</span>).<span class="ident">unwrap_err</span>();
         <span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="string">&quot;text/plain; charset=\&quot;\r\nutf-8\&quot;&quot;</span>).<span class="ident">unwrap_err</span>();
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_mime_from_str_empty_parameter_list</span>() {
+        <span class="kw">static</span> <span class="ident">CASES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[
+            <span class="string">&quot;text/event-stream;&quot;</span>,
+            <span class="string">&quot;text/event-stream; &quot;</span>,
+            <span class="string">&quot;text/event-stream;       &quot;</span>,
+        ];
+
+        <span class="kw">for</span> <span class="ident">case</span> <span class="kw">in</span> <span class="ident">CASES</span> {
+            <span class="kw">let</span> <span class="ident">mime</span> <span class="op">=</span> <span class="ident">Mime</span>::<span class="ident">from_str</span>(<span class="ident">case</span>).<span class="ident">expect</span>(<span class="ident">case</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mime</span>, <span class="ident">TEXT_EVENT_STREAM</span>, <span class="string">&quot;case = {:?}&quot;</span>, <span class="ident">case</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mime</span>.<span class="ident">type_</span>(), <span class="ident">TEXT</span>, <span class="string">&quot;case = {:?}&quot;</span>, <span class="ident">case</span>);
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">mime</span>.<span class="ident">subtype</span>(), <span class="ident">EVENT_STREAM</span>, <span class="string">&quot;case = {:?}&quot;</span>, <span class="ident">case</span>);
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">mime</span>.<span class="ident">has_params</span>(), <span class="string">&quot;case = {:?}&quot;</span>, <span class="ident">case</span>);
+        }
+
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -1741,5 +1811,5 @@
         <span class="macro">assert_ne</span><span class="macro">!</span>(<span class="string">&quot;abc&quot;</span>, <span class="ident">param</span>);
     }
 }
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "mime";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "mime";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
